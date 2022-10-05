@@ -169,15 +169,24 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 5. Si tot ha anat bé, hauríeu de veure això:
    ![img.png](readme_images/img4.png)
 
-## Getting Started
+### Ja està! Ara us recomano que aneu al fitxer apunts.md i llegiu els apunts que hi ha per a començar a fer el projecte.
 
-This project is a starting point for a Flutter application.
+## Enllaços d'interès
 
-A few resources to get you started if this is your first Flutter project:
+#### Documentació
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Documentació de flutter](https://flutter.dev/docs)
+- [Tutorial de com crear la primera aplicació](https://docs.flutter.dev/get-started/codelab)
+- [Petits tutorials de funcionalitats](https://docs.flutter.dev/cookbook)
+- [Codis d'exemple de funcionalitats](https://flutter.github.io/samples/#/)
+- [Documentació de la api de google maps](https://pub.dev/packages/google_maps_flutter)
+- [Llibreria de serveis de google maps](https://pub.dev/packages/google_maps_webservice)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### Videos
+
+- [Mini curs de YT de creació d'una copia de Uber amb flutter](https://www.youtube.com/playlist?list=PLy9JCsy2u97l8vY42NaXwsA_Y_LJXJyp6)
+- [Curso YT des de 0 de flutter en Español 1](https://www.youtube.com/playlist?list=PLl_hIu4u7P677H9f6zPOHiOz2izkvQq2E)
+- [Curso YT des de 0 de flutter en Español 2](https://www.youtube.com/playlist?list=PLgD-VLjdOvqj4qcsYTREjiLcVMK9vzbfj)
+- [Video de 2h que explica una mica de tot](https://www.youtube.com/watch?v=CD1Y2DmL5JM&ab_channel=FlutterMapp)
+
+Si trobeu algun enllaç més, no dubteu en posar-lo.

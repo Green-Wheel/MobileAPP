@@ -1,0 +1,1 @@
+Directori amb funcions utils per al projecte (conversions, calculs, etc).

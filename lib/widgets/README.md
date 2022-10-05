@@ -1,0 +1,1 @@
+Directori amb els widgets genèrics que utilitzarem a l'aplicació.

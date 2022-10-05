@@ -1,0 +1,1 @@
+Directori que conté els temes (estils) de l'aplicació.

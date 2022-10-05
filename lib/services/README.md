@@ -1,0 +1,1 @@
+Directori que conté totes les connexions externes de l'aplicació utilitzant la llibreria http
