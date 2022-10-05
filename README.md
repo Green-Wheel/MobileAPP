@@ -187,6 +187,7 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 - [Tutorial de com crear la primera aplicació](https://docs.flutter.dev/get-started/codelab)
 - [Petits tutorials de funcionalitats](https://docs.flutter.dev/cookbook)
 - [Codis d'exemple de funcionalitats](https://flutter.github.io/samples/#/)
+- [Tutorial oficial d'afegeir un mapa a l'aplicació](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter#0)
 - [Documentació de la api de google maps](https://pub.dev/packages/google_maps_flutter)
 - [Llibreria de serveis de google maps](https://pub.dev/packages/google_maps_webservice)
 
