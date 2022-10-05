@@ -1,0 +1,1 @@
+#-keep class cat.greenwheel.greenwheel.BuildConfig { *; }
