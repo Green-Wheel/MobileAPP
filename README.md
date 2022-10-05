@@ -163,11 +163,19 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 ### Executar l'aplicació
 
 1. Seleccionar a dalt a la dreta el dispositiu virtual que heu creat.
+2. Si no teniu el dispositiu virtual creat, seleccionar "Create New Virtual Device" i crear-lo.
+3. Si no teniu cap configuració posada, aneu a edit configurations i afegiu una configuració de tipus "Flutter".
 2. Donar al play i esperar que s'instal·li l'aplicació.
 3. Us hauria d'apareixer el movil virtual amb l'aplicació instal·lada.
 4. Si no us surt, busqueu la pestanya a la barra lateral dreta anomenada Android Emulator.
 5. Si tot ha anat bé, hauríeu de veure això:
    ![img.png](readme_images/img4.png)
+
+### Executar tests
+
+1. Per executar els tests, aneu a la pestanya "Run" i seleccioneu "Run All Tests".
+2. Si no ho tenieu configurat, aneu a "Run" -> "Edit Configurations" i afegiu una configuració de tipus "Flutter Test".
+   Allà seleccioneu que siguin de tipus directori i seleccioneu la carpeta test.
 
 ### Ja està! Ara us recomano que aneu al fitxer apunts.md i llegiu els apunts que hi ha per a començar a fer el projecte.
 
