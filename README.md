@@ -37,7 +37,11 @@ Jordi Piguillem Poch ( [jpiguillem@essi.upc.edu](mailto:jpiguillem@essi.upc.edu)
 - [Enllaç al projecte Taiga](https://tree.taiga.io/project/arnau147-pes-green-whee/)
 - [Repositori GitHub](https://github.com/orgs/Green-Wheel/repositories)
 
+
+
 ## Requeriments per a poder començar a treballar
+<details>
+<summary>Explicació detallada</summary>
 
 ### Introducció
 
@@ -178,6 +182,8 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
    Allà seleccioneu que siguin de tipus directori i seleccioneu la carpeta test.
 
 ### Ja està! Ara us recomano que aneu al fitxer apunts.md i llegiu els apunts que hi ha per a començar a fer el projecte.
+
+</details>
 
 ## Enllaços d'interès
 
