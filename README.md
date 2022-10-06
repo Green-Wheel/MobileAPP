@@ -181,15 +181,18 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 
 ## Enllaços d'interès
 
-#### Documentació
+### Documentació i formació
+
+#### Documentació escrita
 
 - [Documentació de flutter](https://flutter.dev/docs)
 - [Tutorial de com crear la primera aplicació](https://docs.flutter.dev/get-started/codelab)
 - [Petits tutorials de funcionalitats](https://docs.flutter.dev/cookbook)
 - [Codis d'exemple de funcionalitats](https://flutter.github.io/samples/#/)
-- [Tutorial oficial d'afegeir un mapa a l'aplicació](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter#0)
 - [Documentació de la api de google maps](https://pub.dev/packages/google_maps_flutter)
 - [Llibreria de serveis de google maps](https://pub.dev/packages/google_maps_webservice)
+- [Explicacions i exemples de widgets a flutter by javaTpoint](https://www.javatpoint.com/flutter)
+- [Documentació components de material design](https://material.io/components?platform=flutter)
 
 #### Videos
 
@@ -197,5 +200,28 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 - [Curso YT des de 0 de flutter en Español 1](https://www.youtube.com/playlist?list=PLl_hIu4u7P677H9f6zPOHiOz2izkvQq2E)
 - [Curso YT des de 0 de flutter en Español 2](https://www.youtube.com/playlist?list=PLgD-VLjdOvqj4qcsYTREjiLcVMK9vzbfj)
 - [Video de 2h que explica una mica de tot](https://www.youtube.com/watch?v=CD1Y2DmL5JM&ab_channel=FlutterMapp)
+
+### Llibreries i exemples de codi concrets
+
+#### Mapes
+
+- [Tutorial oficial d'afegeir un mapa a l'aplicació](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter#0)
+- [Using Google Maps to add maps in flutter applications](https://blog.logrocket.com/google-maps-flutter/)
+- [Com obrir aplicació google maps amb coordenades](https://stackoverflow.com/questions/47046637/open-google-maps-app-if-available-with-flutter)
+- [Com fer un mapa amb rutes](https://medium.com/flutter-community/flutter-google-maps-with-directions-api-2d1a60b1a5a0)
+- [Dibuixar ruta en mapa](https://medium.com/@rohanarafat86/drawing-route-direction-in-flutter-using-openrouteservice-api-and-google-maps-in-flutter-4431a2989dd5)
+- [Geolocation](https://blog.logrocket.com/geolocation-geocoding-flutter/)
+
+#### Chat
+
+- [Llibreria per a fer un chat facilment (visualment)](https://pub.dev/packages/flutter_chat_ui)
+- [Exemple real time chat amb django i flutter](https://github.com/udaykhalsa/flutter-django-chat-app)
+- [Chat utilitzant flutter](https://medium.com/nerd-for-tech/flutter-a-chat-app-in-flutter-using-a-socket-io-service-88be02a388d6)
+
+#### Notificacions push
+
+- [Llibreria Notificacions push locals](https://pub.dev/packages/flutter_local_notifications)
+
+#### Altres
 
 Si trobeu algun enllaç més, no dubteu en posar-lo.
