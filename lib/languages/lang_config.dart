@@ -15,4 +15,17 @@ class LangConfig {
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
   ];
+
+  static String getFlag(String lang) {
+    switch (lang) {
+      case 'es':
+        return '🇪🇸';
+      case 'en':
+        return '🇺🇸';
+      case 'ca':
+        return '🇪🇸';
+      default:
+        return '🇪🇸';
+    }
+  }
 }

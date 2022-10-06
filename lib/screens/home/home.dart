@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,9 +20,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Page"),
+        title: Text(tr!.language),
         actions: [
           IconButton(icon: Icon(Icons.language), onPressed: _changeLanguage),
         ],
