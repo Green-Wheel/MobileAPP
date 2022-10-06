@@ -3,6 +3,8 @@ import 'package:flutter_config/flutter_config.dart';
 import 'package:greenwheel/routes.dart';
 import 'package:greenwheel/theme/style.dart';
 
+import 'languages/lang_config.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
   await FlutterConfig.loadEnvVariables();
@@ -20,6 +22,8 @@ class MainApp extends StatelessWidget {
       theme: appTheme(),
       initialRoute: '/',
       routes: routes,
+      supportedLocales: LangConfig.langs,
+      localizationsDelegates: LangConfig.delegates,
     );
   }
 }

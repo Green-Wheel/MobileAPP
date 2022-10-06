@@ -1,0 +1,6 @@
+{
+    "language": "Español",
+    "@language": {
+        "description": "Language of the item"
+    }
+}
