@@ -90,7 +90,7 @@ Doctor summary (to see all details, run flutter doctor -v):
    mateix), així com android virtual device si no està instalat. també android sdk. (vigileu el path)
 4. Quan acabi, pulseu els tres puntets que hi ha a la dreta d'open i seleccionar "SDK Manager".
    ![img.png](readme_images/img.png)
-5. A la pestanya "SDK Tools" seleccionar "Android SDK Build-Tools,Android SDK Platform-Tools i Android SDK Tools" i
+5. A la pestanya "SDK Tools" seleccionar "Android SDK Build-Tools,Android SDK Platform-Tools, Android SDK command line tools i Android SDK Tools" i
    seleccionar la última versió.
 6. A la pestanya "SDK Platforms" seleccionar descarregar el següent.
    ![img.png](readme_images/img2.png)
