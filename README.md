@@ -229,5 +229,5 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 - [Llibreria Notificacions push locals](https://pub.dev/packages/flutter_local_notifications)
 
 #### Altres
-
-Si trobeu algun enllaç més, no dubteu en posar-lo.
+- [App bar flotat al estil google maps](https://pub.dev/packages/floating_search_bar)
+  Si trobeu algun enllaç més, no dubteu en posar-lo.
