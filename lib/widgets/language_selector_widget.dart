@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/localizations.dart';
 import 'package:greenwheel/services/LanguagesService.dart';
 import 'package:provider/provider.dart';
-
+//ICONS: https://hatscripts.github.io/circle-flags/gallery
 class LanguageSelectorWidget extends StatefulWidget {
   const LanguageSelectorWidget({super.key});
 
@@ -18,8 +18,7 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
       title: Text(tr.language_selector),
       children: [
         SimpleDialogItem(
-          icon: Icons.account_circle,
-          color: Colors.orange,
+          icon_code: 'es-ct',
           text: 'Català',
           onPressed: () {
             Provider.of<LocaleLanguage>(context, listen: false)
@@ -28,8 +27,7 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
           },
         ),
         SimpleDialogItem(
-          icon: Icons.flag,
-          color: Colors.green,
+          icon_code: 'es',
           text: 'Castellano',
           onPressed: () {
             Provider.of<LocaleLanguage>(context, listen: false)
@@ -38,8 +36,7 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
           },
         ),
         SimpleDialogItem(
-          icon: Icons.add_circle,
-          color: Colors.grey,
+          icon_code: 'gb',
           text: 'English',
           onPressed: () {
             Provider.of<LocaleLanguage>(context, listen: false)
@@ -55,13 +52,11 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
 class SimpleDialogItem extends StatelessWidget {
   const SimpleDialogItem(
       {super.key,
-      required this.icon,
-      required this.color,
+      required this.icon_code,
       required this.text,
       required this.onPressed});
 
-  final IconData icon;
-  final Color color;
+  final String icon_code;
   final String text;
   final VoidCallback onPressed;
 
@@ -73,7 +68,7 @@ class SimpleDialogItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Icon(icon, size: 36.0, color: color),
+          Image.asset('assets/icons/$icon_code.png', width: 36, height: 36),
           Padding(
             padding: const EdgeInsetsDirectional.only(start: 16.0),
             child: Text(text),
