@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:greenwheel/routes.dart';
-import 'package:greenwheel/services/LanguagesService.dart';
+import 'package:greenwheel/services/generalServices/LanguagesService.dart';
 import 'package:greenwheel/theme/style.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +10,10 @@ import 'languages/lang_config.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
   await FlutterConfig.loadEnvVariables();
+
   runApp(const MainApp());
+  LocaleLanguage localeLanguage = LocaleLanguage();
+  await localeLanguage.fetchLocale();
 }
 
 class MainApp extends StatelessWidget {

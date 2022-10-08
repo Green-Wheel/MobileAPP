@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/localizations.dart';
-import 'package:greenwheel/services/LanguagesService.dart';
+import 'package:greenwheel/services/generalServices/LanguagesService.dart';
 import 'package:provider/provider.dart';
+
 //ICONS: https://hatscripts.github.io/circle-flags/gallery
 class LanguageSelectorWidget extends StatefulWidget {
   const LanguageSelectorWidget({super.key});
