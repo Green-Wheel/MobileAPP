@@ -1,9 +1,11 @@
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 
 import '../languages/lang_config.dart';
 
 class LocaleLanguage extends ChangeNotifier {
-  Locale _locale = const Locale('es', 'ES');
+  Locale _locale = LangConfig.getLocale(Platform.localeName.substring(3, 5));
 
   Locale get locale => _locale;
 
@@ -16,7 +18,7 @@ class LocaleLanguage extends ChangeNotifier {
   }
 
   void clearLocale() {
-    _locale = const Locale('es', 'ES');
+    _locale = LangConfig.getLocale(Platform.localeName.substring(3, 5));
     notifyListeners();
   }
 }

@@ -28,4 +28,17 @@ class LangConfig {
         return '🇪🇸';
     }
   }
+
+  static Locale getLocale(substring) {
+    switch (substring) {
+      case 'es':
+        return const Locale('es', 'ES');
+      case 'en':
+        return const Locale('en', 'US');
+      case 'ca':
+        return const Locale('ca', 'ES');
+      default:
+        return const Locale('es', 'ES');
+    }
+  }
 }
