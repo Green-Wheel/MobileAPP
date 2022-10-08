@@ -41,4 +41,17 @@ class LangConfig {
         return const Locale('es', 'ES');
     }
   }
+
+  static String getStringFromLocale(Locale locale) {
+    switch (locale.toString()) {
+      case 'es_ES':
+        return 'es';
+      case 'en_US':
+        return 'en';
+      case 'ca_ES':
+        return 'ca';
+      default:
+        return 'es';
+    }
+  }
 }
