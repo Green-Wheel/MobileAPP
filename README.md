@@ -215,7 +215,7 @@ Per tal que les funcionalitats i tots els botons del mapa funcionin, cal activar
 anar a "Settings" -> "Location" i anar a "App access to location", seleccionar l'aplicació de "greenwheel" (amb el logo de Flutter)
 i activar l'opció "Allow all the time". Depsprés reinicieu l'emulador i ja hauria de funcionar.
 La localització de l'emulador no serà el lloc de l'ordinador que esteu fent servir si no predeterminadament és la seu central de Google. No us preocupeu, és normal. Quan es provi amb un mòbil de veritat la localització serà la real
-   
+
 ![Image](https://i.imgur.com/9HK1Amx.png)
 
 
