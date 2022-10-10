@@ -93,14 +93,14 @@ Doctor summary (to see all details, run flutter doctor -v):
    Quan us aparegui una que es diu SDK components setup, seleccionar l'ultima versió de la api que hi hagi (33 ara
    mateix), així com android virtual device si no està instalat. també android sdk. (vigileu el path)
 4. Quan acabi, pulseu els tres puntets que hi ha a la dreta d'open i seleccionar "SDK Manager".
-   ![img.png](readme_images/img.png)
+   ![img.png](https://i.imgur.com/VPwRc5Q.png)
 5. A la pestanya "SDK Tools" seleccionar "Android SDK Build-Tools,Android SDK Platform-Tools, Android SDK command line tools i Android SDK Tools" i
    seleccionar la última versió.
 6. A la pestanya "SDK Platforms" seleccionar descarregar el següent.
-   ![img.png](readme_images/img2.png)
+   ![img.png](https://i.imgur.com/qaVDKYD.png)
 7. Quan acabi, pulseu els tres puntets que hi ha a la dreta d'open i seleccionar "AVD Manager".
 8. Crear un nou dispositiu virtual amb el següent:
-   ![img.png](readme_images/img3.png)
+   ![img.png](https://i.imgur.com/30DaGJ3.png)
 9. Li doneu a next i seleccioneu android api level 33.
 10. Finalitzeu i ja tindreu un mòbil virtual per a poder executar l'aplicació.
 
@@ -173,13 +173,51 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 3. Us hauria d'apareixer el movil virtual amb l'aplicació instal·lada.
 4. Si no us surt, busqueu la pestanya a la barra lateral dreta anomenada Android Emulator.
 5. Si tot ha anat bé, hauríeu de veure això:
-   ![img.png](readme_images/img4.png)
+
+![img.png](https://i.imgur.com/MzIYxjK.png)
 
 ### Executar tests
 
 1. Per executar els tests, aneu a la pestanya "Run" i seleccioneu "Run All Tests".
 2. Si no ho tenieu configurat, aneu a "Run" -> "Edit Configurations" i afegiu una configuració de tipus "Flutter Test".
    Allà seleccioneu que siguin de tipus directori i seleccioneu la carpeta test.
+
+### En cas de que no us funcioni l'execució, feu això:
+
+A alguns de vosaltres no us està funcionant l'execució de l¡aplicació o la virtualització del dispositiu android.
+Crec que es bugueja una mica amb git, però no ho sé molt bé. Per això, si no us funciona, podeu fer això:
+
+1. Crear un nou projecte de flutter, anant a File-> New -> project.
+2. Seleccionar flutter amb el sdk (la carpeta de flutter principal) i next.
+3. Posar el nom que vulgueu al projecte, on volgueu i amb la descripcio que vulgueu. Android Language = Kotlin i marqueu
+   nomes android. Li doneu a create.
+   ![Image](https://i.imgur.com/BKAsT2E.png)
+
+4. Copieu els seguents fitxers/directoris a la carpeta del projecte que heu creat (del projecte github que teniu):
+    - .git
+    - android
+    - assets
+    - lib
+    - test
+    - .env
+    - .gitignore
+    - .metadata
+    - analysis_options.yaml
+    - apunts.md
+    - LICENSE
+    - pubspec.lock
+    - pubspec.yaml
+    - README.md
+
+### Activar localització a l'emulador
+
+Per tal que les funcionalitats i tots els botons del mapa funcionin, cal activar la localització a l'emulador. Per fer-ho, cal
+anar a "Settings" -> "Location" i anar a "App access to location", seleccionar l'aplicació de "greenwheel" (amb el logo de Flutter)
+i activar l'opció "Allow all the time". Depsprés reinicieu l'emulador i ja hauria de funcionar.
+La localització de l'emulador no serà el lloc de l'ordinador que esteu fent servir si no predeterminadament és la seu central de Google. No us preocupeu, és normal. Quan es provi amb un mòbil de veritat la localització serà la real
+   
+![Image](https://i.imgur.com/9HK1Amx.png)
+
 
 ### Ja està! Ara us recomano que aneu al fitxer apunts.md i llegiu els apunts que hi ha per a començar a fer el projecte.
 
@@ -233,3 +271,4 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 - [App bar flotat al estil google maps](https://pub.dev/packages/floating_search_bar)
 
 Si trobeu algun enllaç més, no dubteu en posar-lo.
+
