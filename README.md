@@ -214,7 +214,8 @@ Crec que es bugueja una mica amb git, però no ho sé molt bé. Per això, si no
 Per tal que les funcionalitats i tots els botons del mapa funcionin, cal activar la localització a l'emulador. Per fer-ho, cal
 anar a "Settings" -> "Location" i anar a "App access to location", seleccionar l'aplicació de "greenwheel" (amb el logo de Flutter)
 i activar l'opció "Allow all the time". Depsprés reinicieu l'emulador i ja hauria de funcionar.
-![Image](https://imgur.com/a/cI34T8e)
+La localització de l'emulador no serà el lloc de l'ordinador que esteu fent servir si no predeterminadament és la seu central de Google. No us preocupeu, és normal. Quan es provi amb un mòbil de veritat la localització serà la real
+![Image]([https://imgur.com/a/cI34T8e](https://i.imgur.com/9HK1Amx.png))
 
 ### Ja està! Ara us recomano que aneu al fitxer apunts.md i llegiu els apunts que hi ha per a començar a fer el projecte.
 
