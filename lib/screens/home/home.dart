@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:html';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,16 +24,13 @@ class _HomePageState extends State<HomePage> {
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
+
   /*
   void _currentLocation() async {
-    final GoogleMapController controller = await _controller.future;
-    zLocationData currentLocation;
+    final GoogleMapController controller = await mapController.future;
+    LocationData currentLocation;
     var location = new Location();
-    try {
-      currentLocation = await location.getLocation();
-    } on Exception {
-      currentLocation = null;
-    }
+    currentLocation = await location.getLocation();
 
     controller.animateCamera(CameraUpdate.newCameraPosition(
       CameraPosition(
@@ -62,29 +61,13 @@ class _HomePageState extends State<HomePage> {
         myLocationButtonEnabled: true,
         zoomGesturesEnabled: true,
         zoomControlsEnabled: true,
-        padding: EdgeInsets.only(bottom:MediaQuery.of(context).size.height*0.80),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          Position position = await _determinePosition();
-          mapController.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-              target: LatLng(position.latitude, position.longitude),
-              zoom: 14.0,
-            ),
-          ));
-
-          markers.clear();
-
-          markers.add(Marker(markerId:  const MarkerId('currentLocation'), position: LatLng(position.latitude, position.longitude)));
-        }, /*_currentLocation,*/
-        backgroundColor: Colors.green,
-        child: IconButton(icon: const Icon(Icons.location_searching), onPressed: () {}),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
+
+
+  // deprecated
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
