@@ -35,6 +35,10 @@ dependencies:
 
   cupertino_icons: ^1.0.5
 
+  geolocator: ^8.0.1
+
+  awesome_snackbar_content: ^0.0.8
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
