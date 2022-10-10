@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,9 +22,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home Page"),
+        title: Text(tr.language),
         actions: [
           IconButton(icon: Icon(Icons.language), onPressed: _changeLanguage),
         ],
@@ -37,6 +41,9 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _changeLanguage() {
-    print("Change language");
+    showDialog(
+      context: context,
+      builder: (context) => const LanguageSelectorWidget(),
+    );
   }
 }
