@@ -1,0 +1,10 @@
+{
+    "language": "Español",
+    "@language": {
+        "description": "Language of the item"
+    },
+    "language_selector": "Selector de idioma",
+    "@language_selector": {
+        "description": "Language selector"
+    }
+}
