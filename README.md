@@ -215,7 +215,9 @@ Per tal que les funcionalitats i tots els botons del mapa funcionin, cal activar
 anar a "Settings" -> "Location" i anar a "App access to location", seleccionar l'aplicació de "greenwheel" (amb el logo de Flutter)
 i activar l'opció "Allow all the time". Depsprés reinicieu l'emulador i ja hauria de funcionar.
 La localització de l'emulador no serà el lloc de l'ordinador que esteu fent servir si no predeterminadament és la seu central de Google. No us preocupeu, és normal. Quan es provi amb un mòbil de veritat la localització serà la real
+
 ![Image](https://i.imgur.com/9HK1Amx.png)
+
 
 ### Ja està! Ara us recomano que aneu al fitxer apunts.md i llegiu els apunts que hi ha per a començar a fer el projecte.
 
@@ -265,5 +267,8 @@ La localització de l'emulador no serà el lloc de l'ordinador que esteu fent se
 - [Llibreria Notificacions push locals](https://pub.dev/packages/flutter_local_notifications)
 
 #### Altres
+
 - [App bar flotat al estil google maps](https://pub.dev/packages/floating_search_bar)
-  Si trobeu algun enllaç més, no dubteu en posar-lo.
+
+Si trobeu algun enllaç més, no dubteu en posar-lo.
+

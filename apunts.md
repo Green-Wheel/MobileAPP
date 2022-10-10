@@ -121,52 +121,66 @@ Map<String, dynamic> json = jsonDecode(body);
 
 ## Internacionalització
 
-- Per a canviar l'idioma de l'aplicació, cal canviar la propietat `locale` de `MaterialApp`:
-
-```dart
-locale: Locale
-('es
-'
-,
-'
-ES
-'
-)
-,
-```
-
-Per afegir una nova paraula, cal afegir-la als fitxers de la carpeta `lib/l10n`. Per exemple, per afegir la paraula "
-Hola", cal afegir la següent línia als fitxers `lib/l10n/intl_en.arb` i `lib/l10n/intl_es.arb`:
+Per afegir una nova paraula, cal afegir-la als fitxers de la carpeta `lib/languages`. Per exemple, per afegir la
+paraula "Hola", cal afegir les següents línies al fitxer `lib/languages/app_es.arb`:
 
 ```json
-"hello": "Hola"
+"language": "Español",
+"@language": {
+"description": "Language of the item"
+}
 ```
 
-- Per a traduir un text, cal utilitzar la funció `AppLocalizations.of(context).translate('key')`:
+Després, només haurem d'escriure la traducció en els altres dos fitxers (`lib/languages/app_en.arb`
+i `lib/languages/app_ca.arb`).
 
-```dart
-Text
-(
-AppLocalizations.of(context).
-translate
-('key
-'
-)
-)
-,
+```json
+"language": "Spanish"
 ```
 
-- Per a traduir un text amb paràmetres, cal utilitzar la
-  funció `AppLocalizations.of(context).translateWithParams('key', params)`:
+> La ultima entrada de cada {} no pot acabar amb una coma, sino us donarà un error al compilar.
+
+- Finalement, per a utilitzar la paraula, cal importar la
+  llibreria `package:flutter_gen/gen_l10n/app_localizations.dart` i utilitzar la
+  funció `AppLocalizations.of(context).language`:
 
 ```dart
-Text
-(
-AppLocalizations.of(context).
-translateWithParams
-('key
-'
-,
-params))
-,
+import 'package:flutter_gen/gen_l10n/localizations.dart';
+
+...
+
+@override
+Widget build(BuildContext context) {
+  final tr = AppLocalizations.of(context)!;
+  return Text(tr.language);
+}
+```
+
+- Per a traduir un text amb paràmetres, cal definir en el fitxer 'lib/languages/app_es.arb' la frase de la seguent
+  manera:
+
+```json
+"hello": "Hola {name}",
+"@hello": {
+"description": "Hello {name}"
+"placeholders": {
+"name": {
+"type": "string",
+}
+}
+}
+```
+
+afegirlo als altres dos fitxers i per a utilitzar-lo:
+
+```dart
+import 'package:flutter_gen/gen_l10n/localizations.dart';
+
+...
+
+@override
+Widget build(BuildContext context) {
+  final tr = AppLocalizations.of(context)!;
+  return Text(tr.language('Alex'));
+}
 ```
