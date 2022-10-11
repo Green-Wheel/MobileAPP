@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:html';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/localizations.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:location/location.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 
 import '../../widgets/language_selector_widget.dart';
 
@@ -66,6 +64,17 @@ class _HomePageState extends State<HomePage> {
         zoomGesturesEnabled: true,
         zoomControlsEnabled: true,
       ),
+      bottomNavigationBar: TabBarMaterialWidget(
+        index: 0,
+        onChangedTab: (index) {
+          setState(() {});
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.chat),
+        onPressed: () => print('Hello World'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
