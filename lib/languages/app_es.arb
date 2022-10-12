@@ -6,5 +6,9 @@
     "language_selector": "Selector de idioma",
     "@language_selector": {
         "description": "Language selector"
+    },
+    "form_form_title" : "Titulo",
+    "@form_form_title": {
+        "description": "Title of the form"
     }
 }

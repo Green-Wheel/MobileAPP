@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/widgets/select_image.dart';
+//import 'package:flutter_gen/gen_l10n/localizations.dart';
 
 void main() {runApp(MaterialApp(
   title: 'addCharger try',
@@ -31,6 +33,7 @@ class _AddChargerState extends State<AddCharger> {
   };
   @override
   Widget build(BuildContext context) {
+    //final tr = AppLocalizations.of(context)!;
     return Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
       child: Form(
@@ -154,10 +157,6 @@ class _AddChargerState extends State<AddCharger> {
                 value: data['velocity'],
                 items: const <DropdownMenuItem>[
                   DropdownMenuItem(
-                    child: Text('Out of service'),
-                    value: 'Out of service',
-                  ),
-                  DropdownMenuItem(
                     child: Text('Normal'),
                     value: 'Normal',
                   ),
@@ -175,6 +174,8 @@ class _AddChargerState extends State<AddCharger> {
                 },
               ),
             ),
+            SizedBox(height: 10),
+            SelectImage(),
             SizedBox(height: 10),
             Center(
               child: ElevatedButton(
