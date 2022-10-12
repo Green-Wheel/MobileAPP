@@ -27,18 +27,27 @@ class _SelectImageState extends State<SelectImage> {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: () {
-        _getFromGallery();
-      },
-      child: Container(
-        height: 100,
-        width: 100,
-        child: imageFile == null || imageFile!.isEmpty
-            ? const Icon(Icons.add)
-            : Row(children: imageFile.map((file) => Image.file(file)).toList(),
+    return Column(
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            _getFromGallery();
+          },
+          child: Text('Select Image'),
         ),
-      ),
+        Container(
+          height: 100,
+          child: imageFile == null || imageFile!.isEmpty
+              ? const Icon(Icons.add)
+              : ListView(
+                scrollDirection: Axis.horizontal,
+                children: imageFile.map((file) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0),
+                  child: Image.file(file),
+                )).toList(),
+              ),
+        ),
+      ],
     );
   }
 }
