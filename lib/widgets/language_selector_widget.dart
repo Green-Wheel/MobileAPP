@@ -1,7 +1,5 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/localizations.dart';
-import 'package:greenwheel/services/generalServices/LanguagesService.dart';
-import 'package:provider/provider.dart';
 
 //ICONS: https://hatscripts.github.io/circle-flags/gallery
 class LanguageSelectorWidget extends StatefulWidget {
@@ -14,16 +12,14 @@ class LanguageSelectorWidget extends StatefulWidget {
 class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
   @override
   Widget build(BuildContext context) {
-    final tr = AppLocalizations.of(context)!;
     return SimpleDialog(
-      title: Text(tr.language_selector),
+      title: Text("language_selector_title".tr()),
       children: [
         SimpleDialogItem(
           icon_code: 'es-ct',
           text: 'Català',
           onPressed: () {
-            Provider.of<LocaleLanguage>(context, listen: false)
-                .changeLanguage(const Locale('ca', 'ES'));
+            context.setLocale(const Locale('ca', 'ES'));
             Navigator.pop(context);
           },
         ),
@@ -31,8 +27,7 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
           icon_code: 'es',
           text: 'Castellano',
           onPressed: () {
-            Provider.of<LocaleLanguage>(context, listen: false)
-                .changeLanguage(const Locale('es', 'ES'));
+            context.setLocale(const Locale('es', 'ES'));
             Navigator.pop(context);
           },
         ),
@@ -40,8 +35,7 @@ class _LanguageSelectorWidgetState extends State<LanguageSelectorWidget> {
           icon_code: 'gb',
           text: 'English',
           onPressed: () {
-            Provider.of<LocaleLanguage>(context, listen: false)
-                .changeLanguage(const Locale('en', 'US'));
+            context.setLocale(const Locale('en', 'US'));
             Navigator.pop(context);
           },
         ),
