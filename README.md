@@ -266,6 +266,7 @@ La localització de l'emulador no serà el lloc de l'ordinador que esteu fent se
 #### Notificacions push
 
 - [Llibreria Notificacions push locals](https://pub.dev/packages/flutter_local_notifications)
+- [Mostrar si hi ha notificacions a la icona de l'aplicació](https://pub.dev/packages/flutter_app_badger)
 
 #### Internacionalització
 
@@ -287,6 +288,7 @@ La localització de l'emulador no serà el lloc de l'ordinador que esteu fent se
 - [Llibreria de carrossel de fotos](https://pub.dev/packages/carousel_slider)
 - [Bottom bar amb animacions](https://pub.dev/packages/animated_bottom_navigation_bar)
 - [Web amb snipets i petites templates](https://www.fluttertemplates.dev/widgets)
+- [Filtres a l'estil google maps](https://material.io/components/chips/flutter)
 
 Si trobeu algun enllaç més, no dubteu en posar-lo.
 
