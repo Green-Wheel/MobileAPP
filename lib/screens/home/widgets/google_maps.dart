@@ -31,7 +31,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   static const CameraPosition _kInitialPosition = CameraPosition(
     target: LatLng(41.7285833, 1.8130899),
-    zoom: 15.0,
+    zoom: 8.0,
   );
 
   @override
