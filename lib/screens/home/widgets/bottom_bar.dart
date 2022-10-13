@@ -1,17 +1,18 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 
-class TabBarMaterialWidget extends StatefulWidget {
+class BottomBarWidget extends StatefulWidget {
   final int index;
   final ValueChanged<int> onChangedTab;
 
-  const TabBarMaterialWidget(
+  const BottomBarWidget(
       {required this.index, required this.onChangedTab, super.key});
 
   @override
-  _TabBarMaterialWidgetState createState() => _TabBarMaterialWidgetState();
+  State<BottomBarWidget> createState() => _BottomBarWidgetState();
 }
 
-class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
+class _BottomBarWidgetState extends State<BottomBarWidget> {
   @override
   Widget build(BuildContext context) {
     const placeholder = Opacity(
@@ -27,12 +28,12 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
         children: [
           buildTabItem(
             index: 0,
-            icon: Icon(Icons.directions_car),
+            icon: const Icon(Icons.directions_car),
           ),
           placeholder,
           buildTabItem(
-            index: 3,
-            icon: Icon(Icons.directions_bike),
+            index: 1,
+            icon: const Icon(Icons.directions_bike),
           ),
         ],
       ),
@@ -47,12 +48,46 @@ class _TabBarMaterialWidgetState extends State<TabBarMaterialWidget> {
 
     return IconTheme(
       data: IconThemeData(
-        color: isSelected ? Colors.red : Colors.black,
+        color: isSelected ? Colors.green : Colors.black,
       ),
       child: IconButton(
         icon: icon,
         onPressed: () => widget.onChangedTab(index),
       ),
+    );
+  }
+}
+
+class BottomBarActionButton extends StatefulWidget {
+  const BottomBarActionButton({super.key});
+
+  final int msgCount = 1; //Caldrà implementar-ho quan es faci el chat.
+
+  @override
+  State<BottomBarActionButton> createState() => _BottomBarActionButtonState();
+}
+
+class _BottomBarActionButtonState extends State<BottomBarActionButton> {
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: _onPressed,
+      backgroundColor: Colors.green,
+      child: widget.msgCount > 0 ? notificationBadge() : const Icon(Icons.chat),
+    );
+  }
+
+  void _onPressed() {
+    debugPrint("Show chat");
+  }
+
+  Widget notificationBadge() {
+    return Badge(
+      animationType: BadgeAnimationType.scale,
+      position: BadgePosition.topEnd(top: -11, end: -11),
+      badgeContent: Text(widget.msgCount.toString(),
+          style: const TextStyle(color: Colors.white)),
+      child: const Icon(Icons.chat),
     );
   }
 }
