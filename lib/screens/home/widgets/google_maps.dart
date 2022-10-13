@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -141,11 +142,10 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   var snackBarLocation = SnackBar(
-      content: const Text(
-          'Se rechazó el permiso a la app para acceder a la ubicación'),
+      content: const Text('snackbar_location_denied_label').tr(),
       action: SnackBarAction(
         textColor: Colors.green,
-        label: 'CONFIGURACIÓN',
+        label: 'snackbar_location_denied_action'.tr(),
         onPressed: () {
           openAppSettings();
         },

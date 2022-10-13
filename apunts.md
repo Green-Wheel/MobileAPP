@@ -172,20 +172,8 @@ També podem fer que la paraula o frase tingui un valor o altre depenent d'un pa
 import 'package:easy_localization/easy_localization.dart';
 
 Text
-('title
-'
-)
-.
-tr
-(
-) //Text widget
-print
-('title
-'
-.
-tr
-(
-)); //String
+('title').tr() //Text widget
+print('title'.tr()); //String
 var title = tr('title') //Static function
 ```
 
@@ -193,54 +181,11 @@ i si passem paràmetres, el podem especificar de la següent manera:
 
 ```dart
 // args
-Text
-('msg
-'
-)
-.
-tr
-(
-args: ['Easy localization', 'Dart']),
+Text('msg').tr(args: ['Easy localization', 'Dart']),
 // namedArgs
-Text
-('msg_named
-'
-)
-.
-tr
-(
-namedArgs: {'lang': 'Dart'})
-,
+Text('msg_named').tr(namedArgs: {'lang': 'Dart'}),
 // args and namedArgs
-Text
-('msg_mixed
-'
-)
-.
-tr
-(
-args: [
-'
-
-Easy localization
-'
-]
-,
-namedArgs: {'lang': 'Dart'})
-,
+Text('msg_mixed').tr(args: ['Easy localization'],namedArgs: {'lang': 'Dart'}),
 // gender
-Text
-('gender
-'
-)
-.
-tr
-(
-gender: _gender
-? "female
-"
-:
-"
-male")
-,
+Text('gender').tr(gender: _gender? "female":"male"),
 ```
