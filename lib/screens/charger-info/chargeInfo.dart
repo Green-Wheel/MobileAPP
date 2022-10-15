@@ -64,59 +64,37 @@ class _ChargeInfoState extends State<ChargeInfo>{
         onDrag: null,
         onDragStart: null,
         icon: icon_marker,
-        //onTap: _buildCard(address,rate,distance,time,match),
+        //onTap: _zoomIn(),
     ));
   }
+
 
   @override
   Widget build(BuildContext context) {
     //final tr = AppLocalizations.of(context)!;
     return  Scaffold(
-      body: _buildCard("Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true)/*Center(
-        child: Container(
-          margin: EdgeInsets.only(bottom: 150.0),
-          children:[
-              GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                //haura d'anar la ubi del marcador seleccionat
-                  target: _center,
-                  zoom: 11.0
-              ),
-              markers: markers,
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: true,
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: true,
-              ),
-           ],
-          ),
-        ),*/
-
-        /*GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(
-          //haura d'anar la ubi del marcador seleccionat
-          target: _center,
-          zoom: 11.0
-        ),
-        markers: markers,
-        mapType: MapType.normal,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
-        zoomGesturesEnabled: true,
-        zoomControlsEnabled: true,
-      ),*/
-      );
-
+      body: GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              //haura d'anar la ubi del marcador seleccionat
+                target: _center,
+                zoom: 11.0
+            ),
+            markers: markers,
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: true,
+      ),
+      bottomNavigationBar: _buildCard("Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true),
+    );
   }
 
   Widget _buildCard(String location, double rating, int distance, String time, bool match) => Card(
-      elevation: 20,
+      //elevation: 20,
       color: CupertinoColors.extraLightBackgroundGray,
       shadowColor: Colors.black,
-      //margin: EdgeInsets.only(left: 15.0, bottom: 90.0),
       shape:  const RoundedRectangleBorder(
         side: BorderSide(
           color: Color(0xff43802a),
@@ -290,5 +268,4 @@ class _ChargeInfoState extends State<ChargeInfo>{
         ),
       ),
   );
-
 }
