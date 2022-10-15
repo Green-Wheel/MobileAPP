@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/widgets/select_image.dart';
 //import 'package:flutter_gen/gen_l10n/localizations.dart';
@@ -20,6 +21,8 @@ class AddCharger extends StatefulWidget {
   State<AddCharger> createState() => _AddChargerState();
 }
 
+typedef void SetImages(images);
+
 class _AddChargerState extends State<AddCharger> {
   final _formKey = GlobalKey<FormState>();
   var data =  {
@@ -30,7 +33,14 @@ class _AddChargerState extends State<AddCharger> {
     'velocity': 'Normal',
     'Latitude': '',
     'Longitude': '',
+    'tipusCarregador': '',
+    'images': [],
   };
+
+  void _getImageData(images) {
+    data['images'] = images;
+  }
+
   @override
   Widget build(BuildContext context) {
     //final tr = AppLocalizations.of(context)!;
@@ -176,7 +186,27 @@ class _AddChargerState extends State<AddCharger> {
                 ),
               ),
               SizedBox(height: 10),
-              SelectImage(),
+              TextFormField(
+                keyboardType: TextInputType.number,
+                onSaved: (value) {
+                  data['tipusCarregador'] = value!;
+                },
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Tipus carregador',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'please enter Tipus carregador';
+                  }
+                  return null;
+                },
+              ),
+              SizedBox(height: 10),
+              SelectImage(
+                  multiple: true,
+                  getImageData: _getImageData,
+              ),
               SizedBox(height: 10),
               Center(
                 child: ElevatedButton(

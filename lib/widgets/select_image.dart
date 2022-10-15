@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:cross_file/cross_file.dart';
 
 class SelectImage extends StatefulWidget {
-  const SelectImage({Key? key}) : super(key: key);
+  final Function getImageData;
+  final bool multiple;
+
+  const SelectImage({Key? key, required this.getImageData, this.multiple = false}) : super(key: key);
 
   @override
   State<SelectImage> createState() => _SelectImageState();
 }
+
 
 class _SelectImageState extends State<SelectImage> {
   List<File> imageFile =  [];
@@ -22,6 +26,7 @@ class _SelectImageState extends State<SelectImage> {
       setState(() => {
         pikedImg.map((e) => imageFile.add(e)).toList(),
       });
+      widget.getImageData(imageFile);
     }
   }
 
