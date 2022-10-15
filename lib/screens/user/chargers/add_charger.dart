@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/widgets/select_image.dart';
+import 'package:greenwheel/services/backend_service.dart';
 //import 'package:flutter_gen/gen_l10n/localizations.dart';
 
 void main() {runApp(MaterialApp(
@@ -34,11 +36,25 @@ class _AddChargerState extends State<AddCharger> {
     'Latitude': '',
     'Longitude': '',
     'tipusCarregador': '',
-    'images': [],
   };
+  var images = [];
 
   void _getImageData(images) {
-    data['images'] = images;
+    setState(() {
+      this.images = images;
+    });
+  }
+
+  bool sendData() {
+    BackendService.post('/chargers/', data).then((response) async {
+      if (response.statusCode == 200) {
+        return true;
+      } else {
+        print(response.statusCode);
+        return false;
+      }
+    });
+    return false;
   }
 
   @override
@@ -213,6 +229,7 @@ class _AddChargerState extends State<AddCharger> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
+                      sendData();
                       showDialog(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
