@@ -4,9 +4,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_gen/gen_l10n/localizations.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+//import 'package:flutter_gen/gen_l10n/localizations.dart';
+//import 'package:geolocator/geolocator.dart';
+//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 void main(){runApp(const MaterialApp(
   title: 'chargeInfo try',
@@ -34,61 +34,66 @@ class _ChargeInfoState extends State<ChargeInfo>{
   }
 
   Set<Marker> markers = {};
-  //Map<String, String> markerMap = {};
+  final Map<MarkerId, Marker> markerMap = {};
+  late Marker actualMarcador;
 
-  /*void _addToSetMarkers (Set<Marker> markers, Map<String, LatLng> positions){
-    if (positions != null){
-      for (int i = 0; i < positions.length; i++){
-        _addMarker(positions[i]!.latitude, positions[i]!.longitude, positions.keys.toString());
-      }
-    }
-  }*/
-
+  @override
   void initState(){
     super.initState();
     _addMarker(41.3874, 2.1686, "plaça-cat", "Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true);
     _addMarker(41.375182, 2.182867, "maremagnum", "Maremagnum", 5.0, 3,"10:00 - 20:00h", true);
   }
 
-  //funcion para añadir los marcadores al set y mostrarlos por pantalla
+  //funcion para añadir los marcadores al set
   void _addMarker(double lat, double log, String id, String address, double rate, int distance, String time, bool match) async{
-    final icon_marker = await BitmapDescriptor.fromAssetImage(
+    final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(
           devicePixelRatio: 3.2,
           //size: Size(50, 50)
         ),
         "assets/images/punt_carregador.png");
-    markers.add(Marker(
-        markerId: MarkerId(id),
-        position: LatLng(lat, log),
-        onDrag: null,
-        onDragStart: null,
-        icon: icon_marker,
-        //onTap: _zoomIn(),
-    ));
+    final Marker marcador = Marker(
+      markerId: MarkerId(id),
+      position: LatLng(lat, log),
+      onDrag: null,
+      icon: iconMarker,
+      onTap: () => _onMarkerTapped(MarkerId(id)),
+    );
+    markers.add(marcador);
+    markerMap[MarkerId(id)] = marcador;
   }
 
+  //Seleccionar marcador i devolver el id para obtener datos  futuro
+  _onMarkerTapped(MarkerId markerId) async {
+    final Marker? markerTapped = markerMap[markerId];
+    if (markerTapped != null && markerMap.containsKey(markerId)) {
+      actualMarcador = markerTapped;
+      _buildCard("maremagnum", 4, 3, "10:00 - 14:00h", true);
+      /*await mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+          CameraPosition(
+            target: markerMap[markerId]!.position,
+            zoom: 17,
+          )
+        )
+      );*/
+    }
+  }
 
-  @override
-  Widget build(BuildContext context) {
-    //final tr = AppLocalizations.of(context)!;
-    return  Scaffold(
-      body: GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              //haura d'anar la ubi del marcador seleccionat
-                target: _center,
-                zoom: 11.0
-            ),
-            markers: markers,
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
-      ),
-      bottomNavigationBar: _buildCard("Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true),
-    );
+  /*_cargeInfo() async {
+    if (actualMarcador != null){
+      _buildCard("maremagnum", 4, 3, "10:00 - 14:00h", true);
+    }
+  }*/
+
+  //Cambio del marcador en el plano 2D-3D
+  Future<void> _cambiarPlano(MarkerId markerId) async {
+    final Marker marcador = markerMap[markerId]!;
+    setState(() {
+      markerMap[markerId] = marcador.copyWith(
+        flatParam: !marcador.flat
+      );
+    });
   }
 
   Widget _buildCard(String location, double rating, int distance, String time, bool match) => Card(
@@ -107,165 +112,187 @@ class _ChargeInfoState extends State<ChargeInfo>{
         width: 400,
         child: Column(
           children: [
-            Container(
-              child: Padding(
-                padding: EdgeInsets.only(left: 15.0, bottom: 3.0, top: 15.0) ,
-                child: Row(
-                  children: [
-                     Text(location,
-                        style: TextStyle(fontWeight: FontWeight.w600)
-                    ),
-                    Icon(
-                      Icons.bolt,
-                      size: 20,
-                      color: Colors.green[500],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.only(left: 10.0, bottom: 3.0),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                     Padding(
-                        padding:EdgeInsets.only(left: 10.0),
-                        child: Text(rating.toString(),
-                          style: TextStyle(fontWeight: FontWeight.w600),
-                        ),
-                    ),
-                  ],
-                ),
-              )
-            ),
-            Container(
-              child: Padding(
-                  padding: EdgeInsets.only(left: 15.0, bottom: 3.5),
-                  child: Row(
-                    children: [
-                      Text('Point of charge - ($distance km)',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ],
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, bottom: 3.0, top: 15.0) ,
+              child: Row(
+                children: [
+                   Text(location,
+                      style: const TextStyle(fontWeight: FontWeight.w600)
                   ),
+                  Icon(
+                    Icons.bolt,
+                    size: 20,
+                    color: Colors.green[500],
+                  ),
+                ],
               ),
             ),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.only(left: 15.0, bottom: 4.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0, bottom: 3.0),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.star,
+                    size: 20,
+                    color: Colors.yellow[500],
+                  ),
+                  Icon(
+                    Icons.star,
+                    size: 20,
+                    color: Colors.yellow[500],
+                  ),
+                  Icon(
+                    Icons.star,
+                    size: 20,
+                    color: Colors.yellow[500],
+                  ),
+                  Icon(
+                    Icons.star,
+                    size: 20,
+                    color: Colors.yellow[500],
+                  ),
+                  Icon(
+                    Icons.star,
+                    size: 20,
+                    color: Colors.yellow[500],
+                  ),
+                   Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Text(rating.toString(),
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+                padding: const EdgeInsets.only(left: 15.0, bottom: 3.5),
                 child: Row(
-                  children:[
-                    const Text('Available: ',
-                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green),
-                    ),
-                    Text(time,
+                  children: [
+                    Text('Point of charge - ($distance km)',
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0, bottom: 4.0),
+              child: Row(
+                children:[
+                  const Text('Available: ',
+                    style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green),
+                  ),
+                  Text(time,
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                ],
               ),
             ),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.only(left: 15.0),
-                child: Row(
-                  children: const [
-                    Icon (
-                      Icons.check_circle_outline_rounded,
-                      size: 20,
-                      color: Colors.green,
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0),
+              child: Row(
+                children: const [
+                  Icon (
+                    Icons.check_circle_outline_rounded,
+                    size: 20,
+                    color: Colors.green,
+                  ),
+                  Padding(
+                    padding:EdgeInsets.only(left: 5.0),
+                    child: Text('Matching with your car charger',
+                      style: TextStyle(fontWeight: FontWeight.w600),
                     ),
-                    Padding(
-                      padding:EdgeInsets.only(left: 5.0),
-                      child: Text('Matching with your car charger',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            Container(
-              child: Padding(
-                padding: EdgeInsets.only(left: 15.0,),
-                child: Row(
-                  children: [
-                    Column(
-                      children: [
-                        TextButton(
-                            style: TextButton.styleFrom(
-                              primary: Colors.blueAccent, // foreground
-                            ),
-                            onPressed:() {},
-                            child: Row(
-                              children: const [
-                                Text('Route ',
-                                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
-                                ),
-                                 Icon(
-                                  Icons.arrow_circle_right_outlined,
-                                  size: 20,
-                                  color: Colors.blueAccent,
-                                ),
-                              ],
-                            ),
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        TextButton(
+            Padding(
+              padding: const EdgeInsets.only(left: 15.0,),
+              child: Row(
+                children: [
+                  Column(
+                    children: [
+                      TextButton(
                           style: TextButton.styleFrom(
                             primary: Colors.blueAccent, // foreground
                           ),
                           onPressed:() {},
                           child: Row(
                             children: const [
-                              Text('Chat ',
+                              Text('Route ',
                                 style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
                               ),
-                              Icon(
-                                Icons.chat_outlined,
+                               Icon(
+                                Icons.turn_slight_right_rounded,
                                 size: 20,
                                 color: Colors.blueAccent,
                               ),
                             ],
                           ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                          primary: Colors.blueAccent, // foreground
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                        onPressed:() {},
+                        child: Row(
+                          children: const [
+                            Text('Chat ',
+                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
+                            ),
+                            Icon(
+                              Icons.chat_outlined,
+                              size: 20,
+                              color: Colors.blueAccent,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
   );
+
+  @override
+  Widget build(BuildContext context) {
+    //final tr = AppLocalizations.of(context)!;
+    return  Scaffold(
+      body: GoogleMap(
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: CameraPosition(
+          //haura d'anar la ubi del marcador seleccionat
+            target: _center,
+            zoom: 11.0
+        ),
+        markers: markers,
+        mapType: MapType.normal,
+        myLocationEnabled: true,
+        myLocationButtonEnabled: true,
+        zoomGesturesEnabled: true,
+        zoomControlsEnabled: true,
+        //onTap: ,
+      ),
+      bottomNavigationBar: _buildCard("Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true),
+    );
+  }
+  /*_zoomIn() async{
+    await mapController.animateCamera(
+        CameraUpdate.newCameraPosition(
+            CameraPosition(
+              target: ,
+              zoom: 17,
+            )
+        )
+    );
+  }*/
 }
+
