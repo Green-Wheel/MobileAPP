@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../widgets/floating_search_bar.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,12 +25,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     final tr = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(tr.language),
-        actions: [
-          IconButton(icon: Icon(Icons.language), onPressed: _changeLanguage),
-        ],
-      ),
+      appBar: SearchBar(),
+
       body: GoogleMap(
         onMapCreated: _onMapCreated,
         initialCameraPosition: CameraPosition(
@@ -37,6 +34,7 @@ class _HomePageState extends State<HomePage> {
           zoom: 11.0,
         ),
       ),
+
     );
   }
 

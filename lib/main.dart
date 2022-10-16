@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import 'languages/lang_config.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
+  WidgetsFlutterBinding.ensureInitialized();
   await FlutterConfig.loadEnvVariables();
 
   runApp(const MainApp());
