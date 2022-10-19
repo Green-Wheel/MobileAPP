@@ -4,9 +4,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:flutter_gen/gen_l10n/localizations.dart';
-//import 'package:geolocator/geolocator.dart';
-//import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+//TODO:Refactoring de todo el codigo
 
 void main(){runApp(const MaterialApp(
   title: 'chargeInfo try',
@@ -39,9 +38,9 @@ class _ChargeInfoState extends State<ChargeInfo>{
 
   @override
   void initState(){
-    super.initState();
     _addMarker(41.3874, 2.1686, "plaça-cat", "Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true);
     _addMarker(41.375182, 2.182867, "maremagnum", "Maremagnum", 5.0, 3,"10:00 - 20:00h", true);
+    super.initState();
   }
 
   //funcion para añadir los marcadores al set
@@ -80,11 +79,6 @@ class _ChargeInfoState extends State<ChargeInfo>{
     }
   }
 
-  /*_cargeInfo() async {
-    if (actualMarcador != null){
-      _buildCard("maremagnum", 4, 3, "10:00 - 14:00h", true);
-    }
-  }*/
 
   //Cambio del marcador en el plano 2D-3D
   Future<void> _cambiarPlano(MarkerId markerId) async {
@@ -266,22 +260,29 @@ class _ChargeInfoState extends State<ChargeInfo>{
   Widget build(BuildContext context) {
     //final tr = AppLocalizations.of(context)!;
     return  Scaffold(
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(
-          //haura d'anar la ubi del marcador seleccionat
-            target: _center,
-            zoom: 11.0
-        ),
-        markers: markers,
-        mapType: MapType.normal,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
-        zoomGesturesEnabled: true,
-        zoomControlsEnabled: true,
-        //onTap: ,
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              //haura d'anar la ubi del marcador seleccionat
+                target: _center,
+                zoom: 11.0
+            ),
+            markers: markers,
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: true,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: true,
+            //onTap: ,
+          ),
+          Padding(
+              padding: EdgeInsets.fromLTRB(0, 550, 0, 0),
+              child: _buildCard("Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true)
+          ),
+        ],
       ),
-      bottomNavigationBar: _buildCard("Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true),
     );
   }
   /*_zoomIn() async{
