@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:greenwheel/services/backend_service.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../home/home.dart';
 
@@ -16,6 +18,12 @@ void main() {runApp(MaterialApp(
     appBar: AppBar(
       title: const Text('Mis Reservas'),
       centerTitle: true,
+      actions: const [
+        Padding(
+          padding: EdgeInsets.only(right: 105.0),
+          child: Icon(Icons.calendar_month),
+        ),
+      ],
       backgroundColor: Colors.green,
       leading: IconButton(
         icon: const Icon(Icons.arrow_back),
@@ -43,29 +51,45 @@ class BookingsList extends StatefulWidget {
 class _BookingsListState extends State<BookingsList> {
 
   List bookings = [];
+  List ratings = [];
 
   @override
   void initState() {
     super.initState();
     _getBookings();
+    _getRatings();
+  }
+
+  void _getRatings() async {
+    BackendService.get('ratings/').then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        // print(jsonResponse);
+        setState(() {
+          ratings = jsonResponse;
+        });
+      } else {
+        print('Error getting bookings!');
+      }
+    });
   }
 
   void _getBookings() async {
     BackendService.get('bookings/').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        print(jsonResponse);
+        // print(jsonResponse);
         setState(() {
           bookings = jsonResponse;
         });
       } else {
-        print('Error getting bookings');
+        print('Error getting bookings!');
       }
     });
   }
 
-  Widget _buildCard(String location, double rating, int distance, String time, bool match) => Card(
-    //elevation: 20,
+  Widget _buildCard(String location, String rating, int distance, String time) => Card(
+    elevation: 10,
     color: CupertinoColors.white,
     shadowColor: Colors.black,
     margin: const EdgeInsets.all(10),
@@ -96,30 +120,21 @@ class _BookingsListState extends State<BookingsList> {
             padding: const EdgeInsets.only(left: 10.0, bottom: 3.0),
             child: Row(
               children: [
-                Icon(
-                  Icons.star,
-                  size: 20,
-                  color: Colors.yellow[500],
-                ),
-                Icon(
-                  Icons.star,
-                  size: 20,
-                  color: Colors.yellow[500],
-                ),
-                Icon(
-                  Icons.star,
-                  size: 20,
-                  color: Colors.yellow[500],
-                ),
-                Icon(
-                  Icons.star,
-                  size: 20,
-                  color: Colors.yellow[500],
-                ),
-                Icon(
-                  Icons.star,
-                  size: 20,
-                  color: Colors.yellow[500],
+                RatingBar.builder(
+                  initialRating: double.parse(rating),
+                  minRating: 1,
+                  direction: Axis.horizontal,
+                  allowHalfRating: true,
+                  itemCount: 5,
+                  itemSize: 20,
+                  itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                  itemBuilder: (context, _) => const Icon(
+                    Icons.star,
+                    color: Colors.amber,
+                  ),
+                  onRatingUpdate: (rating) {
+                    print(rating);
+                  },
                 ),
                 Padding(
                   padding: const EdgeInsets.only(left: 10.0),
@@ -134,7 +149,7 @@ class _BookingsListState extends State<BookingsList> {
             padding: const EdgeInsets.only(left: 15.0, bottom: 3.5),
             child: Row(
               children: [
-                Text('Point of charge - ($distance km)',
+                Text('Charging point - ($distance km)',
                   style: const TextStyle(fontWeight: FontWeight.w600),
                 ),
               ],
@@ -172,89 +187,104 @@ class _BookingsListState extends State<BookingsList> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 15.0,),
+            padding: const EdgeInsets.only(left: 10.0, top: 10.0, bottom: 5.0),
             child: Row(
               children: [
                 Column(
                   children: [
-                    TextButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue[50]!),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: const BorderSide(color: Colors.blueAccent)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: SizedBox(
+                        height: 30,
+                        child: TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue[50]!),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: const BorderSide(color: Colors.blueAccent)
+                                  )
                               )
-                          )
-                      ),
-                      onPressed:() {},
-                      child: Row(
-                        children: const [
-                          Text('Route',
-                            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
                           ),
-                          Icon(
-                            Icons.turn_slight_right_rounded,
-                            size: 20,
-                            color: Colors.blueAccent,
+                          onPressed:() {},
+                          child: Row(
+                            children: const [
+                              Text('Route ',
+                                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
+                              ),
+                              Icon(
+                                Icons.directions,
+                                size: 20,
+                                color: Colors.blueAccent,
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
                 ),
                 Column(
                   children: [
-                    TextButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue[50]!),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: const BorderSide(color: Colors.blueAccent)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: SizedBox(
+                        height: 30,
+                        child: TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(Colors.lightBlue[50]!),
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(18.0),
+                                      side: const BorderSide(color: Colors.blueAccent)
+                                  )
                               )
-                          )
-                      ),
-                      onPressed:() {},
-                      child: Row(
-                        children: const [
-                          Text('Chat ',
-                            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
                           ),
-                          Icon(
-                            Icons.chat,
-                            size: 20,
-                            color: Colors.blueAccent,
+                          onPressed:() {},
+                          child: Row(
+                            children: const [
+                              Text('Chat ',
+                                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
+                              ),
+                              Icon(
+                                Icons.chat,
+                                size: 20,
+                                color: Colors.blueAccent,
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
                 ),
                 Column(
                   children: [
-                    TextButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<Color>(Colors.red[50]!),
-                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: const BorderSide(color: Colors.red)
-                              )
-                          )
-                      ),
-                      onPressed:() {},
-                      child: Row(
-                        children: const [
-                          Text('Cancel ',
-                            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red),
-                          ),
-                          Icon(
-                            Icons.cancel,
-                            size: 20,
-                            color: Colors.red,
-                          ),
-                        ],
+                    SizedBox(
+                      height: 30,
+                      child: TextButton(
+                        style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(Colors.red[50]!),
+                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(18.0),
+                                    side: const BorderSide(color: Colors.red)
+                                )
+                            )
+                        ),
+                        onPressed:() {},
+                        child: Row(
+                          children: const [
+                            Text('Cancel ',
+                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red),
+                            ),
+                            Icon(
+                              Icons.cancel,
+                              size: 20,
+                              color: Colors.red,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -272,278 +302,31 @@ class _BookingsListState extends State<BookingsList> {
     return ListView.builder(
       itemCount: bookings.length,
       itemBuilder: (context, index) {
-        print(bookings[index]['publication']);
-        return _buildCard("Passeig de la Bonanova", 4.5, 2, "10:00 - 11:00", true);
-        //return _buildCard(bookings[index]['location'], bookings[index]['rating'], bookings[index]['distance'], bookings[index]['time'], bookings[index]['match']);
+        // Guarda a rate el rating de la reserva <-- De moment això és temporal fins que s'implementi poder valorar un carregador (ara es passa una mitjana hardcoded)
+        String rate = "";
+        for (int i = 0; i < ratings.length; i++) {
+          if (bookings[index]['id'].toString() == ratings[i]['booking'].toString()) {
+            rate = ratings[i]['rate'].toString();
+          }
+        }
+        if (rate == "") {
+          rate = "0";
+        }
+
+        // Nom de la publicació del carregador reservat
+        List<dynamic> publicationName = bookings[index]['publication'];
+        //print(publicationName[0]['description']);
+
+        var endDate = DateTime.parse(bookings[index]['end_date']);
+        var startDate = DateTime.parse(bookings[index]['start_date']);
+        DateFormat formatterStart = DateFormat('HH:mm');
+        DateFormat formatterEnd = DateFormat('HH:mm');
+        String formattedTimeStart = formatterStart.format(startDate);
+        String formattedTimeEnd = formatterEnd.format(endDate);
+        return _buildCard(publicationName[0]['description'], rate, 2, '$formattedTimeEnd-$formattedTimeStart');
       },
     );
   }
-    /*
-    return ListView(
-      padding: const EdgeInsets.all(10),
-      children: <Widget>[
-        Container(
-          padding: const EdgeInsets.fromLTRB(10,0,10,0),
-          height: 190,
-          width: double.maxFinite,
-          child: Card(
-            elevation: 5,
-            child:
-            Column(
-              children: <Widget>[
-                const ListTile(
-                  leading: Icon(Icons.bolt, color: Colors.green, size: 40),
-                  title: Text('Passeig de la Bonanova'),
-                  subtitle: Text('Punto de carga · (1 km)'),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,0,10,0),
-                          child: FloatingActionButton.extended(
-                            label: const Text('Cómo llegar'), // <-- Text
-                            backgroundColor: Colors.green,
-                            icon: const Icon( // <-- Icon
-                              Icons.directions,
-                              size: 35.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 70,
-                      height: 70,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,0,10,0),
-                          child: FloatingActionButton.extended(
-                            label: const Text('Chat'), // <-- Text
-                            backgroundColor: Colors.green,
-                            icon: const Icon( // <-- Icon
-                              Icons.chat,
-                              size: 25.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,0,10,0),
-                          child: FloatingActionButton.extended(
-                            label: const Text('Cancelar'), // <-- Text
-                            backgroundColor: Colors.red,
-                            icon: const Icon( // <-- Icon
-                              Icons.cancel,
-                              size: 30.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,0,10,0),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 3,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        Container(
-          padding: const EdgeInsets.fromLTRB(10,10,10,0),
-          height: 190,
-          width: double.maxFinite,
-          child: Card(
-            elevation: 5,
-            child:
-            Column(
-              children: <Widget>[
-                const ListTile(
-                  leading: Icon(Icons.directions_bike, color: Colors.green, size: 40),
-                  title: Text('Terrassa Rambla'),
-                  subtitle: Text('Punto de bicicletas · (2 km)'),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,10,10,0),
-                          child: FloatingActionButton.extended(
-                            label: const Text('Cómo llegar'), // <-- Text
-                            backgroundColor: Colors.green,
-                            icon: const Icon( // <-- Icon
-                              Icons.directions,
-                              size: 35.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 70,
-                      height: 70,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,10,10,0),
-                          child: FloatingActionButton.extended(
-                            label: const Text('Chat'), // <-- Text
-                            backgroundColor: Colors.green,
-                            icon: const Icon( // <-- Icon
-                              Icons.chat,
-                              size: 25.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,10,10,0),
-                          child: FloatingActionButton.extended(
-                            label: const Text('Cancelar'), // <-- Text
-                            backgroundColor: Colors.red,
-                            icon: const Icon( // <-- Icon
-                              Icons.cancel,
-                              size: 30.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-
-        Container(
-          padding: const EdgeInsets.fromLTRB(10,10,10,0),
-          height: 190,
-          width: double.maxFinite,
-          child: Card(
-            elevation: 5,
-            child:
-            Column(
-              children: <Widget>[
-                const ListTile(
-                  leading: Icon(Icons.directions_bike, color: Colors.green, size: 40),
-                  title: Text('Gran Via'),
-                  subtitle: Text('Punto de bicicletas · (3 km)'),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    SizedBox(
-                      width: 100,
-                      height: 100,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,10,10,0),
-                          child: FloatingActionButton.extended(
-                            label: const Text('Cómo llegar'), // <-- Text
-                            backgroundColor: Colors.green,
-                            icon: const Icon( // <-- Icon
-                              Icons.directions,
-                              size: 35.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 70,
-                      height: 70,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,10,10,0),
-                          child: FloatingActionButton.extended(
-                            label: const Text('Chat'), // <-- Text
-                            backgroundColor: Colors.green,
-                            icon: const Icon( // <-- Icon
-                              Icons.chat,
-                              size: 25.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: FittedBox(
-                        child:
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(10,10,10,0),
-                          child: FloatingActionButton.extended(
-                            label: const Text('Cancelar'), // <-- Text
-                            backgroundColor: Colors.red,
-                            icon: const Icon( // <-- Icon
-                              Icons.cancel,
-                              size: 30.0,
-                            ),
-                            onPressed: () {},
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-  */
 
 }
 
