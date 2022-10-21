@@ -252,7 +252,7 @@ La localització de l'emulador no serà el lloc de l'ordinador que esteu fent se
 - [Tutorial oficial d'afegeir un mapa a l'aplicació](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter#0)
 - [Using Google Maps to add maps in flutter applications](https://blog.logrocket.com/google-maps-flutter/)
 - [Com obrir aplicació google maps amb coordenades](https://stackoverflow.com/questions/47046637/open-google-maps-app-if-available-with-flutter)
-- [Com fer un mapa amb rutes](https://medium.com/flutter-community/flutter-google-maps-with-directions-api-2d1a60b1a5a0)
+- [Com fer un mapa amb rutes](https://medium.com/@shiraz990/flutter-fetching-google-directions-using-changenotifierprovider-f642adbe6cf4)
 - [Dibuixar ruta en mapa](https://medium.com/@rohanarafat86/drawing-route-direction-in-flutter-using-openrouteservice-api-and-google-maps-in-flutter-4431a2989dd5)
 - [Geolocation](https://blog.logrocket.com/geolocation-geocoding-flutter/)
 
