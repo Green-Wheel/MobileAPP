@@ -1,40 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/localizations.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
+import 'package:greenwheel/screens/home/widgets/drawer.dart';
+import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 
 import '../../widgets/floating_search_bar.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late GoogleMapController mapController;
-
-  final LatLng _center = const LatLng(41.3874, 2.1686);
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
+  int index = 0;
 
   @override
   Widget build(BuildContext context) {
-    final tr = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: SearchBar(),
+/*
+          appBar: AppBar(
+            backgroundColor: Color.fromRGBO(200, 200, 200, 1),
+            toolbarHeight: 60.0,
+            title: TextField(
+              cursorColor: Colors.white,
+              decoration: InputDecoration(
+                  hintText: " Search...",
+                  border: InputBorder.none,
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.search),
+                    color: Color.fromRGBO(93, 25, 72, 1),
+                    onPressed: () {},
+                  )),
+              style: TextStyle(color: Colors.white, fontSize: 15.0),
+            ),
+          ),
+        //  Solució 1.
 
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(
-          target: _center,
-          zoom: 11.0,
-        ),
+*/
+      appBar: SearchBar(MediaQuery.of(context).size),
+      body: SafeArea(
+        child: GoogleMapsWidget(),
       ),
-
+      bottomNavigationBar: BottomBarWidget(
+        index: index,
+        onChangedTab: _onChangeTab,
+      ),
+      drawer : SimpleDrawer(),
+      floatingActionButton: const BottomBarActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -43,5 +58,11 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) => const LanguageSelectorWidget(),
     );
+  }
+
+  void _onChangeTab(int index) {
+    setState(() {
+      this.index = index;
+    });
   }
 }

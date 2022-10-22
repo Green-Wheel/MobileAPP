@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
+import '../screens/home/widgets/drawer.dart';
+
 class SearchBar extends StatefulWidget implements PreferredSizeWidget {
-  SearchBar({Key? key}) : preferredSize=Size.fromHeight(kToolbarHeight),super(key: key);
+  SearchBar(Size size, {Key? key}) : preferredSize = Size.fromHeight(size.height),super(key: key);
 
   @override
   _SearchBar createState() => _SearchBar();
@@ -15,6 +17,7 @@ class SearchBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _SearchBar extends State<SearchBar> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,50 +28,10 @@ class _SearchBar extends State<SearchBar> {
         fit: StackFit.expand,
         children: [
           buildFloatingSearchBar(context),
+
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            const UserAccountsDrawerHeader( // <-- SEE HERE
-              decoration: BoxDecoration(color: const Color(0xff764abc)),
-              accountName: Text(
-                "Pinkesh Darji",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              accountEmail: Text(
-                "pinkesh.earth@gmail.com",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              currentAccountPicture: FlutterLogo(),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.home,
-              ),
-              title: const Text('Page 1'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.train,
-              ),
-              title: const Text('Page 2'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: SimpleDrawer(),
     );
   }
 
@@ -85,7 +48,7 @@ class _SearchBar extends State<SearchBar> {
       physics: const BouncingScrollPhysics(),
       axisAlignment: isPortrait ? 0.0 : -1.0,
       openAxisAlignment: 0.0,
-      width: isPortrait ? 600 : 500,
+      width: isPortrait ? 800 : 800,
       debounceDelay: const Duration(milliseconds: 500),
       onQueryChanged: (query) {
         // Call your model, bloc, controller here.
@@ -123,3 +86,4 @@ class _SearchBar extends State<SearchBar> {
     );
   }
 }
+

@@ -121,66 +121,71 @@ Map<String, dynamic> json = jsonDecode(body);
 
 ## Internacionalització
 
-Per afegir una nova paraula, cal afegir-la als fitxers de la carpeta `lib/languages`. Per exemple, per afegir la
-paraula "Hola", cal afegir les següents línies al fitxer `lib/languages/app_es.arb`:
+S'ha canviat la [llibreria d'internacionalització](https://pub.dev/packages/easy_localization) degut a que la nativa de
+flutter es una merda.
+\nA continuació es detallen els canvis a realitzar per a que funcioni correctament.
+
+### Afegir nova traducció (frase)
+
+Per afegir una nova paraula o frase, cal afegir-la als fitxers de la carpeta `langs`. Per exemple, per afegir la
+paraula "Hola", cal afegir la següent linia al fitxer `langs/es_ES.json`:
 
 ```json
-"language": "Español",
-"@language": {
-"description": "Language of the item"
+  "hello": "Hola"
+```
+
+i caldria fer el mateix en els altres dos fitxers.
+> Recordeu que cal fer les keys en anglès.
+
+### Afegir nova traducció amb paràmetres
+
+Per afegir una nova paraula o frase amb paràmetres, cal afegir-la als fitxers de la carpeta `langs`. Per exemple, per
+afegir la
+paraula "Hola, {name}", cal afegir la següent linia al fitxer `langs/es_ES.json`:
+
+```json
+  "hello": "Hola, {name}"
+```
+
+i caldria fer el mateix en els altres dos fitxers.
+
+També podem fer que la paraula o frase tingui un valor o altre depenent d'un paràmetre. Per exemple:
+
+```json
+  "gender":{
+"male": "Hi man ;) {}",
+"female": "Hello girl :) {}",
+"other": "Hello {}"
 }
 ```
 
-Després, només haurem d'escriure la traducció en els altres dos fitxers (`lib/languages/app_en.arb`
-i `lib/languages/app_ca.arb`).
+> També es poden fer coses més complexes (com pluralització, utilitzar unitats numèriques, reaprofitar altres
+> traduccions...), però per això millor llegir
+> la [documentació de la llibreria](https://pub.dev/packages/easy_localization).
 
-```json
-"language": "Spanish"
-```
-
-> La ultima entrada de cada {} no pot acabar amb una coma, sino us donarà un error al compilar.
+### Traduir un widget
 
 - Finalement, per a utilitzar la paraula, cal importar la
-  llibreria `package:flutter_gen/gen_l10n/app_localizations.dart` i utilitzar la
-  funció `AppLocalizations.of(context).language`:
+  llibreria `import 'package:easy_localization/easy_localization.dart';` i posteriorment traduir allò que volem:
 
 ```dart
-import 'package:flutter_gen/gen_l10n/localizations.dart';
+import 'package:easy_localization/easy_localization.dart';
 
-...
-
-@override
-Widget build(BuildContext context) {
-  final tr = AppLocalizations.of(context)!;
-  return Text(tr.language);
-}
+Text
+('title').tr() //Text widget
+print('title'.tr()); //String
+var title = tr('title') //Static function
 ```
 
-- Per a traduir un text amb paràmetres, cal definir en el fitxer 'lib/languages/app_es.arb' la frase de la seguent
-  manera:
-
-```json
-"hello": "Hola {name}",
-"@hello": {
-"description": "Hello {name}"
-"placeholders": {
-"name": {
-"type": "string",
-}
-}
-}
-```
-
-afegirlo als altres dos fitxers i per a utilitzar-lo:
+i si passem paràmetres, el podem especificar de la següent manera:
 
 ```dart
-import 'package:flutter_gen/gen_l10n/localizations.dart';
-
-...
-
-@override
-Widget build(BuildContext context) {
-  final tr = AppLocalizations.of(context)!;
-  return Text(tr.language('Alex'));
-}
+// args
+Text('msg').tr(args: ['Easy localization', 'Dart']),
+// namedArgs
+Text('msg_named').tr(namedArgs: {'lang': 'Dart'}),
+// args and namedArgs
+Text('msg_mixed').tr(args: ['Easy localization'],namedArgs: {'lang': 'Dart'}),
+// gender
+Text('gender').tr(gender: _gender? "female":"male"),
 ```
