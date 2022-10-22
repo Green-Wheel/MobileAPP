@@ -1,11 +1,14 @@
+import 'dart:convert';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:greenwheel/services/backend_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
-  GoogleMapsWidget({Key? key}) : super(key: key);
+  const GoogleMapsWidget({Key? key}) : super(key: key);
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
@@ -24,6 +27,55 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       speed: 1,
       speedAccuracy: 1);
   Set<Marker> markers = {};
+  final Map<MarkerId, Marker> markerMap = {};
+  late Marker actualMarcador;
+  List markersList = [];
+
+  void _getAndDrawPublicChargers() async {
+    BackendService.get('chargers/public/').then((response) {
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        setState(() {
+          markersList = jsonResponse;
+          for (int i = 0; i < markersList.length; i++) {
+            Map localization = markersList[i]['localization'];
+            double latitude = localization['latitude'];
+            double longitude = localization['longitude'];
+            if (markersList[i]['direction'] == null) {
+              markersList[i]['direction'] = "No description";
+            }
+            _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+          }
+        });
+      } else {
+        print('Error getting chargers!');
+      }
+    });
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _getCurrentLocation();
+    });
+    _getAndDrawPublicChargers();
+    super.initState();
+  }
+
+  void _addMarker(double lat, double log, String id, String address, double rate, int distance, String time) async{
+    final iconMarker = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2,), "assets/images/punt_carregador.png");
+    final Marker marcador = Marker(
+        markerId: MarkerId(id),
+        position: LatLng(lat, log),
+        onDrag: null,
+        icon: iconMarker,
+        onTap: () {} //_onMarkerTapped(MarkerId(id)),
+    );
+    markers.add(marcador);
+    markerMap[MarkerId(id)] = marcador;
+  }
+
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -33,14 +85,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     target: LatLng(41.7285833, 1.8130899),
     zoom: 8.0,
   );
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getCurrentLocation();
-    });
-  }
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
