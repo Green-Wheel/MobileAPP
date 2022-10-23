@@ -1,13 +1,10 @@
 import 'dart:convert';
-import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import '../home/home.dart';
 
 void main() {runApp(MaterialApp(
   title: 'bookings',
@@ -64,7 +61,7 @@ class _BookingsListState extends State<BookingsList> {
     BackendService.get('ratings/').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        // print(jsonResponse);
+        //print(jsonResponse);
         setState(() {
           ratings = jsonResponse;
         });
@@ -78,7 +75,7 @@ class _BookingsListState extends State<BookingsList> {
     BackendService.get('bookings/').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        // print(jsonResponse);
+        print(jsonResponse);
         setState(() {
           bookings = jsonResponse;
         });
@@ -88,7 +85,18 @@ class _BookingsListState extends State<BookingsList> {
     });
   }
 
-  Widget _buildCard(String location, String rating, int distance, String time) => Card(
+  void _cancelBooking(id) async {
+    BackendService.delete('bookings/' + id.toString() + '/').then((response) {
+      if (response.statusCode == 204) {
+        print('Booking cancelled!');
+      } else {
+        print('Error deleting booking!');
+        print(response.statusCode);
+      }
+    });
+  }
+
+  Widget _buildCard(int id, String location, String rating, int distance, String time) => Card(
     elevation: 10,
     color: CupertinoColors.white,
     shadowColor: Colors.black,
@@ -272,7 +280,10 @@ class _BookingsListState extends State<BookingsList> {
                                 )
                             )
                         ),
-                        onPressed:() {},
+                        onPressed:() {
+                          print(id);
+                          _cancelBooking(id);
+                        },
                         child: Row(
                           children: const [
                             Text('Cancel ',
@@ -323,7 +334,8 @@ class _BookingsListState extends State<BookingsList> {
         DateFormat formatterEnd = DateFormat('HH:mm');
         String formattedTimeStart = formatterStart.format(startDate);
         String formattedTimeEnd = formatterEnd.format(endDate);
-        return _buildCard(publicationName[0]['description'], rate, 2, '$formattedTimeEnd-$formattedTimeStart');
+        //print(bookings[index]['id']);
+        return _buildCard(bookings[index]['id'], publicationName[0]['description'], rate, 2, '$formattedTimeEnd-$formattedTimeStart');
       },
     );
   }
