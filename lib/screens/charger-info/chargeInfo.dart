@@ -32,7 +32,7 @@ class ChargeInfo extends StatefulWidget {
 
 class _ChargeInfoState extends State<ChargeInfo>{
   late GoogleMapController mapController;
-
+  bool isVisible = false;
   //Posem inicailment localiztzacio del user o barna?
   final LatLng _center = const LatLng(41.3874, 2.1686);
 
@@ -64,7 +64,8 @@ class _ChargeInfoState extends State<ChargeInfo>{
       position: LatLng(lat, log),
       onDrag: null,
       icon: iconMarker,
-      onTap: () => _onMarkerTapped(MarkerId(id)),
+      onTap: () {}
+
     );
     markers.add(marcador);
     markerMap[MarkerId(id)] = marcador;
@@ -154,83 +155,6 @@ class _ChargeInfoState extends State<ChargeInfo>{
       ),
     );
   }
-      //elevation: 20,
-     /* color: CupertinoColors.extraLightBackgroundGray,
-      shadowColor: Colors.black,
-      shape:  const RoundedRectangleBorder(
-        side: BorderSide(
-          color: Color(0xff43802a),
-          width: 4,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
-      ),
-      child: SizedBox(
-        height: 175,
-        width: 400,
-        child: Row(
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 0.0,),
-                  child: LocationChargerWidget(location: location),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0,),
-                  child: StarsStaticRateWidget(rate: 3.5),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 20.0,),
-                  child: PointOfChargeDistWidget(distance: distance),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: 83.0),
-                  child: AvaliablePublicChargerWidget(avaliable: avaliable),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(),
-                  child: MatchWithCarWidget(match: match),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(),
-                  child: Row(
-                    children: [
-                      Column(
-                        children: const [
-                          ButtonRouteWidget(),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          TextButton(
-                            style: TextButton.styleFrom(
-                              primary: Colors.blueAccent, // foreground
-                            ),
-                            onPressed:() {},
-                            child: Row(
-                              children: const [
-                                Text('Chat ',
-                                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
-                                ),
-                                Icon(
-                                  Icons.chat_outlined,
-                                  size: 20,
-                                  color: Colors.blueAccent,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-  );*/
 
   @override
   Widget build(BuildContext context) {
