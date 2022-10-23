@@ -1,7 +1,21 @@
-import 'package:flutter/widgets.dart';
+
+/*import 'package:flutter/widgets.dart';
 import 'package:greenwheel/screens/home/home.dart';
 
 final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
   "/": (BuildContext context) => const HomePage(key: Key("HomePage")),
-  // "/ExScreen2": (BuildContext context) => ExScreen2(),
 };
+*/
+
+import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
+import 'package:greenwheel/screens/home/home.dart';
+
+final GoRouter router = GoRouter(
+  routes: [
+    GoRoute(
+      path: '/',
+      builder: (context, state) => const HomePage(key: Key("HomePage")),
+    ),
+  ],
+);

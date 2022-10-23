@@ -261,14 +261,34 @@ La localització de l'emulador no serà el lloc de l'ordinador que esteu fent se
 - [Llibreria per a fer un chat facilment (visualment)](https://pub.dev/packages/flutter_chat_ui)
 - [Exemple real time chat amb django i flutter](https://github.com/udaykhalsa/flutter-django-chat-app)
 - [Chat utilitzant flutter](https://medium.com/nerd-for-tech/flutter-a-chat-app-in-flutter-using-a-socket-io-service-88be02a388d6)
+- [Llibreria de badges](https://pub.dev/packages/badges)
 
 #### Notificacions push
 
 - [Llibreria Notificacions push locals](https://pub.dev/packages/flutter_local_notifications)
+- [Mostrar si hi ha notificacions a la icona de l'aplicació](https://pub.dev/packages/flutter_app_badger)
+
+#### Internacionalització
+
+- [Easy internacionalization](https://pub.dev/packages/easy_localization)
+
+#### Rutes i navegacio
+
+- [Llibreria de navegacio per les screens](https://pub.dev/packages/go_router)
+
+#### Calendaris
+
+- [Top llibreria de calendaris](https://pub.dev/packages/table_calendar)
+- [Llibreria de booking de calendaris](https://pub.dev/packages/booking_calendar)
 
 #### Altres
 
 - [App bar flotat al estil google maps](https://pub.dev/packages/floating_search_bar)
+- [Llibreria de ratings molones](https://pub.dev/packages/flutter_rating_bar)
+- [Llibreria de carrossel de fotos](https://pub.dev/packages/carousel_slider)
+- [Bottom bar amb animacions](https://pub.dev/packages/animated_bottom_navigation_bar)
+- [Web amb snipets i petites templates](https://www.fluttertemplates.dev/widgets)
+- [Filtres a l'estil google maps](https://material.io/components/chips/flutter)
 
 Si trobeu algun enllaç més, no dubteu en posar-lo.
 
