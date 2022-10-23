@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class StarsStaticRateWidget extends StatefulWidget {
-  final double rate;
-  const StarsStaticRateWidget({required this.rate, super.key});
+  double rate;
+  StarsStaticRateWidget({required this.rate, super.key});
 
   @override
   State<StatefulWidget> createState() => _StarsStaticRateWidget();
 }
 
 class _StarsStaticRateWidget extends State<StarsStaticRateWidget>{
-  late double rate = 4.0;
-
   @override
   Widget build(BuildContext context) {
-    return _starsStaticCard(rate);
+    return _starsStaticCard(widget.rate);
   }
 }
 

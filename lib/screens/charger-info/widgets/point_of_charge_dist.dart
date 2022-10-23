@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
 class PointOfChargeDistWidget extends StatefulWidget {
-  final int distance;
-  const PointOfChargeDistWidget({required this.distance, super.key});
+  int distance;
+  PointOfChargeDistWidget({required this.distance, super.key});
 
   @override
   State<StatefulWidget> createState() => _PointOfChargeDistWidget();
 }
 
 class _PointOfChargeDistWidget extends State<PointOfChargeDistWidget>{
-  late int distance = 2;
-
   @override
   Widget build(BuildContext context) {
-    return _pointOfCharge(distance);
+    return _pointOfCharge(widget.distance);
   }
 }
 

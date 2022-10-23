@@ -17,7 +17,7 @@ class _ButtonRouteWidget extends State<ButtonRouteWidget>{
 //funcion del boton route situado en la card
 Widget _buttonRoute(){
   return Padding(
-    padding: const EdgeInsets.fromLTRB(38, 0, 0, 0),
+    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
     child: TextButton(
       style: TextButton.styleFrom(
         primary: Colors.blueAccent, // foreground
@@ -41,7 +41,7 @@ Widget _buttonRoute(){
 
 Widget _buttonRoute1(){
   return Padding(
-    padding: const EdgeInsets.fromLTRB(30, 10, 5, 0),
+    padding: const EdgeInsets.fromLTRB(0, 10, 5, 0),
     child: SizedBox(
       height: 33,
       child: TextButton(

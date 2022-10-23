@@ -6,6 +6,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:greenwheel/screens/charger-info/chargeInfo.dart';
+
 
 class GoogleMapsWidget extends StatefulWidget {
   const GoogleMapsWidget({Key? key}) : super(key: key);
@@ -30,6 +32,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   final Map<MarkerId, Marker> markerMap = {};
   late Marker actualMarcador;
   List markersList = [];
+  bool is_visible = false;
 
   void _getAndDrawPublicChargers() async {
     BackendService.get('chargers/public/').then((response) {

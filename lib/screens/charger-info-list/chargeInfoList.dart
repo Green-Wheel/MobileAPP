@@ -1,6 +1,10 @@
 import 'dart:core';
 import 'dart:ffi';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
 import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
@@ -8,6 +12,9 @@ import 'package:greenwheel/screens/charger-info/widgets/location_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
 import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
+import 'package:greenwheel/services/backend_service.dart';
+import 'package:greenwheel/screens/charger-info/chargeInfo.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 void main(){runApp(const MaterialApp(
@@ -17,32 +24,6 @@ void main(){runApp(const MaterialApp(
   ),
 ));}
 
-//TODO: Acabar de confeccionar el modelo en el que llegaran los datos (preguntar)
-class Locations{
-  late String direction;
-  late String town;
-  late double latitude;
-  late double longitude;
-
-}
-
-class Info {
-  late bool avaliable;
-  late String speed;
-  late Float power;
-  late String charger_type;
-  late String type_veichle;
-  late bool match;
-}
-
-class Marcador {
-  late String identifier;
-  late bool is_public;
-  late List<Locations> geolocation;
-  late List<Info> info;
-}
-
-
 
 class ChargeInfoList extends StatefulWidget {
   const ChargeInfoList({Key? key}) : super(key: key);
@@ -51,7 +32,17 @@ class ChargeInfoList extends StatefulWidget {
   State<ChargeInfoList> createState() => _ChargeInfoListState();
 
 }
-List<Marcador> elements = {} as List<Marcador>;
+abstract class Marcador {
+  late int id;
+  late double latitude;
+  late double longitude;
+  late String direction;
+  late double power;
+  late String town;
+}
+
+List<Marcador> markers = [];
+List markersList = [];
 List<String> element = [
   "Hey", "hola", "sep", "yep", "prova",
   "Hey", "hola", "sep", "yep", "prova",
@@ -59,6 +50,39 @@ List<String> element = [
   "Hey", "hola", "sep", "yep", "prova",
   "Hey", "hola", "sep", "yep", "prova",
 ];
+
+void _getPublicChargers() async {
+  BackendService.get('chargers/public/').then((response)  {
+    if (response.statusCode == 200) {
+      List<dynamic> jsonResponse = jsonDecode(response.body);
+      markersList = jsonResponse;
+      Marcador? mark;
+      for (int i = 0; i < markersList.length; i++) {
+        Map localization = markersList[i]['localization'];
+        double latitude = localization['latitude'];
+        double longitude = localization['longitude'];
+        String direction = "No description";
+        if (markersList[i]['direction'] != null) {
+          direction = markersList[i]['direction'];
+        }
+        double power =  markersList[i]['power'];
+        String town = markersList[i]['town'];
+        mark!.id = i;
+        mark.latitude = latitude;
+        mark.longitude = longitude;
+        mark.direction = direction;
+        mark.power = power;
+        mark.town = town;
+        markers.add(mark);
+      }
+    }
+  });
+}
+
+@override
+void initState(){
+  _getPublicChargers();
+}
 
 class _ChargeInfoListState extends State<ChargeInfoList>{
   @override
@@ -90,10 +114,11 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
         addRepaintBoundaries: false,
         addSemanticIndexes: false,*/
         itemBuilder: (context, position) {
+         //Marcador item = markers[position];
           return Stack(
             key: Key(element[position]),
-            children:[
-              _cardChargerList("location", true, true),
+            children: [
+              _cardChargerList(markersList.length.toString(), true, true),
             ],
           );
         }
@@ -119,38 +144,41 @@ Widget _cardChargerList(String direction, bool avaliable, bool match){
       width: 400,
       child:Row(
         children: [
-          Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 135),
-                child: LocationChargerWidget(location: direction),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 65),
-                child:  StarsStaticRateWidget(rate: 4.0),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 55),
-                child:  PointOfChargeDistWidget(distance: 2),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 83),
-                child: AvaliablePublicChargerWidget(avaliable: avaliable),
-              ),
-              Padding(
-                padding: EdgeInsets.only(),
-                child: MatchWithCarWidget(match: match),
-              ),
-            ],
+          SizedBox(
+            width: 270,
+            child:Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: 5, left: 25),
+                  child: LocationChargerWidget(location: direction),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child:  StarsStaticRateWidget(rate: 4.0),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child:  PointOfChargeDistWidget(distance: 2),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: AvaliablePublicChargerWidget(avaliable: avaliable),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: MatchWithCarWidget(match: match),
+                ),
+              ],
+            ),
           ),
           Column(
             children:const [
               Padding(
-                padding:EdgeInsets.only(left: 8),
+                padding:EdgeInsets.only(right: 25),
                 child: ImageChargerWidget(),
               ),
               Padding(
-                padding:EdgeInsets.only(left: 5),
+                padding:EdgeInsets.only(right: 0),
                 child: ButtonRouteWidget(),
               ),
             ],
