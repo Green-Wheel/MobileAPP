@@ -4,8 +4,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:greenwheel/services/backend_service.dart';
+import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
+import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
+import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
+import 'package:greenwheel/screens/charger-info/widgets/location_charger.dart';
+import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
+import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
+import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
 
-//TODO:Refactoring de todo el codigo
+
 
 void main(){runApp(const MaterialApp(
   title: 'chargeInfo try',
@@ -67,7 +75,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
     final Marker? markerTapped = markerMap[markerId];
     if (markerTapped != null && markerMap.containsKey(markerId)) {
       actualMarcador = markerTapped;
-      _buildCard("maremagnum", 4, 3, "10:00 - 14:00h", true);
+      _buildCard("maremagnum", 4, 3, "10:00 - 14:00h", true, true);
       /*await mapController.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
@@ -90,9 +98,64 @@ class _ChargeInfoState extends State<ChargeInfo>{
     });
   }
 
-  Widget _buildCard(String location, double rating, int distance, String time, bool match) => Card(
+  Widget _buildCard(String location, double rating, int distance, String time, bool avaliable,  bool match) {
+    return Card(
+      elevation: 10,
+      shape:  const RoundedRectangleBorder(
+        side: BorderSide(
+          color: Color(0xff43802a),
+          width: 3,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      child: SizedBox(
+        height: 175,
+        width: 400,
+        child:Row(
+          children: [
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: 135),
+                  child: LocationChargerWidget(location: location),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 65),
+                  child:  StarsStaticRateWidget(rate: 4.0),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 55),
+                  child:  PointOfChargeDistWidget(distance: 2),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 83),
+                  child: AvaliablePublicChargerWidget(avaliable: avaliable),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(),
+                  child: MatchWithCarWidget(match: match),
+                ),
+              ],
+            ),
+            Column(
+              children:const [
+                Padding(
+                  padding:EdgeInsets.only(left: 8),
+                  child: ImageChargerWidget(),
+                ),
+                Padding(
+                  padding:EdgeInsets.only(left: 5),
+                  child: ButtonRouteWidget(),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
       //elevation: 20,
-      color: CupertinoColors.extraLightBackgroundGray,
+     /* color: CupertinoColors.extraLightBackgroundGray,
       shadowColor: Colors.black,
       shape:  const RoundedRectangleBorder(
         side: BorderSide(
@@ -104,157 +167,70 @@ class _ChargeInfoState extends State<ChargeInfo>{
       child: SizedBox(
         height: 175,
         width: 400,
-        child: Column(
+        child: Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0, bottom: 3.0, top: 15.0) ,
-              child: Row(
-                children: [
-                   Text(location,
-                      style: const TextStyle(fontWeight: FontWeight.w600)
-                  ),
-                  Icon(
-                    Icons.bolt,
-                    size: 20,
-                    color: Colors.green[500],
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, bottom: 3.0),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.star,
-                    size: 20,
-                    color: Colors.yellow[500],
-                  ),
-                  Icon(
-                    Icons.star,
-                    size: 20,
-                    color: Colors.yellow[500],
-                  ),
-                  Icon(
-                    Icons.star,
-                    size: 20,
-                    color: Colors.yellow[500],
-                  ),
-                  Icon(
-                    Icons.star,
-                    size: 20,
-                    color: Colors.yellow[500],
-                  ),
-                  Icon(
-                    Icons.star,
-                    size: 20,
-                    color: Colors.yellow[500],
-                  ),
-                   Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Text(rating.toString(),
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-                padding: const EdgeInsets.only(left: 15.0, bottom: 3.5),
-                child: Row(
-                  children: [
-                    Text('Point of charge - ($distance km)',
-                      style: const TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ],
+            Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(left: 0.0,),
+                  child: LocationChargerWidget(location: location),
                 ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0, bottom: 4.0),
-              child: Row(
-                children:[
-                  const Text('Available: ',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green),
-                  ),
-                  Text(time,
-                    style: const TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0),
-              child: Row(
-                children: const [
-                  Icon (
-                    Icons.check_circle_outline_rounded,
-                    size: 20,
-                    color: Colors.green,
-                  ),
-                  Padding(
-                    padding:EdgeInsets.only(left: 5.0),
-                    child: Text('Matching with your car charger',
-                      style: TextStyle(fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0,),
-              child: Row(
-                children: [
-                  Column(
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0,),
+                  child: StarsStaticRateWidget(rate: 3.5),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 20.0,),
+                  child: PointOfChargeDistWidget(distance: distance),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: 83.0),
+                  child: AvaliablePublicChargerWidget(avaliable: avaliable),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(),
+                  child: MatchWithCarWidget(match: match),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(),
+                  child: Row(
                     children: [
-                      TextButton(
-                          style: TextButton.styleFrom(
-                            primary: Colors.blueAccent, // foreground
+                      Column(
+                        children: const [
+                          ButtonRouteWidget(),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              primary: Colors.blueAccent, // foreground
+                            ),
+                            onPressed:() {},
+                            child: Row(
+                              children: const [
+                                Text('Chat ',
+                                  style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
+                                ),
+                                Icon(
+                                  Icons.chat_outlined,
+                                  size: 20,
+                                  color: Colors.blueAccent,
+                                ),
+                              ],
+                            ),
                           ),
-                          onPressed:() {},
-                          child: Row(
-                            children: const [
-                              Text('Route ',
-                                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
-                              ),
-                               Icon(
-                                Icons.turn_slight_right_rounded,
-                                size: 20,
-                                color: Colors.blueAccent,
-                              ),
-                            ],
-                          ),
+                        ],
                       ),
                     ],
                   ),
-                  Column(
-                    children: [
-                      TextButton(
-                        style: TextButton.styleFrom(
-                          primary: Colors.blueAccent, // foreground
-                        ),
-                        onPressed:() {},
-                        child: Row(
-                          children: const [
-                            Text('Chat ',
-                              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
-                            ),
-                            Icon(
-                              Icons.chat_outlined,
-                              size: 20,
-                              color: Colors.blueAccent,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
       ),
-  );
+  );*/
 
   @override
   Widget build(BuildContext context) {
@@ -279,7 +255,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
           ),
           Padding(
               padding: EdgeInsets.fromLTRB(0, 550, 0, 0),
-              child: _buildCard("Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true)
+              child: _buildCard("Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true, true)
           ),
         ],
       ),

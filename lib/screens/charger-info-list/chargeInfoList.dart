@@ -1,9 +1,14 @@
 import 'dart:core';
 import 'dart:ffi';
-
-
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
+import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
+import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
+import 'package:greenwheel/screens/charger-info/widgets/location_charger.dart';
+import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
+import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
+import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
+
 
 void main(){runApp(const MaterialApp(
   title: 'chargeInfoList try',
@@ -59,205 +64,39 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chargers Markers'),
+        centerTitle: true,
+        actions: const [
+        Padding(
+          padding: EdgeInsets.only(right: 105.0, left: 5.0),
+          child: Icon(Icons.location_on_outlined),
+          ),
+        ],backgroundColor: Colors.green,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              // Tornar a HomePage
+              /*Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );*/
+          },
+        ),
+      ),
       body: ListView.builder(
         itemCount: 25,
+        /*addAutomaticKeepAlives: false,
+        addRepaintBoundaries: false,
+        addSemanticIndexes: false,*/
         itemBuilder: (context, position) {
-          return Dismissible(
+          return Stack(
             key: Key(element[position]),
-            child: _cardChargerList("location", true, true),
+            children:[
+              _cardChargerList("location", true, true),
+            ],
           );
         }
-      ),
-    );
-  }
-}
-
-//funcion para mostrar la direccion del cargador en la card
-Widget _locationCharger(String location){
-  return Padding(
-    padding: const EdgeInsets.only(left: 45.0, bottom: 3.0, top: 25.0) ,
-    child: Row(
-      children: [
-        Text(location,
-            style: const TextStyle(fontWeight: FontWeight.w600)
-        ),
-        Icon(
-          Icons.bolt,
-          size: 20,
-          color: Colors.green[500],
-        ),
-      ],
-    ),
-  );
-}
-
-//funcion para mostrar información del cargador en la card (consultar al grupo)
-Widget _pointOfCharge(){
-  return  Padding(
-    padding: const EdgeInsets.only(left: 48.0, bottom: 3.5),
-    child: Row(
-      children: [
-        Text('Point of charge - ( km)',
-          style: const TextStyle(fontWeight: FontWeight.w600),
-        ),
-      ],
-    ),
-  );
-}
-
-//funcion para mostrar la imagen del marcador de Green Wheel en la card
-Widget _imageGreenWheelCharger(){
-  return  Padding(
-      padding: EdgeInsets.fromLTRB(25, 18, 5, 0),
-      child: SizedBox(
-        height: 90.0,
-        child: Image.asset("assets/images/punt_carregador.png"),
-      )
-  );
-}
-
-
-//funcion del boton route situado en la card
-Widget _bottonRoute(){
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(38, 0, 0, 0),
-    child: TextButton(
-      style: TextButton.styleFrom(
-        primary: Colors.blueAccent, // foreground
-      ),
-      onPressed:() {},
-      child:  Row(
-        children: const [
-          Text('Route ',
-            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.blueAccent),
-          ),
-          Icon(
-            Icons.turn_slight_right_rounded,
-            size: 20,
-            color: Colors.blueAccent,
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-
-//funcion para mostrar las estrellas
-Widget _starsStaticCard(double rate){
-  return Padding(
-    padding: const EdgeInsets.only(left: 10.0),
-    child: Row(
-      children: [
-      RatingBar(
-          initialRating: rate,
-          direction: Axis.horizontal,
-          allowHalfRating: true,
-          itemCount: 5,
-          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-          itemSize: 15,
-          ratingWidget: RatingWidget(
-            full: const Icon(
-              Icons.star,
-              color: Colors.amber,
-            ),
-            half: const Icon(
-              Icons.star_half,
-              color: Colors.amber,
-            ),
-            empty: const Icon(
-              Icons.star,
-              color: Colors.grey,
-            ),
-          ),
-          ignoreGestures: true,
-          onRatingUpdate: (rate) { print(rate); },
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 5.0),
-            child:Text(
-              rate.toString(),
-              style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-
-//funcion para determinar la compatibilidad cargador con el coche
-Widget _matchCarWithCharger(bool match){
-  if (match){
-    return Padding(
-        padding: const EdgeInsets.only(left: 42.0),
-        child: Row(
-        children: const [
-          Icon (
-            Icons.check_circle_outline_rounded,
-            size: 20,
-            color: Colors.green,
-          ),
-          Padding(
-            padding:EdgeInsets.only(left: 5.0),
-            child: Text('Matching with your car charger',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-  else{
-    return Padding(
-      padding: const EdgeInsets.only(left: 35.0),
-      child: Row(
-        children: const [
-          Icon (
-            Icons.do_not_disturb_on_outlined,
-            size: 20,
-            color: Colors.red,
-          ),
-          Padding(
-            padding:EdgeInsets.only(left: 5.0),
-            child: Text('Not match with your car charger',
-              style: TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-//funcion para determinar si un cargador publico esta disponible
-Widget _avaliablePublicCharger(bool avaliable){
-  if (avaliable){
-    return Padding(
-      padding: const EdgeInsets.only(left: 25.0, bottom: 4.0),
-      child: Row(
-        children:const [
-          Text('Available: ',
-          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green),
-          ),
-          Text("time",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-        ],
-      ),
-    );
-  }
-  else {
-    return Padding(
-      padding: const EdgeInsets.only(left: 25.0, bottom: 4.0),
-      child: Row(
-        children:const [
-          Text('Not Available: ',
-            style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red),
-          ),
-          Text("time",
-            style: TextStyle(fontWeight: FontWeight.w600),
-          ),
-        ],
       ),
     );
   }
@@ -271,34 +110,49 @@ Widget _cardChargerList(String direction, bool avaliable, bool match){
     shape:  const RoundedRectangleBorder(
       side: BorderSide(
         color: Color(0xff43802a),
-        width: 4,
+        width: 3,
       ),
       borderRadius: BorderRadius.all(Radius.circular(20)),
     ),
     child: SizedBox(
-      height: 162.5,
+      height: 175,
+      width: 400,
       child:Row(
         children: [
           Column(
             children: [
-              _locationCharger(direction),
               Padding(
-                padding: const EdgeInsets.only(left: 50.0, bottom: 3.0),
-                child: Row(
-                  children: [
-                    _starsStaticCard(4.0),
-                  ],
-                ),
+                padding: EdgeInsets.only(right: 135),
+                child: LocationChargerWidget(location: direction),
               ),
-              _pointOfCharge(),
-              _avaliablePublicCharger(avaliable),
-              _matchCarWithCharger(match),
+              Padding(
+                padding: EdgeInsets.only(right: 65),
+                child:  StarsStaticRateWidget(rate: 4.0),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 55),
+                child:  PointOfChargeDistWidget(distance: 2),
+              ),
+              Padding(
+                padding: EdgeInsets.only(right: 83),
+                child: AvaliablePublicChargerWidget(avaliable: avaliable),
+              ),
+              Padding(
+                padding: EdgeInsets.only(),
+                child: MatchWithCarWidget(match: match),
+              ),
             ],
           ),
           Column(
-            children: [
-              _imageGreenWheelCharger(),
-              _bottonRoute(),
+            children:const [
+              Padding(
+                padding:EdgeInsets.only(left: 8),
+                child: ImageChargerWidget(),
+              ),
+              Padding(
+                padding:EdgeInsets.only(left: 5),
+                child: ButtonRouteWidget(),
+              ),
             ],
           ),
         ],
@@ -306,36 +160,3 @@ Widget _cardChargerList(String direction, bool avaliable, bool match){
     ),
   );
 }
-
-
-/*Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                    Icon(
-                      Icons.star,
-                      size: 20,
-                      color: Colors.yellow[500],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Text("rating".toString(),
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ),*/
