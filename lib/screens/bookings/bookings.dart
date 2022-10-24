@@ -75,7 +75,7 @@ class _BookingsListState extends State<BookingsList> {
     BackendService.get('bookings/').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        print(jsonResponse);
+        //print(jsonResponse);
         setState(() {
           bookings = jsonResponse;
         });
@@ -86,7 +86,7 @@ class _BookingsListState extends State<BookingsList> {
   }
 
   void _cancelBooking(id) async {
-    BackendService.delete('bookings/' + id.toString() + '/').then((response) {
+    BackendService.delete('bookings/$id/').then((response) {
       if (response.statusCode == 204) {
         print('Booking cancelled!');
       } else {
@@ -283,6 +283,8 @@ class _BookingsListState extends State<BookingsList> {
                         onPressed:() {
                           print(id);
                           _cancelBooking(id);
+                          _getBookings();
+                          _getRatings();
                         },
                         child: Row(
                           children: const [
@@ -334,8 +336,13 @@ class _BookingsListState extends State<BookingsList> {
         DateFormat formatterEnd = DateFormat('HH:mm');
         String formattedTimeStart = formatterStart.format(startDate);
         String formattedTimeEnd = formatterEnd.format(endDate);
-        //print(bookings[index]['id']);
-        return _buildCard(bookings[index]['id'], publicationName[0]['description'], rate, 2, '$formattedTimeEnd-$formattedTimeStart');
+        if (bookings[index]['cancelled'] == false) {
+          return _buildCard(
+              bookings[index]['id'], publicationName[0]['description'], rate, 2,
+              '$formattedTimeStart-$formattedTimeEnd');
+        } else {
+          return Container();
+        }
       },
     );
   }
