@@ -32,3 +32,27 @@ class DistanceMatrix {
 
   Map<String, dynamic> toJson() => _$DistanceMatrixToJson(this);
 }
+
+@JsonSerializable()
+class Address {
+  Address({
+    required this.street,
+    required this.streetNumber,
+    required this.city,
+    required this.postalCode,
+    required this.province,
+    required this.country,
+  });
+
+  String street;
+  String streetNumber;
+  String city;
+  String postalCode;
+  String province;
+  String country;
+
+  factory Address.fromJson(Map<String, dynamic> json) =>
+      _$AddressFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AddressToJson(this);
+}

@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter_config/flutter_config.dart';
-import 'package:greenwheel/services/serializers/maps.dart';
 import 'package:http/http.dart' as http;
+
+import '../serializers/maps.dart';
 
 class GoogleService {
   // https://developers.google.com/maps/documentation/distance-matrix/distance-matrix
@@ -31,8 +32,8 @@ class GoogleService {
     }
   }
 
-  // https://developers.google.com/maps/documentation/geocoding/requests-geocoding
-  static Future<dynamic> getGeocoding(LatLng latLng) async {
+  // https://developers.google.com/maps/documentation/geocoding/requests-reverse-geocoding
+  static Future<dynamic> getReverseGeocoding(LatLng latLng) async {
     final url =
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.lat},${latLng.lng}&key=${FlutterConfig.get('GOOGLE_MAPS_API_KEY')}';
     final response = await http.get(Uri.parse(url));
@@ -43,8 +44,8 @@ class GoogleService {
     }
   }
 
-  // https://developers.google.com/maps/documentation/geocoding/requests-reverse-geocoding
-  static Future<dynamic> getReverseGeocoding(String address) {
+  // https://developers.google.com/maps/documentation/geocoding/requests-geocoding
+  static Future<dynamic> getGeocoding(String address) {
     final url =
         'https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=${FlutterConfig.get('GOOGLE_MAPS_API_KEY')}';
     return http.get(Uri.parse(url)).then((response) {

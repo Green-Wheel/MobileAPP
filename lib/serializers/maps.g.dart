@@ -27,3 +27,21 @@ Map<String, dynamic> _$DistanceMatrixToJson(DistanceMatrix instance) =>
       'distance': instance.distance,
       'duration': instance.duration,
     };
+
+Address _$AddressFromJson(Map<String, dynamic> json) => Address(
+      street: json['street'] as String,
+      streetNumber: json['streetNumber'] as String,
+      city: json['city'] as String,
+      postalCode: json['postalCode'] as String,
+      province: json['province'] as String,
+      country: json['country'] as String,
+    );
+
+Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
+      'street': instance.street,
+      'streetNumber': instance.streetNumber,
+      'city': instance.city,
+      'postalCode': instance.postalCode,
+      'province': instance.province,
+      'country': instance.country,
+    };

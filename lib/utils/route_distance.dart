@@ -1,5 +1,5 @@
+import '../serializers/maps.dart';
 import '../services/google_service.dart';
-import '../services/serializers/maps.dart';
 
 class RouteDistance {
   static DistanceMatrix getDistanceMatrix(LatLng origin, LatLng destination) {
