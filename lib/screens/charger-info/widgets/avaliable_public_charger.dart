@@ -22,11 +22,8 @@ Widget _avaliablePublicCharger(bool avaliable){
       padding: const EdgeInsets.only(right: 0.0, bottom: 4.0),
       child: Row(
         children:const [
-          Text('Available: ',
+          Text('Available',
             style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green),
-          ),
-          Text("time",
-            style: TextStyle(fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -37,11 +34,8 @@ Widget _avaliablePublicCharger(bool avaliable){
       padding: const EdgeInsets.only(right: 0.0, bottom: 4.0),
       child: Row(
         children:const [
-          Text('Not Available: ',
+          Text('Not Available',
             style: TextStyle(fontWeight: FontWeight.w600, color: Colors.red),
-          ),
-          Text("time",
-            style: TextStyle(fontWeight: FontWeight.w600),
           ),
         ],
       ),

@@ -30,16 +30,21 @@ class ChargeInfo extends StatefulWidget {
   State<ChargeInfo> createState() => _ChargeInfoState();
 
 }
-abstract class Marcador {
-  late int id;
-  late double latitude;
-  late double longitude;
-  late String direction;
-  late double power;
-  late String town;
+
+class Marcador {
+
+  int id;
+  double latitude;
+  double longitude;
+  String direction;
+  double power;
+  String town;
+
+  Marcador(this.id, this.latitude, this.longitude, this.direction, this.power, this.town);
 }
 
 class _ChargeInfoState extends State<ChargeInfo>{
+
   late GoogleMapController mapController;
   //Posem inicailment localiztzacio del user o barna?
   final LatLng _center = const LatLng(41.3874, 2.1686);
@@ -132,7 +137,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 25),
-                    child:  PointOfChargeDistWidget(distance: 2),
+                    child:  PointOfChargeDistWidget(types: 2),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 25),

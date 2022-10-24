@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PointOfChargeDistWidget extends StatefulWidget {
-  int distance;
-  PointOfChargeDistWidget({required this.distance, super.key});
+  int types;
+  PointOfChargeDistWidget({required this.types, super.key});
 
   @override
   State<StatefulWidget> createState() => _PointOfChargeDistWidget();
@@ -11,17 +11,17 @@ class PointOfChargeDistWidget extends StatefulWidget {
 class _PointOfChargeDistWidget extends State<PointOfChargeDistWidget>{
   @override
   Widget build(BuildContext context) {
-    return _pointOfCharge(widget.distance);
+    return _pointOfCharge(widget.types);
   }
 }
 
 //funcion para mostrar información del cargador en la card (consultar al grupo)
-Widget _pointOfCharge(int distance){
+Widget _pointOfCharge(int types){
   return  Padding(
     padding: const EdgeInsets.only(left: 0.0, bottom: 3.5),
     child: Row(
       children: [
-        Text('Point of charge - ($distance km)',
+        Text('Type/s of charger:  $types',
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
       ],

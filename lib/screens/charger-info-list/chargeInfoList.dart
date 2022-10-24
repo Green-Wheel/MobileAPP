@@ -2,6 +2,7 @@ import 'dart:core';
 import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -32,59 +33,59 @@ class ChargeInfoList extends StatefulWidget {
   State<ChargeInfoList> createState() => _ChargeInfoListState();
 
 }
-abstract class Marcador {
-  late int id;
-  late double latitude;
-  late double longitude;
-  late String direction;
-  late double power;
-  late String town;
-}
-
-List<Marcador> markers = [];
-List markersList = [];
-List<String> element = [
-  "Hey", "hola", "sep", "yep", "prova",
-  "Hey", "hola", "sep", "yep", "prova",
-  "Hey", "hola", "sep", "yep", "prova",
-  "Hey", "hola", "sep", "yep", "prova",
-  "Hey", "hola", "sep", "yep", "prova",
-];
-
-void _getPublicChargers() async {
-  BackendService.get('chargers/public/').then((response)  {
-    if (response.statusCode == 200) {
-      List<dynamic> jsonResponse = jsonDecode(response.body);
-      markersList = jsonResponse;
-      Marcador? mark;
-      for (int i = 0; i < markersList.length; i++) {
-        Map localization = markersList[i]['localization'];
-        double latitude = localization['latitude'];
-        double longitude = localization['longitude'];
-        String direction = "No description";
-        if (markersList[i]['direction'] != null) {
-          direction = markersList[i]['direction'];
-        }
-        double power =  markersList[i]['power'];
-        String town = markersList[i]['town'];
-        mark!.id = i;
-        mark.latitude = latitude;
-        mark.longitude = longitude;
-        mark.direction = direction;
-        mark.power = power;
-        mark.town = town;
-        markers.add(mark);
-      }
-    }
-  });
-}
-
-@override
-void initState(){
-  _getPublicChargers();
-}
 
 class _ChargeInfoListState extends State<ChargeInfoList>{
+
+  List markersList = [];
+
+  @override
+  void initState(){
+    super.initState();
+    _getChargers();
+  }
+
+  /*void _getPublicChargers() async {
+    BackendService.get('chargers/public/').then((response)  {
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        markersList = jsonResponse;
+        Marcador? mark;
+        for (int i = 0; i < markersList.length; i++) {
+          Map localization = markersList[i]['localization'];
+          double latitude = localization['latitude'];
+          double longitude = localization['longitude'];
+          String direction = "No description";
+          if (markersList[i]['direction'] != null) {
+            direction = markersList[i]['direction'];
+          }
+          double power =  markersList[i]['power'];
+          String town = markersList[i]['town'];
+          mark!.id = i;
+          mark!.latitude = latitude;
+          mark!.longitude = longitude;
+          mark!.direction = direction;
+          mark!.power = power;
+          mark!.town = town;
+          markers.add(mark);
+        }
+      }
+    });
+  }*/
+
+  void _getChargers() async {
+    BackendService.get('chargers/public/').then((response)  {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        print(jsonResponse);
+        setState(() {
+          markersList = jsonResponse;
+        });
+      } else {
+        print('Error getting chargers!');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,18 +110,64 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
         ),
       ),
       body: ListView.builder(
-        itemCount: 25,
+        itemCount: markersList.length,
         /*addAutomaticKeepAlives: false,
         addRepaintBoundaries: false,
         addSemanticIndexes: false,*/
         itemBuilder: (context, position) {
-         //Marcador item = markers[position];
-          return Stack(
-            key: Key(element[position]),
-            children: [
-              _cardChargerList(markersList.length.toString(), true, true),
-            ],
-          );
+          String description = markersList[position]['description'];
+          description = description.replaceAll("Ãa", "i");
+          description = description.replaceAll("Ã", "à");
+          description = description.replaceAll("àa", "ia");
+          description = description.replaceAll("Ã³", "ó");
+          description = description.replaceAll("à³", "ó");
+          description = description.replaceAll("Ã²", "ò");
+          description = description.replaceAll("à²", "ò");
+          description = description.replaceAll("Ã§", "ç");
+          description = description.replaceAll("à§", "ç");
+          description = description.replaceAll("Ã©", "é");
+          description = description.replaceAll("à¨", "è");
+          description = description.replaceAll("à©", "è");
+          description = description.replaceAll("2 -", "2\n");
+          description = description.replaceAll("6 -  ", "6\n");
+          description = description.replaceAll("³-", "\n");
+          description = description.replaceAll("er-Al", "er\nAl");
+          description = description.replaceAll("a-Ca", "a\nCa");
+          description = description.replaceAll(", Ap", "\nAp");
+          description = description.replaceAll("-Ca", "\nCa");
+          description = description.replaceAll(", Ca", "\nCa");
+          description = description.replaceAll(" QR", "\nQR");
+          description = description.replaceAll("37 - S", "37\nS");
+          description = description.replaceAll("res SO", "res\nSO");
+          description = description.replaceAll("-Ca", "\nCa");
+          description = description.replaceAll("ó-Pl", "ó\nPl");
+          description = description.replaceAll("mans i ", "mans\ni ");
+          description = description.replaceAll("T-I", "T\nI");
+          description = description.replaceAll("A  Torr", "A\nTorr");
+          description = description.replaceAll("Mont-Roig", "Mont\nRoig");
+          description = description.replaceAll("a Sup", "a\nSup");
+          description = description.replaceAll("Despà", "Despí");
+          if (description.length >= 40){
+            description = description.replaceAll(" - ", "\n");
+            //description = description.replaceAll("-", "\n");
+            description = description.replaceAll("- ", "\n");
+            description = description.replaceAll(")(", ")\n(");
+            description = description.replaceAll(" (", "\n(");
+            description = description.replaceAll("E L'", "E\nL'");
+          }
+          if (description.length < 40){
+            description = description.replaceAll(") ", ")\n");
+            description = description.replaceAll(" (", "\n(");
+            description = description.replaceAll("m-", "m\n");
+          }
+          bool avaliable = true;
+          //avaliable da null
+          if (markersList[position]['description'] == "false") avaliable = false;
+          //print(markersList[position]['connection_type']); //retorna numero de typos diferentes con el .lenght
+          //print(markersList[position]['current_type']); //puede ser 1 o 2 -> AC - DC
+
+          int types = markersList[position]['connection_type'].length;
+          return _cardChargerList(description, avaliable, true, types);
         }
       ),
     );
@@ -129,7 +176,12 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
 
 
 //funcion respectiva a la card de los cargadores
-Widget _cardChargerList(String direction, bool avaliable, bool match){
+Widget _cardChargerList(String direction, bool avaliable, bool match, int types){
+  Random random = Random();
+  int min = 2, max = 6;
+  int num = (min + random.nextInt(max - min));
+  double numd = num.toDouble();
+
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -141,7 +193,7 @@ Widget _cardChargerList(String direction, bool avaliable, bool match){
     ),
     child: SizedBox(
       height: 175,
-      width: 400,
+      width: 450,
       child:Row(
         children: [
           SizedBox(
@@ -154,11 +206,11 @@ Widget _cardChargerList(String direction, bool avaliable, bool match){
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
-                  child:  StarsStaticRateWidget(rate: 4.0),
+                  child:  StarsStaticRateWidget(rate: numd),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
-                  child:  PointOfChargeDistWidget(distance: 2),
+                  child:  PointOfChargeDistWidget(types: types),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
