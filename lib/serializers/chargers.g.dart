@@ -57,7 +57,7 @@ Publication _$PublicationFromJson(Map<String, dynamic> json) => Publication(
       description: json['description'] as String,
       direction: json['direction'] as String,
       town: Town.fromJson(json['town'] as Map<String, dynamic>),
-      latLng: LatLng.fromJson(json['latLng'] as Map<String, dynamic>),
+      latLng: LatLang.fromJson(json['latLng'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PublicationToJson(Publication instance) =>

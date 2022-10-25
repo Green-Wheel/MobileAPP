@@ -10,11 +10,11 @@ class Geocoding {
     return position;
   }
 
-  static LatLng getLatLngFromPosition(Position position) {
-    return LatLng(lat: position.latitude, lng: position.longitude);
+  static LatLang getLatLngFromPosition(Position position) {
+    return LatLang(lat: position.latitude, lng: position.longitude);
   }
 
-  static LatLng? getLatLangFromAddress(String address) {
+  static Future<LatLang>? getLatLangFromAddress(String address) {
     GoogleService.getGeocoding(address).then((response) {
       if (response['status'] == 'OK') {
         final results = response['results'];
@@ -22,14 +22,14 @@ class Geocoding {
         final location = geometry['location'];
         final lat = location['lat'];
         final lng = location['lng'];
-        LatLng latLng = LatLng(lat: lat, lng: lng);
+        LatLang latLng = LatLang(lat: lat, lng: lng);
         return latLng;
       }
     });
     return null;
   }
 
-  static Address? getAddressFromLatLang(LatLng latLng) {
+  static Future<Address>? getAddressFromLatLang(LatLang latLng) {
     GoogleService.getReverseGeocoding(latLng).then((response) {
       if (response['status'] == 'OK') {
         final results = response['results'];
@@ -68,9 +68,9 @@ class Geocoding {
     return null;
   }
 
-  static Address? getCurrentAddress() {
+  static Future<Address>? getCurrentAddress() {
     getCurrentPosition().then((position) async {
-      LatLng latLng = getLatLngFromPosition(position);
+      LatLang latLng = getLatLngFromPosition(position);
       return getAddressFromLatLang(latLng);
     });
     return null;

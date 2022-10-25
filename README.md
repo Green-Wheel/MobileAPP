@@ -237,6 +237,7 @@ La localització de l'emulador no serà el lloc de l'ordinador que esteu fent se
 - [Llibreria de serveis de google maps](https://pub.dev/packages/google_maps_webservice)
 - [Explicacions i exemples de widgets a flutter by javaTpoint](https://www.javatpoint.com/flutter)
 - [Documentació components de material design](https://material.io/components?platform=flutter)
+- [Detectar canvis de posició en temps real](https://medium.com/flutter-community/implement-real-time-location-updates-on-google-maps-in-flutter-235c8a09173e)
 
 #### Videos
 

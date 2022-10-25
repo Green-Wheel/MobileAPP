@@ -85,7 +85,7 @@ class Publication {
   String description;
   String direction;
   Town town;
-  LatLng latLng;
+  LatLang latLng;
 
   factory Publication.fromJson(Map<String, dynamic> json) =>
       _$PublicationFromJson(json);

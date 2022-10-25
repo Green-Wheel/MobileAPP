@@ -2,7 +2,7 @@ import '../serializers/maps.dart';
 import '../services/google_service.dart';
 
 class RouteDistance {
-  static DistanceMatrix getDistanceMatrix(LatLng origin, LatLng destination) {
+  static DistanceMatrix getDistanceMatrix(LatLang origin, LatLang destination) {
     GoogleService.getDistanceMatrix(origin, destination).then((value) {
       print(value);
       if (value['status'] == 'OK') {

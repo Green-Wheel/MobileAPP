@@ -8,7 +8,7 @@ import '../serializers/maps.dart';
 class GoogleService {
   // https://developers.google.com/maps/documentation/distance-matrix/distance-matrix
   static Future<dynamic> getDistanceMatrix(
-      LatLng origin, LatLng destination) async {
+      LatLang origin, LatLang destination) async {
     final url =
         'https://maps.googleapis.com/maps/api/distancematrix/json?units=metric&origins=${origin.lat},${origin.lng}&destinations=${destination.lat},${destination.lng}&key=${FlutterConfig.get('GOOGLE_MAPS_API_KEY')}';
     final response = await http.get(Uri.parse(url));
@@ -21,9 +21,10 @@ class GoogleService {
 
   // https://developers.google.com/maps/documentation/directions/get-directions
   static Future<dynamic> getDirections(
-      LatLng origin, LatLng destination) async {
+      LatLang origin, LatLang destination) async {
     final url =
-        'https://maps.googleapis.com/maps/api/directions/json?origin=${origin.lat},${origin.lng}&destination=${destination.lat},${destination.lng}&key=${FlutterConfig.get('GOOGLE_MAPS_API_KEY')}';
+        'https://maps.googleapis.com/maps/api/directions/json?destination=${destination.lat},${destination.lng}&origin=${origin.lat},${origin.lng}&key=${FlutterConfig.get('GOOGLE_MAPS_API_KEY')}';
+    print(url);
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
@@ -33,7 +34,7 @@ class GoogleService {
   }
 
   // https://developers.google.com/maps/documentation/geocoding/requests-reverse-geocoding
-  static Future<dynamic> getReverseGeocoding(LatLng latLng) async {
+  static Future<dynamic> getReverseGeocoding(LatLang latLng) async {
     final url =
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=${latLng.lat},${latLng.lng}&key=${FlutterConfig.get('GOOGLE_MAPS_API_KEY')}';
     final response = await http.get(Uri.parse(url));

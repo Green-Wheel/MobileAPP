@@ -10,14 +10,14 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const HomePage(key: Key("HomePage")),
     ),
     GoRoute(
-      path: '/route/:long/:lat',
+      path: '/route/:lat/:long',
       builder: (context, state) {
         final long = state.params['long']!;
         final lat = state.params['lat']!;
         return RoutePage(
           key: Key("RoutePage"),
-          long: long,
           lat: lat,
+          long: long,
         );
       },
     ),

@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       this.index = index;
       if (index == 1) {
-        GoRouter.of(context).go('/route/41.3874/2.1686');
+        GoRouter.of(context).go('/route/41.544902/1.862905');
       }
     });
   }
