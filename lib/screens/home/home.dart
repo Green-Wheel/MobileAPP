@@ -1,42 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/localizations.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
+import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late GoogleMapController mapController;
-
-  final LatLng _center = const LatLng(41.3874, 2.1686);
-
-  void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
-  }
-
+  int index = 0;
   @override
   Widget build(BuildContext context) {
-    final tr = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(tr.language),
+        title: const Text("Home Page"),
         actions: [
-          IconButton(icon: Icon(Icons.language), onPressed: _changeLanguage),
+          IconButton(
+              icon: const Icon(Icons.language), onPressed: _changeLanguage),
         ],
       ),
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: CameraPosition(
-          target: _center,
-          zoom: 11.0,
-        ),
+      body: SafeArea(
+        child: GoogleMapsWidget(),
       ),
+      bottomNavigationBar: BottomBarWidget(
+        index: index,
+        onChangedTab: _onChangeTab,
+      ),
+      floatingActionButton: const BottomBarActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 
@@ -45,5 +40,11 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) => const LanguageSelectorWidget(),
     );
+  }
+
+  void _onChangeTab(int index) {
+    setState(() {
+      this.index = index;
+    });
   }
 }
