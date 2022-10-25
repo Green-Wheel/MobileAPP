@@ -28,7 +28,7 @@ class MainApp extends StatelessWidget {
           return MaterialApp(
             title: 'GreenWheel',
             theme: appTheme(),
-            initialRoute: '/',
+            initialRoute: '/addCharger',
             routes: routes,
             locale: provider.locale,
             supportedLocales: LangConfig.langs,
