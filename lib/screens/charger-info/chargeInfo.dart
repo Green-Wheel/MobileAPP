@@ -13,6 +13,7 @@ import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
 import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
+import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
 
 
 
@@ -172,7 +173,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
   Widget build(BuildContext context) {
     //final tr = AppLocalizations.of(context)!;
     return  Scaffold(
-      body: Stack(
+      body:  Stack(
         children: [
           GoogleMap(
             onMapCreated: _onMapCreated,
@@ -189,7 +190,10 @@ class _ChargeInfoState extends State<ChargeInfo>{
             zoomControlsEnabled: true,
             onTap: onTap,
           ),
-          is_visible ? infoWidget() : Container()
+          Padding(
+            padding: EdgeInsets.only(left: 325, top: 100),
+            child: ButtonListScreenChargersWidget(),
+          ),
         ],
       ),
     );
