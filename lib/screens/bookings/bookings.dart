@@ -19,7 +19,7 @@ class MyBookings extends StatelessWidget {
     return MaterialApp(
       title: 'bookings',
       theme: ThemeData(
-        scaffoldBackgroundColor: CupertinoColors.extraLightBackgroundGray,
+        scaffoldBackgroundColor: CupertinoColors.white, //CupertinoColors.extraLightBackgroundGray,
       ),
       home: const MyBookingsPage(),
     );
@@ -36,6 +36,10 @@ class MyBookingsPage extends StatefulWidget {
 class _MyBookingsPageState extends State<MyBookingsPage> {
   List bookings = [];
   List ratings = [];
+  bool pressFilterByDate = false;
+  bool pressFilterByChargers = false;
+  bool pressFilterByBikes = false;
+  bool pressFilterByLocation = false;
 
   @override
   void initState() {
@@ -83,8 +87,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
     });
   }
 
-  Widget _buildCard(int id, String location, String rating, int distance,
-      String time) =>
+  Widget _buildCard(int id, String location, String rating, int distance, String time) =>
       Card(
         elevation: 10,
         color: CupertinoColors.white,
@@ -320,6 +323,41 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
         ),
       );
 
+  Widget buildList() => ListView.builder(
+    itemCount: bookings.length,
+    itemBuilder: (context, index) {
+      // Guarda a rate el rating de la reserva <-- De moment això és temporal fins que s'implementi poder valorar un carregador (ara es passa una mitjana hardcoded)
+      String rate = "";
+      for (int i = 0; i < ratings.length; i++) {
+        if (bookings[index]['id'].toString() == ratings[i]['booking'].toString()) {
+          rate = ratings[i]['rate'].toString();
+        }
+      }
+      if (rate == "") {
+        rate = "0";
+      }
+
+      // Nom de la publicació del carregador reservat
+      List<dynamic> publicationName = bookings[index]['publication'];
+
+      var endDate = DateTime.parse(bookings[index]['end_date']);
+      var startDate = DateTime.parse(bookings[index]['start_date']);
+      DateFormat formatterStart = DateFormat('HH:mm');
+      DateFormat formatterEnd = DateFormat('HH:mm');
+      String formattedTimeStart = formatterStart.format(startDate);
+      String formattedTimeEnd = formatterEnd.format(endDate);
+      if (bookings[index]['cancelled'] == false) {
+        return _buildCard(
+            bookings[index]['id'], publicationName[0]['description'], rate, 2,
+            '$formattedTimeStart-$formattedTimeEnd');
+      } else {
+        return Container();
+      }
+    },
+  );
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -344,39 +382,157 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
             },
           ),
         ),
-        body: ListView.builder(
-          itemCount: bookings.length,
-          itemBuilder: (context, index) {
-            // Guarda a rate el rating de la reserva <-- De moment això és temporal fins que s'implementi poder valorar un carregador (ara es passa una mitjana hardcoded)
-            String rate = "";
-            for (int i = 0; i < ratings.length; i++) {
-              if (bookings[index]['id'].toString() == ratings[i]['booking'].toString()) {
-                rate = ratings[i]['rate'].toString();
-              }
-            }
-            if (rate == "") {
-              rate = "0";
-            }
-
-            // Nom de la publicació del carregador reservat
-            List<dynamic> publicationName = bookings[index]['publication'];
-            //print(publicationName[0]['description']);
-
-            var endDate = DateTime.parse(bookings[index]['end_date']);
-            var startDate = DateTime.parse(bookings[index]['start_date']);
-            DateFormat formatterStart = DateFormat('HH:mm');
-            DateFormat formatterEnd = DateFormat('HH:mm');
-            String formattedTimeStart = formatterStart.format(startDate);
-            String formattedTimeEnd = formatterEnd.format(endDate);
-            if (bookings[index]['cancelled'] == false) {
-              return _buildCard(
-                  bookings[index]['id'], publicationName[0]['description'],
-                  rate, 2,
-                  '$formattedTimeStart-$formattedTimeEnd');
-            } else {
-              return Container();
-            }
-          },
+        body: Column(
+          children: [
+            SizedBox(
+              height: 40,
+              child: Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 17.0, top: 7.5, bottom: 1),
+                    child: SizedBox(
+                      height: 35,
+                      child: TextButton(
+                        style: ButtonStyle(
+                            backgroundColor: pressFilterByDate ? MaterialStateProperty.all<Color>(Colors.green[50]!) : MaterialStateProperty.all<Color>(Colors.white),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        18.0),
+                                    side: BorderSide(
+                                        color: pressFilterByDate ? Colors.green : Colors.grey[700]!)
+                                )
+                            )
+                        ),
+                        onPressed: () {
+                          setState(() => pressFilterByDate = !pressFilterByDate);
+                          if (pressFilterByDate) {
+                            bookings.sort((a, b) => a['start_date'].compareTo(b['start_date']));
+                          } else {
+                            bookings.sort((a, b) => a['id'].compareTo(b['id']));
+                          }
+                          buildList();
+                        },
+                        child: Row(
+                          children: [
+                            Text('Date ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: pressFilterByDate ? Colors.green : Colors.grey[700]!),
+                            ),
+                            Icon(
+                              Icons.calendar_today,
+                              size: 20,
+                              color: pressFilterByDate ? Colors.green : Colors.grey[700]!,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, top: 7.5, bottom: 1),
+                    child: SizedBox(
+                      height: 35,
+                      child: TextButton(
+                        style: ButtonStyle(
+                            backgroundColor: pressFilterByChargers ? MaterialStateProperty.all<Color>(Colors.green[50]!) : MaterialStateProperty.all<Color>(Colors.white),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        18.0),
+                                    side: BorderSide(
+                                        color: pressFilterByChargers ? Colors.green : Colors.grey[700]!)
+                                )
+                            )
+                        ),
+                        onPressed: () => setState(() => pressFilterByChargers = !pressFilterByChargers),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.bolt,
+                              size: 20,
+                              color: pressFilterByChargers ? Colors.green : Colors.grey[700]!,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, top: 7.5, bottom: 1),
+                    child: SizedBox(
+                      height: 35,
+                      child: TextButton(
+                        style: ButtonStyle(
+                            backgroundColor: pressFilterByBikes ? MaterialStateProperty.all<Color>(Colors.green[50]!) : MaterialStateProperty.all<Color>(Colors.white),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        18.0),
+                                    side: BorderSide(
+                                        color: pressFilterByBikes ? Colors.green : Colors.grey[700]!)
+                                )
+                            )
+                        ),
+                        onPressed: () => setState(() => pressFilterByBikes = !pressFilterByBikes),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.directions_bike,
+                              size: 20,
+                              color: pressFilterByBikes ? Colors.green : Colors.grey[700]!,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10.0, top: 7.5, bottom: 1),
+                    child: SizedBox(
+                      height: 35,
+                      child: TextButton(
+                        style: ButtonStyle(
+                            backgroundColor: pressFilterByLocation ? MaterialStateProperty.all<Color>(Colors.green[50]!) : MaterialStateProperty.all<Color>(Colors.white),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                                RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        18.0),
+                                    side: BorderSide(
+                                        color: pressFilterByLocation ? Colors.green : Colors.grey[700]!)
+                                )
+                            )
+                        ),
+                        onPressed: () => setState(() => pressFilterByLocation = !pressFilterByLocation),
+                        child: Row(
+                          children: [
+                            Text('Location',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: pressFilterByLocation ? Colors.green : Colors.grey[700]!),
+                            ),
+                            Icon(
+                              Icons.location_on,
+                              size: 20,
+                                color: pressFilterByLocation ? Colors.green : Colors.grey[700]!
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              child: buildList(),
+            ),
+          ],
         )
     );
   }
