@@ -9,6 +9,7 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
 
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/home/home.dart';
 
 final GoRouter router = GoRouter(
@@ -16,6 +17,10 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: '/',
       builder: (context, state) => const HomePage(key: Key("HomePage")),
+    ),
+    GoRoute(
+      path: '/booking',
+      builder: (context, state) => const MyBookings(key: Key("Booking")),
     ),
   ],
 );

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
@@ -19,7 +20,7 @@ class MyBookings extends StatelessWidget {
     return MaterialApp(
       title: 'bookings',
       theme: ThemeData(
-        scaffoldBackgroundColor: CupertinoColors.white, //CupertinoColors.extraLightBackgroundGray,
+        backgroundColor: Colors.white, //CupertinoColors.extraLightBackgroundGray,
       ),
       home: const MyBookingsPage(),
     );
@@ -297,6 +298,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                               _cancelBooking(id);
                               _getBookings();
                               _getRatings();
+                              buildList();
                             },
                             child: Row(
                               children: const [
@@ -348,7 +350,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
       String formattedTimeEnd = formatterEnd.format(endDate);
       if (bookings[index]['cancelled'] == false) {
         return _buildCard(
-            bookings[index]['id'], publicationName[0]['description'], rate, 2,
+            bookings[index]['id'], publicationName[0]['description'], rate, index+1,
             '$formattedTimeStart-$formattedTimeEnd');
       } else {
         return Container();
@@ -373,13 +375,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
           backgroundColor: Colors.green,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              // Tornar a HomePage
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const HomePage()),
-              );
-            },
+            onPressed: () => context.go('/'),
           ),
         ),
         body: Column(
@@ -389,7 +385,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
               child: Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 17.0, top: 7.5, bottom: 1),
+                    padding: const EdgeInsets.only(left: 20.0, top: 7.5, bottom: 1),
                     child: SizedBox(
                       height: 35,
                       child: TextButton(
@@ -399,7 +395,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                 RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
-                                        18.0),
+                                        7.5),
                                     side: BorderSide(
                                         color: pressFilterByDate ? Colors.green : Colors.grey[700]!)
                                 )
@@ -442,7 +438,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                 RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
-                                        18.0),
+                                        7.5),
                                     side: BorderSide(
                                         color: pressFilterByChargers ? Colors.green : Colors.grey[700]!)
                                 )
@@ -472,7 +468,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                 RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
-                                        18.0),
+                                        7.5),
                                     side: BorderSide(
                                         color: pressFilterByBikes ? Colors.green : Colors.grey[700]!)
                                 )
@@ -502,7 +498,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
                                 RoundedRectangleBorder>(
                                 RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
-                                        18.0),
+                                        7.5),
                                     side: BorderSide(
                                         color: pressFilterByLocation ? Colors.green : Colors.grey[700]!)
                                 )
