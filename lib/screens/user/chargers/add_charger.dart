@@ -204,15 +204,15 @@ class _AddChargerState extends State<AddCharger> {
                     TextFormField(
                       keyboardType: TextInputType.number,
                       onSaved: (value) {
-                        _data['power'] = value!;
+                        _data['price'] = value!;
                       },
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
-                        labelText: 'Power',
+                        labelText: 'Price',
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'please enter power';
+                          return 'please enter price';
                         }
                         return null;
                       },
