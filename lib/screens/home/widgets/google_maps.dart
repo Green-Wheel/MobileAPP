@@ -8,7 +8,10 @@ import 'package:greenwheel/services/backend_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
-  const GoogleMapsWidget({Key? key}) : super(key: key);
+  Set<Polyline>? polylines = {};
+
+  GoogleMapsWidget({Key? key, this.polylines}) : super(key: key);
+
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
@@ -177,15 +180,15 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         mapType: MapType.normal,
         myLocationEnabled: true,
         myLocationButtonEnabled: false,
-        compassEnabled: true,
         zoomGesturesEnabled: true,
         zoomControlsEnabled: false,
-        trafficEnabled: true,
+        trafficEnabled: widget.polylines != null ? false : true,
         mapToolbarEnabled: false,
         rotateGesturesEnabled: true,
         scrollGesturesEnabled: true,
         tiltGesturesEnabled: true,
         liteModeEnabled: false,
+        polylines: widget.polylines != null ? widget.polylines! : {},
         onTap: (latLong) {
           (SnackBar(
             content: Text(
