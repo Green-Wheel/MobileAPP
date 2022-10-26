@@ -11,6 +11,7 @@ class BackendService {
   /// @param endpoint: Endpoint al que se quiere hacer el get (ejemplo: users/language/?id=1)
   /// @return: Devuelve un Future con el resultado del get, al cual se le debe hacer un then para obtener el resultado
   static Future<http.Response> get(String endpoint) async {
+    print(_baseUrl + endpoint);
     http.Response response = await http.get(
       Uri.parse(_baseUrl + endpoint),
       headers: {"Accept": "application/json"},
@@ -24,6 +25,7 @@ class BackendService {
   /// @return: Devuelve un Future con el resultado del post, al cual se le debe hacer un then para obtener el resultado
   static Future<http.Response> post(
       String endpoint, Map<String, dynamic> jsonMap) async {
+    print(_baseUrl + endpoint);
     http.Response response = await http.post(
       Uri.parse(_baseUrl + endpoint),
       headers: {
@@ -41,6 +43,7 @@ class BackendService {
   /// @return: Devuelve un Future con el resultado del put, al cual se le debe hacer un then para obtener el resultado
   static Future<http.Response> put(
       String endpoint, Map<String, dynamic> jsonMap) async {
+    print(_baseUrl);
     http.Response response = await http.put(
       Uri.parse(_baseUrl + endpoint),
       headers: {
