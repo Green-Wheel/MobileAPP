@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
+import 'package:greenwheel/screens/home/widgets/drawer.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 
+import '../../widgets/floating_search_bar.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,13 +18,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home Page"),
-        actions: [
-          IconButton(
-              icon: const Icon(Icons.language), onPressed: _changeLanguage),
-        ],
-      ),
+      appBar: SearchBar(MediaQuery.of(context).size),
       body: SafeArea(
         child: GoogleMapsWidget(),
       ),
@@ -30,6 +26,7 @@ class _HomePageState extends State<HomePage> {
         index: index,
         onChangedTab: _onChangeTab,
       ),
+      drawer : SimpleDrawer(),
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

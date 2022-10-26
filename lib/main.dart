@@ -7,7 +7,7 @@ import 'package:greenwheel/theme/style.dart';
 import 'package:greenwheel/utils/lang_config.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
+  WidgetsFlutterBinding.ensureInitialized();
   await FlutterConfig.loadEnvVariables();
   await EasyLocalization.ensureInitialized();
 
