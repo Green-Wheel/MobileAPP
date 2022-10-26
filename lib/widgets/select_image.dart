@@ -45,12 +45,12 @@ class _SelectImageState extends State<SelectImage> {
           child: imageFile == null || imageFile!.isEmpty
               ? const Icon(Icons.add)
               : ListView(
-                scrollDirection: Axis.horizontal,
-                children: imageFile.map((file) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0),
-                  child: Image.file(file),
-                )).toList(),
-              ),
+            scrollDirection: Axis.horizontal,
+            children: imageFile.map((file) => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 0.0),
+              child: Image.file(file),
+            )).toList(),
+          ),
         ),
       ],
     );
@@ -58,5 +58,4 @@ class _SelectImageState extends State<SelectImage> {
 }
 
 /*
-
  */
