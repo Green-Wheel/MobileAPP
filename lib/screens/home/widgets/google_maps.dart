@@ -48,7 +48,29 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           }
         });
       } else {
-        print('Error getting chargers!');
+        print('Error getting public chargers!');
+      }
+    });
+  }
+
+  void _getAndDrawPrivateChargers() async {
+    BackendService.get('chargers/private/').then((response) {
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        setState(() {
+          markersList = jsonResponse;
+          for (int i = 0; i < markersList.length; i++) {
+            Map localization = markersList[i]['localization'];
+            double latitude = localization['latitude'];
+            double longitude = localization['longitude'];
+            if (markersList[i]['direction'] == null) {
+              markersList[i]['direction'] = "No description";
+            }
+            _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+          }
+        });
+      } else {
+        print('Error getting public chargers!');
       }
     });
   }
@@ -60,6 +82,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _getCurrentLocation();
     });
     _getAndDrawPublicChargers();
+    _getAndDrawPrivateChargers();
     super.initState();
   }
 
