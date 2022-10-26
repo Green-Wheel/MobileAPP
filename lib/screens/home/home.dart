@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 
@@ -47,9 +46,6 @@ class _HomePageState extends State<HomePage> {
   void _onChangeTab(int index) {
     setState(() {
       this.index = index;
-      if (index == 1) {
-        GoRouter.of(context).go('/route/41.544902/1.862905');
-      }
     });
   }
 }
