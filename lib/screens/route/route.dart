@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -7,6 +8,7 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../serializers/maps.dart';
 import '../../utils/geocoding.dart';
+import '../../utils/lang_config.dart';
 import '../../utils/map_directions.dart';
 
 //https://medium.com/@shiraz990/flutter-fetching-google-directions-using-changenotifierprovider-f642adbe6cf4
@@ -27,8 +29,10 @@ class RoutePage extends StatefulWidget {
 
 class _RoutePageState extends State<RoutePage> {
   Set<Polyline>? polylines = {};
-  final _formKey = GlobalKey<FormState>();
   final panelController = PanelController();
+  Direction? routeInfo;
+  final originController = TextEditingController();
+  final destinationController = TextEditingController();
 
   @override
   void initState() {
@@ -42,9 +46,14 @@ class _RoutePageState extends State<RoutePage> {
                   LatLang(lat: position.latitude, lng: position.longitude),
                   LatLang(
                       lat: double.parse(widget.lat),
-                      lng: double.parse(widget.long)))
-              .then((value) => {
+                      lng: double.parse(widget.long)),
+                  LangConfig.getStringFromLocale(context.locale))
+              .then((value) =>
+      {
                     setState(() {
+                      routeInfo = value;
+                      originController.text = value.startAddress;
+                      destinationController.text = value.endAddress;
                       polylines!.add(Polyline(
                           polylineId: const PolylineId("poly"),
                           color: Colors.blue,
@@ -61,61 +70,64 @@ class _RoutePageState extends State<RoutePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100.0),
-        child: AppBar(
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_rounded),
-              onPressed: () {
-                context.go('/');
-              },
-            ),
-            flexibleSpace: Container(
-              color: Colors.white,
-              child: Padding(
-                  padding: const EdgeInsets.fromLTRB(55, 35, 50, 10),
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        decorativeIcons(),
-                        Expanded(
-                            child: Column(children: [
-                          searchField("Origin"),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          searchField("Destination"),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(100.0),
+          child: AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back_rounded),
+                onPressed: () {
+                  context.go('/');
+                },
+              ),
+              flexibleSpace: Container(
+                color: Colors.white,
+                child: Padding(
+                    padding: const EdgeInsets.fromLTRB(55, 35, 50, 10),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          decorativeIcons(),
+                          Expanded(
+                              child: Column(children: [
+                            searchField("Origin", originController),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            searchField("Destination", destinationController),
+                          ])),
                         ])),
-                      ])),
-            )),
-      ),
-      body: SlidingUpPanel(
-          // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-          minHeight: MediaQuery.of(context).size.height * 0.2,
-          controller: panelController,
-          parallaxEnabled: true,
-          parallaxOffset: 0.5,
-          backdropEnabled: true,
-          body: Expanded(
+              )),
+        ),
+        body: Stack(children: [
+          Container(
+            padding: const EdgeInsets.only(bottom: 135),
             child: GoogleMapsWidget(polylines: polylines),
           ),
-          panelBuilder: (controller) => PanelWidget(
-                controller: controller,
-                panelController: panelController,
-              ),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
-    );
+          SlidingUpPanel(
+              // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
+              maxHeight: MediaQuery.of(context).size.height * 0.8,
+              minHeight: 135.0,
+              controller: panelController,
+              parallaxEnabled: true,
+              parallaxOffset: 0.5,
+              backdropEnabled: true,
+              panelBuilder: (controller) => PanelWidget(
+                    controller: controller,
+                    panelController: panelController,
+                    routeInfo: routeInfo,
+                  ),
+              borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
+        ]));
   }
 }
 
-Widget searchField(hint) {
+Widget searchField(hint, controller) {
   return Expanded(
       child: TextField(
     cursorColor: Colors.green,
     enabled: false,
     maxLines: 1,
-    //controller: controller,
+    controller: controller,
     decoration: InputDecoration(
       contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
       enabledBorder: const OutlineInputBorder(

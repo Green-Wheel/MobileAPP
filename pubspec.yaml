@@ -28,6 +28,7 @@ dependencies:
   json_annotation: ^4.7.0
   flutter_polyline_points: ^1.0.0
   sliding_up_panel: ^2.0.0+1
+  url_launcher: ^6.1.6
 
 dev_dependencies:
   flutter_test:

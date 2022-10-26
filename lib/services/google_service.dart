@@ -21,9 +21,9 @@ class GoogleService {
 
   // https://developers.google.com/maps/documentation/directions/get-directions
   static Future<dynamic> getDirections(
-      LatLang origin, LatLang destination) async {
+      LatLang origin, LatLang destination, String? lang) async {
     final url =
-        'https://maps.googleapis.com/maps/api/directions/json?destination=${destination.lat},${destination.lng}&origin=${origin.lat},${origin.lng}&key=${FlutterConfig.get('GOOGLE_MAPS_API_KEY')}';
+        'https://maps.googleapis.com/maps/api/directions/json?destination=${destination.lat},${destination.lng}&origin=${origin.lat},${origin.lng}&language=$lang&key=${FlutterConfig.get('GOOGLE_MAPS_API_KEY')}';
     print(url);
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
