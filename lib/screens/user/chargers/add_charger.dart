@@ -199,10 +199,10 @@ class _AddChargerState extends State<AddCharger> {
                       },
                     ),
                     SizedBox(height: 10),
-                    SelectImage(
+                    /*SelectImage(
                       multiple: true,
                       getImageData: _getImage_data,
-                    ),
+                    ),*/
                     SizedBox(height: 10),
                     Center(
                       child: ElevatedButton(
