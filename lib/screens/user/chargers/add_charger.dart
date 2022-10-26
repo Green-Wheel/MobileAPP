@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:greenwheel/widgets/select_image.dart';
 import 'package:greenwheel/services/backend_service.dart';
 
 
@@ -199,10 +200,10 @@ class _AddChargerState extends State<AddCharger> {
                       },
                     ),
                     SizedBox(height: 10),
-                    /*SelectImage(
+                    SelectImage(
                       multiple: true,
                       getImageData: _getImage_data,
-                    ),*/
+                    ),
                     SizedBox(height: 10),
                     Center(
                       child: ElevatedButton(
