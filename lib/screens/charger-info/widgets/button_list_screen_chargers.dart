@@ -12,7 +12,7 @@ class _ButtonListScreenChargersWidget extends State<ButtonListScreenChargersWidg
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
-      radius: 25,
+      radius: 27,
       backgroundColor: Colors.white,
       child: IconButton(
           padding: const EdgeInsets.all(10),
@@ -20,7 +20,7 @@ class _ButtonListScreenChargersWidget extends State<ButtonListScreenChargersWidg
           icon: Image.asset("assets/images/punt_carregador.png"),
           onPressed: () {
             // do something
-            context.go('/lib/screens/charger-info-list/chargeInfoList.dart');
+            //context.go('../../charger-info-list/chargeInfoList.dart');
           }),
     );
   }

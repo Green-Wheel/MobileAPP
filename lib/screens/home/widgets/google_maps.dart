@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:greenwheel/screens/charger-info/widgets/card_info.dart';
+import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
 
 
 class GoogleMapsWidget extends StatefulWidget {
@@ -189,6 +190,10 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               ));
             },
             onCameraMove: onCameraMove,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10, left: 325),
+            child: ButtonListScreenChargersWidget(),
           ),
           is_visible ? show_card() : Container()
         ],
