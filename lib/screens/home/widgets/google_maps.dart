@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:greenwheel/screens/charger-info/widgets/card_info.dart';
+import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
+
 
 class GoogleMapsWidget extends StatefulWidget {
   Set<Polyline>? polylines = {};
@@ -31,8 +35,13 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       speedAccuracy: 1);
   Set<Marker> markers = {};
   final Map<MarkerId, Marker> markerMap = {};
-  late Marker actualMarcador;
+  late Position _actualMarcador = _position;
+  late double latitud_act;
+  late double longitud_act;
+  late Marker marcador_actual;
+  late String id_marcador;
   List markersList = [];
+  bool is_visible = false;
 
   void _getAndDrawPublicChargers() async {
     BackendService.get('chargers/public/').then((response) {
@@ -83,6 +92,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getCurrentLocation();
+      is_visible = false;
     });
     _getAndDrawPublicChargers();
     _getAndDrawPrivateChargers();
@@ -96,7 +106,15 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         position: LatLng(lat, log),
         onDrag: null,
         icon: iconMarker,
-        onTap: () {} //_onMarkerTapped(MarkerId(id)),
+        onTap: () {
+          setState(() {
+            is_visible = false;
+          });
+          setState(() {
+            id_marcador = id;
+            is_visible = true;
+          });
+        } //_onMarkerTapped(MarkerId(id)),
     );
     markers.add(marcador);
     markerMap[MarkerId(id)] = marcador;
@@ -167,38 +185,127 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void onCameraMove(CameraPosition cameraPosition) {
-    //debugPrint('$cameraPosition');
+    //print('$cameraPosition');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GoogleMap(
-        onMapCreated: _onMapCreated,
-        initialCameraPosition: _kInitialPosition,
-        markers: markers,
-        mapType: MapType.normal,
-        myLocationEnabled: true,
-        myLocationButtonEnabled: false,
-        zoomGesturesEnabled: true,
-        zoomControlsEnabled: false,
-        trafficEnabled: widget.polylines != null ? false : true,
-        mapToolbarEnabled: false,
-        rotateGesturesEnabled: true,
-        scrollGesturesEnabled: true,
-        tiltGesturesEnabled: true,
-        liteModeEnabled: false,
-        polylines: widget.polylines != null ? widget.polylines! : {},
-        onTap: (latLong) {
-          (SnackBar(
-            content: Text(
-                'Tapped location LatLong is (${latLong.latitude},${latLong.longitude})'),
-          ));
-        },
-        onCameraMove: onCameraMove,
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: _kInitialPosition,
+            markers: markers,
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            compassEnabled: true,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            trafficEnabled: true,
+            mapToolbarEnabled: false,
+            rotateGesturesEnabled: true,
+            scrollGesturesEnabled: true,
+            tiltGesturesEnabled: true,
+            liteModeEnabled: false,
+            onTap: (latLong) {
+              (SnackBar(
+                content: Text(
+                    'Tapped location LatLong is (${latLong.latitude},${latLong.longitude})'),
+              ));
+            },
+            onCameraMove: onCameraMove,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 10, left: 325),
+            child: ButtonListScreenChargersWidget(),
+          ),
+          is_visible ? show_card() : Container()
+        ],
       ),
       floatingActionButton: currentLocationActionButton(),
     );
+  }
+
+  String title_parser(String description){
+    description = description.replaceAll("Ãa", "i");
+    description = description.replaceAll("Ã", "à");
+    description = description.replaceAll("àa", "ia");
+    description = description.replaceAll("Ã³", "ó");
+    description = description.replaceAll("à³", "ó");
+    description = description.replaceAll("Ã²", "ò");
+    description = description.replaceAll("à²", "ò");
+    description = description.replaceAll("Ã§", "ç");
+    description = description.replaceAll("à§", "ç");
+    description = description.replaceAll("Ã©", "é");
+    description = description.replaceAll("à¨", "è");
+    description = description.replaceAll("à©", "è");
+    description = description.replaceAll("2 -", "2\n");
+    description = description.replaceAll("6 -  ", "6\n");
+    description = description.replaceAll("³-", "\n");
+    description = description.replaceAll("er-Al", "er\nAl");
+    description = description.replaceAll("a-Ca", "a\nCa");
+    description = description.replaceAll(", Ap", "\nAp");
+    description = description.replaceAll("-Ca", "\nCa");
+    description = description.replaceAll(", Ca", "\nCa");
+    description = description.replaceAll(" QR", "\nQR");
+    description = description.replaceAll("37 - S", "37\nS");
+    description = description.replaceAll("res SO", "res\nSO");
+    description = description.replaceAll("-Ca", "\nCa");
+    description = description.replaceAll("ó-Pl", "ó\nPl");
+    description = description.replaceAll("mans i ", "mans\ni ");
+    description = description.replaceAll("T-I", "T\nI");
+    description = description.replaceAll("A  Torr", "A\nTorr");
+    description = description.replaceAll("Mont-Roig", "Mont\nRoig");
+    description = description.replaceAll("a Sup", "a\nSup");
+    description = description.replaceAll("Despà", "Despí");
+    if (description.length >= 40){
+      description = description.replaceAll(" - ", "\n");
+      //description = description.replaceAll("-", "\n");
+      description = description.replaceAll("- ", "\n");
+      description = description.replaceAll(")(", ")\n(");
+      description = description.replaceAll(" (", "\n(");
+      description = description.replaceAll("E L'", "E\nL'");
+    }
+    if (description.length < 40){
+      description = description.replaceAll(") ", ")\n");
+      description = description.replaceAll(" (", "\n(");
+      description = description.replaceAll("m-", "m\n");
+    }
+    return description;
+  }
+
+  Widget show_card(){
+
+    //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
+    int pos_marker = 0;
+    for (int i = 0; i < markersList.length; i++){
+      if (markersList[i]['description'] == id_marcador){
+        pos_marker = i;
+        print(pos_marker);
+      }
+    }
+
+    //Generación rate aleatoria (harcode rate)
+    Random random = Random();
+    int min = 2, max = 6;
+    int num = (min + random.nextInt(max - min));
+    double numd = num.toDouble();
+
+    //Obtencion del numero de tipos de cargadores
+    int types = markersList[pos_marker]['connection_type'].length;
+
+    //Arreglo del titulo del cargador respecto a los datos del json
+    String description = markersList[pos_marker]['description'];
+    description = title_parser(description);
+
+    //Mirar el tipo de la variable porque to_do  da null
+    bool avaliable = true;
+    //avaliable da null
+    if (markersList[pos_marker]['description'] == "false") avaliable = false;
+
+    return CardInfoWidget(location: description, rating: numd, types: types, avaliable: avaliable, match: true);
   }
 
   Widget currentLocationActionButton() {

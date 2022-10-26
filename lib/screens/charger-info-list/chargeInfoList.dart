@@ -1,6 +1,11 @@
 import 'dart:core';
 import 'dart:ffi';
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:math';
+
+import 'package:easy_localization/easy_localization.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
 import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
@@ -8,6 +13,9 @@ import 'package:greenwheel/screens/charger-info/widgets/location_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
 import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
+import 'package:greenwheel/services/backend_service.dart';
+import 'package:greenwheel/screens/charger-info/chargeInfo.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 
 void main(){runApp(const MaterialApp(
@@ -17,32 +25,6 @@ void main(){runApp(const MaterialApp(
   ),
 ));}
 
-//TODO: Acabar de confeccionar el modelo en el que llegaran los datos (preguntar)
-class Locations{
-  late String direction;
-  late String town;
-  late double latitude;
-  late double longitude;
-
-}
-
-class Info {
-  late bool avaliable;
-  late String speed;
-  late Float power;
-  late String charger_type;
-  late String type_veichle;
-  late bool match;
-}
-
-class Marcador {
-  late String identifier;
-  late bool is_public;
-  late List<Locations> geolocation;
-  late List<Info> info;
-}
-
-
 
 class ChargeInfoList extends StatefulWidget {
   const ChargeInfoList({Key? key}) : super(key: key);
@@ -51,16 +33,59 @@ class ChargeInfoList extends StatefulWidget {
   State<ChargeInfoList> createState() => _ChargeInfoListState();
 
 }
-List<Marcador> elements = {} as List<Marcador>;
-List<String> element = [
-  "Hey", "hola", "sep", "yep", "prova",
-  "Hey", "hola", "sep", "yep", "prova",
-  "Hey", "hola", "sep", "yep", "prova",
-  "Hey", "hola", "sep", "yep", "prova",
-  "Hey", "hola", "sep", "yep", "prova",
-];
 
 class _ChargeInfoListState extends State<ChargeInfoList>{
+
+  List markersList = [];
+
+  @override
+  void initState(){
+    super.initState();
+    _getChargers();
+  }
+
+  /*void _getPublicChargers() async {
+    BackendService.get('chargers/public/').then((response)  {
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        markersList = jsonResponse;
+        Marcador? mark;
+        for (int i = 0; i < markersList.length; i++) {
+          Map localization = markersList[i]['localization'];
+          double latitude = localization['latitude'];
+          double longitude = localization['longitude'];
+          String direction = "No description";
+          if (markersList[i]['direction'] != null) {
+            direction = markersList[i]['direction'];
+          }
+          double power =  markersList[i]['power'];
+          String town = markersList[i]['town'];
+          mark!.id = i;
+          mark!.latitude = latitude;
+          mark!.longitude = longitude;
+          mark!.direction = direction;
+          mark!.power = power;
+          mark!.town = town;
+          markers.add(mark);
+        }
+      }
+    });
+  }*/
+
+  void _getChargers() async {
+    BackendService.get('chargers/public/').then((response)  {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        print(jsonResponse);
+        setState(() {
+          markersList = jsonResponse;
+        });
+      } else {
+        print('Error getting chargers!');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,26 +110,92 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
         ),
       ),
       body: ListView.builder(
-        itemCount: 25,
+        itemCount: markersList.length,
         /*addAutomaticKeepAlives: false,
         addRepaintBoundaries: false,
         addSemanticIndexes: false,*/
         itemBuilder: (context, position) {
-          return Stack(
-            key: Key(element[position]),
-            children:[
-              _cardChargerList("location", true, true),
-            ],
-          );
+
+          //Arreglo del titulo del cargador respecto a los datos del json
+          String description = markersList[position]['description'];
+          description = title_parser(description);
+
+          //Mirar el tipo de la variable porque to_do  da null
+          bool avaliable = true;
+          //avaliable da null
+          if (markersList[position]['description'] == "false") avaliable = false;
+
+          //print(markersList[position]['connection_type']); //retorna numero de typos diferentes con el .lenght
+          //print(markersList[position]['current_type']); //puede ser 1 o 2 -> AC - DC
+
+          //Obtencion del numero de tipos de cargadores
+          int types = markersList[position]['connection_type'].length;
+
+          return _cardChargerList(description, avaliable, true, types);
         }
       ),
     );
   }
 }
 
+String title_parser(String description){
+  description = description.replaceAll("Ãa", "i");
+  description = description.replaceAll("Ã", "à");
+  description = description.replaceAll("àa", "ia");
+  description = description.replaceAll("Ã³", "ó");
+  description = description.replaceAll("à³", "ó");
+  description = description.replaceAll("Ã²", "ò");
+  description = description.replaceAll("à²", "ò");
+  description = description.replaceAll("Ã§", "ç");
+  description = description.replaceAll("à§", "ç");
+  description = description.replaceAll("Ã©", "é");
+  description = description.replaceAll("à¨", "è");
+  description = description.replaceAll("à©", "è");
+  description = description.replaceAll("2 -", "2\n");
+  description = description.replaceAll("6 -  ", "6\n");
+  description = description.replaceAll("³-", "\n");
+  description = description.replaceAll("er-Al", "er\nAl");
+  description = description.replaceAll("a-Ca", "a\nCa");
+  description = description.replaceAll(", Ap", "\nAp");
+  description = description.replaceAll("-Ca", "\nCa");
+  description = description.replaceAll(", Ca", "\nCa");
+  description = description.replaceAll(" QR", "\nQR");
+  description = description.replaceAll("37 - S", "37\nS");
+  description = description.replaceAll("res SO", "res\nSO");
+  description = description.replaceAll("-Ca", "\nCa");
+  description = description.replaceAll("ó-Pl", "ó\nPl");
+  description = description.replaceAll("mans i ", "mans\ni ");
+  description = description.replaceAll("T-I", "T\nI");
+  description = description.replaceAll("A  Torr", "A\nTorr");
+  description = description.replaceAll("Mont-Roig", "Mont\nRoig");
+  description = description.replaceAll("a Sup", "a\nSup");
+  description = description.replaceAll("Despà", "Despí");
+  if (description.length >= 40){
+    description = description.replaceAll(" - ", "\n");
+    //description = description.replaceAll("-", "\n");
+    description = description.replaceAll("- ", "\n");
+    description = description.replaceAll(")(", ")\n(");
+    description = description.replaceAll(" (", "\n(");
+    description = description.replaceAll("E L'", "E\nL'");
+  }
+  if (description.length < 40){
+    description = description.replaceAll(") ", ")\n");
+    description = description.replaceAll(" (", "\n(");
+    description = description.replaceAll("m-", "m\n");
+  }
+  return description;
+}
+
 
 //funcion respectiva a la card de los cargadores
-Widget _cardChargerList(String direction, bool avaliable, bool match){
+Widget _cardChargerList(String direction, bool avaliable, bool match, int types){
+
+  //Generación rate aleatoria (harcode rate)
+  Random random = Random();
+  int min = 2, max = 6;
+  int num = (min + random.nextInt(max - min));
+  double numd = num.toDouble();
+
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -116,41 +207,44 @@ Widget _cardChargerList(String direction, bool avaliable, bool match){
     ),
     child: SizedBox(
       height: 175,
-      width: 400,
+      width: 450,
       child:Row(
         children: [
-          Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(right: 135),
-                child: LocationChargerWidget(location: direction),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 65),
-                child:  StarsStaticRateWidget(rate: 4.0),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 55),
-                child:  PointOfChargeDistWidget(distance: 2),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 83),
-                child: AvaliablePublicChargerWidget(avaliable: avaliable),
-              ),
-              Padding(
-                padding: EdgeInsets.only(),
-                child: MatchWithCarWidget(match: match),
-              ),
-            ],
+          SizedBox(
+            width: 270,
+            child:Column(
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: 5, left: 25),
+                  child: LocationChargerWidget(location: direction),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child:  StarsStaticRateWidget(rate: numd),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child:  PointOfChargeDistWidget(types: types),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: AvaliablePublicChargerWidget(avaliable: avaliable),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 25),
+                  child: MatchWithCarWidget(match: match),
+                ),
+              ],
+            ),
           ),
           Column(
             children:const [
               Padding(
-                padding:EdgeInsets.only(left: 8),
+                padding:EdgeInsets.only(right: 25),
                 child: ImageChargerWidget(),
               ),
               Padding(
-                padding:EdgeInsets.only(left: 5),
+                padding:EdgeInsets.only(right: 0),
                 child: ButtonRouteWidget(),
               ),
             ],

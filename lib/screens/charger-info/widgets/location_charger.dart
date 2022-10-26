@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
 class LocationChargerWidget extends StatefulWidget {
-  final String location;
-  const LocationChargerWidget({required this.location, super.key});
+  String location;
+  LocationChargerWidget({required this.location, super.key});
 
   @override
   State<StatefulWidget> createState() => _LocationChargerWidget();
 }
 
 class _LocationChargerWidget extends State<LocationChargerWidget>{
-  String location = "location";
-
   @override
   Widget build(BuildContext context) {
-    return _locationCharger(location);
+    return _locationCharger(widget.location);
   }
 }
 
