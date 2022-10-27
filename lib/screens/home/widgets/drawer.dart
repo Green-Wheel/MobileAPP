@@ -14,7 +14,7 @@ class SimpleDrawer extends StatelessWidget {
         padding: const EdgeInsets.only(left:0.0,top:25.0),
         children:[
           crossFirstRow(context),
-          const DrawerHeader(
+           DrawerHeader(
             decoration: BoxDecoration(
               image:  DecorationImage(
                 scale: 1.0,
@@ -40,7 +40,16 @@ class SimpleDrawer extends StatelessWidget {
                 currentAccountPictureSize: Size.square(50),
                   currentAccountPicture: Padding(
                     padding: EdgeInsets.only(bottom:0.0,left:15.0),
-                    child: Icon(Icons.account_circle,size:80,color:Colors.green),
+                    child: IconButton(
+                        icon: Icon(Icons.account_circle,size:80,color:Colors.green),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                              builder: (context) => ProfilePage())
+                          );
+                        }
+                    ),
                   ),
                 ), //circleAvatar
               ), //UserAccountDrawerHeader
