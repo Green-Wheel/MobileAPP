@@ -1,11 +1,9 @@
-import 'dart:core';
-import 'dart:ffi';
-import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'dart:core';
 import 'dart:math';
 
-import 'package:easy_localization/easy_localization.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
 import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
@@ -14,17 +12,6 @@ import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
 import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
 import 'package:greenwheel/services/backend_service.dart';
-import 'package:greenwheel/screens/charger-info/chargeInfo.dart';
-import 'package:permission_handler/permission_handler.dart';
-
-
-void main(){runApp(const MaterialApp(
-  title: 'chargeInfoList try',
-  home: Scaffold(
-    body: ChargeInfoList(),
-  ),
-));}
-
 
 class ChargeInfoList extends StatefulWidget {
   const ChargeInfoList({Key? key}) : super(key: key);
@@ -101,7 +88,8 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
-              // Tornar a HomePage
+              GoRouter.of(context).go('/');
+            // Tornar a HomePage
               /*Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const HomePage()),
@@ -244,8 +232,8 @@ Widget _cardChargerList(String direction, bool avaliable, bool match, int types)
                 child: ImageChargerWidget(),
               ),
               Padding(
-                padding:EdgeInsets.only(right: 0),
-                child: ButtonRouteWidget(),
+                padding: EdgeInsets.only(right: 0),
+                child: ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
               ),
             ],
           ),

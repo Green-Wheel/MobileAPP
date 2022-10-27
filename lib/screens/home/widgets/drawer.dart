@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
@@ -101,7 +102,7 @@ class SimpleDrawer extends StatelessWidget {
               leading: const Icon(Icons.calendar_month, size: 30.0),
               title: const Text('My Bookings', style: TextStyle(fontSize: 18)),
               onTap: () {
-                Navigator.pop(context);
+                GoRouter.of(context).go('/booking');
               },
             ),
           ),
@@ -121,9 +122,9 @@ class SimpleDrawer extends StatelessWidget {
             child: ListTile(
               visualDensity: VisualDensity(vertical: -2),
               leading: const Icon(Icons.add, size: 30),
-              title: const Text('My points', style: TextStyle(fontSize: 18)),
+              title: const Text('Add point', style: TextStyle(fontSize: 18)),
               onTap: () {
-                Navigator.pop(context);
+                GoRouter.of(context).go('/chargers/add');
               },
             ),
           ),

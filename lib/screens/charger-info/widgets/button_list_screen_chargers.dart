@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class ButtonListScreenChargersWidget extends StatefulWidget {
   const ButtonListScreenChargersWidget({super.key});
@@ -14,6 +15,7 @@ class _ButtonListScreenChargersWidget extends State<ButtonListScreenChargersWidg
       onPressed: () {
         // do something
         //context.go('../../charger-info-list/chargeInfoList.dart');
+        GoRouter.of(context).go('/chargers/list');
       },
       child: Icon(
         Icons.list,
