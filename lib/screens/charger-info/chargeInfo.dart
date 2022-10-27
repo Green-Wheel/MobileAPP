@@ -4,16 +4,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:greenwheel/services/backend_service.dart';
 import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
+import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
 import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
 import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/location_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
 import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
-import 'package:greenwheel/screens/home/widgets/google_maps.dart';
-import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
 
 
 
@@ -59,12 +57,14 @@ class _ChargeInfoState extends State<ChargeInfo>{
   final Map<MarkerId, Marker> markerMap = {};
   bool is_visible = false;
   late String adress = "PLAÇA CAT";
-
+  LatLng pos = LatLng(41.3874, 2.1686);
 
   @override
-  void initState(){
-    _addMarker(41.3874, 2.1686, 0, "Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true);
-    _addMarker(41.375182, 2.182867, 1, "Maremagnum", 5.0, 3,"10:00 - 20:00h", true);
+  void initState() {
+    _addMarker(
+        41.3874, 2.1686, 0, "Plaça Catalunya", 5.0, 2, "10:00 - 20:00h", true);
+    _addMarker(
+        41.375182, 2.182867, 1, "Maremagnum", 5.0, 3, "10:00 - 20:00h", true);
     super.initState();
   }
 
@@ -158,8 +158,9 @@ class _ChargeInfoState extends State<ChargeInfo>{
                   child: ImageChargerWidget(),
                 ),
                 Padding(
-                  padding:EdgeInsets.only(left: 15),
-                  child: ButtonRouteWidget(),
+                  padding: EdgeInsets.only(left: 15),
+                  child:
+                      ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
                 ),
               ],
             ),
@@ -199,11 +200,10 @@ class _ChargeInfoState extends State<ChargeInfo>{
     );
   }
 
-  infoWidget(){
+  infoWidget(LatLng pos) {
     return Padding(
         padding: const EdgeInsets.only(top: 650),
-        child: _buildCard(adress, 4, 2, "time", true, true)
-    );
+        child: _buildCard(adress, 4, 2, "time", true, true));
   }
 
   void onTap(LatLng pos){

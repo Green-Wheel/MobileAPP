@@ -5,17 +5,15 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
+import 'package:greenwheel/screens/charger-info/widgets/card_info.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:greenwheel/screens/charger-info/widgets/card_info.dart';
-import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
-
 
 class GoogleMapsWidget extends StatefulWidget {
   Set<Polyline>? polylines = {};
 
   GoogleMapsWidget({Key? key, this.polylines}) : super(key: key);
-
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
@@ -210,22 +208,24 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
             tiltGesturesEnabled: true,
             liteModeEnabled: false,
             onTap: (latLong) {
-              (SnackBar(
-                content: Text(
-                    'Tapped location LatLong is (${latLong.latitude},${latLong.longitude})'),
-              ));
-            },
-            onCameraMove: onCameraMove,
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 10, left: 325),
-            child: ButtonListScreenChargersWidget(),
-          ),
-          is_visible ? show_card() : Container()
-        ],
-      ),
-      floatingActionButton: currentLocationActionButton(),
-    );
+                (SnackBar(
+                  content: Text(
+                      'Tapped location LatLong is (${latLong.latitude},${latLong.longitude})'),
+                ));
+              },
+              onCameraMove: onCameraMove,
+            ),
+            is_visible ? show_card() : Container()
+          ],
+        ),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            ButtonListScreenChargersWidget(),
+            SizedBox(height: 10),
+            currentLocationActionButton(),
+          ],
+        ));
   }
 
   String title_parser(String description){

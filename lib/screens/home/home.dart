@@ -3,7 +3,6 @@ import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/drawer.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 
-import '../../widgets/floating_search_bar.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +17,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: SearchBar(MediaQuery.of(context).size),
+      appBar: AppBar(title: _searchTextField(), actions: [
+        IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              setState(() {});
+            })
+      ]),
       body: SafeArea(
         child: GoogleMapsWidget(),
       ),
@@ -26,7 +31,7 @@ class _HomePageState extends State<HomePage> {
         index: index,
         onChangedTab: _onChangeTab,
       ),
-      drawer : SimpleDrawer(),
+      drawer: SimpleDrawer(),
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
@@ -43,5 +48,28 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       this.index = index;
     });
+  }
+
+  Widget _searchTextField() {
+    return const TextField(
+      autofocus: false,
+      cursorColor: Colors.white,
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 20,
+      ),
+      textInputAction: TextInputAction.search,
+      //Specify the action button on the keyboard
+      decoration: InputDecoration(
+        //Style of TextField
+        hintText: 'Search...', //Text that is displayed when nothing is entered.
+        hintStyle: TextStyle(
+          //Style of hintText
+          color: Colors.white60,
+          fontSize: 20,
+        ),
+        enabled: false,
+      ),
+    );
   }
 }

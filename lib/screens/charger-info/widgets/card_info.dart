@@ -78,8 +78,9 @@ Widget _buildCard(String location, double rating, int types, bool avaliable,  bo
                   child: ImageChargerWidget(),
                 ),
                 Padding(
-                  padding:EdgeInsets.only(left: 15),
-                  child: ButtonRouteWidget(),
+                  padding: EdgeInsets.only(left: 15),
+                  child:
+                      ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
                 ),
               ],
             ),

@@ -11,17 +11,33 @@ class ButtonListScreenChargersWidget extends StatefulWidget {
 class _ButtonListScreenChargersWidget extends State<ButtonListScreenChargersWidget>{
   @override
   Widget build(BuildContext context) {
-    return CircleAvatar(
-      radius: 27,
-      backgroundColor: Colors.white,
-      child: IconButton(
-          padding: const EdgeInsets.all(10),
-          iconSize: 70,
-          icon: Image.asset("assets/images/punt_carregador.png"),
-          onPressed: () {
-            // do something
-            //context.go('../../charger-info-list/chargeInfoList.dart');
-          }),
+    return FloatingActionButton(
+      onPressed: () {
+        // do something
+        //context.go('../../charger-info-list/chargeInfoList.dart');
+        GoRouter.of(context).go('/chargers/list');
+      },
+      child: Icon(
+        Icons.list,
+        size: 35,
+      ),
+      backgroundColor: Colors.green,
+    );
+    ElevatedButton(
+      onPressed: () {
+        // do something
+        //context.go('../../charger-info-list/chargeInfoList.dart');
+      },
+      style: ButtonStyle(
+        backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+        shape: MaterialStateProperty.all<CircleBorder>(CircleBorder()),
+        padding:
+            MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(12)),
+      ),
+      child: Icon(
+        Icons.list,
+        size: 35,
+      ),
     );
   }
 }
