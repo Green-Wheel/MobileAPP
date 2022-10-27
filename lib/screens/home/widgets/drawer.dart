@@ -63,7 +63,7 @@ class SimpleDrawer extends StatelessWidget {
             padding: EdgeInsets.only(left: 10.0, top: 10.0),
             child: ListTile(
               leading: const Icon(Icons.person, size: 30.0),
-              title: Text(' My Profile ', style: TextStyle(fontSize: 18)),
+              title: Text('My Profile', style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.push(
                   context,
@@ -77,7 +77,7 @@ class SimpleDrawer extends StatelessWidget {
             child: ListTile(
               visualDensity: VisualDensity(vertical: -2),
               leading: const Icon(Icons.car_rental, size: 30.0),
-              title: const Text(' My Cars ', style: TextStyle(fontSize: 18)),
+              title: const Text('My Cars', style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -88,7 +88,7 @@ class SimpleDrawer extends StatelessWidget {
             child: ListTile(
               visualDensity: VisualDensity(vertical: -2),
               leading: const Icon(Icons.history, size: 30.0),
-              title: const Text(' History ', style: TextStyle(fontSize: 18)),
+              title: const Text('History', style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -99,8 +99,7 @@ class SimpleDrawer extends StatelessWidget {
             child: ListTile(
               visualDensity: VisualDensity(vertical: -2),
               leading: const Icon(Icons.calendar_month, size: 30.0),
-              title:
-                  const Text(' My Bookings ', style: TextStyle(fontSize: 18)),
+              title: const Text('My Bookings', style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.pop(context);
               },
@@ -111,7 +110,7 @@ class SimpleDrawer extends StatelessWidget {
             child: ListTile(
               visualDensity: VisualDensity(vertical: -2),
               leading: const Icon(Icons.chat, size: 30.0),
-              title: const Text(' Chat', style: TextStyle(fontSize: 18)),
+              title: const Text('Chat', style: TextStyle(fontSize: 18)),
               onTap: () {
                 Navigator.pop(context);
               },
