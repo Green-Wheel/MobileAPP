@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
-class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key}) : super(key: key);
+
+import '../screens/home/widgets/drawer.dart';
+
+class SearchBar extends StatefulWidget implements PreferredSizeWidget {
+  SearchBar(Size size, {Key? key}) : preferredSize = Size.fromHeight(kToolbarHeight),super(key: key);
 
   @override
   _SearchBar createState() => _SearchBar();

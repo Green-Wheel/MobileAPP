@@ -14,7 +14,9 @@ class SimpleDrawer extends StatelessWidget {
         padding: const EdgeInsets.only(top: 10.0),
         children: [
           crossFirstRow(context),
+
           DrawerHeader(
+
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -58,7 +60,6 @@ class SimpleDrawer extends StatelessWidget {
               ],
             ),
           ), //UserAccountDrawerHeader
-
           //DrawerHeader
           Padding(
             padding: EdgeInsets.only(left: 10.0, top: 10.0),
