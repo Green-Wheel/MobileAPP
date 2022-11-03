@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/profile/myprofile.dart';
+import 'package:greenwheel/screens/register/signup.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class SimpleDrawer extends StatelessWidget {
@@ -92,7 +93,10 @@ class SimpleDrawer extends StatelessWidget {
               leading: const Icon(Icons.history, size: 30.0),
               title: const Text('History', style: TextStyle(fontSize: 18)),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SignupScreen()),
+                );
               },
             ),
           ),
