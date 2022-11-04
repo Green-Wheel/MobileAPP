@@ -4,8 +4,9 @@ import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 class SimpleDrawer extends StatelessWidget {
-  const SimpleDrawer({Key? key}) : super(key: key);
+  SimpleDrawer({Key? key}) : super(key: key);
 
+  bool logged = false;
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -14,9 +15,7 @@ class SimpleDrawer extends StatelessWidget {
         padding: const EdgeInsets.only(top: 10.0),
         children: [
           crossFirstRow(context),
-
           DrawerHeader(
-
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -62,7 +61,7 @@ class SimpleDrawer extends StatelessWidget {
           ), //UserAccountDrawerHeader
           //DrawerHeader
           Padding(
-            padding: EdgeInsets.only(left: 10.0, top: 10.0),
+            padding: EdgeInsets.only(left: 10.0, top: 0.0),
             child: ListTile(
               leading: const Icon(Icons.person, size: 30.0),
               title: Text('My Profile', style: TextStyle(fontSize: 18)),
@@ -129,24 +128,55 @@ class SimpleDrawer extends StatelessWidget {
               },
             ),
           ),
-          SizedBox(
-            height: 20,
+          Padding(
+              padding: EdgeInsets.only(left: 10.0, right: 10.0),
+              child: Align(
+                        alignment: Alignment.center,
+                        child :Container(
+                            decoration: new BoxDecoration(color: Colors.lightBlueAccent),
+                            child: ListTile(
+                              visualDensity: VisualDensity(vertical: -2),
+                              leading: const Icon(Icons.help, size: 30),
+                              title: const Text('Help & Comments', style: TextStyle(fontSize: 18)),
+                              onTap: () {
+                              },
+                            ),
+                          )
+                    ),
           ),
-          Expanded(
+          Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
             child: Align(
-              alignment: Alignment.bottomCenter,
-              child: ListTile(
-                tileColor: Colors.white70,
-                visualDensity: VisualDensity(vertical: -2),
-                title: Center(
-                  child: const Text('Log out',
-                      style: TextStyle(fontSize: 20, color: Colors.red)),
-                ),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
+                alignment: Alignment.center,
+                child :Container(
+                  decoration: new BoxDecoration(color: Colors.grey),
+                  child: ListTile(
+                    visualDensity: VisualDensity(vertical: -2),
+                    leading: const Icon(Icons.account_box_rounded, size: 30),
+                    title: const Text('Change Accounts', style: TextStyle(fontSize: 18)),
+                    onTap: () {
+                    },
+                  ),
+                )
             ),
+          ),
+          Padding(
+              padding: EdgeInsets.only(left: 0.0, right: 30.0),
+              child: !logged ?
+              Align(
+                alignment: Alignment.center,
+                child: ListTile(
+                  tileColor: Colors.white70,
+                  visualDensity: VisualDensity(vertical: -2),
+                  title: Center(
+                    child: const Text('Log out',
+                        style: TextStyle(fontSize: 20, color: Colors.red)),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ): Text("")
           ),
         ],
       ),
