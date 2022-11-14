@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:greenwheel/services/backend_service.dart';
+import 'package:greenwheel/widgets/addCharger/localization_info.dart';
 import 'package:greenwheel/widgets/select_image.dart';
 import 'package:greenwheel/widgets/addCharger/basic_info.dart';
 
@@ -45,13 +46,14 @@ class _AddChargerState extends State<AddCharger> {
     'description': '',
     'direction': '',
     'town': '',
-    'Latitude': '',
-    'Longitude': '',
+    'lat': '',
+    'lng': '',
     'price': '',
     'power': '',
     'speed': [],
     'connection_type': [],
-    'current_type': []
+    'current_type': [],
+    'images': []
   };
 
   var _speeds = [];
@@ -118,8 +120,28 @@ class _AddChargerState extends State<AddCharger> {
     });
   }
 
-  void getBasicInfo() {
+  void getBasicInfo(basic_info) {
+    setState(() => {
+      _data['title'] = basic_info['title'],
+      _data['description'] = basic_info['description'],
+      _data['price'] = basic_info['price'],
+      _data['images'] = basic_info['images'],
+    });
+    setState(() {
+      ++_page;
+    });
+  }
 
+  void getLocalization(localization) {
+    setState(() => {
+      _data['direction'] = localization['direction'],
+      _data['town'] = localization['town'],
+      _data['lat'] = localization['lat'],
+      _data['lng'] = localization['lng'],
+    });
+    setState(() {
+      ++_page;
+    });
   }
 
   @override
@@ -139,117 +161,15 @@ class _AddChargerState extends State<AddCharger> {
         }
       case 1:
         {
-          return Scaffold(
-              body: SingleChildScrollView(
-                  child: Form(
-            key: _formKey1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                TextFormField(
-                  onSaved: (value) {
-                    _data['direction'] = value!;
-                  },
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                      labelText: 'Direction',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter Direction';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  TextFormField(
-                    onSaved: (value) {
-                      _data['town'] = value!;
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Town',
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter Town';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          onSaved: (value) {
-                            _data['Latitude'] = value!;
-                          },
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Latitude',
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'please enter Latitude';
-                            }
-                            return null;
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: TextFormField(
-                          keyboardType: TextInputType.number,
-                          onSaved: (value) {
-                            _data['Longitude'] = value!;
-                          },
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: 'Longitude',
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'please enter Longitude';
-                            }
-                            return null;
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(height: 10),
-                  Center(
-                    child: Row(
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            setState(() {
-                              --_page;
-                            });
-                          },
-                          child: const Text('Previous'),
-                        ),
-                        SizedBox(width: 20),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (_formKey1.currentState!.validate()) {
-                              _formKey1.currentState!.save();
-                              setState(() {
-                                ++_page;
-                              });
-                            }
-                          },
-                          child: const Text('Next'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
-              ));
+          return LocalizationInfo(
+              data: {
+                'direction': _data['direction'],
+                'town': _data['town'],
+                'lat': _data['lat'],
+                'lng': _data['lng'],
+              },
+              callback: getLocalization
+          );
       }
       case 2: {
         if (_speeds.isEmpty) {
