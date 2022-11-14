@@ -3,6 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:greenwheel/widgets/select_image.dart';
+import 'package:greenwheel/widgets/addCharger/basic_info.dart';
+
+import 'basic_info.dart';
+
 
 class charger extends StatelessWidget {
   @override
@@ -57,13 +61,6 @@ class _AddChargerState extends State<AddCharger> {
   var _current_types = [];
   var _selected_current_types = [];
 
-  var _images = [];
-
-  void _getImage_data(images) {
-    setState(() {
-      _images = images;
-    });
-  }
 
   bool send_data() {
     BackendService.post('chargers/private/', _data).then((response) async {
@@ -121,109 +118,23 @@ class _AddChargerState extends State<AddCharger> {
     });
   }
 
+  void getBasicInfo() {
+
+  }
+
   @override
   Widget build(BuildContext context) {
     switch (_page) {
       case 0:
         {
-          return Scaffold(
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
-                child: Form(
-                  key: _formKey0,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      TextFormField(
-                        onSaved: (value) {
-                          _data['title'] = value!;
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Title',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter Title';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        onSaved: (value) {
-                          _data['description'] = value!;
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Description',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter description';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        keyboardType: TextInputType.number,
-                        onSaved: (value) {
-                          _data['price'] = value!;
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Price',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter Price';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      TextFormField(
-                        keyboardType: TextInputType.number,
-                        onSaved: (value) {
-                          _data['price'] = value!;
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Price',
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'please enter price';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 10),
-                      SelectImage(
-                        multiple: true,
-                        getImageData: _getImage_data,
-                      ),
-                      SizedBox(height: 10),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            if (_formKey0.currentState!.validate()) {
-                              _formKey0.currentState!.save();
-                              setState(() {
-                                ++_page;
-                              });
-                            }
-                          },
-                          child: const Text('Next'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+          return BasicInfo(
+            data: {
+              'title': _data['title'],
+              'description': _data['description'],
+              'price': _data['price'],
+              'images': _data['images']
+            },
+            callback: getBasicInfo
           );
         }
       case 1:
