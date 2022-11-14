@@ -1,10 +1,10 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/services/backend_service.dart';
+import 'package:greenwheel/widgets/addCharger/connection_info.dart';
 import 'package:greenwheel/widgets/addCharger/localization_info.dart';
 import 'package:greenwheel/widgets/addCharger/speed_%20info.dart';
-import 'package:greenwheel/widgets/select_image.dart';
 import 'package:greenwheel/widgets/addCharger/basic_info.dart';
 
 import 'basic_info.dart';
@@ -40,8 +40,10 @@ class _AddChargerState extends State<AddCharger> {
   final _formKey0 = GlobalKey<FormState>();
   final _formKey1 = GlobalKey<FormState>();
 
-  int _page = 0;
+  int _page = 2;
 
+  List<File> _images = [];
+  
   var _data = {
     'title': '',
     'description': '',
@@ -51,12 +53,14 @@ class _AddChargerState extends State<AddCharger> {
     'lng': '',
     'price': '',
     'power': '',
+    'power': '',
     'speed': [],
     'connection_type': [],
     'current_type': [],
-    'images': []
   };
-
+  
+  
+  
   var _speeds = [];
   var _selected_speeds = [];
   var _connection_types = [];
@@ -124,7 +128,7 @@ class _AddChargerState extends State<AddCharger> {
       _data['title'] = basic_info['title'],
       _data['description'] = basic_info['description'],
       _data['price'] = basic_info['price'],
-      _data['images'] = basic_info['images'],
+      _images = basic_info['images'],
     });
   }
 
@@ -139,7 +143,13 @@ class _AddChargerState extends State<AddCharger> {
 
   void getSpeeds(speeds) {
     setState(() => {
-      _data['speed'] = speeds['speed'],
+      _data['speed'] = speeds,
+    });
+  }
+
+  void getConnections(connections) {
+    setState(() => {
+      _data['connection_type'] = connections,
     });
   }
 
@@ -153,7 +163,7 @@ class _AddChargerState extends State<AddCharger> {
               'title': _data['title'],
               'description': _data['description'],
               'price': _data['price'],
-              'images': _data['images']
+              'images': _images
             },
             callback: getBasicInfo,
             nextPage: nextPage,
@@ -184,59 +194,13 @@ class _AddChargerState extends State<AddCharger> {
           );
       }
       case 3: {
-        if (_connection_types.isEmpty) {
-            getConnectionTypes();
-            print(_connection_types);
-          }
-          return Scaffold(
-              body: SingleChildScrollView(
-            child: Column(children: [
-              Column(
-                children: _connection_types
-                    .map((item) => CheckboxListTile(
-                          title: Text(item["name"]),
-                          value: _selected_connection_types!
-                              .contains(item["name"]),
-                          onChanged: (bool? value) {
-                            setState(() {
-                              if (value == true &&
-                                  !_selected_connection_types
-                                      .contains(item["name"])) {
-                                _selected_connection_types.add(item["name"]);
-                              } else if (value == false && _selected_connection_types.contains(item["name"])) {
-                        _selected_connection_types.remove(item["name"]);
-                      }
-                      _data["connection_type"] =_selected_connection_types;
-                    });
-                  },
-                )).toList(),
-              ),
-              SizedBox(height: 10),
-              Center(
-                child: Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          --_page;
-                        });
-                      },
-                      child: const Text('Previous'),
-                    ),
-                    SizedBox(width: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          ++_page;
-                        });
-                      },
-                      child: const Text('Next'),
-                    ),
-                  ],
-                ),
-              ),
-            ]),
-            ));
+        return ConnectionInfo(
+            data: {
+              'connection_type': _data['connection_type'],
+            },
+            callback: getConnections,
+            nextPage: nextPage,
+            prevPage: previousPage);
       }
       case 4: {
         if (_current_types.isEmpty) {

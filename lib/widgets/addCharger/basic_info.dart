@@ -6,20 +6,14 @@ class BasicInfo extends StatefulWidget {
   var data;
   final Function callback;
   final Function nextPage;
-  BasicInfo({super.key, required this.data, required this.callback, required this.nextPage}) {
-    this.data['title'] = data['title'] ?? '';
-    this.data['description'] = data['description'] ?? '';
-    this.data['price'] = data['price'] ?? '';
-    this.data['images'] = data['images'] ?? [];
-  }
+  BasicInfo({Key? key, required this.data, required this.callback, required this.nextPage}) : super(key: key);
 
   @override
-  _BasicInfoState createState() => _BasicInfoState();
+  State<BasicInfo> createState() => _BasicInfoState();
 }
 
 class _BasicInfoState extends State<BasicInfo> {
   final _formKey = GlobalKey<FormState>();
-
 
   void _getImageData(images) {
     setState(() {
@@ -28,23 +22,25 @@ class _BasicInfoState extends State<BasicInfo> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 16.0, 8.0, 0.0),
+          padding: const EdgeInsets.fromLTRB(8.0, 40.0, 8.0, 0.0),
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                Text("Title"),
                 TextFormField(
+                  initialValue: widget.data['title'],
                   onSaved: (value) {
                     widget.data['title'] = value!;
                   },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Title',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -54,13 +50,14 @@ class _BasicInfoState extends State<BasicInfo> {
                   },
                 ),
                 SizedBox(height: 10),
+                Text("Description"),
                 TextFormField(
+                  initialValue: widget.data['description'],
                   onSaved: (value) {
                     widget.data['description'] = value!;
                   },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Description',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -70,14 +67,15 @@ class _BasicInfoState extends State<BasicInfo> {
                   },
                 ),
                 SizedBox(height: 10),
+                Text("Price"),
                 TextFormField(
+                  initialValue: widget.data['price'],
                   keyboardType: TextInputType.number,
                   onSaved: (value) {
                     widget.data['price'] = value!;
                   },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: 'Price',
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
