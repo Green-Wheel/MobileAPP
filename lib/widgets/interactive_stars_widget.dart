@@ -49,14 +49,10 @@ Widget _interactiveStarsWidget(double rate){
               color: Colors.grey,
             ),
           ),
-          onRatingUpdate: (rate)  {  },
-        ),
-        Padding(
-          padding: EdgeInsets.only(left: 5.0),
-          child:Text(
-            rate.toString(),
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
+          onRatingUpdate: (rate)  {
+            //gestionar el evento de click en la estrella al actualizar el rating
+            print(rate);
+            },
         ),
       ],
     ),
