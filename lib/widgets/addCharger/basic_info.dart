@@ -5,7 +5,8 @@ import '../select_image.dart';
 class BasicInfo extends StatefulWidget {
   var data;
   final Function callback;
-  BasicInfo({super.key, required this.data, required this.callback}) {
+  final Function nextPage;
+  BasicInfo({super.key, required this.data, required this.callback, required this.nextPage}) {
     this.data['title'] = data['title'] ?? '';
     this.data['description'] = data['description'] ?? '';
     this.data['price'] = data['price'] ?? '';
@@ -99,6 +100,7 @@ class _BasicInfoState extends State<BasicInfo> {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
                         widget.callback(widget.data);
+                        widget.nextPage();
                       }
                     },
                     child: const Text('Next'),

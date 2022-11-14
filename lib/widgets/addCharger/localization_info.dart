@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 class LocalizationInfo extends StatefulWidget {
   var data;
   final Function callback;
-  LocalizationInfo({super.key, required this.data, required this.callback}) {
+  final Function nextPage;
+  final Function prevPage;
+  LocalizationInfo({super.key, required this.data, required this.callback, required this.nextPage, required this.prevPage}) {
     this.data['direction'] = data['direction'] ?? '';
     this.data['town'] = data['town'] ?? '';
     this.data['lat'] = data['lat'] ?? '';
@@ -105,9 +107,7 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            setState(() {
-                             // --_page;
-                            });
+                            widget.prevPage();
                           },
                           child: const Text('Previous'),
                         ),
@@ -116,9 +116,8 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
-                              setState(() {
-                                //++_page;
-                              });
+                              widget.callback(widget.data);
+                              widget.nextPage();
                             }
                           },
                           child: const Text('Next'),

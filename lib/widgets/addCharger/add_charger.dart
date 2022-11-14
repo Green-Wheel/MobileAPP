@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:greenwheel/widgets/addCharger/localization_info.dart';
+import 'package:greenwheel/widgets/addCharger/speed_%20info.dart';
 import 'package:greenwheel/widgets/select_image.dart';
 import 'package:greenwheel/widgets/addCharger/basic_info.dart';
 
@@ -78,20 +79,6 @@ class _AddChargerState extends State<AddCharger> {
     return false;
   }
 
-  void getSpeeds() {
-    BackendService.get('chargers/speed/').then((response) async {
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-        setState(() {
-          _speeds = json;
-        });
-      } else {
-        print('Error getting speeds');
-        print(response.statusCode);
-      }
-    });
-  }
-
   void getConnectionTypes() {
     BackendService.get('chargers/connection/').then((response) async {
       if (response.statusCode == 200) {
@@ -103,6 +90,18 @@ class _AddChargerState extends State<AddCharger> {
         print('Error getting connection types');
         print(response.statusCode);
       }
+    });
+  }
+
+  void nextPage() {
+    setState(() {
+      ++_page;
+    });
+  }
+
+  void previousPage() {
+    setState(() {
+      --_page;
     });
   }
 
@@ -127,9 +126,6 @@ class _AddChargerState extends State<AddCharger> {
       _data['price'] = basic_info['price'],
       _data['images'] = basic_info['images'],
     });
-    setState(() {
-      ++_page;
-    });
   }
 
   void getLocalization(localization) {
@@ -139,8 +135,11 @@ class _AddChargerState extends State<AddCharger> {
       _data['lat'] = localization['lat'],
       _data['lng'] = localization['lng'],
     });
-    setState(() {
-      ++_page;
+  }
+
+  void getSpeeds(speeds) {
+    setState(() => {
+      _data['speed'] = speeds['speed'],
     });
   }
 
@@ -156,7 +155,8 @@ class _AddChargerState extends State<AddCharger> {
               'price': _data['price'],
               'images': _data['images']
             },
-            callback: getBasicInfo
+            callback: getBasicInfo,
+            nextPage: nextPage,
           );
         }
       case 1:
@@ -168,60 +168,20 @@ class _AddChargerState extends State<AddCharger> {
                 'lat': _data['lat'],
                 'lng': _data['lng'],
               },
-              callback: getLocalization
+              callback: getLocalization,
+              nextPage: nextPage,
+              prevPage: previousPage,
           );
       }
       case 2: {
-        if (_speeds.isEmpty) {
-            getSpeeds();
-          }
-          return Scaffold(
-              body: SingleChildScrollView(
-            child: Column(children: [
-              Column(
-                children: _speeds
-                    .map((item) => CheckboxListTile(
-                          title: Text(item["name"]),
-                          value: _selected_speeds!.contains(item["name"]),
-                          onChanged: (bool? value) {
-                            setState(() {
-                              if (value == true &&
-                                  !_selected_speeds.contains(item["name"])) {
-                                _selected_speeds.add(item["name"]);
-                              } else if (value == false && _selected_speeds.contains(item["name"])) {
-                        _selected_speeds.remove(item["name"]);
-                      }
-                      _data["speed"] = _selected_speeds;
-                    });
-                  },
-                )).toList(),
-              ),
-              SizedBox(height: 10),
-              Center(
-                child: Row(
-                  children: [
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          --_page;
-                        });
-                      },
-                      child: const Text('Previous'),
-                    ),
-                    SizedBox(width: 20),
-                    ElevatedButton(
-                      onPressed: () {
-                        setState(() {
-                          ++_page;
-                        });
-                      },
-                      child: const Text('Next'),
-                    ),
-                  ],
-                ),
-              ),
-            ]),
-            ));
+          return SpeedInfo(
+              data: {
+                'speed': _data['speed'],
+              },
+              callback: getSpeeds,
+              nextPage: nextPage,
+              prevPage: previousPage
+          );
       }
       case 3: {
         if (_connection_types.isEmpty) {
