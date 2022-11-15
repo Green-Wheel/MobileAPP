@@ -18,43 +18,40 @@ class _InteractiveStarsWidget extends State<InteractiveStarsWidget>{
 
 main() {
   runApp(MaterialApp(
-    home: InteractiveStarsWidget(rate: 0.0),
+    home: _interactiveStarsWidget(0.0),
   ));
 }
 
 //funcion para mostrar las estrellas
 Widget _interactiveStarsWidget(double rate){
-  return Padding(
-    padding: const EdgeInsets.only(left: 0.0, bottom: 5.0),
-    child: Row(
-      children: [
-        RatingBar(
-          initialRating: rate,
-          direction: Axis.horizontal,
-          allowHalfRating: true,
-          itemCount: 5,
-          itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-          itemSize: 20,
-          ratingWidget: RatingWidget(
-            full: const Icon(
-              Icons.star,
-              color: Colors.amber,
-            ),
-            half: const Icon(
-              Icons.star_half,
-              color: Colors.amber,
-            ),
-            empty: const Icon(
-              Icons.star_outline,
-              color: Colors.grey,
-            ),
+  return Row(
+    children: [
+      RatingBar(
+        initialRating: rate,
+        direction: Axis.horizontal,
+        allowHalfRating: true,
+        itemCount: 5,
+        itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+        itemSize: 20,
+        ratingWidget: RatingWidget(
+          full: const Icon(
+            Icons.star,
+            color: Colors.amber,
           ),
-          onRatingUpdate: (rate)  {
-            //gestionar el evento de click en la estrella al actualizar el rating
-            print(rate);
-            },
+          half: const Icon(
+            Icons.star_half,
+            color: Colors.amber,
+          ),
+          empty: const Icon(
+            Icons.star_outline,
+            color: Colors.grey,
+          ),
         ),
-      ],
-    ),
+        onRatingUpdate: (rate)  {
+          //gestionar el evento de click en la estrella al actualizar el rating
+          print(rate);
+          },
+      ),
+    ],
   );
 }
