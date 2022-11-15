@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class BackendService {
   // Variable en el .env con la dirección del backend. Ejemplo: BACKEND_API_URL=http://192.168.56.1:8000/api/
   //static final String _baseUrl = FlutterConfig.get('BACKEND_API_URL');
   static const String _baseUrl = "http://192.168.1.95:8000/api/";
+
   /// Permite hacer un get genérico a cualquier endpoint de la api
   /// @param endpoint: Endpoint al que se quiere hacer el get (ejemplo: users/language/?id=1)
   /// @return: Devuelve un Future con el resultado del get, al cual se le debe hacer un then para obtener el resultado
@@ -23,8 +26,7 @@ class BackendService {
   /// @param endpoint: Endpoint al que se quiere hacer el post (ejemplo: users/language/)
   /// @param jsonMap: Mapa con los datos que se quieren enviar en el post en formato clave valor. Ejemplo: {"language": "es"}
   /// @return: Devuelve un Future con el resultado del post, al cual se le debe hacer un then para obtener el resultado
-  static Future<http.Response> post(
-      String endpoint, Map<String, dynamic> jsonMap) async {
+  static Future<http.Response> post(String endpoint, Map<String, dynamic> jsonMap) async {
     print(_baseUrl + endpoint);
     http.Response response = await http.post(
       Uri.parse(_baseUrl + endpoint),
@@ -66,3 +68,4 @@ class BackendService {
     return response;
   }
 }
+

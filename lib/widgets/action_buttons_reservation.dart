@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../screens/bookings/bookings.dart';
 
 class ActionButtonsReservation extends StatefulWidget {
-  List bookings;
-  List ratings;
+  List<dynamic>? bookings;
+  List<dynamic>? ratings;
 
   ActionButtonsReservation({required this.bookings, required this.ratings, super.key});
 
@@ -22,7 +22,7 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
     return _actionButtonsReservation(widget.bookings, widget.ratings);
   }
 
-  Widget _actionButtonsReservation(List bookings, List ratings) {
+  Widget _actionButtonsReservation(List<dynamic>? bookings, List<dynamic>? ratings) {
     return Column(
       children: [
         SizedBox(
@@ -49,9 +49,9 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                     onPressed: () {
                       setState(() => pressFilterByDate = !pressFilterByDate);
                       if (pressFilterByDate) {
-                        bookings.sort((a, b) => a['start_date'].compareTo(b['start_date']));
+                        bookings!.sort((a, b) => a['start_date'].compareTo(b['start_date'])); //pillar del backend ordenat per data
                       } else {
-                        bookings.sort((a, b) => a['id'].compareTo(b['id']));
+                        bookings!.sort((a, b) => a['id'].compareTo(b['id']));
                       }
                       buildList(bookings, ratings);
                     },

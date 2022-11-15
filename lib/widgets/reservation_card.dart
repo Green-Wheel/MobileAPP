@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:greenwheel/widgets/rating_stars.dart';
-import '../screens/bookings/bookings.dart';
 import 'package:greenwheel/services/backend_service.dart';
-
-import 'action_buttons_reservation.dart';
+import 'package:greenwheel/services/backendServices/bookings.dart';
+// import 'package:go_router/go_router.dart';
 
 
 class ReservationCard extends StatefulWidget {
@@ -28,17 +26,6 @@ class _ReservationCard extends State<ReservationCard> {
   Widget build(BuildContext context) {
     return _buildCard(widget.bookings, widget.ratings, widget.id, widget.location, widget.rating, widget.distance,
         widget.time);
-  }
-
-  void _cancelBooking(id) async {
-    BackendService.delete('bookings/$id/').then((response) {
-      if (response.statusCode == 204) {
-        print('Booking cancelled!');
-      } else {
-        print('Error deleting booking!');
-        print(response.statusCode);
-      }
-    });
   }
 
   bool _isVisible = true;
@@ -146,7 +133,9 @@ class _ReservationCard extends State<ReservationCard> {
                                         )
                                     )
                                 ),
-                                onPressed: () {},
+                                onPressed: () {
+                                  // GoRouter.of(context).go('/route/${widget.longitude}/${widget.latitude}');
+                                },
                                 child: Row(
                                   children: const [
                                     Text('Route ',
@@ -225,9 +214,8 @@ class _ReservationCard extends State<ReservationCard> {
                                   )
                               ),
                               onPressed: () {
-                                print(id);
-                                _cancelBooking(id);
-                                print('$id cancelled');
+                                BookingService.deleteBookings(id);
+                                // print('$id cancelled');
                                 setState(() {
                                   _isVisible = false;
                                 });

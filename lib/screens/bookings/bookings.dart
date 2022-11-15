@@ -3,10 +3,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/serializers/bookings.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:greenwheel/widgets/action_buttons_reservation.dart';
 
+import '../../serializers/ratings.dart';
+import '../../services/backendServices/bookings.dart';
+import '../../services/backendServices/ratings.dart';
 import '../../widgets/reservation_card.dart';
 import '../home/home.dart';
 
@@ -52,40 +56,23 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
   }
 
   void _getRatings() async {
-    BackendService.get('ratings/').then((response) {
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        //print(jsonResponse);
-        setState(() {
-          ratings = jsonResponse;
-        });
-      } else {
-        print('Error getting bookings!');
+    List<dynamic>? ratings = await RatingService.getRatings();
+    print(ratings);
+    setState(() {
+      if (ratings != null) {
+        this.ratings = ratings;
       }
     });
   }
 
   void _getBookings() async {
-    BackendService.get('bookings/').then((response) {
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        //print(jsonResponse);
-        setState(() {
-          bookings = jsonResponse;
-        });
-      } else {
-        print('Error getting bookings!');
-      }
-    });
-  }
-
-  void _cancelBooking(id) async {
-    BackendService.delete('bookings/$id/').then((response) {
-      if (response.statusCode == 204) {
-        print('Booking cancelled!');
-      } else {
-        print('Error deleting booking!');
-        print(response.statusCode);
+    List<dynamic>? bookings = await BookingService.getBookings();
+    print('ini list');
+    print(bookings);
+    print('end list');
+    setState(() {
+      if (bookings != null) {
+        this.bookings = bookings;
       }
     });
   }
