@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
-import 'package:http/http.dart';
 
 class BackendService {
   // Variable en el .env con la dirección del backend. Ejemplo: BACKEND_API_URL=http://192.168.56.1:8000/api/

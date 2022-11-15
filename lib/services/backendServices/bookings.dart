@@ -3,31 +3,22 @@ import 'dart:convert';
 import 'package:greenwheel/services/backend_service.dart';
 import '../../serializers/bookings.dart';
 
+
 class BookingService {
   static List<Booking>? getBookings() {
+    List<Booking> bookingList = [];
     BackendService.get('bookings/').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         print(jsonResponse);
-        // Bookings = List<Booking>
-        Booking bookings = jsonResponse.map((e) => Booking.fromJson(e)).toList();
-
-        //List<Booking> bookings = jsonResponse.map((e) => Booking.fromJson(e)).toList();
-        //List temp = (jsonResponse as List).map((e) => Booking.fromJson(e)).toList();
-        //print(temp);
-
-        //Map<String, dynamic> map = json.decode(response.body);
-        //print(map[0]['created']);
-        // List<dynamic> list = map.toList();
-        // List<dynamic> data = map["id"];
-        // print(data[0]["id"]);
-        //List<dynamic> bookings = Booking.fromJson(jsonResponse) as List<dynamic>;
+        List<Booking> bookings = jsonResponse.map((e) => Booking.fromJson(e)).toList();
         print(bookings);
-        return bookings;
+        bookingList = bookings;
       } else {
         print('Error getting bookings!');
       }
     });
+    return bookingList;
   }
 
   static bool deleteBookings(id) {

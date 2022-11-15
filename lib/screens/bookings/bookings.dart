@@ -41,8 +41,8 @@ class MyBookingsPage extends StatefulWidget {
 }
 
 class _MyBookingsPageState extends State<MyBookingsPage> {
-  List bookings = [];
-  List ratings = [];
+  List<Booking> bookings = [];
+  List<Rating> ratings = [];
   bool pressFilterByDate = false;
   bool pressFilterByChargers = false;
   bool pressFilterByBikes = false;
@@ -51,28 +51,24 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
   @override
   void initState() {
     super.initState();
-    _getBookings();
     _getRatings();
+    _getBookings();
   }
 
   void _getRatings() async {
-    List<dynamic>? ratings = await RatingService.getRatings();
-    print(ratings);
+    List<Rating>? ratingList = RatingService.getRatings();
     setState(() {
-      if (ratings != null) {
-        this.ratings = ratings;
+      if (ratingList != null) {
+        ratings = ratingList;
       }
     });
   }
 
   void _getBookings() async {
-    List<dynamic>? bookings = await BookingService.getBookings();
-    print('ini list');
-    print(bookings);
-    print('end list');
+    List<Booking>? bookingList = BookingService.getBookings();
     setState(() {
-      if (bookings != null) {
-        this.bookings = bookings;
+      if (bookingList != null) {
+        bookings = bookingList;
       }
     });
   }
