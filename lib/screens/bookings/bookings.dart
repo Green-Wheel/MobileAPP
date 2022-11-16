@@ -41,8 +41,8 @@ class MyBookingsPage extends StatefulWidget {
 }
 
 class _MyBookingsPageState extends State<MyBookingsPage> {
-  List<Booking> bookings = [];
-  List<Rating> ratings = [];
+  List bookings = [];
+  List ratings = [];
   bool pressFilterByDate = false;
   bool pressFilterByChargers = false;
   bool pressFilterByBikes = false;
@@ -56,7 +56,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
   }
 
   void _getRatings() async {
-    List<Rating>? ratingList = RatingService.getRatings();
+    List? ratingList = await RatingService.getRatings();
     setState(() {
       if (ratingList != null) {
         ratings = ratingList;
@@ -65,7 +65,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
   }
 
   void _getBookings() async {
-    List<Booking>? bookingList = BookingService.getBookings();
+    List? bookingList = await BookingService.getBookings();
     setState(() {
       if (bookingList != null) {
         bookings = bookingList;

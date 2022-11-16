@@ -5,20 +5,17 @@ import '../../serializers/bookings.dart';
 
 
 class BookingService {
-  static List<Booking>? getBookings() {
-    List<Booking> bookingList = [];
-    BackendService.get('bookings/').then((response) {
+  static Future<List?> getBookings() async {
+    List result = [];
+    await BackendService.get('bookings/').then((response) {
       if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
-        List<Booking> bookings = jsonResponse.map((e) => Booking.fromJson(e)).toList();
-        print(bookings);
-        bookingList = bookings;
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        result = jsonResponse;
       } else {
         print('Error getting bookings!');
       }
     });
-    return bookingList;
+    return result;
   }
 
   static bool deleteBookings(id) {

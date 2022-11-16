@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:greenwheel/widgets/rating_stars.dart';
-import 'package:greenwheel/services/backend_service.dart';
-import 'package:greenwheel/services/backendServices/bookings.dart';
-// import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
+import 'buttons_card.dart';
 
 class ReservationCard extends StatefulWidget {
   List bookings;
@@ -13,27 +12,30 @@ class ReservationCard extends StatefulWidget {
   String rating;
   int distance;
   String time;
+
   ReservationCard({required this.bookings, required this.ratings,
     required this.id, required this.location, required this.rating,
     required this.distance, required this.time, super.key});
 
   @override
   State<StatefulWidget> createState() => _ReservationCard();
+
 }
+bool _isVisible = true;
 
 class _ReservationCard extends State<ReservationCard> {
+
+
   @override
   Widget build(BuildContext context) {
     return _buildCard(widget.bookings, widget.ratings, widget.id, widget.location, widget.rating, widget.distance,
         widget.time);
   }
 
-  bool _isVisible = true;
-
   Widget _buildCard(List bookings, List ratings, int id, String location, String rating, int distance, String time) =>
-     Visibility(
-       visible: _isVisible,
-       child: Card(
+      Visibility(
+        visible: _isVisible,
+        child: Card(
           elevation: 10,
           color: Colors.white,
           shadowColor: Colors.green,
@@ -111,140 +113,17 @@ class _ReservationCard extends State<ReservationCard> {
                 Padding(
                   padding: const EdgeInsets.only(
                       left: 10.0, top: 10.0, bottom: 5.0),
-                  child: Row(
-                    children: [
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: SizedBox(
-                              height: 30,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<
-                                        Color>(Colors.lightBlue[50]!),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                18.0),
-                                            side: const BorderSide(
-                                                color: Colors.blueAccent)
-                                        )
-                                    )
-                                ),
-                                onPressed: () {
-                                  // GoRouter.of(context).go('/route/${widget.longitude}/${widget.latitude}');
-                                },
-                                child: Row(
-                                  children: const [
-                                    Text('Route ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.blueAccent),
-                                    ),
-                                    Icon(
-                                      Icons.directions,
-                                      size: 20,
-                                      color: Colors.blueAccent,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(right: 10.0),
-                            child: SizedBox(
-                              height: 30,
-                              child: TextButton(
-                                style: ButtonStyle(
-                                    backgroundColor: MaterialStateProperty.all<
-                                        Color>(Colors.lightBlue[50]!),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                18.0),
-                                            side: const BorderSide(
-                                                color: Colors.blueAccent)
-                                        )
-                                    )
-                                ),
-                                onPressed: () {},
-                                child: Row(
-                                  children: const [
-                                    Text('Chat ',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.blueAccent),
-                                    ),
-                                    Icon(
-                                      Icons.chat,
-                                      size: 20,
-                                      color: Colors.blueAccent,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          SizedBox(
-                            height: 30,
-                            child: TextButton(
-                              style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all<
-                                      Color>(Colors.red[50]!),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(
-                                              18.0),
-                                          side: const BorderSide(
-                                              color: Colors.red)
-                                      )
-                                  )
-                              ),
-                              onPressed: () {
-                                BookingService.deleteBookings(id);
-                                // print('$id cancelled');
-                                setState(() {
-                                  _isVisible = false;
-                                });
-                              },
-                              child: Row(
-                                children: const [
-                                  Text('Cancel ',
-                                    style: TextStyle(fontWeight: FontWeight.w600,
-                                        color: Colors.red),
-                                  ),
-                                  Icon(
-                                    Icons.cancel,
-                                    size: 20,
-                                    color: Colors.red,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                  child: ButtonsCard(longitude: 41.389622159782746, latitude: 2.113375926632859, function: callSetState, id: id),
                 ),
               ],
             ),
           ),
         ),
-  );
+      );
+
+  callSetState() {
+    setState(() {
+      _isVisible = false;
+    });
+  }
 }
-
-
