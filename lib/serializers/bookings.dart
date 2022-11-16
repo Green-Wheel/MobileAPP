@@ -1,4 +1,7 @@
+import 'package:greenwheel/serializers/users.dart';
 import 'package:json_annotation/json_annotation.dart';
+
+import 'chargers.dart';
 
 part 'bookings.g.dart';
 
@@ -6,28 +9,48 @@ part 'bookings.g.dart';
 class Booking {
   Booking({
     this.id,
-    required this.userId,
-    required this.publicationId,
-    required this.startDate,
-    required this.endDate,
+    required this.user,
+    required this.publication,
+    required this.start_date,
+    required this.end_date,
     required this.confirmed,
     required this.finished,
-    required this.canceled,
-    required this.createdAt,
+    required this.cancelled,
+    required this.created,
   });
 
   int? id;
-  int userId;
-  int publicationId;
-  DateTime startDate;
-  DateTime endDate;
+  User user;
+  Publication publication;
+  DateTime start_date;
+  DateTime end_date;
   bool confirmed;
   bool finished;
-  bool canceled;
-  DateTime createdAt;
+  bool cancelled;
+  DateTime created;
 
   factory Booking.fromJson(Map<String, dynamic> json) =>
       _$BookingFromJson(json);
 
   Map<String, dynamic> toJson() => _$BookingToJson(this);
+}
+
+@JsonSerializable()
+class Bookings {
+  Bookings({
+    required this.count,
+    required this.next,
+    required this.previous,
+    required this.results,
+  });
+
+  int count;
+  dynamic next;
+  dynamic previous;
+  List<Booking> results;
+
+  factory Bookings.fromJson(Map<String, dynamic> json) =>
+      _$BookingsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BookingsToJson(this);
 }
