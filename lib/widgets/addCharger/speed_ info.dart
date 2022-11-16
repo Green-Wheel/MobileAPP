@@ -1,6 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:greenwheel/services/backend_service.dart';
+import 'package:greenwheel/services/private_chargers.dart';
+import '../../serializers/chargers.dart';
 
 class SpeedInfo extends StatefulWidget {
   var data;
@@ -17,25 +17,16 @@ class _SpeedInfoState extends State<SpeedInfo> {
 
   var _speeds = [];
   var _selected_speeds = [];
-
-  void _getSpeeds() {
-    BackendService.get('chargers/speed/').then((response) async {
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-        setState(() {
-          _speeds = json;
-        });
-      } else {
-        print('Error getting speeds');
-        print(response.statusCode);
-      }
-    });
-  }
-
+  var i = 0;
   @override
   Widget build(BuildContext context) {
-    if (_speeds.isEmpty) {
-      _getSpeeds();
+    if (_speeds.isEmpty && i == 0) {
+      ++i;
+      PrivateChargersService.getSpeeds().then((value) {
+        setState(() {
+          _speeds = value;
+        });
+      });
     }
     return Scaffold(
         body: SingleChildScrollView(

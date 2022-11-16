@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class BackendService {
   // Variable en el .env con la dirección del backend. Ejemplo: BACKEND_API_URL=http://192.168.56.1:8000/api/
-  static final String _baseUrl = 'http://192.168.139.139:8000/api/';
+  static final String _baseUrl = 'http://192.168.1.26:8000/api/';
 
   /// Permite hacer un get genérico a cualquier endpoint de la api
   /// @param endpoint: Endpoint al que se quiere hacer el get (ejemplo: users/language/?id=1)
