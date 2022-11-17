@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/utils/geocoding.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import '../../serializers/maps.dart';
 
 class LocalizationInfo extends StatefulWidget {
   var data;
@@ -19,120 +22,95 @@ class LocalizationInfo extends StatefulWidget {
 }
 
 class _LocalizationInfoState extends State<LocalizationInfo> {
-  final _formKey = GlobalKey<FormState>();
+  late GoogleMapController mapController;
+  Set<Marker> _markers = {};
+  Address _selectedAddress = Address(
+      street: '',
+      streetNumber: '',
+      city: '',
+      postalCode: '',
+      province: '',
+      country: '');
+
+  static CameraPosition _kInitialPosition = CameraPosition(
+    target: LatLng(41.7285833, 1.8130899),
+    zoom: 8.0,
+  );
+
+  void _onMapCreated(GoogleMapController controller) {
+    mapController = controller;
+  }
+
+  void selectPoint(LatLng point) async {
+    LatLang p = LatLang(lat: point.latitude, lng: point.longitude);
+    //Address? addres = await Geocoding.getAddressFromLatLang(p);
+    setState(() {
+      _markers.clear();
+      _markers.add(Marker(
+        markerId: MarkerId(point.toString()),
+        position: point,
+      ));
+      //_selectedAddress = addres!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    var latitude;
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Padding(
-      padding: const EdgeInsets.fromLTRB(8.0, 40.0, 8.0, 0.0),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text("Address"),
-            TextFormField(
-              initialValue: widget.data['direction'],
-              onSaved: (value) {
-                widget.data['direction'] = value!;
-              },
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+      appBar: AppBar(
+        title: Text('Localization'),
+      ),
+      body: Column(
+        children: [
+          SizedBox(
+            height: 1 * MediaQuery.of(context).size.height / 3,
+            width: MediaQuery.of(context).size.width,
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'please enter Direction';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 10),
-            TextFormField(
-              initialValue: widget.data['town'],
-              onSaved: (value) {
-                widget.data['town'] = value!;
-              },
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'please enter Town';
-                }
-                return null;
-              },
-            ),
-            SizedBox(height: 10),
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextFormField(
-                    initialValue: widget.data['lat'],
-                    keyboardType: TextInputType.number,
-                    onSaved: (value) {
-                      widget.data['lat'] = value!;
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter Latitude';
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                SizedBox(width: 10),
-                Expanded(
-                  child: TextFormField(
-                    initialValue: widget.data['lng'],
-                    keyboardType: TextInputType.number,
-                    onSaved: (value) {
-                      widget.data['lng'] = value!;
-                    },
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'please enter Longitude';
-                      }
-                      return null;
-                    },
-                  ),
-                )
-              ],
-            ),
-            SizedBox(height: 10),
-            Center(
-              child: Row(
+              child: Column(
                 children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.prevPage();
-                    },
-                    child: const Text('Previous'),
-                  ),
-                  SizedBox(width: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-                        widget.callback(widget.data);
-                        widget.nextPage();
-                      }
-                    },
-                    child: const Text('Next'),
-                  ),
+                  Text('Street: ${_selectedAddress.street}'),
+                  Text('Street Number: ${_selectedAddress.streetNumber}'),
+                  Text('City: ${_selectedAddress.city}'),
+                  Text('Postal Code: ${_selectedAddress.postalCode}'),
+                  Text('Province: ${_selectedAddress.province}'),
+                  Text('Country: ${_selectedAddress.country}'),
+                  Text('lat: ${_markers.first.position.latitude}'),
+                  Text('lng: ${_markers.first.position.longitude}'),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: _kInitialPosition,
+                markers: _markers,
+                mapType: MapType.normal,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: true,
+                compassEnabled: false,
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: false,
+                trafficEnabled: false,
+                mapToolbarEnabled: false,
+                rotateGesturesEnabled: true,
+                scrollGesturesEnabled: true,
+                tiltGesturesEnabled: true,
+                liteModeEnabled: false,
+                onTap: (point) => selectPoint(point),
+              ),
+            ),
+          ),
+        ],
       ),
-    )));
+    );
   }
 }

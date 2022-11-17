@@ -38,7 +38,7 @@ class _AddChargerState extends State<AddCharger> {
   final _formKey0 = GlobalKey<FormState>();
   final _formKey1 = GlobalKey<FormState>();
 
-  int _page = 2;
+  int _page = 1;
 
   List<File> _images = [];
 
