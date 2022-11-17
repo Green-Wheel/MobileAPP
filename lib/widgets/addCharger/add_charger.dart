@@ -3,29 +3,27 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:greenwheel/widgets/addCharger/connection_info.dart';
+import 'package:greenwheel/widgets/addCharger/current_info.dart';
 import 'package:greenwheel/widgets/addCharger/localization_info.dart';
 import 'package:greenwheel/widgets/addCharger/speed_%20info.dart';
 import 'package:greenwheel/widgets/addCharger/basic_info.dart';
 
 import 'basic_info.dart';
 
-
 class charger extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return (
-        MaterialApp(
-          title: 'addCharger try',
-          home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Formulary'),
-            ),
-            body: const AddCharger(),
-          ),
-        ));
+    return (MaterialApp(
+      title: 'addCharger try',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Formulary'),
+        ),
+        body: const AddCharger(),
+      ),
+    ));
   }
 }
-
 
 class AddCharger extends StatefulWidget {
   const AddCharger({Key? key}) : super(key: key);
@@ -43,7 +41,7 @@ class _AddChargerState extends State<AddCharger> {
   int _page = 2;
 
   List<File> _images = [];
-  
+
   var _data = {
     'title': '',
     'description': '',
@@ -58,16 +56,13 @@ class _AddChargerState extends State<AddCharger> {
     'connection_type': [],
     'current_type': [],
   };
-  
-  
-  
+
   var _speeds = [];
   var _selected_speeds = [];
   var _connection_types = [];
   var _selected_connection_types = [];
   var _current_types = [];
   var _selected_current_types = [];
-
 
   bool send_data() {
     BackendService.post('chargers/private/', _data).then((response) async {
@@ -109,48 +104,42 @@ class _AddChargerState extends State<AddCharger> {
     });
   }
 
-  void getCurrentTypes() {
-    BackendService.get('chargers/current/').then((response) async {
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-        setState(() {
-          _current_types = json;
-        });
-      } else {
-        print('Error getting current types');
-        print(response.statusCode);
-      }
-    });
-  }
-
   void getBasicInfo(basic_info) {
     setState(() => {
-      _data['title'] = basic_info['title'],
-      _data['description'] = basic_info['description'],
-      _data['price'] = basic_info['price'],
-      _images = basic_info['images'],
-    });
+          _data['title'] = basic_info['title'],
+          _data['description'] = basic_info['description'],
+          _data['price'] = basic_info['price'],
+          _images = basic_info['images'],
+        });
   }
 
   void getLocalization(localization) {
     setState(() => {
-      _data['direction'] = localization['direction'],
-      _data['town'] = localization['town'],
-      _data['lat'] = localization['lat'],
-      _data['lng'] = localization['lng'],
-    });
+          _data['direction'] = localization['direction'],
+          _data['town'] = localization['town'],
+          _data['lat'] = localization['lat'],
+          _data['lng'] = localization['lng'],
+        });
   }
 
   void getSpeeds(speeds) {
     setState(() => {
-      _data['speed'] = speeds,
-    });
+          _data['speed'] = speeds,
+        });
   }
 
   void getConnections(connections) {
     setState(() => {
-      _data['connection_type'] = connections,
-    });
+          _data['connection_type'] = connections,
+        });
+  }
+
+  void getCurrents(currents) {
+    setState(() => {
+          _data['current_type'] = currents['current_type'],
+          _data['power'] = currents['power'],
+        });
+    send_data();
   }
 
   @override
@@ -172,96 +161,47 @@ class _AddChargerState extends State<AddCharger> {
       case 1:
         {
           return LocalizationInfo(
-              data: {
-                'direction': _data['direction'],
-                'town': _data['town'],
-                'lat': _data['lat'],
-                'lng': _data['lng'],
-              },
-              callback: getLocalization,
-              nextPage: nextPage,
-              prevPage: previousPage,
-          );
-      }
-      case 2: {
-          return SpeedInfo(
-              data: {
-                'speed': _data['speed'],
-              },
-              callback: getSpeeds,
-              nextPage: nextPage,
-              prevPage: previousPage
-          );
-      }
-      case 3: {
-        return ConnectionInfo(
             data: {
-              'connection_type': _data['connection_type'],
+              'direction': _data['direction'],
+              'town': _data['town'],
+              'lat': _data['lat'],
+              'lng': _data['lng'],
             },
-            callback: getConnections,
+            callback: getLocalization,
             nextPage: nextPage,
-            prevPage: previousPage);
-      }
-      case 4: {
-        if (_current_types.isEmpty) {
-            getCurrentTypes();
-            print(_current_types);
-          }
-          return Scaffold(
-              body: SingleChildScrollView(
-            child: Column(children: [
-              Column(
-                children: _current_types
-                    .map((item) => CheckboxListTile(
-                          title: Text(item["name"]),
-                          value:
-                              _selected_current_types!.contains(item["name"]),
-                          onChanged: (bool? value) {
-                            setState(() {
-                              if (value == true &&
-                                  !_selected_current_types
-                                      .contains(item["name"])) {
-                                _selected_current_types.add(item["name"]);
-                              } else if (value == false && _selected_current_types.contains(item["name"])) {
-                          _selected_current_types.remove(item["name"]);
-                        }
-                        _data["current_type"] = _selected_current_types;
-                      });
-                    },
-                  )).toList(),
-                ),
-                SizedBox(height: 10),
-                Center(
-                  child: Row(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            --_page;
-                          });
-                        },
-                        child: const Text('Previous'),
-                      ),
-                      SizedBox(width: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          send_data();
-                          print(_data);
-                        },
-                        child: const Text('Submit'),
-                      ),
-                    ],
-                  ),
-                ),
-              ]),
-            ));
-      }
-      default: {
-        return  Center(
+            prevPage: previousPage,
+          );
+        }
+      case 2:
+        {
+          return SpeedInfo(data: {
+            'speed': _data['speed'],
+          }, callback: getSpeeds, nextPage: nextPage, prevPage: previousPage);
+        }
+      case 3:
+        {
+          return ConnectionInfo(
+              data: {
+                'connection_type': _data['connection_type'],
+              },
+              callback: getConnections,
+              nextPage: nextPage,
+              prevPage: previousPage);
+        }
+      case 4:
+        {
+          return CurrentInfo(data: {
+            'current_type': _data['current_type'],
+            'power': _data['power'],
+          }, callback: getCurrents, prevPage: previousPage);
+        }
+      default:
+        {
+          return Center(
               child: Scaffold(
             body: SingleChildScrollView(child: Text("PAGE NOT EXISTENT")),
           ));
-      }
+        }
     }
   }
 }

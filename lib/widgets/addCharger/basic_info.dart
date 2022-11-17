@@ -6,7 +6,13 @@ class BasicInfo extends StatefulWidget {
   var data;
   final Function callback;
   final Function nextPage;
-  BasicInfo({Key? key, required this.data, required this.callback, required this.nextPage}) : super(key: key);
+
+  BasicInfo(
+      {Key? key,
+      required this.data,
+      required this.callback,
+      required this.nextPage})
+      : super(key: key);
 
   @override
   State<BasicInfo> createState() => _BasicInfoState();
@@ -89,7 +95,6 @@ class _BasicInfoState extends State<BasicInfo> {
                   multiple: true,
                   getImageData: _getImageData,
                   imageFile: widget.data['images'],
-
                 ),
                 SizedBox(height: 10),
                 Center(

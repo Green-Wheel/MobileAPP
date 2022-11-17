@@ -1,59 +1,56 @@
 import 'package:flutter/material.dart';
-import 'package:greenwheel/services/private_chargers.dart';
-import '../../serializers/chargers.dart';
+import '../../services/private_chargers.dart';
 
-class SpeedInfo extends StatefulWidget {
+class CurrentInfo extends StatefulWidget {
   var data;
   final Function callback;
-  final Function nextPage;
   final Function prevPage;
 
-  SpeedInfo(
+  CurrentInfo(
       {Key? key,
       required this.data,
       required this.callback,
-      required this.nextPage,
       required this.prevPage})
       : super(key: key);
 
   @override
-  State<SpeedInfo> createState() => _SpeedInfoState();
+  State<CurrentInfo> createState() => _CurrentInfoState();
 }
 
-class _SpeedInfoState extends State<SpeedInfo> {
-  List<dynamic> _speeds = [];
-  var _selected_speeds = [];
+class _CurrentInfoState extends State<CurrentInfo> {
+  List<dynamic> _current_types = [];
+  var _selected_current_types = [];
 
-  void _getSpeeds() async {
-    List<dynamic> speedsL = await PrivateChargersService.getSpeeds();
+  void _getCurrents() async {
+    List<dynamic> currentsL = await PrivateChargersService.getCurrentTypes();
     setState(() {
-      _speeds = speedsL;
+      _current_types = currentsL;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_speeds.isEmpty) {
-      _getSpeeds();
+    if (_current_types.isEmpty) {
+      _getCurrents();
     }
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(children: [
         Column(
-          children: _speeds
+          children: _current_types
               .map((item) => CheckboxListTile(
                     title: Text(item.name),
-                    value: _selected_speeds!.contains(item.name),
+                    value: _selected_current_types!.contains(item.name),
                     onChanged: (bool? value) {
                       setState(() {
                         if (value == true &&
-                            !_selected_speeds.contains(item.name)) {
-                          _selected_speeds.add(item.name);
+                            !_selected_current_types.contains(item.name)) {
+                          _selected_current_types.add(item.name);
                         } else if (value == false &&
-                            _selected_speeds.contains(item.name)) {
-                          _selected_speeds.remove(item.name);
+                            _selected_current_types.contains(item.name)) {
+                          _selected_current_types.remove(item.name);
                         }
-                        widget.data["speed"] = _selected_speeds;
+                        widget.data["current_type"] = _selected_current_types;
                       });
                     },
                   ))
@@ -73,9 +70,8 @@ class _SpeedInfoState extends State<SpeedInfo> {
               ElevatedButton(
                 onPressed: () {
                   widget.callback(widget.data);
-                  widget.nextPage();
                 },
-                child: const Text('Next'),
+                child: const Text('Submit'),
               ),
             ],
           ),
