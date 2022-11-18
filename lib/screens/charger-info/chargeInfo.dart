@@ -7,11 +7,18 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
 import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
+import 'package:greenwheel/screens/charger-info/widgets/card_info.dart';
 import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/location_charger.dart';
 import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
 import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import '../../widgets/interactive_stars_widget.dart';
+import '../home/widgets/bottom_bar.dart';
+import '../home/widgets/drawer.dart';
+import '../home/widgets/google_maps.dart';
 
 
 
@@ -58,6 +65,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
   bool is_visible = false;
   late String adress = "PLAÇA CAT";
   LatLng pos = LatLng(41.3874, 2.1686);
+  final panelController = PanelController();
 
   @override
   void initState() {
@@ -109,7 +117,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
     });
   }*/
 
-  Widget _buildCard(String location, double rating, int distance, String time, bool avaliable,  bool match) {
+  Widget buildCard(String location, double rating, int distance, String time, bool avaliable,  bool match) {
     return Card(
       elevation: 10,
       shape:  const RoundedRectangleBorder(
@@ -117,7 +125,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
           color: Color(0xff43802a),
           width: 3,
         ),
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: BorderRadius.all(Radius.circular(18)),
       ),
       child: SizedBox(
         height: 175,
@@ -134,7 +142,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 25),
-                    child:  StarsStaticRateWidget(rate: 4.0),
+                    child:   InteractiveStarsWidget(rate: 0.0),//StarsStaticRateWidget(rate: 4.0),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 25),
@@ -170,40 +178,99 @@ class _ChargeInfoState extends State<ChargeInfo>{
     );
   }
 
+  static const CameraPosition _kInitialPosition = CameraPosition(
+    target: LatLng(41.7285833, 1.8130899),
+    zoom: 8.0,
+  );
+
+  void onCameraMove(CameraPosition cameraPosition) {
+    //print('$cameraPosition');
+  }
+
   @override
   Widget build(BuildContext context) {
     //final tr = AppLocalizations.of(context)!;
     return  Scaffold(
-      body:  Stack(
-        children: [
-          GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              //haura d'anar la ubi del marcador seleccionat
-                target: _center,
-                zoom: 11.0
-            ),
-            markers: markers,
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: true,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: true,
-            onTap: onTap,
+      appBar: AppBar(title: Text("PROBA"), actions: [
+        IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              setState(() {});
+            })
+      ]),
+      body:Scaffold(
+          body: Stack(
+            children: [
+              GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: _kInitialPosition,
+                markers: markers,
+                mapType: MapType.normal,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                compassEnabled: true,
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: false,
+                trafficEnabled: true,
+                mapToolbarEnabled: false,
+                rotateGesturesEnabled: true,
+                scrollGesturesEnabled: true,
+                tiltGesturesEnabled: true,
+                liteModeEnabled: false,
+                onTap: (latLong) {
+                  (SnackBar(
+                    content: Text(
+                        'Tapped location LatLong is (${latLong.latitude},${latLong.longitude})'),
+                  ));
+                },
+                onCameraMove: onCameraMove,
+              ),
+              is_visible? SlidingUpPanel(
+                // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
+                maxHeight: MediaQuery.of(context).size.height * 0.8,
+                minHeight: 175.0,
+                controller: panelController,
+                parallaxEnabled: true,
+                parallaxOffset: 0.5,
+                backdropEnabled: true,
+                panelBuilder: (controller) => buildSlidingUpPanel(
+                  controller: controller,
+                  panelController: panelController,
+                ), borderRadius: BorderRadius.vertical(top: Radius.circular(18))) : Container(),
+              //!!!!!!is_visible ? show_card() : Container()
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 325, top: 100),
-            child: ButtonListScreenChargersWidget(),
-          ),
-        ],
+          /*floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              ButtonListScreenChargersWidget(),
+              SizedBox(height: 10),
+            ],
+          ),*/
+        ),
+          //is_visible ? InteractiveStarsWidget(rate: 0.0) : Container(),
+      bottomNavigationBar: BottomBarWidget(
+        index: 1,
+        onChangedTab: (index) {
+          setState(() {});
+        },
       ),
+      drawer: SimpleDrawer(),
+      floatingActionButton: const BottomBarActionButton(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
+
+  Widget show_card(){
+    return buildCard("bcn", 5, 2, "time", true, true);
+    return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true);
+  }
+
 
   infoWidget(LatLng pos) {
     return Padding(
         padding: const EdgeInsets.only(top: 650),
-        child: _buildCard(adress, 4, 2, "time", true, true));
+        child: buildCard(adress, 4, 2, "time", true, true));
   }
 
   void onTap(LatLng pos){
@@ -216,5 +283,12 @@ class _ChargeInfoState extends State<ChargeInfo>{
       is_visible = true;
     });
   }
+
+  Widget buildSlidingUpPanel({required ScrollController controller, required PanelController panelController}) {
+    return buildCard("bcn", 5, 2, "time", true, true);
+    return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true);
+  }
 }
+
+
 
