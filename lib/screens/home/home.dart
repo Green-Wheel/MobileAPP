@@ -14,26 +14,33 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int index = 0;
+
+  void _onChangeTab(int index) {
+    setState(() {
+      this.index = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: _searchTextField(), actions: [
         IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               setState(() {});
             })
       ]),
-      body: SafeArea(
-        child: GoogleMapsWidget(),
-      ),
       bottomNavigationBar: BottomBarWidget(
         index: index,
         onChangedTab: _onChangeTab,
       ),
-      drawer: SimpleDrawer(),
+      drawer: const SimpleDrawer(),
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: SafeArea(
+        child: GoogleMapsWidget(index: index, key: UniqueKey())
+      ),
     );
   }
 
@@ -42,12 +49,6 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) => const LanguageSelectorWidget(),
     );
-  }
-
-  void _onChangeTab(int index) {
-    setState(() {
-      this.index = index;
-    });
   }
 
   Widget _searchTextField() {

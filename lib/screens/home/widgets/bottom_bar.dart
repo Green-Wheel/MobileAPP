@@ -40,10 +40,7 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
     );
   }
 
-  Widget buildTabItem({
-    required int index,
-    required Icon icon,
-  }) {
+  Widget buildTabItem({required int index, required Icon icon}) {
     final isSelected = index == widget.index;
 
     return IconTheme(
@@ -52,7 +49,9 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
       ),
       child: IconButton(
         icon: icon,
-        onPressed: () => widget.onChangedTab(index),
+        onPressed: () {
+          widget.onChangedTab(index);
+        }
       ),
     );
   }
