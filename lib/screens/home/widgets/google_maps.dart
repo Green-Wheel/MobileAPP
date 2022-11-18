@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -7,13 +6,17 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
 import 'package:greenwheel/screens/charger-info/widgets/card_info.dart';
-import 'package:greenwheel/services/backend_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../services/backendServices/bikes.dart';
+import '../../../services/backendServices/publicChargers.dart';
+import '../../../services/backendServices/privateChargers.dart';
+
 class GoogleMapsWidget extends StatefulWidget {
+  int index;
   Set<Polyline>? polylines = {};
 
-  GoogleMapsWidget({Key? key, this.polylines}) : super(key: key);
+  GoogleMapsWidget({Key? key, required this.index, this.polylines}) : super(key: key);
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
@@ -41,46 +44,56 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   List markersList = [];
   bool is_visible = false;
 
-  void _getAndDrawPublicChargers() async {
-    BackendService.get('chargers/public/').then((response) {
-      if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = jsonDecode(response.body);
-        setState(() {
-          markersList = jsonResponse;
-          for (int i = 0; i < markersList.length; i++) {
-            Map localization = markersList[i]['localization'];
-            double latitude = localization['latitude'];
-            double longitude = localization['longitude'];
-            if (markersList[i]['direction'] == null) {
-              markersList[i]['direction'] = "No description";
-            }
-            _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+  void _drawPublicChargers() async {
+    List? publicChargerList = await PublicChargerService.getPublicChargers();
+    setState(() {
+      if (publicChargerList != null) {
+        markersList = publicChargerList;
+        for (int i = 0; i < markersList.length; i++) {
+          Map localization = markersList[i]['localization'];
+          double latitude = localization['latitude'];
+          double longitude = localization['longitude'];
+          if (markersList[i]['direction'] == null) {
+            markersList[i]['direction'] = "No description";
           }
-        });
-      } else {
-        print('Error getting public chargers!');
+          _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+        }
       }
     });
   }
 
-  void _getAndDrawPrivateChargers() async {
-    BackendService.get('chargers/private/').then((response) {
-      if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = jsonDecode(response.body);
-        setState(() {
-          markersList = jsonResponse;
-          for (int i = 0; i < markersList.length; i++) {
-            Map localization = markersList[i]['localization'];
-            double latitude = localization['latitude'];
-            double longitude = localization['longitude'];
-            if (markersList[i]['direction'] == null) {
-              markersList[i]['direction'] = "No description";
-            }
-            _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+  void _drawPrivateChargers() async {
+    List? privateChargerList = await PrivateChargerService.getPrivateChargers();
+    setState(() {
+      if (privateChargerList != null) {
+        markersList = privateChargerList;
+        for (int i = 0; i < markersList.length; i++) {
+          Map localization = markersList[i]['localization'];
+          double latitude = localization['latitude'];
+          double longitude = localization['longitude'];
+          if (markersList[i]['direction'] == null) {
+            markersList[i]['direction'] = "No description";
           }
-        });
-      } else {
-        print('Error getting public chargers!');
+          _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+        }
+      }
+    });
+  }
+
+  void _drawBikes() async {
+    List? bikesList = await Bikes.getBikes();
+    setState(() {
+      if (bikesList != null) {
+        markersList = bikesList;
+        for (int i = 0; i < markersList.length; i++) {
+          Map localization = markersList[i]['localization'];
+          double latitude = localization['latitude'];
+          double longitude = localization['longitude'];
+          if (markersList[i]['direction'] == null) {
+            markersList[i]['direction'] = "No description";
+          }
+          _addBikeMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+        }
       }
     });
   }
@@ -92,9 +105,36 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _getCurrentLocation();
       is_visible = false;
     });
-    _getAndDrawPublicChargers();
-    _getAndDrawPrivateChargers();
+    print(widget.index);
+
+    if (widget.index == 0) {
+      _drawPublicChargers();
+      _drawPrivateChargers();
+    } else if (widget.index == 1) {
+      _drawBikes();
+    }
     super.initState();
+  }
+
+  void _addBikeMarker(double lat, double log, String id, String address, double rate, int distance, String time) async{
+    final iconMarker = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2,), "assets/images/punt_bicicleta.png");
+    final Marker marcador = Marker(
+        markerId: MarkerId(id),
+        position: LatLng(lat, log),
+        onDrag: null,
+        icon: iconMarker,
+        onTap: () {
+          setState(() {
+            is_visible = false;
+          });
+          setState(() {
+            id_marcador = id;
+            is_visible = true;
+          });
+        } //_onMarkerTapped(MarkerId(id)),
+    );
+    markers.add(marcador);
+    markerMap[MarkerId(id)] = marcador;
   }
 
   void _addMarker(double lat, double log, String id, String address, double rate, int distance, String time) async{
