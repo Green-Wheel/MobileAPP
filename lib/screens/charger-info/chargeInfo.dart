@@ -76,6 +76,63 @@ class _ChargeInfoState extends State<ChargeInfo>{
     super.initState();
   }
 
+  Widget buildCard(String location, double rating, int distance, String time, bool avaliable,  bool match) {
+    return Card(
+      elevation: 10,
+      shape:  const RoundedRectangleBorder(
+        side: BorderSide(
+          color: Color(0xff43802a),
+          width: 3,
+        ),
+        borderRadius: BorderRadius.all(Radius.circular(18)),
+      ),
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.2,
+        width: MediaQuery.of(context).size.width * 0.8,
+          child:Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.725,
+                child:Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 5, left: 25),
+                      child: LocationChargerWidget(location: location),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child:   InteractiveStarsWidget(rate: 0.0),//StarsStaticRateWidget(rate: 4.0),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child:  PointOfChargeDistWidget(types: 2),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child: AvaliablePublicChargerWidget(avaliable: avaliable),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child: MatchWithCarWidget(match: match),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.215,
+                child: Column(
+                  children:const [
+                    ImageChargerWidget(),
+                    ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+    );
+  }
+
   //funcion para añadir los marcadores al set
   void _addMarker(double lat, double log, int id, String address, double rate, int distance, String time, bool match) async{
     final iconMarker = await BitmapDescriptor.fromAssetImage(
@@ -116,67 +173,6 @@ class _ChargeInfoState extends State<ChargeInfo>{
       );
     });
   }*/
-
-  Widget buildCard(String location, double rating, int distance, String time, bool avaliable,  bool match) {
-    return Card(
-      elevation: 10,
-      shape:  const RoundedRectangleBorder(
-        side: BorderSide(
-          color: Color(0xff43802a),
-          width: 3,
-        ),
-        borderRadius: BorderRadius.all(Radius.circular(18)),
-      ),
-      child: SizedBox(
-        height: 175,
-        width: 400,
-        child:Row(
-          children: [
-            SizedBox(
-              width: 270,
-              child:Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 5, left: 25),
-                    child: LocationChargerWidget(location: location),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 25),
-                    child:   InteractiveStarsWidget(rate: 0.0),//StarsStaticRateWidget(rate: 4.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 25),
-                    child:  PointOfChargeDistWidget(types: 2),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 25),
-                    child: AvaliablePublicChargerWidget(avaliable: avaliable),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 25),
-                    child: MatchWithCarWidget(match: match),
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              children:const [
-                Padding(
-                  padding:EdgeInsets.only(right: 12),
-                  child: ImageChargerWidget(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child:
-                      ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   static const CameraPosition _kInitialPosition = CameraPosition(
     target: LatLng(41.7285833, 1.8130899),
@@ -262,7 +258,9 @@ class _ChargeInfoState extends State<ChargeInfo>{
   }
 
   Widget show_card(){
-    return buildCard("bcn", 5, 2, "time", true, true);
+    return Expanded(
+      child: buildCard("bcn", 5, 2, "time", true, true)
+    );
     return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true);
   }
 

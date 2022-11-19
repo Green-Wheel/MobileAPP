@@ -17,7 +17,7 @@ class _ImageChargerWidget extends State<ImageChargerWidget>{
 //funcion para mostrar la imagen del marcador de Green Wheel en la card
 Widget _imageGreenWheelCharger(){
   return  Padding(
-      padding: const EdgeInsets.fromLTRB(30, 20, 5, 3),
+      padding: const EdgeInsets.fromLTRB(0, 20, 5, 0),
       child: SizedBox(
         height: 90.0,
         child: Image.asset("assets/images/punt_carregador.png"),
