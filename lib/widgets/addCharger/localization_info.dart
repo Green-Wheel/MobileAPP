@@ -49,10 +49,9 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
 
   void submitSearch(value) async {
     LatLang? prov = await Geocoding.getLatLangFromAddress(value);
+    _selectedAddress = (await Geocoding.getAddressFromLatLang(prov!))!;
     setState(() {
       selectPoint(LatLng(prov!.lat, prov.lng));
-      widget.data['lat'] = prov?.lat;
-      widget.data['lng'] = prov?.lng;
     });
   }
 

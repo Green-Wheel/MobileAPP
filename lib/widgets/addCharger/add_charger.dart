@@ -163,7 +163,6 @@ class _AddChargerState extends State<AddCharger> {
           return LocalizationInfo(
             data: {
               'direction': _data['direction'],
-              'town': _data['town'],
               'lat': _data['lat'],
               'lng': _data['lng'],
             },

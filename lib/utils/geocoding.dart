@@ -25,42 +25,41 @@ class Geocoding {
     return latLng;
   }
 
-  static Future<Address>? getAddressFromLatLang(LatLang latLng) {
-    GoogleService.getReverseGeocoding(latLng).then((response) {
-      if (response['status'] == 'OK') {
-        final results = response['results'];
-        final address_components = results[0]['address_components'];
-        Address address = Address(
-            street: "",
-            streetNumber: "",
-            city: "",
-            postalCode: "",
-            province: "",
-            country: "");
-        for (var i = 0; i < address_components.length; i++) {
-          final types = address_components[i]['types'];
-          if (types.contains('street_number')) {
-            address.streetNumber = address_components[i]['long_name'];
-          }
-          if (types.contains('route')) {
-            address.street = address_components[i]['long_name'];
-          }
-          if (types.contains('locality')) {
-            address.city = address_components[i]['long_name'];
-          }
-          if (types.contains('postal_code')) {
-            address.postalCode = address_components[i]['long_name'];
-          }
-          if (types.contains('administrative_area_level_2')) {
-            address.province = address_components[i]['long_name'];
-          }
-          if (types.contains('country')) {
-            address.country = address_components[i]['long_name'];
-          }
+  static Future<Address?> getAddressFromLatLang(LatLang latLng) async {
+    var response = await GoogleService.getReverseGeocoding(latLng);
+    if (response['status'] == 'OK') {
+      final results = response['results'];
+      final address_components = results[0]['address_components'];
+      Address address = Address(
+          street: "",
+          streetNumber: "",
+          city: "",
+          postalCode: "",
+          province: "",
+          country: "");
+      for (var i = 0; i < address_components.length; i++) {
+        final types = address_components[i]['types'];
+        if (types.contains('street_number')) {
+          address.streetNumber = address_components[i]['long_name'];
         }
-        return address;
+        if (types.contains('route')) {
+          address.street = address_components[i]['long_name'];
+        }
+        if (types.contains('locality')) {
+          address.city = address_components[i]['long_name'];
+        }
+        if (types.contains('postal_code')) {
+          address.postalCode = address_components[i]['long_name'];
+        }
+        if (types.contains('administrative_area_level_2')) {
+          address.province = address_components[i]['long_name'];
+        }
+        if (types.contains('country')) {
+          address.country = address_components[i]['long_name'];
+        }
       }
-    });
+      return address;
+    }
     return null;
   }
 
