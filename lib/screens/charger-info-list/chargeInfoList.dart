@@ -195,5 +195,5 @@ Widget _cardChargerList(String direction, bool avaliable, bool match, int types)
   int num = (min + random.nextInt(max - min));
   double numd = num.toDouble();
 
-  return CardInfoWidget(location: direction, rating: numd, types: types, avaliable: avaliable, match: match);
+  return CardInfoWidget(location: direction, rating: numd, types: types, avaliable: avaliable, match: match, private: true, full_info: false);
 }

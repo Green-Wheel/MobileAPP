@@ -274,7 +274,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     //avaliable da null
     if (markersList[pos_marker]['description'] == "false") avaliable = false;
 
-    return CardInfoWidget(location: description, rating: numd, types: types, avaliable: avaliable, match: true);
+    return CardInfoWidget(location: description, rating: numd, types: types, avaliable: avaliable, match: true, private: true, full_info: true);
   }
 
   String title_parser(String description){

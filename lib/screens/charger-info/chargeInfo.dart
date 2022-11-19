@@ -261,7 +261,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
     return Expanded(
       child: buildCard("bcn", 5, 2, "time", true, true)
     );
-    return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true);
+    return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true, private: false, full_info: true);
   }
 
 
@@ -284,7 +284,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
 
   Widget buildSlidingUpPanel({required ScrollController controller, required PanelController panelController}) {
     return buildCard("bcn", 5, 2, "time", true, true);
-    return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true);
+    return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true, private: false, full_info: true);
   }
 }
 
