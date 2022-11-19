@@ -4,15 +4,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
-import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
-import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
-import 'package:greenwheel/screens/charger-info/widgets/card_info.dart';
-import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
-import 'package:greenwheel/screens/charger-info/widgets/location_charger.dart';
-import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
-import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
-import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
+import 'package:greenwheel/widgets/avaliable_public_charger.dart';
+import 'package:greenwheel/widgets/button_list_screen_chargers.dart';
+import 'package:greenwheel/widgets/button_route.dart';
+import 'package:greenwheel/widgets/card_info.dart';
+import 'package:greenwheel/widgets/image_charger.dart';
+import 'package:greenwheel/widgets/location_charger.dart';
+import 'package:greenwheel/widgets/match_with_car.dart';
+import 'package:greenwheel/widgets/point_of_charge_dist.dart';
+import 'package:greenwheel/widgets/stars_static_rate.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../widgets/interactive_stars_widget.dart';
