@@ -46,16 +46,15 @@ class GoogleService {
   }
 
   // https://developers.google.com/maps/documentation/geocoding/requests-geocoding
-  static Future<dynamic> getGeocoding(String address) {
+  static Future<dynamic> getGeocoding(String address) async {
     final url =
         'https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=${FlutterConfig.get('GOOGLE_MAPS_API_KEY')}';
-    return http.get(Uri.parse(url)).then((response) {
+    var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       } else {
         throw Exception('Failed to load reverse geocoding');
       }
-    });
   }
 
   // https://developers.google.com/maps/documentation/places/web-service/autocomplete

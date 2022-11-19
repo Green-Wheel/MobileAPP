@@ -14,19 +14,15 @@ class Geocoding {
     return LatLang(lat: position.latitude, lng: position.longitude);
   }
 
-  static Future<LatLang>? getLatLangFromAddress(String address) {
-    GoogleService.getGeocoding(address).then((response) {
-      if (response['status'] == 'OK') {
-        final results = response['results'];
-        final geometry = results[0]['geometry'];
-        final location = geometry['location'];
-        final lat = location['lat'];
-        final lng = location['lng'];
-        LatLang latLng = LatLang(lat: lat, lng: lng);
-        return latLng;
-      }
-    });
-    return null;
+  static Future<LatLang>? getLatLangFromAddress(String address) async {
+    var response = await GoogleService.getGeocoding(address);
+    final results = response['results'];
+    final geometry = results[0]['geometry'];
+    final location = geometry['location'];
+    final lat = location['lat'];
+    final lng = location['lng'];
+    LatLang latLng = LatLang(lat: lat, lng: lng);
+    return latLng;
   }
 
   static Future<Address>? getAddressFromLatLang(LatLang latLng) {

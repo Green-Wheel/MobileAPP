@@ -5,6 +5,7 @@ import '../../serializers/maps.dart';
 import 'package:searchfield/searchfield.dart';
 
 import '../../utils/address_autocompletation.dart';
+import '../location_search.dart';
 
 class LocalizationInfo extends StatefulWidget {
   var data;
@@ -26,10 +27,6 @@ class LocalizationInfo extends StatefulWidget {
 
 class _LocalizationInfoState extends State<LocalizationInfo> {
   late GoogleMapController mapController;
-  var _address = '';
-  List<SearchFieldListItem> _suggestions = ['suggestion1', 'suggestion2']
-      .map((e) => SearchFieldListItem(e))
-      .toList();
   Set<Marker> _markers = {};
   Address _selectedAddress = Address(
       street: '',
@@ -39,7 +36,7 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
       province: '',
       country: '');
 
-  final _searchController = TextEditingController();
+
 
   static const CameraPosition _kInitialPosition = CameraPosition(
     target: LatLng(41.7285833, 1.8130899),
@@ -48,13 +45,6 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-  }
-
-  void getSuggestions(String input) async {
-    var suggestions = await AdressAutocompletation.getAdresses(input);
-    setState(() {
-      _suggestions = suggestions.map((item) => SearchFieldListItem(item)).toList();
-    });
   }
 
   void submitSearch(value) async {
@@ -80,25 +70,6 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    _searchController.addListener(() {
-      final String text = _searchController.text.toLowerCase();
-      if(_address != text) {
-        getSuggestions(text);
-        _address = text;
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
-
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -115,10 +86,8 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
               ),
               child: Column(
                 children: [
-                  SearchField(
-                    suggestions: _suggestions,
-                    onSubmit: submitSearch,
-                    controller: _searchController,
+                  LocationSearch(
+                    submitSearch: submitSearch,
                   ),
                   Text('Street: ${_selectedAddress.street ?? ''}'),
                   Text('Street Number: ${_selectedAddress.streetNumber ?? ''}'),
