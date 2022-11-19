@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -6,18 +7,14 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/widgets/button_list_screen_chargers.dart';
 import 'package:greenwheel/widgets/card_info.dart';
+import 'package:greenwheel/services/backend_service.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import '../../../services/backendServices/bikes.dart';
-import '../../../services/backendServices/publicChargers.dart';
-import '../../../services/backendServices/privateChargers.dart';
-import 'package:greenwheel/widgets/bike_card_info.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
-  int index;
   Set<Polyline>? polylines = {};
 
-  GoogleMapsWidget({Key? key, required this.index, this.polylines}) : super(key: key);
+  GoogleMapsWidget({Key? key, this.polylines}) : super(key: key);
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
@@ -44,57 +41,49 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   late String id_marcador;
   List markersList = [];
   bool is_visible = false;
+  final panelController = PanelController();
+  bool is_visible_panel = false;
 
-  void _drawPublicChargers() async {
-    List? publicChargerList = await PublicChargerService.getPublicChargers();
-    setState(() {
-      if (publicChargerList != null) {
-        markersList = publicChargerList;
-        for (int i = 0; i < markersList.length; i++) {
-          Map localization = markersList[i]['localization'];
-          double latitude = localization['latitude'];
-          double longitude = localization['longitude'];
-          if (markersList[i]['direction'] == null) {
-            markersList[i]['direction'] = "No description";
+  void _getAndDrawPublicChargers() async {
+    BackendService.get('chargers/public/').then((response) {
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        setState(() {
+          markersList = jsonResponse;
+          for (int i = 0; i < markersList.length; i++) {
+            Map localization = markersList[i]['localization'];
+            double latitude = localization['latitude'];
+            double longitude = localization['longitude'];
+            if (markersList[i]['direction'] == null) {
+              markersList[i]['direction'] = "No description";
+            }
+            _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
           }
-          _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
-        }
+        });
+      } else {
+        print('Error getting public chargers!');
       }
     });
   }
 
-  void _drawPrivateChargers() async {
-    List? privateChargerList = await PrivateChargerService.getPrivateChargers();
-    setState(() {
-      if (privateChargerList != null) {
-        markersList = privateChargerList;
-        for (int i = 0; i < markersList.length; i++) {
-          Map localization = markersList[i]['localization'];
-          double latitude = localization['latitude'];
-          double longitude = localization['longitude'];
-          if (markersList[i]['direction'] == null) {
-            markersList[i]['direction'] = "No description";
+  void _getAndDrawPrivateChargers() async {
+    BackendService.get('chargers/private/').then((response) {
+      if (response.statusCode == 200) {
+        List<dynamic> jsonResponse = jsonDecode(response.body);
+        setState(() {
+          markersList = jsonResponse;
+          for (int i = 0; i < markersList.length; i++) {
+            Map localization = markersList[i]['localization'];
+            double latitude = localization['latitude'];
+            double longitude = localization['longitude'];
+            if (markersList[i]['direction'] == null) {
+              markersList[i]['direction'] = "No description";
+            }
+            _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
           }
-          _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
-        }
-      }
-    });
-  }
-
-  void _drawBikes() async {
-    List? bikesList = await Bikes.getBikes();
-    setState(() {
-      if (bikesList != null) {
-        markersList = bikesList;
-        for (int i = 0; i < markersList.length; i++) {
-          Map localization = markersList[i]['localization'];
-          double latitude = localization['latitude'];
-          double longitude = localization['longitude'];
-          if (markersList[i]['direction'] == null) {
-            markersList[i]['direction'] = "No description";
-          }
-          _addBikeMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
-        }
+        });
+      } else {
+        print('Error getting public chargers!');
       }
     });
   }
@@ -106,36 +95,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _getCurrentLocation();
       is_visible = false;
     });
-    print(widget.index);
-
-    if (widget.index == 0) {
-      _drawPublicChargers();
-      _drawPrivateChargers();
-    } else if (widget.index == 1) {
-      _drawBikes();
-    }
+    _getAndDrawPublicChargers();
+    _getAndDrawPrivateChargers();
     super.initState();
-  }
-
-  void _addBikeMarker(double lat, double log, String id, String address, double rate, int distance, String time) async{
-    final iconMarker = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2,), "assets/images/punt_bicicleta.png");
-    final Marker marcador = Marker(
-        markerId: MarkerId(id),
-        position: LatLng(lat, log),
-        onDrag: null,
-        icon: iconMarker,
-        onTap: () {
-          setState(() {
-            is_visible = false;
-          });
-          setState(() {
-            id_marcador = id;
-            is_visible = true;
-          });
-        } //_onMarkerTapped(MarkerId(id)),
-    );
-    markers.add(marcador);
-    markerMap[MarkerId(id)] = marcador;
   }
 
   void _addMarker(double lat, double log, String id, String address, double rate, int distance, String time) async{
@@ -256,18 +218,63 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               },
               onCameraMove: onCameraMove,
             ),
-
-          is_visible ? show_card() : Container()
-        ],
-      ),
-        floatingActionButton: Column(
+            is_visible ? SlidingUpPanel(
+              // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
+                maxHeight: MediaQuery.of(context).size.height * 0.8,
+                minHeight: 175.0,
+                controller: panelController,
+                parallaxEnabled: true,
+                parallaxOffset: 0.5,
+                backdropEnabled: true,
+                panelBuilder: (controller) => buildSlidingUpPanel(
+                  controller: controller,
+                  panelController: panelController,
+                ), borderRadius: BorderRadius.vertical(top: Radius.circular(18))) : Container(),
+          ],
+        ),
+        floatingActionButton:  Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [
+          children: !is_visible? [
             ButtonListScreenChargersWidget(),
             SizedBox(height: 10),
             currentLocationActionButton(),
-          ],
+            ] : <Widget>[
+              ButtonListScreenChargersWidget(),
+              SizedBox(height: 10),
+              currentLocationActionButton(),
+              SizedBox(height: 165),],
         ));
+  }
+
+  Widget buildSlidingUpPanel({required ScrollController controller, required PanelController panelController}) {
+    //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
+    int pos_marker = 0;
+    for (int i = 0; i < markersList.length; i++){
+      if (markersList[i]['description'] == id_marcador){
+        pos_marker = i;
+        print(pos_marker);
+      }
+    }
+
+    //Generación rate aleatoria (harcode rate)
+    Random random = Random();
+    int min = 2, max = 6;
+    int num = (min + random.nextInt(max - min));
+    double numd = num.toDouble();
+
+    //Obtencion del numero de tipos de cargadores
+    int types = markersList[pos_marker]['connection_type'].length;
+
+    //Arreglo del titulo del cargador respecto a los datos del json
+    String description = markersList[pos_marker]['description'];
+    description = title_parser(description);
+
+    //Mirar el tipo de la variable porque to_do  da null
+    bool avaliable = true;
+    //avaliable da null
+    if (markersList[pos_marker]['description'] == "false") avaliable = false;
+
+    return CardInfoWidget(location: description, rating: numd, types: types, avaliable: avaliable, match: true);
   }
 
   String title_parser(String description){
@@ -318,86 +325,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     return description;
   }
 
-  Widget show_card() {
-    if (widget.index == 0) {
-      print("do charger");
-      return show_card_charger();
-    } else {
-      print("do bike");
-      return show_card_bike();
-    }
-  }
 
-  Widget show_card_charger(){
-    //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
-    int pos_marker = 0;
-    for (int i = 0; i < markersList.length; i++){
-      if (markersList[i]['description'] == id_marcador){
-        pos_marker = i;
-        print('id $pos_marker');
-        print(is_visible);
-      }
-    }
-    //Generación rate aleatoria (harcode rate)
-    Random random = Random();
-    int min = 2, max = 6;
-    int num = (min + random.nextInt(max - min));
-    double numd = num.toDouble();
-
-    //Obtencion del numero de tipos de cargadores
-    int types = markersList[pos_marker]['connection_type'].length;
-
-    //Arreglo del titulo del cargador respecto a los datos del json
-    String description = markersList[pos_marker]['description'];
-    description = title_parser(description);
-
-    //Mirar el tipo de la variable porque to_do  da null
-    bool available = true;
-    //avaliable da null
-    if (markersList[pos_marker]['description'] == "false") available = false;
-
-    return CardInfoWidget(location: description, rating: numd, types: types, available: available, match: true);
-  }
-
-
-  Widget show_card_bike(){
-    //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
-    int pos_marker = 0;
-    for (int i = 0; i < markersList.length; i++){
-      if (markersList[i]['description'] == id_marcador){
-        pos_marker = i;
-        print('id $pos_marker');
-        print(is_visible);
-      }
-    }
-    //Generación rate aleatoria (harcode rate)
-    Random random = Random();
-    int min = 2, max = 6;
-    int num = (min + random.nextInt(max - min));
-    double numd = num.toDouble();
-
-    //Obtencion del numero de tipos de cargadores
-    int types = markersList[pos_marker]['connection_type'].length;
-
-    //Arreglo del titulo del cargador respecto a los datos del json
-    String description = markersList[pos_marker]['description'];
-    description = title_parser(description);
-
-    //Mirar el tipo de la variable porque to_do  da null
-    bool available = true;
-    //avaliable da null
-    if (markersList[pos_marker]['description'] == "false") available = false;
-
-    return BikeCardInfoWidget(location: description, rating: numd, types: types, available: available, match: true);
-  }
-
-
-  Widget card_charger(String description, double rating, int types, bool available, bool match) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 470),
-      child: CardInfoWidget(location: description, rating: rating, types: types, available: available, match: true),
-    );
-  }
 
   Widget currentLocationActionButton() {
     return FloatingActionButton(

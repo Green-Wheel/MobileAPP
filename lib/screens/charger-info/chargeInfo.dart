@@ -1,3 +1,4 @@
+
 //import 'dart:html';
 
 import 'package:flutter/cupertino.dart';
@@ -14,7 +15,7 @@ import 'package:greenwheel/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/widgets/stars_static_rate.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import '../../widgets/rating_stars.dart';
+import '../../widgets/interactive_stars_widget.dart';
 import '../home/widgets/bottom_bar.dart';
 import '../home/widgets/drawer.dart';
 import '../home/widgets/google_maps.dart';
@@ -88,44 +89,47 @@ class _ChargeInfoState extends State<ChargeInfo>{
       child: SizedBox(
         height: MediaQuery.of(context).size.height * 0.2,
         width: MediaQuery.of(context).size.width * 0.8,
-        child:Row(
-          children: [
-            SizedBox(
-              width: 270,
-              child:Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(right: 5, left: 15),
-                    child: LocationChargerWidget(location: location),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child:   RatingStars(rating: "0.0"),//StarsStaticRateWidget(rate: 4.0),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child:  PointOfChargeDistWidget(types: 2),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: AvaliablePublicChargerWidget(avaliable: avaliable),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 15),
-                    child: MatchWithCarWidget(match: match),
-                  ),
-                ],
+          child:Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.725,
+                child:Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: 5, left: 25),
+                      child: LocationChargerWidget(location: location),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 20),
+                      child:   InteractiveStarsWidget(rate: 0.0),//StarsStaticRateWidget(rate: 4.0),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child:  PointOfChargeDistWidget(types: 2),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child: AvaliablePublicChargerWidget(avaliable: avaliable),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child: MatchWithCarWidget(match: match),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Column(
-              children:const [
-                ImageChargerWidget(),
-                ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
-              ],
-            ),
-          ],
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.215,
+                child: Column(
+                  children:const [
+                    ImageChargerWidget(),
+                    ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
     );
   }
 
@@ -138,18 +142,18 @@ class _ChargeInfoState extends State<ChargeInfo>{
         ),
         "assets/images/punt_carregador.png");
     final Marker marcador = Marker(
-        markerId: MarkerId(id.toString()),
-        position: LatLng(lat, log),
-        onDrag: null,
-        icon: iconMarker,
-        onTap: () {
-          setState(() {
-            is_visible = false;
-          });
-          setState(() {
-            is_visible = true;
-          });
+      markerId: MarkerId(id.toString()),
+      position: LatLng(lat, log),
+      onDrag: null,
+      icon: iconMarker,
+      onTap: () {
+        setState(() {
+          is_visible = false;
         });
+        setState(() {
+          is_visible = true;
+        });
+      });
     markers.add(marcador);
     Marcador? mark;
     mark!.id = id;
@@ -183,7 +187,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
   Widget build(BuildContext context) {
     //final tr = AppLocalizations.of(context)!;
     return  Scaffold(
-      appBar: AppBar(title: Text("PROVA"), actions: [
+      appBar: AppBar(title: Text("PROBA"), actions: [
         IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
@@ -191,34 +195,34 @@ class _ChargeInfoState extends State<ChargeInfo>{
             })
       ]),
       body:Scaffold(
-        body: Stack(
-          children: [
-            GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: _kInitialPosition,
-              markers: markers,
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              compassEnabled: true,
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: false,
-              trafficEnabled: true,
-              mapToolbarEnabled: false,
-              rotateGesturesEnabled: true,
-              scrollGesturesEnabled: true,
-              tiltGesturesEnabled: true,
-              liteModeEnabled: false,
-              onTap: (latLong) {
-                (SnackBar(
-                  content: Text(
-                      'Tapped location LatLong is (${latLong.latitude},${latLong.longitude})'),
-                ));
-              },
-              onCameraMove: onCameraMove,
-            ),
-            is_visible? SlidingUpPanel(
-              // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
+          body: Stack(
+            children: [
+              GoogleMap(
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: _kInitialPosition,
+                markers: markers,
+                mapType: MapType.normal,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                compassEnabled: true,
+                zoomGesturesEnabled: true,
+                zoomControlsEnabled: false,
+                trafficEnabled: true,
+                mapToolbarEnabled: false,
+                rotateGesturesEnabled: true,
+                scrollGesturesEnabled: true,
+                tiltGesturesEnabled: true,
+                liteModeEnabled: false,
+                onTap: (latLong) {
+                  (SnackBar(
+                    content: Text(
+                        'Tapped location LatLong is (${latLong.latitude},${latLong.longitude})'),
+                  ));
+                },
+                onCameraMove: onCameraMove,
+              ),
+              is_visible? SlidingUpPanel(
+                // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
                 maxHeight: MediaQuery.of(context).size.height * 0.8,
                 minHeight: 175.0,
                 controller: panelController,
@@ -229,18 +233,18 @@ class _ChargeInfoState extends State<ChargeInfo>{
                   controller: controller,
                   panelController: panelController,
                 ), borderRadius: BorderRadius.vertical(top: Radius.circular(18))) : Container(),
-            //!!!!!!is_visible ? show_card() : Container()
-          ],
-        ),
-        /*floatingActionButton: Column(
+              //!!!!!!is_visible ? show_card() : Container()
+            ],
+          ),
+          /*floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ButtonListScreenChargersWidget(),
               SizedBox(height: 10),
             ],
           ),*/
-      ),
-      //is_visible ? InteractiveStarsWidget(rate: 0.0) : Container(),
+        ),
+          //is_visible ? InteractiveStarsWidget(rate: 0.0) : Container(),
       bottomNavigationBar: BottomBarWidget(
         index: 1,
         onChangedTab: (index) {
@@ -255,9 +259,9 @@ class _ChargeInfoState extends State<ChargeInfo>{
 
   Widget show_card(){
     return Expanded(
-        child: buildCard("bcn", 5, 2, "time", true, true)
+      child: buildCard("bcn", 5, 2, "time", true, true)
     );
-    return CardInfoWidget(location: "BCN", rating: 5, types: 5, available: true, match: true);
+    return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true);
   }
 
 
@@ -280,6 +284,9 @@ class _ChargeInfoState extends State<ChargeInfo>{
 
   Widget buildSlidingUpPanel({required ScrollController controller, required PanelController panelController}) {
     return buildCard("bcn", 5, 2, "time", true, true);
-    return CardInfoWidget(location: "BCN", rating: 5, types: 5, available: true, match: true);
+    return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true);
   }
 }
+
+
+
