@@ -30,9 +30,10 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
       city: '',
       postalCode: '',
       province: '',
-      country: '');
+      country: ''
+  );
 
-  static CameraPosition _kInitialPosition = CameraPosition(
+  static const CameraPosition _kInitialPosition = CameraPosition(
     target: LatLng(41.7285833, 1.8130899),
     zoom: 8.0,
   );
@@ -56,10 +57,9 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
 
   @override
   Widget build(BuildContext context) {
-    var latitude;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Localization'),
+        title: const Text('Localization'),
       ),
       body: Column(
         children: [
@@ -72,14 +72,14 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
               ),
               child: Column(
                 children: [
-                  Text('Street: ${_selectedAddress.street}'),
-                  Text('Street Number: ${_selectedAddress.streetNumber}'),
-                  Text('City: ${_selectedAddress.city}'),
-                  Text('Postal Code: ${_selectedAddress.postalCode}'),
-                  Text('Province: ${_selectedAddress.province}'),
-                  Text('Country: ${_selectedAddress.country}'),
-                  Text('lat: ${_markers.first.position.latitude}'),
-                  Text('lng: ${_markers.first.position.longitude}'),
+                  Text('Street: ${_selectedAddress.street ?? ''}'),
+                  Text('Street Number: ${_selectedAddress.streetNumber ?? ''}'),
+                  Text('City: ${_selectedAddress.city ?? ''}'),
+                  Text('Postal Code: ${_selectedAddress.postalCode ?? ''}'),
+                  Text('Province: ${_selectedAddress.province ?? ''}'),
+                  Text('Country: ${_selectedAddress.country ?? ''}'),
+                  Text('lat: ${_markers.isNotEmpty ? _markers.first.position.latitude : ''}'),
+                  Text('lng: ${_markers.isNotEmpty ? _markers.first.position.longitude : ''}'),
                 ],
               ),
             ),
