@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:greenwheel/utils/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../serializers/maps.dart';
+import 'package:searchfield/searchfield.dart';
+
+import '../../utils/address_autocompletation.dart';
 
 class LocalizationInfo extends StatefulWidget {
   var data;
@@ -23,6 +26,10 @@ class LocalizationInfo extends StatefulWidget {
 
 class _LocalizationInfoState extends State<LocalizationInfo> {
   late GoogleMapController mapController;
+  var _address = '';
+  List<SearchFieldListItem> _suggestions = ['suggestion1', 'suggestion2']
+      .map((e) => SearchFieldListItem(e))
+      .toList();
   Set<Marker> _markers = {};
   Address _selectedAddress = Address(
       street: '',
@@ -30,8 +37,9 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
       city: '',
       postalCode: '',
       province: '',
-      country: ''
-  );
+      country: '');
+
+  final _searchController = TextEditingController();
 
   static const CameraPosition _kInitialPosition = CameraPosition(
     target: LatLng(41.7285833, 1.8130899),
@@ -40,6 +48,22 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+  }
+
+  void getSuggestions(String input) async {
+    var suggestions = await AdressAutocompletation.getAdresses(input);
+    setState(() {
+      _suggestions = suggestions.map((item) => SearchFieldListItem(item)).toList();
+    });
+  }
+
+  void submitSearch(value) async {
+    LatLang? prov = await Geocoding.getLatLangFromAddress(value);
+    setState(() {
+      selectPoint(LatLng(prov!.lat, prov.lng));
+      widget.data['lat'] = prov?.lat;
+      widget.data['lng'] = prov?.lng;
+    });
   }
 
   void selectPoint(LatLng point) async {
@@ -54,6 +78,25 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
       //_selectedAddress = addres!;
     });
   }
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      final String text = _searchController.text.toLowerCase();
+      if(_address != text) {
+        getSuggestions(text);
+        _address = text;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +115,21 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
               ),
               child: Column(
                 children: [
+                  SearchField(
+                    suggestions: _suggestions,
+                    onSubmit: submitSearch,
+                    controller: _searchController,
+                  ),
                   Text('Street: ${_selectedAddress.street ?? ''}'),
                   Text('Street Number: ${_selectedAddress.streetNumber ?? ''}'),
                   Text('City: ${_selectedAddress.city ?? ''}'),
                   Text('Postal Code: ${_selectedAddress.postalCode ?? ''}'),
                   Text('Province: ${_selectedAddress.province ?? ''}'),
                   Text('Country: ${_selectedAddress.country ?? ''}'),
-                  Text('lat: ${_markers.isNotEmpty ? _markers.first.position.latitude : ''}'),
-                  Text('lng: ${_markers.isNotEmpty ? _markers.first.position.longitude : ''}'),
+                  Text(
+                      'lat: ${_markers.isNotEmpty ? _markers.first.position.latitude : ''}'),
+                  Text(
+                      'lng: ${_markers.isNotEmpty ? _markers.first.position.longitude : ''}'),
                 ],
               ),
             ),
