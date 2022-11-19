@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
-import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
-import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
-import 'package:greenwheel/screens/charger-info/widgets/location_charger.dart';
-import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
-import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
-import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
+import 'package:greenwheel/widgets/avaliable_public_charger.dart';
+import 'package:greenwheel/widgets/button_route.dart';
+import 'package:greenwheel/widgets/image_charger.dart';
+import 'package:greenwheel/widgets/location_charger.dart';
+import 'package:greenwheel/widgets/match_with_car.dart';
+import 'package:greenwheel/widgets/point_of_charge_dist.dart';
+import 'package:greenwheel/widgets/stars_static_rate.dart';
 
 class CardInfoWidget extends StatefulWidget {
   String location;
   double rating;
   int types;
-  bool avaliable;
+  bool available;
   bool match;
 
-  CardInfoWidget({required this.location, required this.rating, required this.types, required this.avaliable, required this.match, super.key});
+  CardInfoWidget({required this.location, required this.rating, required this.types, required this.available, required this.match, super.key});
 
   @override
   State<StatefulWidget> createState() => _CardInfoWidget();
@@ -23,14 +23,13 @@ class CardInfoWidget extends StatefulWidget {
 class _CardInfoWidget extends State<CardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.types, widget.avaliable, widget.match);
+    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, context);
   }
 }
 
-Widget _buildCard(String location, double rating, int types, bool avaliable,  bool match) {
-  return Padding(
-    padding: EdgeInsets.only(top: 470),
-    child: Card(
+Widget _buildCard(String location, double rating, int types, bool avaliable,  bool match, BuildContext context) {
+  double width = MediaQuery.of(context).size.width;
+  return Card(
       elevation: 10,
       shape:  const RoundedRectangleBorder(
         side: BorderSide(
@@ -42,7 +41,7 @@ Widget _buildCard(String location, double rating, int types, bool avaliable,  bo
       child: SizedBox(
         height: 175,
         width: 400,
-        child:Row(
+        child: Row(
           children: [
             SizedBox(
               width: 270,
@@ -72,22 +71,14 @@ Widget _buildCard(String location, double rating, int types, bool avaliable,  bo
               ),
             ),
             Column(
-              children:const [
-                Padding(
-                  padding:EdgeInsets.only(right: 12),
-                  child: ImageChargerWidget(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 15),
-                  child:
-                      ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
-                ),
+              children: const [
+                ImageChargerWidget(),
+                ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
               ],
             ),
           ],
         ),
       ),
-    ),
-  );
+    );
 }
 

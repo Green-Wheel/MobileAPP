@@ -4,13 +4,14 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:greenwheel/screens/charger-info/widgets/button_list_screen_chargers.dart';
-import 'package:greenwheel/screens/charger-info/widgets/card_info.dart';
+import 'package:greenwheel/widgets/button_list_screen_chargers.dart';
+import 'package:greenwheel/widgets/card_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/publicChargers.dart';
 import '../../../services/backendServices/privateChargers.dart';
+import 'package:greenwheel/widgets/bike_card_info.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
@@ -255,9 +256,10 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               },
               onCameraMove: onCameraMove,
             ),
-            is_visible ? show_card() : Container()
-          ],
-        ),
+
+          is_visible ? show_card() : Container()
+        ],
+      ),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -316,17 +318,26 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     return description;
   }
 
-  Widget show_card(){
+  Widget show_card() {
+    if (widget.index == 0) {
+      print("do charger");
+      return show_card_charger();
+    } else {
+      print("do bike");
+      return show_card_bike();
+    }
+  }
 
+  Widget show_card_charger(){
     //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
     int pos_marker = 0;
     for (int i = 0; i < markersList.length; i++){
       if (markersList[i]['description'] == id_marcador){
         pos_marker = i;
-        print(pos_marker);
+        print('id $pos_marker');
+        print(is_visible);
       }
     }
-
     //Generación rate aleatoria (harcode rate)
     Random random = Random();
     int min = 2, max = 6;
@@ -341,11 +352,51 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     description = title_parser(description);
 
     //Mirar el tipo de la variable porque to_do  da null
-    bool avaliable = true;
+    bool available = true;
     //avaliable da null
-    if (markersList[pos_marker]['description'] == "false") avaliable = false;
+    if (markersList[pos_marker]['description'] == "false") available = false;
 
-    return CardInfoWidget(location: description, rating: numd, types: types, avaliable: avaliable, match: true);
+    return CardInfoWidget(location: description, rating: numd, types: types, available: available, match: true);
+  }
+
+
+  Widget show_card_bike(){
+    //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
+    int pos_marker = 0;
+    for (int i = 0; i < markersList.length; i++){
+      if (markersList[i]['description'] == id_marcador){
+        pos_marker = i;
+        print('id $pos_marker');
+        print(is_visible);
+      }
+    }
+    //Generación rate aleatoria (harcode rate)
+    Random random = Random();
+    int min = 2, max = 6;
+    int num = (min + random.nextInt(max - min));
+    double numd = num.toDouble();
+
+    //Obtencion del numero de tipos de cargadores
+    int types = markersList[pos_marker]['connection_type'].length;
+
+    //Arreglo del titulo del cargador respecto a los datos del json
+    String description = markersList[pos_marker]['description'];
+    description = title_parser(description);
+
+    //Mirar el tipo de la variable porque to_do  da null
+    bool available = true;
+    //avaliable da null
+    if (markersList[pos_marker]['description'] == "false") available = false;
+
+    return BikeCardInfoWidget(location: description, rating: numd, types: types, available: available, match: true);
+  }
+
+
+  Widget card_charger(String description, double rating, int types, bool available, bool match) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 470),
+      child: CardInfoWidget(location: description, rating: rating, types: types, available: available, match: true),
+    );
   }
 
   Widget currentLocationActionButton() {
