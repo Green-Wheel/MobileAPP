@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 
+//TODO refactor para coger imagenes de s3 en vez de assets
 class ImageDisplay extends StatefulWidget {
   final double height;
   final double width;
-  const ImageDisplay({Key? key, this.height = 150, this.width=150}) : super(key: key);
+
+  /*final List<String> images;*/
+
+  const ImageDisplay(
+      {Key? key, /*required this.images,*/ this.height = 150, this.width = 150})
+      : super(key: key);
 
   @override
   State<ImageDisplay> createState() => _ImageDisplayState();
@@ -15,37 +21,104 @@ class _ImageDisplayState extends State<ImageDisplay> {
     return Container(
       height: widget.height,
       width: widget.width,
-      child: OutlinedButton(
-        onPressed: () {},
+      child: InkWell(
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return Expanded(
+                    child: AlertDialog(
+                  content: ImagesDisplay(images: [
+                    'assets/images/img1.jpg',
+                    'assets/images/img2.png',
+                    'assets/images/img3.jpg'
+                  ]),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ));
+              });
+        },
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          padding: const EdgeInsets.symmetric(vertical: 10),
           child: Stack(
             children: [
               Row(children: [
                 Expanded(
-                    child: Image.asset(
-                      'assets/images/img1.jpg',
-                      height: widget.height,
-                      width: widget.width/2,
-                      fit: BoxFit.cover,
-                    )),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1, color: Colors.black),
+                    ),
+                    child: true
+                        ? Image.asset(
+                            'assets/images/img1.jpg',
+                            height: widget.height,
+                            width: widget.width / 2,
+                            fit: BoxFit.cover,
+                          )
+                        : Image.asset(
+                            'assets/images/no_image.png',
+                            height: widget.height,
+                            width: widget.width / 2,
+                            fit: BoxFit.cover,
+                          ),
+                  ),
+                ),
                 Expanded(
                   child: Column(
                     children: [
                       Expanded(
-                          child: Image.asset(
-                            'assets/images/img2.png',
-                            height: widget.height/2,
-                            width: widget.width/2,
-                            fit: BoxFit.cover,
-                          )),
+                        child: Container(
+                            decoration: const BoxDecoration(
+                              border: Border(
+                                  top:
+                                      BorderSide(width: 1, color: Colors.black),
+                                  right: BorderSide(
+                                      width: 1, color: Colors.black)),
+                            ),
+                            child: true
+                                ? Image.asset(
+                                    'assets/images/img2.png',
+                                    height: widget.height / 2,
+                                    width: widget.width / 2,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.asset(
+                                    'assets/images/no_image.png',
+                                    height: widget.height / 2,
+                                    width: widget.width / 2,
+                                    fit: BoxFit.cover,
+                                  )),
+                      ),
                       Expanded(
-                          child: Image.asset(
-                            'assets/images/img3.jpg',
-                            height: widget.height/2,
-                            width: widget.width/2,
-                            fit: BoxFit.cover,
-                          )),
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            border: Border(
+                              top: BorderSide(width: 1, color: Colors.black),
+                              right: BorderSide(width: 1, color: Colors.black),
+                              bottom: BorderSide(width: 1, color: Colors.black),
+                            ),
+                          ),
+                          child: false
+                              ? Image.asset(
+                                  'assets/images/img3.jpg',
+                                  height: widget.height / 2,
+                                  width: widget.width / 2,
+                                  fit: BoxFit.cover,
+                                )
+                              : Image.asset(
+                                  'assets/images/no_image.png',
+                                  height: widget.height / 2,
+                                  width: widget.width / 2,
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -58,3 +131,53 @@ class _ImageDisplayState extends State<ImageDisplay> {
   }
 }
 
+class ImagesDisplay extends StatefulWidget {
+  final List<String> images;
+
+  const ImagesDisplay({Key? key, required this.images}) : super(key: key);
+
+  @override
+  State<ImagesDisplay> createState() => _ImagesDisplayState();
+}
+
+class _ImagesDisplayState extends State<ImagesDisplay> {
+  int _selected_image = 0;
+
+  void selectImg(int index) {
+    setState(() {
+      _selected_image = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 3 * MediaQuery.of(context).size.height / 5,
+      child: Column(
+        children: [
+          Expanded(
+            child: Image.asset(
+              widget.images[_selected_image],
+              fit: BoxFit.cover,
+            ),
+          ),
+          const SizedBox(height: 20),
+          Container(
+            height: 100,
+            child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: widget.images
+                    .map((image) => InkWell(
+                  onTap: () => selectImg(widget.images.indexOf(image)),
+                      child: Padding(
+                            padding: const EdgeInsets.only(right: 10.0),
+                            child: Image.asset(image),
+                          ),
+                    ))
+                    .toList()),
+          )
+        ],
+      ),
+    );
+  }
+}

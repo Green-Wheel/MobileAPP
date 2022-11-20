@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../image_display.dart';
 import '../select_image.dart';
 
 class BasicInfo extends StatefulWidget {
@@ -90,6 +91,8 @@ class _BasicInfoState extends State<BasicInfo> {
                     return null;
                   },
                 ),
+                SizedBox(height: 10),
+                const ImageDisplay(),
                 SizedBox(height: 10),
                 SelectImage(
                   multiple: true,
