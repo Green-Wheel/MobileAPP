@@ -18,16 +18,19 @@ class _LocationBikeWidget extends State<LocationBikeWidget>{
 //funcion para mostrar la direccion del cargador en la card
 Widget _locationBike(String location){
   return Padding(
-    padding: const EdgeInsets.only(left: 1.0, bottom: 3.0, top: 20.0) ,
+    padding: const EdgeInsets.only(left: 0, bottom: 3.0, top: 20.0),
     child: Row(
       children: [
         Text(location,
             style: const TextStyle(fontWeight: FontWeight.w600)
         ),
-        Icon(
-          Icons.directions_bike_outlined,
-          size: 20,
-          color: Colors.blue[500],
+        Padding(
+          padding: const EdgeInsets.only(left: 5.0),
+          child: Icon(
+            Icons.directions_bike_outlined,
+            size: 20,
+            color: Colors.blue[500],
+          ),
         ),
       ],
     ),

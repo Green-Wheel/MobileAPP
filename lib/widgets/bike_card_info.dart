@@ -38,9 +38,9 @@ Widget _buildCard(String location, double rating, int types, bool avaliable,  bo
       ),
       borderRadius: BorderRadius.all(Radius.circular(20)),
     ),
-    child: SizedBox(
-      height: 175,
-      width: 400,
+    child: Expanded(
+      //height: MediaQuery.of(context).size.height * 0.27,
+      //width: MediaQuery.of(context).size.width * 0.8,
       child: Row(
         children: [
           SizedBox(
@@ -57,22 +57,23 @@ Widget _buildCard(String location, double rating, int types, bool avaliable,  bo
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
-                  child:  PointOfChargeDistWidget(types: types),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25),
                   child: AvaliableBikeWidget(avaliable: avaliable),
                 ),
-
-                ButtonBlueRouteWidget(latitude: 41.3874, longitude: 2.1686)
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                  child: ButtonBlueRouteWidget(latitude: 41.3874, longitude: 2.1686),
+                ),
               ],
             ),
           ),
-          Column(
-            children: const [
-              ImageBikeWidget(),
-            ],
-          ),
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.215,
+            child: Column(
+              children: const [
+                ImageBikeWidget(),
+              ],
+            ),
+          )
         ],
       ),
     ),

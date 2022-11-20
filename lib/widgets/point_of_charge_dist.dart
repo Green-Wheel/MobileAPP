@@ -22,7 +22,7 @@ Widget _pointOfCharge(int types){
     child: Row(
       children: [
         Text('Type/s of charger:  $types',
-          style: const TextStyle(fontWeight: FontWeight.w600),
+          style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromRGBO(69, 69, 69, 1)),
         ),
       ],
     ),

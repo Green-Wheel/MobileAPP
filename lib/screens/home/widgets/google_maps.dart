@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -7,14 +6,20 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/widgets/button_list_screen_chargers.dart';
 import 'package:greenwheel/widgets/card_info.dart';
-import 'package:greenwheel/services/backend_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../../services/backendServices/bikes.dart';
+import '../../../services/backendServices/privateChargers.dart';
+import '../../../services/backendServices/publicChargers.dart';
+import '../../../widgets/bike_card_info.dart';
+import '../../../widgets/button_list_screen_bikes.dart';
+
 class GoogleMapsWidget extends StatefulWidget {
+  int index;
   Set<Polyline>? polylines = {};
 
-  GoogleMapsWidget({Key? key, this.polylines}) : super(key: key);
+  GoogleMapsWidget({Key? key, required this.index, this.polylines}) : super(key: key);
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
@@ -44,46 +49,56 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   final panelController = PanelController();
   bool is_visible_panel = false;
 
-  void _getAndDrawPublicChargers() async {
-    BackendService.get('chargers/public/').then((response) {
-      if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = jsonDecode(response.body);
-        setState(() {
-          markersList = jsonResponse;
-          for (int i = 0; i < markersList.length; i++) {
-            Map localization = markersList[i]['localization'];
-            double latitude = localization['latitude'];
-            double longitude = localization['longitude'];
-            if (markersList[i]['direction'] == null) {
-              markersList[i]['direction'] = "No description";
-            }
-            _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+  void _drawPublicChargers() async {
+    List? publicChargerList = await PublicChargerService.getPublicChargers();
+    setState(() {
+      if (publicChargerList != null) {
+        markersList = publicChargerList;
+        for (int i = 0; i < markersList.length; i++) {
+          Map localization = markersList[i]['localization'];
+          double latitude = localization['latitude'];
+          double longitude = localization['longitude'];
+          if (markersList[i]['direction'] == null) {
+            markersList[i]['direction'] = "No description";
           }
-        });
-      } else {
-        print('Error getting public chargers!');
+          _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+        }
       }
     });
   }
 
-  void _getAndDrawPrivateChargers() async {
-    BackendService.get('chargers/private/').then((response) {
-      if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = jsonDecode(response.body);
-        setState(() {
-          markersList = jsonResponse;
-          for (int i = 0; i < markersList.length; i++) {
-            Map localization = markersList[i]['localization'];
-            double latitude = localization['latitude'];
-            double longitude = localization['longitude'];
-            if (markersList[i]['direction'] == null) {
-              markersList[i]['direction'] = "No description";
-            }
-            _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+  void _drawPrivateChargers() async {
+    List? privateChargerList = await PrivateChargerService.getPrivateChargers();
+    setState(() {
+      if (privateChargerList != null) {
+        markersList = privateChargerList;
+        for (int i = 0; i < markersList.length; i++) {
+          Map localization = markersList[i]['localization'];
+          double latitude = localization['latitude'];
+          double longitude = localization['longitude'];
+          if (markersList[i]['direction'] == null) {
+            markersList[i]['direction'] = "No description";
           }
-        });
-      } else {
-        print('Error getting public chargers!');
+          _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+        }
+      }
+    });
+  }
+
+  void _drawBikes() async {
+    List? bikesList = await Bikes.getBikes();
+    setState(() {
+      if (bikesList != null) {
+        markersList = bikesList;
+        for (int i = 0; i < markersList.length; i++) {
+          Map localization = markersList[i]['localization'];
+          double latitude = localization['latitude'];
+          double longitude = localization['longitude'];
+          if (markersList[i]['direction'] == null) {
+            markersList[i]['direction'] = "No description";
+          }
+          _addBikeMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+        }
       }
     });
   }
@@ -95,9 +110,36 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _getCurrentLocation();
       is_visible = false;
     });
-    _getAndDrawPublicChargers();
-    _getAndDrawPrivateChargers();
+    print(widget.index);
+
+    if (widget.index == 0) {
+      _drawPublicChargers();
+      _drawPrivateChargers();
+    } else if (widget.index == 1) {
+      _drawBikes();
+    }
     super.initState();
+  }
+
+  void _addBikeMarker(double lat, double log, String id, String address, double rate, int distance, String time) async{
+    final iconMarker = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2,), "assets/images/punt_bicicleta.png");
+    final Marker marcador = Marker(
+        markerId: MarkerId(id),
+        position: LatLng(lat, log),
+        onDrag: null,
+        icon: iconMarker,
+        onTap: () {
+          setState(() {
+            is_visible = false;
+          });
+          setState(() {
+            id_marcador = id;
+            is_visible = true;
+          });
+        } //_onMarkerTapped(MarkerId(id)),
+    );
+    markers.add(marcador);
+    markerMap[MarkerId(id)] = marcador;
   }
 
   void _addMarker(double lat, double log, String id, String address, double rate, int distance, String time) async{
@@ -218,35 +260,64 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               },
               onCameraMove: onCameraMove,
             ),
-            is_visible ? SlidingUpPanel(
-              // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
-                maxHeight: MediaQuery.of(context).size.height * 0.8,
-                minHeight: 175.0,
-                controller: panelController,
-                parallaxEnabled: true,
-                parallaxOffset: 0.5,
-                backdropEnabled: true,
-                panelBuilder: (controller) => buildSlidingUpPanel(
-                  controller: controller,
-                  panelController: panelController,
-                ), borderRadius: BorderRadius.vertical(top: Radius.circular(18))) : Container(),
+            is_visible ? show_card() : Container(),
           ],
         ),
         floatingActionButton:  Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: !is_visible? [
-            ButtonListScreenChargersWidget(),
+            listButton(),
             SizedBox(height: 10),
             currentLocationActionButton(),
             ] : <Widget>[
-              ButtonListScreenChargersWidget(),
+              listButton(),
               SizedBox(height: 10),
               currentLocationActionButton(),
               SizedBox(height: 165),],
         ));
   }
 
-  Widget buildSlidingUpPanel({required ScrollController controller, required PanelController panelController}) {
+  Widget listButton() {
+    if (widget.index == 0) {
+      return const ButtonListScreenChargersWidget();
+    } else {
+      return const ButtonListScreenBikesWidget();
+    }
+  }
+
+  Widget show_card() {
+    if (widget.index == 0) {
+      print("do charger");
+      return SlidingUpPanel(
+        // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+          minHeight: 175.0,
+          controller: panelController,
+          parallaxEnabled: true,
+          parallaxOffset: 0.5,
+          backdropEnabled: true,
+          panelBuilder: (controller) => buildSlidingUpPanelCharger(
+            controller: controller,
+            panelController: panelController,
+          ), borderRadius: BorderRadius.vertical(top: Radius.circular(18)));
+    } else {
+      print("do bike");
+      return SlidingUpPanel(
+        // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
+          minHeight: 175.0,
+          controller: panelController,
+          parallaxEnabled: true,
+          parallaxOffset: 0.5,
+          backdropEnabled: true,
+          panelBuilder: (controller) => buildSlidingUpPanelBike(
+            controller: controller,
+            panelController: panelController,
+          ), borderRadius: BorderRadius.vertical(top: Radius.circular(18)));
+    }
+  }
+
+  Widget buildSlidingUpPanelCharger({required ScrollController controller, required PanelController panelController}) {
     //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
     int pos_marker = 0;
     for (int i = 0; i < markersList.length; i++){
@@ -275,6 +346,36 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     if (markersList[pos_marker]['description'] == "false") avaliable = false;
 
     return CardInfoWidget(location: description, rating: numd, types: types, avaliable: avaliable, match: true);
+  }
+
+  Widget buildSlidingUpPanelBike({required ScrollController controller, required PanelController panelController}) {
+    //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
+    int pos_marker = 0;
+    for (int i = 0; i < markersList.length; i++){
+      if (markersList[i]['description'] == id_marcador){
+        pos_marker = i;
+        print(pos_marker);
+      }
+    }
+    //Generación rate aleatoria (harcode rate)
+    Random random = Random();
+    int min = 2, max = 6;
+    int num = (min + random.nextInt(max - min));
+    double numd = num.toDouble();
+
+    //Obtencion del numero de tipos de cargadores
+    int types = markersList[pos_marker]['connection_type'].length;
+
+    //Arreglo del titulo del cargador respecto a los datos del json
+    String description = markersList[pos_marker]['description'];
+    description = title_parser(description);
+
+    //Mirar el tipo de la variable porque to_do  da null
+    bool avaliable = true;
+    //avaliable da null
+    if (markersList[pos_marker]['description'] == "false") avaliable = false;
+
+    return BikeCardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: true);
   }
 
   String title_parser(String description){
@@ -328,13 +429,23 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
 
   Widget currentLocationActionButton() {
-    return FloatingActionButton(
-      onPressed: _updateCurrentLocation,
-      backgroundColor: Colors.white,
-      child: permissionGranted
-          ? const Icon(Icons.my_location, color: Colors.green, size: 30.0)
-          : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
-    );
+    if (widget.index == 0) {
+      return FloatingActionButton(
+        onPressed: _updateCurrentLocation,
+        backgroundColor: Colors.white,
+        child: permissionGranted
+            ? const Icon(Icons.my_location, color: Colors.green, size: 30.0)
+            : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
+      );
+    } else {
+      return FloatingActionButton(
+        onPressed: _updateCurrentLocation,
+        backgroundColor: Colors.white,
+        child: permissionGranted
+            ? const Icon(Icons.my_location, color: Colors.blue, size: 30.0)
+            : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
+      );
+    }
   }
 
   var snackBarLocation = SnackBar(

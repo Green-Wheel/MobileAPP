@@ -3,42 +3,42 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/widgets/card_info.dart';
 
 import '../../services/backendServices/publicChargers.dart';
+import '../../widgets/bike_card_info.dart';
 
-class ChargeInfoList extends StatefulWidget {
-  const ChargeInfoList({Key? key}) : super(key: key);
+class BikeInfoList extends StatefulWidget {
+  const BikeInfoList({Key? key}) : super(key: key);
 
   @override
-  State<ChargeInfoList> createState() => _ChargeInfoListState();
+  State<BikeInfoList> createState() => _BikeInfoListState();
 
 }
 
 void main(){
   runApp(const MaterialApp(
-    title: 'chargeInfo try',
+    title: 'BikeInfo try',
     home: Scaffold(
-      body: ChargeInfoList(),
+      body: BikeInfoList(),
     ),
   ));
 }
 
-class _ChargeInfoListState extends State<ChargeInfoList>{
+class _BikeInfoListState extends State<BikeInfoList>{
 
   List markersList = [];
 
   @override
   void initState(){
     super.initState();
-    _getChargers();
+    _getBikes();
   }
 
-  void _getChargers() async {
-    List? publicChargerList = await PublicChargerService.getPublicChargers();
+  void _getBikes() async {
+    List? publicBikeList = await PublicChargerService.getPublicChargers(); // es canviarà a bikes quan estiguin des de backend
     setState(() {
-      if (publicChargerList != null) {
-        markersList = publicChargerList;
+      if (publicBikeList != null) {
+        markersList = publicBikeList;
       }
     });
   }
@@ -47,47 +47,47 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chargers'),
+        title: const Text('Bikes'),
         centerTitle: true,
         actions: const [
-        Padding(
-          padding: EdgeInsets.only(right: 125.0, left: 5.0),
-          child: Icon(Icons.location_on_outlined),
+          Padding(
+            padding: EdgeInsets.only(right: 125.0, left: 5.0),
+            child: Icon(Icons.directions_bike_outlined),
           ),
-        ],backgroundColor: Colors.green,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              GoRouter.of(context).go('/');
+        ],backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).go('/');
           },
         ),
       ),
       body: ListView.builder(
-        itemCount: markersList.length,
-        /*addAutomaticKeepAlives: false,
+          itemCount: markersList.length,
+          /*addAutomaticKeepAlives: false,
         addRepaintBoundaries: false,
         addSemanticIndexes: false,*/
-        itemBuilder: (context, position) {
+          itemBuilder: (context, position) {
 
-          //Arreglo del titulo del cargador respecto a los datos del json
-          String description = markersList[position]['description'];
-          description = title_parser(description);
+            //Arreglo del titulo del cargador respecto a los datos del json
+            String description = markersList[position]['description'];
+            description = title_parser(description);
 
-          //Mirar el tipo de la variable porque to_do  da null
-          bool avaliable = true;
-          //avaliable da null
-          if (markersList[position]['description'] == "false") avaliable = false;
+            //Mirar el tipo de la variable porque to_do  da null
+            bool avaliable = true;
+            //avaliable da null
+            if (markersList[position]['description'] == "false") avaliable = false;
 
-          //print(markersList[position]['connection_type']); //retorna numero de typos diferentes con el .lenght
-          //print(markersList[position]['current_type']); //puede ser 1 o 2 -> AC - DC
+            //print(markersList[position]['connection_type']); //retorna numero de typos diferentes con el .lenght
+            //print(markersList[position]['current_type']); //puede ser 1 o 2 -> AC - DC
 
-          //Obtencion del numero de tipos de cargadores
-          int types = markersList[position]['connection_type'].length;
+            //Obtencion del numero de tipos de cargadores
+            int types = markersList[position]['connection_type'].length;
 
-          bool match = true;
+            bool match = true;
 
-          return _cardChargerList(description, avaliable, match, types);
-        }
+            return _cardBikeList(description, avaliable, match, types);
+          }
       ),
     );
   }
@@ -143,12 +143,12 @@ String title_parser(String description){
 
 
 //funcion respectiva a la card de los cargadores
-Widget _cardChargerList(String direction, bool avaliable, bool match, int types){
+Widget _cardBikeList(String direction, bool available, bool match, int types){
   //Generación rate aleatoria (harcode rate)
   Random random = Random();
   int min = 2, max = 6;
   int num = (min + random.nextInt(max - min));
   double numd = num.toDouble();
 
-  return CardInfoWidget(location: direction, rating: numd, types: types, avaliable: avaliable, match: match);
+  return BikeCardInfoWidget(location: direction, rating: numd, types: types, available: available, match: match);
 }

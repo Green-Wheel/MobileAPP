@@ -5,22 +5,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/widgets/avaliable_public_charger.dart';
-import 'package:greenwheel/widgets/button_list_screen_chargers.dart';
 import 'package:greenwheel/widgets/button_route.dart';
 import 'package:greenwheel/widgets/card_info.dart';
 import 'package:greenwheel/widgets/image_charger.dart';
 import 'package:greenwheel/widgets/location_charger.dart';
 import 'package:greenwheel/widgets/match_with_car.dart';
 import 'package:greenwheel/widgets/point_of_charge_dist.dart';
-import 'package:greenwheel/widgets/stars_static_rate.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../widgets/interactive_stars_widget.dart';
 import '../home/widgets/bottom_bar.dart';
 import '../home/widgets/drawer.dart';
-import '../home/widgets/google_maps.dart';
-
-
 
 void main(){runApp(const MaterialApp(
   title: 'chargeInfo try',
@@ -284,7 +279,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
 
   Widget buildSlidingUpPanel({required ScrollController controller, required PanelController panelController}) {
     return buildCard("bcn", 5, 2, "time", true, true);
-    return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true);
+    //return CardInfoWidget(location: "BCN", rating: 5, types: 5, avaliable: true, match: true);
   }
 }
 
