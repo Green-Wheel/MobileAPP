@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-//TODO refactor para coger imagenes de s3 en vez de assets
+//TODO refactor coger imagenes de s3 no de assets (Image.asset to Image.network)
 class ImageDisplay extends StatefulWidget {
   final double height;
   final double width;
 
-  /*final List<String> images;*/
+  final List<String> images;
 
   const ImageDisplay(
-      {Key? key, /*required this.images,*/ this.height = 150, this.width = 150})
+      {Key? key, required this.images, this.height = 150, this.width = 150})
       : super(key: key);
 
   @override
@@ -28,11 +28,7 @@ class _ImageDisplayState extends State<ImageDisplay> {
               builder: (BuildContext context) {
                 return Expanded(
                     child: AlertDialog(
-                  content: ImagesDisplay(images: [
-                    'assets/images/img1.jpg',
-                    'assets/images/img2.png',
-                    'assets/images/img3.jpg'
-                  ]),
+                  content: ImagesDisplay(images: widget.images),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -54,7 +50,7 @@ class _ImageDisplayState extends State<ImageDisplay> {
                     decoration: BoxDecoration(
                       border: Border.all(width: 1, color: Colors.black),
                     ),
-                    child: true
+                    child: widget.images.length >= 1
                         ? Image.asset(
                             'assets/images/img1.jpg',
                             height: widget.height,
@@ -81,7 +77,7 @@ class _ImageDisplayState extends State<ImageDisplay> {
                                   right: BorderSide(
                                       width: 1, color: Colors.black)),
                             ),
-                            child: true
+                            child: widget.images.length >= 2
                                 ? Image.asset(
                                     'assets/images/img2.png',
                                     height: widget.height / 2,
@@ -104,7 +100,7 @@ class _ImageDisplayState extends State<ImageDisplay> {
                               bottom: BorderSide(width: 1, color: Colors.black),
                             ),
                           ),
-                          child: false
+                          child: widget.images.length >= 3
                               ? Image.asset(
                                   'assets/images/img3.jpg',
                                   height: widget.height / 2,
@@ -158,7 +154,8 @@ class _ImagesDisplayState extends State<ImagesDisplay> {
           Expanded(
             child: Image.asset(
               widget.images[_selected_image],
-              fit: BoxFit.cover,
+              //TODO select contain, fill or cover,
+              fit: BoxFit.contain ,
             ),
           ),
           const SizedBox(height: 20),
@@ -171,7 +168,7 @@ class _ImagesDisplayState extends State<ImagesDisplay> {
                   onTap: () => selectImg(widget.images.indexOf(image)),
                       child: Padding(
                             padding: const EdgeInsets.only(right: 10.0),
-                            child: Image.asset(image),
+                            child: Image.asset(image, fit: BoxFit.contain),
                           ),
                     ))
                     .toList()),

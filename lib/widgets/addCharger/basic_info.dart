@@ -92,8 +92,6 @@ class _BasicInfoState extends State<BasicInfo> {
                   },
                 ),
                 SizedBox(height: 10),
-                const ImageDisplay(),
-                SizedBox(height: 10),
                 SelectImage(
                   multiple: true,
                   getImageData: _getImageData,
