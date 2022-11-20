@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenwheel/services/private_chargers.dart';
+import 'package:greenwheel/services/backendServices/private_chargers.dart';
 import '../../serializers/chargers.dart';
 
 class SpeedInfo extends StatefulWidget {

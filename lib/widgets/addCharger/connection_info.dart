@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../services/private_chargers.dart';
+import '../../services/backendServices/private_chargers.dart';
 
 class ConnectionInfo extends StatefulWidget {
   var data;
