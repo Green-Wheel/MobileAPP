@@ -4,8 +4,10 @@ import '../utils/address_autocompletation.dart';
 
 class LocationSearch extends StatefulWidget {
   final Function submitSearch;
-
-  const LocationSearch({Key? key, required this.submitSearch}) :super(key: key);
+  var address;
+  LocationSearch(
+      {Key? key, required this.submitSearch, required this.address })
+      : super(key: key);
 
   @override
   State<LocationSearch> createState() => _LocationSearchState();
@@ -13,7 +15,6 @@ class LocationSearch extends StatefulWidget {
 
 class _LocationSearchState extends State<LocationSearch> {
   final _searchController = TextEditingController();
-  var _address = '';
   List<SearchFieldListItem> _suggestions = ['suggestion1', 'suggestion2']
       .map((e) => SearchFieldListItem(e))
       .toList();
@@ -29,11 +30,12 @@ class _LocationSearchState extends State<LocationSearch> {
   @override
   void initState() {
     super.initState();
+    _searchController.text = widget.address;
     _searchController.addListener(() {
       final String text = _searchController.text.toLowerCase();
-      if (_address != text) {
+      if (widget.address != text) {
         getSuggestions(text);
-        _address = text;
+        widget.address = text;
       }
     });
   }

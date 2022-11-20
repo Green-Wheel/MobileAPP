@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/services/backend_service.dart';
@@ -7,8 +6,7 @@ import 'package:greenwheel/widgets/addCharger/current_info.dart';
 import 'package:greenwheel/widgets/addCharger/localization_info.dart';
 import 'package:greenwheel/widgets/addCharger/speed_%20info.dart';
 import 'package:greenwheel/widgets/addCharger/basic_info.dart';
-
-import 'basic_info.dart';
+import '../../serializers/maps.dart';
 
 class charger extends StatelessWidget {
   @override
@@ -38,46 +36,40 @@ class _AddChargerState extends State<AddCharger> {
   final _formKey0 = GlobalKey<FormState>();
   final _formKey1 = GlobalKey<FormState>();
 
-  int _page = 1;
+  int _page = 0;
 
   List<File> _images = [];
 
-  var _data = {
+  final _data = {
     'title': '',
     'description': '',
     'direction': '',
-    'town': '',
-    'lat': '',
-    'lng': '',
+    'lat': 0.0,
+    'lng': 0.0,
+    'town': {},
+    'connection_type': [{}],
+    'current_type': [{}],
+    'speed': [{}],
+    'power': int,
+    'avg_rating': double,
+    'charge_type': '',
     'price': '',
-    'power': '',
-    'power': '',
-    'speed': [],
-    'connection_type': [],
-    'current_type': [],
   };
 
-  var _speeds = [];
-  var _selected_speeds = [];
-  var _connection_types = [];
-  var _selected_connection_types = [];
-  var _current_types = [];
-  var _selected_current_types = [];
-
-  bool send_data() {
-    BackendService.post('chargers/private/', _data).then((response) async {
+  void send_data() async {
+    try {
+      var response = await BackendService.post('chargers/private/', _data);
       if (response.statusCode == 200) {
         print('Charger added');
-        return true;
       } else {
-        print('Charger not added');
-        print(response.statusCode);
-        return false;
+        throw Exception('Failed to add charger');
       }
-    });
-    return false;
+    } catch (e) {
+      print(e);
+    }
   }
 
+/*
   void getConnectionTypes() {
     BackendService.get('chargers/connection/').then((response) async {
       if (response.statusCode == 200) {
@@ -91,6 +83,7 @@ class _AddChargerState extends State<AddCharger> {
       }
     });
   }
+*/
 
   void nextPage() {
     setState(() {
@@ -113,30 +106,36 @@ class _AddChargerState extends State<AddCharger> {
         });
   }
 
-  void getLocalization(localization) {
+  void getLocalization(LatLang localization, Address address) {
     setState(() => {
-          _data['direction'] = localization['direction'],
-          _data['town'] = localization['town'],
-          _data['lat'] = localization['lat'],
-          _data['lng'] = localization['lng'],
+          _data['direction'] =
+              '${address.street}, ${address.streetNumber}, ${address.postalCode}',
+          _data['town'] = {
+            'name': address.city,
+            'province': address.province,
+          },
+          _data['lat'] = localization.lat,
+          _data['lng'] = localization.lng
         });
   }
 
   void getSpeeds(speeds) {
     setState(() => {
-          _data['speed'] = speeds,
+          _data['speed'] = speeds.map((s) => {'name': s}).toList(),
         });
   }
 
   void getConnections(connections) {
     setState(() => {
-          _data['connection_type'] = connections,
+          _data['connection_type'] =
+              connections.map((c) => {'name': c}).toList(),
         });
   }
 
   void getCurrents(currents) {
     setState(() => {
-          _data['current_type'] = currents['current_type'],
+          _data['current_type'] =
+              currents['current_type'].map((c) => {'name': c}).toList(),
           _data['power'] = currents['power'],
         });
     send_data();
@@ -161,11 +160,9 @@ class _AddChargerState extends State<AddCharger> {
       case 1:
         {
           return LocalizationInfo(
-            data: {
-              'direction': _data['direction'],
-              'lat': _data['lat'],
-              'lng': _data['lng'],
-            },
+            addres: _data['direction'],
+            localization:
+                LatLang.fromJson({'lat': _data['lat'], 'lng': _data['lng']}),
             callback: getLocalization,
             nextPage: nextPage,
             prevPage: previousPage,
