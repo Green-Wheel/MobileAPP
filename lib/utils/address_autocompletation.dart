@@ -1,16 +1,15 @@
 import '../services/google_service.dart';
 
 class AdressAutocompletation {
-  static List<String> getAdresses(String input) {
+  static Future<List<String>> getAdresses(String input) async {
     List<String> adresses = [];
-    GoogleService.getAutocomplete(input).then((response) {
-      if (response['status'] == 'OK') {
-        final predictions = response['predictions'];
-        for (var i = 0; i < predictions.length; i++) {
-          adresses.add(predictions[i]['description']);
-        }
-      }
-    });
+    var response = await GoogleService.getAutocomplete(input);
+    final predictions = response['predictions'];
+    for (var i = 0; i < predictions.length; i++) {
+      adresses.add(predictions[i]['description']);
+    }
+    print(adresses);
+    print(input);
     return adresses;
   }
 }

@@ -53,21 +53,16 @@ Map<String, dynamic> _$TownToJson(Town instance) => <String, dynamic>{
 
 Publication _$PublicationFromJson(Map<String, dynamic> json) => Publication(
       id: json['id'] as int?,
-      title: json['title'] as String,
-      description: json['description'] as String,
-      direction: json['direction'] as String,
-      town: Town.fromJson(json['town'] as Map<String, dynamic>),
-      latLng: LatLang.fromJson(json['latLng'] as Map<String, dynamic>),
+      type: json['type'] as String,
+      child: DetailedCharherSerializer.fromJson(
+          json['child'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PublicationToJson(Publication instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'title': instance.title,
-      'description': instance.description,
-      'direction': instance.direction,
-      'town': instance.town,
-      'latLng': instance.latLng,
+      'type': instance.type,
+      'child': instance.child,
     };
 
 SpeedType _$SpeedTypeFromJson(Map<String, dynamic> json) => SpeedType(
@@ -82,54 +77,79 @@ Map<String, dynamic> _$SpeedTypeToJson(SpeedType instance) => <String, dynamic>{
 
 Charger _$ChargerFromJson(Map<String, dynamic> json) => Charger(
       id: json['id'] as int?,
-      power: json['power'] as String,
-      speedType: SpeedType.fromJson(json['speedType'] as Map<String, dynamic>),
-      connectionType: ConnectionType.fromJson(
-          json['connectionType'] as Map<String, dynamic>),
-      currentType:
-          CurrentType.fromJson(json['currentType'] as Map<String, dynamic>),
+      location: LatLang.fromJson(json['location'] as Map<String, dynamic>),
+      chargerType: json['chargerType'] as String,
     );
 
 Map<String, dynamic> _$ChargerToJson(Charger instance) => <String, dynamic>{
       'id': instance.id,
-      'power': instance.power,
-      'speedType': instance.speedType,
-      'connectionType': instance.connectionType,
-      'currentType': instance.currentType,
+      'location': instance.location,
+      'chargerType': instance.chargerType,
     };
 
 PublicCharger _$PublicChargerFromJson(Map<String, dynamic> json) =>
     PublicCharger(
-      id: json['id'] as int?,
-      charger: Charger.fromJson(json['charger'] as Map<String, dynamic>),
-      power: (json['power'] as num).toDouble(),
-      speedType: SpeedType.fromJson(json['speedType'] as Map<String, dynamic>),
-      connectionType: ConnectionType.fromJson(
-          json['connectionType'] as Map<String, dynamic>),
-      currentType:
-          CurrentType.fromJson(json['currentType'] as Map<String, dynamic>),
+      agent: json['agent'] as String?,
+      identifier: json['identifier'] as String?,
+      access: json['access'] as String?,
+      available: json['available'] as bool?,
     );
 
 Map<String, dynamic> _$PublicChargerToJson(PublicCharger instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'charger': instance.charger,
-      'power': instance.power,
-      'speedType': instance.speedType,
-      'connectionType': instance.connectionType,
-      'currentType': instance.currentType,
+      'agent': instance.agent,
+      'identifier': instance.identifier,
+      'access': instance.access,
+      'available': instance.available,
     };
 
 PrivateCharger _$PrivateChargerFromJson(Map<String, dynamic> json) =>
     PrivateCharger(
-      id: json['id'] as int?,
-      charger: Charger.fromJson(json['charger'] as Map<String, dynamic>),
+      owner: json['owner'] as int?,
       price: (json['price'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$PrivateChargerToJson(PrivateCharger instance) =>
     <String, dynamic>{
-      'id': instance.id,
-      'charger': instance.charger,
+      'owner': instance.owner,
       'price': instance.price,
+    };
+
+DetailedCharherSerializer _$DetailedCharherSerializerFromJson(
+        Map<String, dynamic> json) =>
+    DetailedCharherSerializer(
+      id: json['id'] as int?,
+      title: json['title'] as String?,
+      description: json['description'] as String?,
+      direction: json['direction'] as String?,
+      localization:
+          LatLang.fromJson(json['localization'] as Map<String, dynamic>),
+      town: Town.fromJson(json['town'] as Map<String, dynamic>),
+      connectionType: ConnectionType.fromJson(
+          json['connectionType'] as Map<String, dynamic>),
+      currentType:
+          CurrentType.fromJson(json['currentType'] as Map<String, dynamic>),
+      speed: SpeedType.fromJson(json['speed'] as Map<String, dynamic>),
+      power: json['power'] as int?,
+      avg_rating: (json['avg_rating'] as num).toDouble(),
+      charger_type: json['charger_type'] as String,
+      child: PrivateCharger.fromJson(json['child'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$DetailedCharherSerializerToJson(
+        DetailedCharherSerializer instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'title': instance.title,
+      'description': instance.description,
+      'direction': instance.direction,
+      'localization': instance.localization,
+      'town': instance.town,
+      'connectionType': instance.connectionType,
+      'currentType': instance.currentType,
+      'speed': instance.speed,
+      'power': instance.power,
+      'avg_rating': instance.avg_rating,
+      'charger_type': instance.charger_type,
+      'child': instance.child,
     };
