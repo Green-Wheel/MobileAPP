@@ -36,7 +36,7 @@ class _AddChargerState extends State<AddCharger> {
   final _formKey0 = GlobalKey<FormState>();
   final _formKey1 = GlobalKey<FormState>();
 
-  int _page = 0;
+  int _page = 2;
 
   List<File> _images = [];
 
@@ -47,11 +47,11 @@ class _AddChargerState extends State<AddCharger> {
     'lat': 0.0,
     'lng': 0.0,
     'town': {},
-    'connection_type': [{}],
-    'current_type': [{}],
-    'speed': [{}],
-    'power': int,
-    'avg_rating': double,
+    'connection_type': [],
+    'current_type': [],
+    'speed': [],
+    'power': '',
+    'avg_rating': 0.0,
     'charge_type': '',
     'price': '',
   };
@@ -121,21 +121,19 @@ class _AddChargerState extends State<AddCharger> {
 
   void getSpeeds(speeds) {
     setState(() => {
-          _data['speed'] = speeds.map((s) => {'name': s}).toList(),
+          _data['speed'] = speeds["speed"],
         });
   }
 
   void getConnections(connections) {
     setState(() => {
-          _data['connection_type'] =
-              connections.map((c) => {'name': c}).toList(),
+          _data['connection_type'] = connections['connection_type'],
         });
   }
 
   void getCurrents(currents) {
     setState(() => {
-          _data['current_type'] =
-              currents['current_type'].map((c) => {'name': c}).toList(),
+          _data['current_type'] = currents['current_type'],
           _data['power'] = currents['power'],
         });
     send_data();

@@ -35,6 +35,7 @@ class _SpeedInfoState extends State<SpeedInfo> {
   Widget build(BuildContext context) {
     if (_speeds.isEmpty) {
       _getSpeeds();
+      _selected_speeds = widget.data["speed"];
     }
     return Scaffold(
         body: SingleChildScrollView(

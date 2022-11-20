@@ -35,6 +35,7 @@ class _ConnectionInfoState extends State<ConnectionInfo> {
   Widget build(BuildContext context) {
     if (_connection_types.isEmpty) {
       _getConnections();
+      _selected_connection_types = widget.data["connection_type"];
     }
     return Scaffold(
         body: SingleChildScrollView(
