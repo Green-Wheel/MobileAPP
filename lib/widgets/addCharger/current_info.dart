@@ -30,11 +30,14 @@ class _CurrentInfoState extends State<CurrentInfo> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _getCurrents();
+    _selected_current_types = widget.data["current"];
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (_current_types.isEmpty) {
-      _getCurrents();
-      _selected_current_types = widget.data["current"];
-    }
       return Scaffold(
           body: SingleChildScrollView(
             child: Column(children: [

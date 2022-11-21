@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 //TODO refactor coger imagenes de s3 no de assets (Image.asset to Image.network)
+//TODO if needed to make expandable, fer que vaigi dins de un container(heigth and with different a null) o en un expanded ((heigth and with different a null)
 class ImageDisplay extends StatefulWidget {
   final double height;
   final double width;

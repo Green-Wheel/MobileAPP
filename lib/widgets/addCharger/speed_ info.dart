@@ -32,11 +32,14 @@ class _SpeedInfoState extends State<SpeedInfo> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _getSpeeds();
+    _selected_speeds = widget.data["speed"];
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (_speeds.isEmpty) {
-      _getSpeeds();
-      _selected_speeds = widget.data["speed"];
-    }
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(children: [

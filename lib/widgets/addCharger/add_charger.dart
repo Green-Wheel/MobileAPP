@@ -24,7 +24,8 @@ class charger extends StatelessWidget {
 }
 
 class AddCharger extends StatefulWidget {
-  const AddCharger({Key? key}) : super(key: key);
+  final data;
+  const AddCharger({Key? key, this.data}) : super(key: key);
 
   @override
   State<AddCharger> createState() => _AddChargerState();
@@ -34,25 +35,11 @@ typedef void SetImages(images);
 
 class _AddChargerState extends State<AddCharger> {
 
-  int _page = 0;
+  int _page = 1;
 
   List<File> _images = [];
 
-  final _data = {
-    'title': '',
-    'description': '',
-    'direction': '',
-    'lat': 0.0,
-    'lng': 0.0,
-    'town': {},
-    'connection_type': [],
-    'current_type': [],
-    'speed': [],
-    'power': '',
-    'avg_rating': 0.0,
-    'charge_type': '',
-    'price': '',
-  };
+  late final Map<String, dynamic>_data;
 
   void nextPage() {
     setState(() {
@@ -105,7 +92,32 @@ class _AddChargerState extends State<AddCharger> {
           _data['current_type'] = currents['current_type'],
           _data['power'] = currents['power'],
         });
-    PrivateChargersService.newCharger(_data, _images);
+    if(widget.data == null){
+      PrivateChargersService.newCharger(_data, _images);
+    }
+    /*else {
+      PrivateChargersService.updateCharger(_data, _images);
+    }*/
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _data = widget.data ?? {
+      'title': '',
+      'description': '',
+      'direction': '',
+      'lat': 0.0,
+      'lng': 0.0,
+      'town': {},
+      'connection_type': [],
+      'current_type': [],
+      'speed': [],
+      'power': '',
+      'avg_rating': 0.0,
+      'charge_type': '',
+      'price': '',
+    };
   }
 
   @override
