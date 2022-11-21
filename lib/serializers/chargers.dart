@@ -1,3 +1,6 @@
+import 'dart:ffi';
+
+import 'package:greenwheel/serializers/users.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import './maps.dart';
@@ -79,7 +82,7 @@ class Publication {
 
   int? id;
   String type;
-  DetailedCharherSerializer child;
+  Publication child; // child: PublicChargerSerializer | PrivateChargerSerializer
 
   factory Publication.fromJson(Map<String, dynamic> json) =>
       _$PublicationFromJson(json);
@@ -104,21 +107,63 @@ class SpeedType {
 }
 
 @JsonSerializable()
+class Localization {
+  Localization({
+    required this.latitude,
+    required this.longitude,
+  });
+
+  double latitude;
+  double longitude;
+
+  factory Localization.fromJson(Map<String, dynamic> json) =>
+      _$LocalizationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LocalizationToJson(this);
+}
+
+@JsonSerializable()
 class Charger {
   Charger({
     this.id,
-    required this.location,
-    required this.chargerType,
+    required this.localization,
+    required this.charger_type,
   });
 
   int? id;
-  LatLang location;
-  String chargerType;
+  Localization localization;
+  String charger_type;
 
   factory Charger.fromJson(Map<String, dynamic> json) =>
       _$ChargerFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChargerToJson(this);
+}
+
+@JsonSerializable()
+class ChargerList {
+  ChargerList({
+    this.id,
+    this.title,
+    required this.localization,
+    required this.connection_type,
+    required this.avg_rating,
+    required this.charger_type,
+    required this.child,
+  });
+
+  int? id;
+  String? title;
+  Localization localization;
+  List<ConnectionType> connection_type;
+  double avg_rating;
+  String charger_type;
+  Charger child; // child: PublicChargerSerializer | PrivateChargerSerializer
+
+  factory ChargerList.fromJson(Map<String, dynamic> json) =>
+      _$ChargerListFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ChargerListToJson(this);
 }
 
 @JsonSerializable()
@@ -141,16 +186,16 @@ class PublicCharger {
   Map<String, dynamic> toJson() => _$PublicChargerToJson(this);
 }
 
-//TODO: Change owner from id to BasicUserInfoSerializer
+
 @JsonSerializable()
 class PrivateCharger {
   PrivateCharger({
-    this.owner,
     required this.price,
+    required this.owner,
   });
 
-  int? owner;
   double price;
+  BasicUser owner;
 
   factory PrivateCharger.fromJson(Map<String, dynamic> json) =>
       _$PrivateChargerFromJson(json);
@@ -167,11 +212,11 @@ class DetailedCharherSerializer {
     this.direction,
     required this.localization,
     required this.town,
-    required this.connectionType,
-    required this.currentType,
+    required this.connection_type,
+    required this.current_type,
     required this.speed,
     this.power,
-    required this.avg_rating,
+    this.avg_rating,
     required this.charger_type,
     required this.child,
   });
@@ -180,15 +225,15 @@ class DetailedCharherSerializer {
   String? title;
   String? description;
   String? direction;
-  LatLang localization;
+  Localization localization;
   Town town;
-  ConnectionType connectionType;
-  CurrentType currentType;
-  SpeedType speed;
-  int? power;
-  double avg_rating;
+  List<ConnectionType> connection_type;
+  List<CurrentType> current_type;
+  List<SpeedType> speed;
+  double? power;
+  double? avg_rating;
   String charger_type;
-  PrivateCharger child;
+  Charger child; // child: PublicChargerSerializer | PrivateChargerSerializer
 
 
   factory DetailedCharherSerializer.fromJson(Map<String, dynamic> json) =>

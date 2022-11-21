@@ -10,6 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../services/backendServices/bikes.dart';
+import '../../../services/backendServices/chargers.dart';
 import '../../../services/backendServices/privateChargers.dart';
 import '../../../services/backendServices/publicChargers.dart';
 import '../../../widgets/bike_card_info.dart';
@@ -48,6 +49,23 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   bool is_visible = false;
   final panelController = PanelController();
   bool is_visible_panel = false;
+
+  void _getChargers()  async {
+    List chargersList = await ChargerService.getChargers();
+    print(chargersList);
+    /*setState(() {
+      markersList = chargersList;
+      for (int i = 0; i < markersList.length; i++) {
+        Map localization = markersList[i]['localization'];
+        double latitude = localization['latitude'];
+        double longitude = localization['longitude'];
+        if (markersList[i]['direction'] == null) {
+          markersList[i]['direction'] = "No description";
+        }
+        _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
+      }
+    });*/
+  }
 
   void _drawPublicChargers() async {
     List? publicChargerList = await PublicChargerService.getPublicChargers();
@@ -110,6 +128,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _getCurrentLocation();
       is_visible = false;
     });
+    _getChargers();
     print(widget.index);
 
     if (widget.index == 0) {

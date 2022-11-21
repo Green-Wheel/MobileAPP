@@ -8,14 +8,16 @@ part of 'ratings.dart';
 
 Rating _$RatingFromJson(Map<String, dynamic> json) => Rating(
       id: json['id'] as int?,
+      user: BasicUser.fromJson(json['user'] as Map<String, dynamic>),
       rate: (json['rate'] as num).toDouble(),
-      comment: json['comment'] as String,
-      booking: Booking.fromJson(json['booking'] as Map<String, dynamic>),
+      comment: json['comment'] as String?,
+      created_at: DateTime.parse(json['created_at'] as String),
     );
 
 Map<String, dynamic> _$RatingToJson(Rating instance) => <String, dynamic>{
       'id': instance.id,
+      'user': instance.user,
       'rate': instance.rate,
       'comment': instance.comment,
-      'booking': instance.booking,
+      'created_at': instance.created_at.toIso8601String(),
     };
