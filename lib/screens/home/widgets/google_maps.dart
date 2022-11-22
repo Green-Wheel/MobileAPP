@@ -10,6 +10,7 @@ import 'package:greenwheel/widgets/card_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../../serializers/bikes.dart';
 import '../../../serializers/chargers.dart';
 import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
@@ -47,6 +48,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   late String id_marcador;
   List markersList = [];
   DetailedCharherSerializer? markedCharger;
+  DetailedBikeSerializer? markedBike;
   bool is_visible = false;
   final panelController = PanelController();
   bool is_visible_panel = false;
@@ -65,20 +67,15 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     });
   }
 
-  void _drawBikes() async {
-    List? bikesList = await Bikes.getBikes();
+  void _getBikes() async {
+    List bikeList = await BikeService.getBikes();
     setState(() {
-      if (bikesList != null) {
-        markersList = bikesList;
-        for (int i = 0; i < markersList.length; i++) {
-          Map localization = markersList[i]['localization'];
-          double latitude = localization['latitude'];
-          double longitude = localization['longitude'];
-          if (markersList[i]['direction'] == null) {
-            markersList[i]['direction'] = "No description";
-          }
-          _addBikeMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
-        }
+      markersList = bikeList;
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        _addBikeMarker(latitude, longitude, id);
       }
     });
   }
@@ -96,15 +93,15 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     if (widget.index == 0) {
       _getChargers();
     } else if (widget.index == 1) {
-      _drawBikes();
+      _getBikes();
     }
     super.initState();
   }
 
-  void _addBikeMarker(double lat, double log, String id, String address, double rate, int distance, String time) async{
+  void _addBikeMarker(double lat, double log, int id) async{ // TODO: Falta BikeType com a argument
     final iconMarker = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2,), "assets/images/punt_bicicleta.png");
     final Marker marcador = Marker(
-        markerId: MarkerId(id),
+        markerId: MarkerId(id.toString()),
         position: LatLng(lat, log),
         onDrag: null,
         icon: iconMarker,
@@ -113,13 +110,14 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
             is_visible = false;
           });
           setState(() {
-            id_marcador = id;
+            id_marcador = id.toString();
             is_visible = true;
+            _getBike(id);
           });
         } //_onMarkerTapped(MarkerId(id)),
     );
     markers.add(marcador);
-    markerMap[MarkerId(id)] = marcador;
+    markerMap[MarkerId(id.toString())] = marcador;
   }
 
   void _addMarker(double lat, double log, String chargerType, int id) async{
@@ -330,34 +328,37 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       return CardInfoWidget(location: descrip, rating: numd, types: types, available: true, match: true);
   }
 
-  Widget buildSlidingUpPanelBike({required ScrollController controller, required PanelController panelController}) {
-    //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
-    int pos_marker = 0;
-    for (int i = 0; i < markersList.length; i++){
-      if (markersList[i]['description'] == id_marcador){
-        pos_marker = i;
-        print(pos_marker);
-      }
+
+  void _getBike(int id) async {
+    DetailedBikeSerializer? bike = await BikeService.getBike(id);
+    print(bike);
+    if (bike != null) {
+      setState(() {
+        markedBike = bike;
+      });
     }
-    //Generación rate aleatoria (harcode rate)
+  }
+
+  Widget buildSlidingUpPanelBike({required ScrollController controller, required PanelController panelController}) {
+    String? descrip = utf8.decode(utf8.encode(markedCharger!.title!));
+    //descrip = title_parser(descrip);
+
+    //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
     Random random = Random();
     int min = 2, max = 6;
     int num = (min + random.nextInt(max - min));
     double numd = num.toDouble();
 
     //Obtencion del numero de tipos de cargadores
-    int types = markersList[pos_marker]['connection_type'].length;
+    List<ConnectionType> types = [];
+    for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
+      types.add(markedCharger!.connection_type[i]);
+    }
 
-    //Arreglo del titulo del cargador respecto a los datos del json
-    String description = markersList[pos_marker]['description'];
-    description = title_parser(description)!;
+    // available
+    // match
 
-    //Mirar el tipo de la variable porque to_do  da null
-    bool avaliable = true;
-    //avaliable da null
-    if (markersList[pos_marker]['description'] == "false") avaliable = false;
-
-    return BikeCardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: true);
+    return BikeCardInfoWidget(location: descrip, rating: numd, available: true);
   }
 
   String? title_parser(String? description){

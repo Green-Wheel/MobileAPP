@@ -4,8 +4,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../services/backendServices/publicChargers.dart';
+import '../../services/backendServices/bikes.dart';
 import '../../widgets/bike_card_info.dart';
+import '../../widgets/infinite_list.dart';
 
 class BikeInfoList extends StatefulWidget {
   const BikeInfoList({Key? key}) : super(key: key);
@@ -27,21 +28,21 @@ void main(){
 class _BikeInfoListState extends State<BikeInfoList>{
 
   List markersList = [];
-
+  /*
   @override
   void initState(){
     super.initState();
-    _getBikes();
+    _getBikesList();
   }
 
-  void _getBikes() async {
-    List? publicBikeList = await PublicChargerService.getPublicChargers(); // es canviarà a bikes quan estiguin des de backend
+  void _getBikesList() async {
+    List? BikeList = await BikeService.getBikeList(pag); // es canviarà a bikes quan estiguin des de backend
     setState(() {
-      if (publicBikeList != null) {
-        markersList = publicBikeList;
+      if (BikeList != null) {
+        markersList = BikeList;
       }
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

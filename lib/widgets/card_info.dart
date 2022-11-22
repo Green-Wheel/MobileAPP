@@ -36,7 +36,7 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
     shape:  const RoundedRectangleBorder(
       side: BorderSide(
         color: Color(0xff43802a),
-        width: 3,
+        width: 2,
       ),
       borderRadius: BorderRadius.all(Radius.circular(18)),
     ),

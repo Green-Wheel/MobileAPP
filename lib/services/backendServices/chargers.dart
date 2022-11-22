@@ -63,10 +63,7 @@ class ChargerService {
     await BackendService.get('chargers/$id/').then((response) {
       if (response.statusCode == 200) {
         Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        print(' heyyy $jsonResponse');
-        print(result);
         result = DetailedCharherSerializer.fromJson(jsonResponse);
-        print('detailed $result');
       } else {
         print('Error getting charger!');
       }

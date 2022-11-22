@@ -29,7 +29,7 @@ void main(){
 class _ChargeInfoListState extends State<ChargeInfoList>{
   List markersList = [];
 
-  @override
+  /*@override
   void initState(){
     super.initState();
     _getChargersList();
@@ -41,7 +41,7 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
     setState(() {
       markersList = chargerList;
     });
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

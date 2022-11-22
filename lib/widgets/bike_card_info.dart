@@ -10,11 +10,9 @@ import 'available_bike.dart';
 class BikeCardInfoWidget extends StatefulWidget {
   String location;
   double rating;
-  int types;
   bool available;
-  bool match;
 
-  BikeCardInfoWidget({required this.location, required this.rating, required this.types, required this.available, required this.match, super.key});
+  BikeCardInfoWidget({required this.location, required this.rating, required this.available, super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
@@ -23,18 +21,18 @@ class BikeCardInfoWidget extends StatefulWidget {
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, context);
+    return _buildCard(widget.location, widget.rating, widget.available, context);
   }
 }
 
-Widget _buildCard(String location, double rating, int types, bool avaliable,  bool match, BuildContext context) {
+Widget _buildCard(String location, double rating, bool avaliable, BuildContext context) {
   double width = MediaQuery.of(context).size.width;
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
       side: BorderSide(
         color: Colors.blueAccent,
-        width: 3,
+        width: 2,
       ),
       borderRadius: BorderRadius.all(Radius.circular(20)),
     ),
