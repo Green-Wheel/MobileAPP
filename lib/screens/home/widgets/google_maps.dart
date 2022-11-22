@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -9,10 +10,9 @@ import 'package:greenwheel/widgets/card_info.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../../serializers/chargers.dart';
 import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
-import '../../../services/backendServices/privateChargers.dart';
-import '../../../services/backendServices/publicChargers.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
 
@@ -40,65 +40,27 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       speedAccuracy: 1);
   Set<Marker> markers = {};
   final Map<MarkerId, Marker> markerMap = {};
-  late Position _actualMarcador = _position;
+  //late Position _actualMarcador = _position;
   late double latitud_act;
   late double longitud_act;
   late Marker marcador_actual;
   late String id_marcador;
   List markersList = [];
+  DetailedCharherSerializer? markedCharger;
   bool is_visible = false;
   final panelController = PanelController();
   bool is_visible_panel = false;
 
-  void _getChargers()  async {
+  void _getChargers() async {
     List chargersList = await ChargerService.getChargers();
-    print(chargersList);
-    /*setState(() {
+    setState(() {
       markersList = chargersList;
       for (int i = 0; i < markersList.length; i++) {
-        Map localization = markersList[i]['localization'];
-        double latitude = localization['latitude'];
-        double longitude = localization['longitude'];
-        if (markersList[i]['direction'] == null) {
-          markersList[i]['direction'] = "No description";
-        }
-        _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
-      }
-    });*/
-  }
-
-  void _drawPublicChargers() async {
-    List? publicChargerList = await PublicChargerService.getPublicChargers();
-    setState(() {
-      if (publicChargerList != null) {
-        markersList = publicChargerList;
-        for (int i = 0; i < markersList.length; i++) {
-          Map localization = markersList[i]['localization'];
-          double latitude = localization['latitude'];
-          double longitude = localization['longitude'];
-          if (markersList[i]['direction'] == null) {
-            markersList[i]['direction'] = "No description";
-          }
-          _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
-        }
-      }
-    });
-  }
-
-  void _drawPrivateChargers() async {
-    List? privateChargerList = await PrivateChargerService.getPrivateChargers();
-    setState(() {
-      if (privateChargerList != null) {
-        markersList = privateChargerList;
-        for (int i = 0; i < markersList.length; i++) {
-          Map localization = markersList[i]['localization'];
-          double latitude = localization['latitude'];
-          double longitude = localization['longitude'];
-          if (markersList[i]['direction'] == null) {
-            markersList[i]['direction'] = "No description";
-          }
-          _addMarker(latitude, longitude, markersList[i]['description'], markersList[i]['direction'], 5.0, 2, "10:00 - 20:00h");
-        }
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        String chargerType = markersList[i].charger_type;
+        _addMarker(latitude, longitude, chargerType, id);
       }
     });
   }
@@ -132,8 +94,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     print(widget.index);
 
     if (widget.index == 0) {
-      _drawPublicChargers();
-      _drawPrivateChargers();
+      _getChargers();
     } else if (widget.index == 1) {
       _drawBikes();
     }
@@ -161,10 +122,10 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     markerMap[MarkerId(id)] = marcador;
   }
 
-  void _addMarker(double lat, double log, String id, String address, double rate, int distance, String time) async{
+  void _addMarker(double lat, double log, String chargerType, int id) async{
     final iconMarker = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2,), "assets/images/punt_carregador.png");
     final Marker marcador = Marker(
-        markerId: MarkerId(id),
+        markerId: MarkerId(id.toString()),
         position: LatLng(lat, log),
         onDrag: null,
         icon: iconMarker,
@@ -173,13 +134,14 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
             is_visible = false;
           });
           setState(() {
-            id_marcador = id;
+            id_marcador = id.toString();
             is_visible = true;
+            _getCharger(id);
           });
         } //_onMarkerTapped(MarkerId(id)),
     );
     markers.add(marcador);
-    markerMap[MarkerId(id)] = marcador;
+    markerMap[MarkerId(id.toString())] = marcador;
   }
 
 
@@ -318,7 +280,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           panelBuilder: (controller) => buildSlidingUpPanelCharger(
             controller: controller,
             panelController: panelController,
-          ), borderRadius: BorderRadius.vertical(top: Radius.circular(18)));
+          ), borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
     } else {
       print("do bike");
       return SlidingUpPanel(
@@ -332,39 +294,40 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           panelBuilder: (controller) => buildSlidingUpPanelBike(
             controller: controller,
             panelController: panelController,
-          ), borderRadius: BorderRadius.vertical(top: Radius.circular(18)));
+          ), borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
+    }
+  }
+
+  void _getCharger(int id) async {
+    DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
+    print(charger);
+    if (charger != null) {
+      setState(() {
+        markedCharger = charger;
+      });
     }
   }
 
   Widget buildSlidingUpPanelCharger({required ScrollController controller, required PanelController panelController}) {
-    //Obtencion posicion del elemento en el array markersList para obtener los parametros del marcador en cuestion
-    int pos_marker = 0;
-    for (int i = 0; i < markersList.length; i++){
-      if (markersList[i]['description'] == id_marcador){
-        pos_marker = i;
-        print(pos_marker);
+      String? descrip = utf8.decode(utf8.encode(markedCharger!.title!));
+      //descrip = title_parser(descrip);
+
+      //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
+      Random random = Random();
+      int min = 2, max = 6;
+      int num = (min + random.nextInt(max - min));
+      double numd = num.toDouble();
+
+      //Obtencion del numero de tipos de cargadores
+      List<ConnectionType> types = [];
+      for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
+        types.add(markedCharger!.connection_type[i]);
       }
-    }
 
-    //Generación rate aleatoria (harcode rate)
-    Random random = Random();
-    int min = 2, max = 6;
-    int num = (min + random.nextInt(max - min));
-    double numd = num.toDouble();
+      // available
+      // match
 
-    //Obtencion del numero de tipos de cargadores
-    int types = markersList[pos_marker]['connection_type'].length;
-
-    //Arreglo del titulo del cargador respecto a los datos del json
-    String description = markersList[pos_marker]['description'];
-    description = title_parser(description);
-
-    //Mirar el tipo de la variable porque to_do  da null
-    bool avaliable = true;
-    //avaliable da null
-    if (markersList[pos_marker]['description'] == "false") avaliable = false;
-
-    return CardInfoWidget(location: description, rating: numd, types: types, avaliable: avaliable, match: true);
+      return CardInfoWidget(location: descrip, rating: numd, types: types, available: true, match: true);
   }
 
   Widget buildSlidingUpPanelBike({required ScrollController controller, required PanelController panelController}) {
@@ -387,7 +350,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
     //Arreglo del titulo del cargador respecto a los datos del json
     String description = markersList[pos_marker]['description'];
-    description = title_parser(description);
+    description = title_parser(description)!;
 
     //Mirar el tipo de la variable porque to_do  da null
     bool avaliable = true;
@@ -397,39 +360,39 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     return BikeCardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: true);
   }
 
-  String title_parser(String description){
-    description = description.replaceAll("Ãa", "i");
-    description = description.replaceAll("Ã", "à");
-    description = description.replaceAll("àa", "ia");
-    description = description.replaceAll("Ã³", "ó");
-    description = description.replaceAll("à³", "ó");
-    description = description.replaceAll("Ã²", "ò");
-    description = description.replaceAll("à²", "ò");
-    description = description.replaceAll("Ã§", "ç");
-    description = description.replaceAll("à§", "ç");
-    description = description.replaceAll("Ã©", "é");
-    description = description.replaceAll("à¨", "è");
-    description = description.replaceAll("à©", "è");
-    description = description.replaceAll("2 -", "2\n");
-    description = description.replaceAll("6 -  ", "6\n");
-    description = description.replaceAll("³-", "\n");
-    description = description.replaceAll("er-Al", "er\nAl");
-    description = description.replaceAll("a-Ca", "a\nCa");
-    description = description.replaceAll(", Ap", "\nAp");
-    description = description.replaceAll("-Ca", "\nCa");
-    description = description.replaceAll(", Ca", "\nCa");
-    description = description.replaceAll(" QR", "\nQR");
-    description = description.replaceAll("37 - S", "37\nS");
-    description = description.replaceAll("res SO", "res\nSO");
-    description = description.replaceAll("-Ca", "\nCa");
-    description = description.replaceAll("ó-Pl", "ó\nPl");
-    description = description.replaceAll("mans i ", "mans\ni ");
-    description = description.replaceAll("T-I", "T\nI");
-    description = description.replaceAll("A  Torr", "A\nTorr");
-    description = description.replaceAll("Mont-Roig", "Mont\nRoig");
-    description = description.replaceAll("a Sup", "a\nSup");
-    description = description.replaceAll("Despà", "Despí");
-    if (description.length >= 40){
+  String? title_parser(String? description){
+    description = description?.replaceAll("Ãa", "i");
+    description = description?.replaceAll("Ã", "à");
+    description = description?.replaceAll("àa", "ia");
+    description = description?.replaceAll("Ã³", "ó");
+    description = description?.replaceAll("à³", "ó");
+    description = description?.replaceAll("Ã²", "ò");
+    description = description?.replaceAll("à²", "ò");
+    description = description?.replaceAll("Ã§", "ç");
+    description = description?.replaceAll("à§", "ç");
+    description = description?.replaceAll("Ã©", "é");
+    description = description?.replaceAll("à¨", "è");
+    description = description?.replaceAll("à©", "è");
+    description = description?.replaceAll("2 -", "2\n");
+    description = description?.replaceAll("6 -  ", "6\n");
+    description = description?.replaceAll("³-", "\n");
+    description = description?.replaceAll("er-Al", "er\nAl");
+    description = description?.replaceAll("a-Ca", "a\nCa");
+    description = description?.replaceAll(", Ap", "\nAp");
+    description = description?.replaceAll("-Ca", "\nCa");
+    description = description?.replaceAll(", Ca", "\nCa");
+    description = description?.replaceAll(" QR", "\nQR");
+    description = description?.replaceAll("37 - S", "37\nS");
+    description = description?.replaceAll("res SO", "res\nSO");
+    description = description?.replaceAll("-Ca", "\nCa");
+    description = description?.replaceAll("ó-Pl", "ó\nPl");
+    description = description?.replaceAll("mans i ", "mans\ni ");
+    description = description?.replaceAll("T-I", "T\nI");
+    description = description?.replaceAll("A  Torr", "A\nTorr");
+    description = description?.replaceAll("Mont-Roig", "Mont\nRoig");
+    description = description?.replaceAll("a Sup", "a\nSup");
+    description = description?.replaceAll("Despà", "Despí");
+    if (description!.length >= 40){
       description = description.replaceAll(" - ", "\n");
       //description = description.replaceAll("-", "\n");
       description = description.replaceAll("- ", "\n");
@@ -437,7 +400,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       description = description.replaceAll(" (", "\n(");
       description = description.replaceAll("E L'", "E\nL'");
     }
-    if (description.length < 40){
+    if (description!.length < 40){
       description = description.replaceAll(") ", ")\n");
       description = description.replaceAll(" (", "\n(");
       description = description.replaceAll("m-", "m\n");
@@ -450,6 +413,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   Widget currentLocationActionButton() {
     if (widget.index == 0) {
       return FloatingActionButton(
+        heroTag: "btn1",
         onPressed: _updateCurrentLocation,
         backgroundColor: Colors.white,
         child: permissionGranted
@@ -458,6 +422,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       );
     } else {
       return FloatingActionButton(
+        heroTag: "btn2",
         onPressed: _updateCurrentLocation,
         backgroundColor: Colors.white,
         child: permissionGranted

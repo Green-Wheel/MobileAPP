@@ -1,3 +1,4 @@
+import 'package:greenwheel/serializers/chargers.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:ffi';
 
@@ -10,8 +11,8 @@ class User {
     required this.username,
     required this.first_name,
     required this.last_name,
-    required this.about,
-    required this.profile_picture,
+    this.about,
+    this.profile_picture,
     required this.language_id,
     required this.level,
     required this.xp,
@@ -22,8 +23,8 @@ class User {
   String username;
   String first_name;
   String last_name;
-  String about;
-  String profile_picture;
+  String? about;
+  ImageSerializer? profile_picture;
   int language_id;
   int level;
   int xp;

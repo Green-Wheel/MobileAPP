@@ -15,7 +15,7 @@ class BackendService {
     print(_baseUrl + endpoint);
     http.Response response = await http.get(
       Uri.parse(_baseUrl + endpoint),
-      headers: {"Accept": "application/json"},
+      headers: {"Accept": "application/json", "Content-Type": "application/json; charset=UTF-8"},
     );
     return response;
   }

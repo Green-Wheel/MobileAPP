@@ -10,7 +10,6 @@ class ChargerService {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         result = jsonResponse.map((e) => Charger.fromJson(e)).toList();
-        print(result);
       } else {
         print('Error getting chargers!');
       }
@@ -44,12 +43,13 @@ class ChargerService {
     return result;
   }
 
-  static List<Charger>? getChargerList(int pag) {
-    List<Charger>? result = [];
-    BackendService.get('chargers/list/?page=$pag/').then((response) { // per pàgines
+  static Future<List<ChargerList>> getChargerList(int pag) async {
+    List<ChargerList> result = [];
+    await BackendService.get('chargers/list/?page=$pag').then((response) { // per pàgines
       if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        result = jsonResponse.map((e) => Charger.fromJson(e)).toList();
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> chargers = jsonResponse['results'] as List<dynamic>;
+        result = chargers.map((e) => ChargerList.fromJson(e)).toList();
       } else {
         print('Error getting charger list!');
       }
@@ -57,12 +57,16 @@ class ChargerService {
     return result;
   }
 
-  static Charger? getCharger(int id) {
-    Charger? result;
-    BackendService.get('chargers/$id/').then((response) {
+
+  static Future<DetailedCharherSerializer?> getCharger(int id) async {
+    DetailedCharherSerializer? result;
+    await BackendService.get('chargers/$id/').then((response) {
       if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        result = Charger.fromJson(jsonResponse);
+        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
+        print(' heyyy $jsonResponse');
+        print(result);
+        result = DetailedCharherSerializer.fromJson(jsonResponse);
+        print('detailed $result');
       } else {
         print('Error getting charger!');
       }

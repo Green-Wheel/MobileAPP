@@ -11,8 +11,11 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       username: json['username'] as String,
       first_name: json['first_name'] as String,
       last_name: json['last_name'] as String,
-      about: json['about'] as String,
-      profile_picture: json['profile_picture'] as String,
+      about: json['about'] as String?,
+      profile_picture: json['profile_picture'] == null
+          ? null
+          : ImageSerializer.fromJson(
+              json['profile_picture'] as Map<String, dynamic>),
       language_id: json['language_id'] as int,
       level: json['level'] as int,
       xp: json['xp'] as int,

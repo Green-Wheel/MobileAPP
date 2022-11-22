@@ -54,14 +54,17 @@ Map<String, dynamic> _$TownToJson(Town instance) => <String, dynamic>{
 Publication _$PublicationFromJson(Map<String, dynamic> json) => Publication(
       id: json['id'] as int?,
       type: json['type'] as String,
-      child: Publication.fromJson(json['child'] as Map<String, dynamic>),
+      charger: json['charger'] == null
+          ? null
+          : DetailedCharherSerializer.fromJson(
+              json['charger'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PublicationToJson(Publication instance) =>
     <String, dynamic>{
       'id': instance.id,
       'type': instance.type,
-      'child': instance.child,
+      'charger': instance.charger,
     };
 
 SpeedType _$SpeedTypeFromJson(Map<String, dynamic> json) => SpeedType(
@@ -106,9 +109,17 @@ ChargerList _$ChargerListFromJson(Map<String, dynamic> json) => ChargerList(
       connection_type: (json['connection_type'] as List<dynamic>)
           .map((e) => ConnectionType.fromJson(e as Map<String, dynamic>))
           .toList(),
-      avg_rating: (json['avg_rating'] as num).toDouble(),
+      avg_rating: (json['avg_rating'] as num?)?.toDouble(),
+      images: (json['images'] as List<dynamic>?)
+          ?.map((e) => ImageSerializer.fromJson(e as Map<String, dynamic>))
+          .toList(),
       charger_type: json['charger_type'] as String,
-      child: Charger.fromJson(json['child'] as Map<String, dynamic>),
+      public: json['public'] == null
+          ? null
+          : PublicCharger.fromJson(json['public'] as Map<String, dynamic>),
+      private: json['private'] == null
+          ? null
+          : PrivateCharger.fromJson(json['private'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ChargerListToJson(ChargerList instance) =>
@@ -118,8 +129,10 @@ Map<String, dynamic> _$ChargerListToJson(ChargerList instance) =>
       'localization': instance.localization,
       'connection_type': instance.connection_type,
       'avg_rating': instance.avg_rating,
+      'images': instance.images,
       'charger_type': instance.charger_type,
-      'child': instance.child,
+      'public': instance.public,
+      'private': instance.private,
     };
 
 PublicCharger _$PublicChargerFromJson(Map<String, dynamic> json) =>
@@ -150,6 +163,18 @@ Map<String, dynamic> _$PrivateChargerToJson(PrivateCharger instance) =>
       'owner': instance.owner,
     };
 
+ImageSerializer _$ImageSerializerFromJson(Map<String, dynamic> json) =>
+    ImageSerializer(
+      id: json['id'] as int?,
+      url: json['url'] as String,
+    );
+
+Map<String, dynamic> _$ImageSerializerToJson(ImageSerializer instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'url': instance.url,
+    };
+
 DetailedCharherSerializer _$DetailedCharherSerializerFromJson(
         Map<String, dynamic> json) =>
     DetailedCharherSerializer(
@@ -170,9 +195,17 @@ DetailedCharherSerializer _$DetailedCharherSerializerFromJson(
           .map((e) => SpeedType.fromJson(e as Map<String, dynamic>))
           .toList(),
       power: (json['power'] as num?)?.toDouble(),
+      images: (json['images'] as List<dynamic>?)
+          ?.map((e) => ImageSerializer.fromJson(e as Map<String, dynamic>))
+          .toList(),
       avg_rating: (json['avg_rating'] as num?)?.toDouble(),
       charger_type: json['charger_type'] as String,
-      child: Charger.fromJson(json['child'] as Map<String, dynamic>),
+      public: json['public'] == null
+          ? null
+          : PublicCharger.fromJson(json['public'] as Map<String, dynamic>),
+      private: json['private'] == null
+          ? null
+          : PrivateCharger.fromJson(json['private'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$DetailedCharherSerializerToJson(
@@ -188,7 +221,9 @@ Map<String, dynamic> _$DetailedCharherSerializerToJson(
       'current_type': instance.current_type,
       'speed': instance.speed,
       'power': instance.power,
+      'images': instance.images,
       'avg_rating': instance.avg_rating,
       'charger_type': instance.charger_type,
-      'child': instance.child,
+      'public': instance.public,
+      'private': instance.private,
     };

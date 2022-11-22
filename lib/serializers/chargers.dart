@@ -77,12 +77,14 @@ class Publication {
   Publication({
     this.id,
     required this.type,
-    required this.child
+    this.charger
+    //required this.bike
   });
 
   int? id;
   String type;
-  Publication child; // child: PublicChargerSerializer | PrivateChargerSerializer
+  DetailedCharherSerializer? charger;
+  //BikeDetailedSerializer bike;
 
   factory Publication.fromJson(Map<String, dynamic> json) =>
       _$PublicationFromJson(json);
@@ -147,18 +149,22 @@ class ChargerList {
     this.title,
     required this.localization,
     required this.connection_type,
-    required this.avg_rating,
+    this.avg_rating,
+    this.images,
     required this.charger_type,
-    required this.child,
+    this.public,
+    this.private,
   });
 
   int? id;
   String? title;
   Localization localization;
   List<ConnectionType> connection_type;
-  double avg_rating;
+  double? avg_rating;
+  List<ImageSerializer>? images;
   String charger_type;
-  Charger child; // child: PublicChargerSerializer | PrivateChargerSerializer
+  PublicCharger? public;
+  PrivateCharger? private;
 
   factory ChargerList.fromJson(Map<String, dynamic> json) =>
       _$ChargerListFromJson(json);
@@ -203,6 +209,24 @@ class PrivateCharger {
   Map<String, dynamic> toJson() => _$PrivateChargerToJson(this);
 }
 
+
+@JsonSerializable()
+class ImageSerializer {
+  ImageSerializer({
+    this.id,
+    required this.url,
+  });
+
+  int? id;
+  String url;
+
+  factory ImageSerializer.fromJson(Map<String, dynamic> json) =>
+      _$ImageSerializerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ImageSerializerToJson(this);
+}
+
+
 @JsonSerializable()
 class DetailedCharherSerializer {
   DetailedCharherSerializer({
@@ -216,9 +240,11 @@ class DetailedCharherSerializer {
     required this.current_type,
     required this.speed,
     this.power,
+    this.images,
     this.avg_rating,
     required this.charger_type,
-    required this.child,
+    this.public,
+    this.private,
   });
 
   int? id;
@@ -231,9 +257,11 @@ class DetailedCharherSerializer {
   List<CurrentType> current_type;
   List<SpeedType> speed;
   double? power;
+  List<ImageSerializer>? images;
   double? avg_rating;
   String charger_type;
-  Charger child; // child: PublicChargerSerializer | PrivateChargerSerializer
+  PublicCharger? public;
+  PrivateCharger? private;
 
 
   factory DetailedCharherSerializer.fromJson(Map<String, dynamic> json) =>

@@ -7,15 +7,17 @@ import 'package:greenwheel/widgets/match_with_car.dart';
 import 'package:greenwheel/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/widgets/stars_static_rate.dart';
 
+import '../serializers/chargers.dart';
+
 class CardInfoWidget extends StatefulWidget {
-  String location;
+  String? location;
   double rating;
-  int types;
-  bool avaliable;
+  List<ConnectionType> types;
+  bool available;
   bool match;
 
 
-  CardInfoWidget({required this.location, required this.rating, required this.types, required this.avaliable, required this.match, super.key});
+  CardInfoWidget({required this.location, required this.rating, required this.types, required this.available, required this.match, super.key});
 
   @override
   State<StatefulWidget> createState() => _CardInfoWidget();
@@ -24,11 +26,11 @@ class CardInfoWidget extends StatefulWidget {
 class _CardInfoWidget extends State<CardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.types, widget.avaliable, widget.match, context);
+    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, context);
   }
 }
 
-Widget _buildCard(String location, double rating, int types, bool avaliable,  bool match, BuildContext context){
+Widget _buildCard(String? location, double rating, List<ConnectionType> types, bool avaliable, bool match, BuildContext context){
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -38,10 +40,7 @@ Widget _buildCard(String location, double rating, int types, bool avaliable,  bo
       ),
       borderRadius: BorderRadius.all(Radius.circular(18)),
     ),
-    child: Expanded(
-      //height: MediaQuery.of(context).size.height * 0.35,
-      //width: MediaQuery.of(context).size.width * 0.8,
-      child:Row(
+    child: Row(
         children: [
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.725,
@@ -53,11 +52,11 @@ Widget _buildCard(String location, double rating, int types, bool avaliable,  bo
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 20),
-                  child:   StarsStaticRateWidget(rate: rating),//StarsStaticRateWidget(rate: 4.0),
+                  child: StarsStaticRateWidget(rate: rating),//StarsStaticRateWidget(rate: 4.0),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
-                  child:  PointOfChargeDistWidget(types: types),
+                  child: PointOfChargeDistWidget(types: types),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
@@ -84,7 +83,6 @@ Widget _buildCard(String location, double rating, int types, bool avaliable,  bo
           ),
 
         ],
-      ),
     ),
   );
 }

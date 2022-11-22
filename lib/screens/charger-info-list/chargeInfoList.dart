@@ -3,9 +3,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/serializers/chargers.dart';
 import 'package:greenwheel/widgets/card_info.dart';
 
-import '../../services/backendServices/publicChargers.dart';
+import '../../services/backendServices/chargers.dart';
+import '../../widgets/infinite_list.dart';
 
 class ChargeInfoList extends StatefulWidget {
   const ChargeInfoList({Key? key}) : super(key: key);
@@ -25,21 +27,19 @@ void main(){
 }
 
 class _ChargeInfoListState extends State<ChargeInfoList>{
-
   List markersList = [];
 
   @override
   void initState(){
     super.initState();
-    _getChargers();
+    _getChargersList();
   }
 
-  void _getChargers() async {
-    List? publicChargerList = await PublicChargerService.getPublicChargers();
+  void _getChargersList() async {
+    List chargerList = await ChargerService.getChargerList(1);
+    print(chargerList);
     setState(() {
-      if (publicChargerList != null) {
-        markersList = publicChargerList;
-      }
+      markersList = chargerList;
     });
   }
 
@@ -62,33 +62,7 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
           },
         ),
       ),
-      body: ListView.builder(
-        itemCount: markersList.length,
-        /*addAutomaticKeepAlives: false,
-        addRepaintBoundaries: false,
-        addSemanticIndexes: false,*/
-        itemBuilder: (context, position) {
-
-          //Arreglo del titulo del cargador respecto a los datos del json
-          String description = markersList[position]['description'];
-          description = title_parser(description);
-
-          //Mirar el tipo de la variable porque to_do  da null
-          bool avaliable = true;
-          //avaliable da null
-          if (markersList[position]['description'] == "false") avaliable = false;
-
-          //print(markersList[position]['connection_type']); //retorna numero de typos diferentes con el .lenght
-          //print(markersList[position]['current_type']); //puede ser 1 o 2 -> AC - DC
-
-          //Obtencion del numero de tipos de cargadores
-          int types = markersList[position]['connection_type'].length;
-
-          bool match = true;
-
-          return _cardChargerList(description, avaliable, match, types);
-        }
-      ),
+      body: InfiniteList(),
     );
   }
 }
@@ -143,12 +117,12 @@ String title_parser(String description){
 
 
 //funcion respectiva a la card de los cargadores
-Widget _cardChargerList(String direction, bool avaliable, bool match, int types){
+Widget _cardChargerList(String direction, bool avaliable, bool match, List<ConnectionType> types){
   //Generación rate aleatoria (harcode rate)
   Random random = Random();
   int min = 2, max = 6;
   int num = (min + random.nextInt(max - min));
   double numd = num.toDouble();
 
-  return CardInfoWidget(location: direction, rating: numd, types: types, avaliable: avaliable, match: match);
+  return CardInfoWidget(location: direction, rating: numd, types: types, available: avaliable, match: match);
 }
