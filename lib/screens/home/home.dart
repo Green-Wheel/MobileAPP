@@ -3,6 +3,8 @@ import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/drawer.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 
+import '../../serializers/users.dart';
+import '../../services/backendServices/user_service.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -15,6 +17,20 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int index = 0;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    _getUser();
+  }
+  void _getUser() async {
+    User? aux = await UserService.getUser();
+    setState(() {
+      user = aux;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +55,7 @@ class _HomePageState extends State<HomePage> {
         index: index,
         onChangedTab: _onChangeTab,
       ),
-      drawer: SimpleDrawer(),
+      drawer: SimpleDrawer(user),
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );

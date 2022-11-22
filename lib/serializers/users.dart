@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:json_annotation/json_annotation.dart';
 
 part 'users.g.dart';
@@ -40,39 +42,30 @@ class Languages {
 class User {
   User({
     this.id,
-    required this.lastLogin,
     required this.username,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.isStaff,
-    required this.isActive,
-    required this.dateJoined,
-    required this.about,
-    required this.profilePicture,
-    required this.language,
-    required this.loginMethod,
+    required this.first_name,
+    required this.last_name,
+    this.about,
+    this.profile_picture,
+    this.language_id,
     required this.level,
     required this.xp,
+    this.rating,
   });
 
   int? id;
-  DateTime? lastLogin;
   String username;
-  String firstName;
-  String lastName;
-  String email;
-  bool isStaff;
-  bool isActive;
-  DateTime dateJoined;
-  String about;
-  String profilePicture;
-  Languages language;
-  LoginMethods loginMethod;
+  String first_name;
+  String last_name;
+  String? about;
+  int? language_id;
+  String? profile_picture;
   int level;
   int xp;
+  double? rating;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
+
 }
