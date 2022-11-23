@@ -34,6 +34,8 @@ dependencies:
   material_floating_search_bar: ^0.3.7
   percent_indicator: ^4.2.2
   easy_search_bar: ^2.4.2
+  searchfield: ^0.7.2
+
 
 dev_dependencies:
   flutter_test:

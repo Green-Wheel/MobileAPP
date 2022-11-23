@@ -4,13 +4,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/screens/charger-info/widgets/avaliable_public_charger.dart';
-import 'package:greenwheel/screens/charger-info/widgets/button_route.dart';
-import 'package:greenwheel/screens/charger-info/widgets/image_charger.dart';
-import 'package:greenwheel/screens/charger-info/widgets/location_charger.dart';
-import 'package:greenwheel/screens/charger-info/widgets/match_with_car.dart';
-import 'package:greenwheel/screens/charger-info/widgets/point_of_charge_dist.dart';
-import 'package:greenwheel/screens/charger-info/widgets/stars_static_rate.dart';
+import 'package:greenwheel/widgets/avaliable_public_charger.dart';
+import 'package:greenwheel/widgets/button_route.dart';
+import 'package:greenwheel/widgets/card_info.dart';
+import 'package:greenwheel/widgets/image_charger.dart';
+import 'package:greenwheel/widgets/location_charger.dart';
+import 'package:greenwheel/widgets/match_with_car.dart';
+import 'package:greenwheel/widgets/point_of_charge_dist.dart';
+import 'package:greenwheel/widgets/stars_static_rate.dart';
 import 'package:greenwheel/services/backend_service.dart';
 
 class ChargeInfoList extends StatefulWidget {
@@ -19,6 +20,15 @@ class ChargeInfoList extends StatefulWidget {
   @override
   State<ChargeInfoList> createState() => _ChargeInfoListState();
 
+}
+
+void main(){
+  runApp(const MaterialApp(
+    title: 'chargeInfo try',
+    home: Scaffold(
+      body: ChargeInfoList(),
+    ),
+  ));
 }
 
 class _ChargeInfoListState extends State<ChargeInfoList>{
@@ -119,7 +129,9 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
           //Obtencion del numero de tipos de cargadores
           int types = markersList[position]['connection_type'].length;
 
-          return _cardChargerList(description, avaliable, true, types);
+          bool match = true;
+
+          return _cardChargerList(description, avaliable, match, types);
         }
       ),
     );
@@ -177,68 +189,11 @@ String title_parser(String description){
 
 //funcion respectiva a la card de los cargadores
 Widget _cardChargerList(String direction, bool avaliable, bool match, int types){
-
   //Generación rate aleatoria (harcode rate)
   Random random = Random();
   int min = 2, max = 6;
   int num = (min + random.nextInt(max - min));
   double numd = num.toDouble();
 
-  return Card(
-    elevation: 10,
-    shape:  const RoundedRectangleBorder(
-      side: BorderSide(
-        color: Color(0xff43802a),
-        width: 3,
-      ),
-      borderRadius: BorderRadius.all(Radius.circular(20)),
-    ),
-    child: SizedBox(
-      height: 175,
-      width: 450,
-      child:Row(
-        children: [
-          SizedBox(
-            width: 270,
-            child:Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 5, left: 25),
-                  child: LocationChargerWidget(location: direction),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child:  StarsStaticRateWidget(rate: numd),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child:  PointOfChargeDistWidget(types: types),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child: AvaliablePublicChargerWidget(avaliable: avaliable),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child: MatchWithCarWidget(match: match),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            children:const [
-              Padding(
-                padding:EdgeInsets.only(right: 25),
-                child: ImageChargerWidget(),
-              ),
-              Padding(
-                padding: EdgeInsets.only(right: 0),
-                child: ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
-              ),
-            ],
-          ),
-        ],
-      ),
-    ),
-  );
+  return CardInfoWidget(location: direction, rating: numd, types: types, avaliable: avaliable, match: match);
 }
