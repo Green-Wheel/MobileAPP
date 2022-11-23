@@ -42,26 +42,26 @@ class Languages {
 class User {
   User({
     this.id,
-    this.username,
-    this.first_name,
-    this.last_name,
+    required this.username,
+    required this.first_name,
+    required this.last_name,
     this.about,
     this.profile_picture,
     this.language_id,
-    this.level,
-    this.xp,
+    required this.level,
+    required this.xp,
     this.rating,
   });
 
   int? id;
-  String? username;
-  String? first_name;
-  String? last_name;
+  String username;
+  String first_name;
+  String last_name;
   String? about;
   int? language_id;
   String? profile_picture;
-  int? level;
-  int? xp;
+  int level;
+  int xp;
   double? rating;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

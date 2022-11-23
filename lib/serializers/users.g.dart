@@ -31,14 +31,14 @@ Map<String, dynamic> _$LanguagesToJson(Languages instance) => <String, dynamic>{
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
       id: json['id'] as int?,
-      username: json['username'] as String?,
-      first_name: json['first_name'] as String?,
-      last_name: json['last_name'] as String?,
+      username: json['username'] as String,
+      first_name: json['first_name'] as String,
+      last_name: json['last_name'] as String,
       about: json['about'] as String?,
       profile_picture: json['profile_picture'] as String?,
       language_id: json['language_id'] as int?,
-      level: json['level'] as int?,
-      xp: json['xp'] as int?,
+      level: json['level'] as int,
+      xp: json['xp'] as int,
       rating: (json['rating'] as num?)?.toDouble(),
     );
 
