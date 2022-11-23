@@ -25,16 +25,16 @@ final GoRouter router = GoRouter(
       routes: [
         GoRoute(
           //aun no funciona
-          path: 'chargers/:id/edit',
+          path: 'chargers/add',//'chargers/:id/edit',
           builder: (context, state) {
-            final id = state.params['id'] as int;
-            return EditCharger(key: const Key("AddCharger"), id: id);
+            //final id = state.params['id'] as int;
+            return EditCharger(key: const Key("EditCharger"), id: 2);
           },
         ),
-        GoRoute(
+        /*GoRoute(
           path: 'chargers/add',
           builder: (context, state) => const AddCharger(key: Key("EditCharger")),
-        ),
+        ),*/
         GoRoute(
           path: 'chargers/list',
           builder: (context, state) =>

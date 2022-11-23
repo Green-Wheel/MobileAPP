@@ -54,6 +54,7 @@ class PrivateChargersService{
   }
 
   static Future<Map<String, dynamic>> getChargerInfo(int id) async {
+    //TODO: end parsing data
     try {
       var response = await BackendService.get('chargers/$id/');
       if (response.statusCode != 200) return {};
@@ -65,9 +66,9 @@ class PrivateChargersService{
         'latitude': json['localization']['latitude'] ?? 0.0,
         'longitude': json['localization']['longitude'] ?? 0.0,
         'town': json['town'] ?? {},
-        'connection_type': json['connection_type'].map((item) => item.id) ?? [],
-        'current_type': json['current_type'].map((item) => item.id) ?? [],
-        'speed': json['speed'].map((item) => item.id) ?? [],
+        'connection_type': json['connection_type'].map((item) => item[0]) ?? [],
+        'current_type': json['current_type'].map((item) => item[0]) ?? [],
+        'speed': json['speed'].map((item) => item[0]) ?? [],
         'power': json['power'] ?? 0.0,
         'avg_rating': json['avg_rating'] ?? 0.0,
         'charge_type': json['charge_type'] ?? '',
