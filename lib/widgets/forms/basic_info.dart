@@ -31,7 +31,7 @@ class _BasicInfoState extends State<BasicInfo> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 40.0, 8.0, 0.0),
+          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
           child: Form(
             key: _formKey,
             child: Column(
