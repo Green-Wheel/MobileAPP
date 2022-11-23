@@ -20,7 +20,7 @@ import 'package:greenwheel/widgets/addCharger/add_charger.dart';
 
 GoRouter routeGenerator(LoginService loginService) {
   return GoRouter(
-    initialLocation: '/login',
+    initialLocation: '/',
     refreshListenable: loginService,
     routes: [
       GoRoute(
