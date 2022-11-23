@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/addCharger/connection_info.dart';
 import 'package:greenwheel/widgets/addCharger/current_info.dart';
 import 'package:greenwheel/widgets/addCharger/localization_info.dart';
@@ -8,38 +9,21 @@ import 'package:greenwheel/widgets/addCharger/basic_info.dart';
 import '../../serializers/maps.dart';
 import '../../services/backendServices/private_chargers.dart';
 
-class charger extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return (MaterialApp(
-      title: 'addCharger try',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Formulary'),
-        ),
-        body: const AddCharger(),
-      ),
-    ));
-  }
-}
-
-class AddCharger extends StatefulWidget {
+class ChargerForm extends StatefulWidget {
   final data;
-  const AddCharger({Key? key, this.data}) : super(key: key);
+
+  const ChargerForm({Key? key, this.data}) : super(key: key);
 
   @override
-  State<AddCharger> createState() => _AddChargerState();
+  State<ChargerForm> createState() => _ChargerFormState();
 }
 
-typedef void SetImages(images);
-
-class _AddChargerState extends State<AddCharger> {
-
+class _ChargerFormState extends State<ChargerForm> {
   int _page = 0;
 
   List<File> _images = [];
 
-  late final Map<String, dynamic>_data;
+  late final Map<String, dynamic> _data;
 
   void nextPage() {
     setState(() {
@@ -93,27 +77,28 @@ class _AddChargerState extends State<AddCharger> {
           _data['power'] = currents['power'],
         });
     PrivateChargersService.newCharger(_data, _images);
-    //TODO hacer pop del context
+    context.pop();
   }
 
   @override
   void initState() {
     super.initState();
-    _data = widget.data ?? {
-      'title': 'titulo 1',
-      'description': 'descripcion 1',
-      'direction': '',
-      'latitude': 0,
-      'longitude': 0,
-      'town': {},
-      'connection_type': [],
-      'current_type': [],
-      'speed': [],
-      'power': '55',
-      'avg_rating': 0.0,
-      'charge_type': 'private',
-      'price': '5',
-    };
+    _data = widget.data ??
+        {
+          'title': '',
+          'description': '',
+          'direction': '',
+          'latitude': 0,
+          'longitude': 0,
+          'town': {},
+          'connection_type': [],
+          'current_type': [],
+          'speed': [],
+          'power': '55',
+          'avg_rating': 0.0,
+          'charge_type': '',
+          'price': '',
+        };
   }
 
   @override
@@ -136,8 +121,8 @@ class _AddChargerState extends State<AddCharger> {
         {
           return LocalizationInfo(
             addres: _data['direction'],
-            localization:
-                LatLang.fromJson({'lat': _data['latitude'], 'lng': _data['longitude']}),
+            localization: LatLang.fromJson(
+                {'lat': _data['latitude'], 'lng': _data['longitude']}),
             callback: getLocalization,
             nextPage: nextPage,
             prevPage: previousPage,
@@ -168,7 +153,7 @@ class _AddChargerState extends State<AddCharger> {
         }
       default:
         {
-          return Center(
+          return const Center(
               child: Scaffold(
             body: SingleChildScrollView(child: Text("PAGE NOT EXISTENT")),
           ));

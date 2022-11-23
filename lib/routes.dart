@@ -12,9 +12,10 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
+import 'package:greenwheel/screens/chargers/add_charger.dart';
+import 'package:greenwheel/screens/chargers/edit_charger.dart';
 import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/route/route.dart';
-import 'package:greenwheel/widgets/addCharger/add_charger.dart';
 
 final GoRouter router = GoRouter(
   routes: [
@@ -23,8 +24,16 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const HomePage(key: Key("HomePage")),
       routes: [
         GoRoute(
+          //aun no funciona
+          path: 'chargers/:id/edit',
+          builder: (context, state) {
+            final id = state.params['id'] as int;
+            return EditCharger(key: const Key("AddCharger"), id: id);
+          },
+        ),
+        GoRoute(
           path: 'chargers/add',
-          builder: (context, state) => const AddCharger(key: Key("AddCharger")),
+          builder: (context, state) => const AddCharger(key: Key("EditCharger")),
         ),
         GoRoute(
           path: 'chargers/list',
