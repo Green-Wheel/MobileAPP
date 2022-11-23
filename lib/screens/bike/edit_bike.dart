@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenwheel/widgets/addCharger/charger_form.dart';
+import '../../services/backendServices/bikes.dart';
+import '../../widgets/forms/bike_form.dart';
 
 class EditBike extends StatefulWidget {
   final int id;
@@ -10,8 +11,40 @@ class EditBike extends StatefulWidget {
 }
 
 class _EditBikeState extends State<EditBike> {
+  Map<String, dynamic> _bikeInfo = {};
+
+  void getBikeInfo() async {
+    var bikeI = await BikesService.getBikeInfo(widget.id);
+    setState(() {
+      _bikeInfo = bikeI;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getBikeInfo();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Edit Bike'),
+      ),
+      body: Center(
+        child: _bikeInfo.isEmpty
+            ? Container(
+                height: MediaQuery.of(context).size.height / 5,
+                width: MediaQuery.of(context).size.height / 5,
+                child: const CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                ),
+              )
+            : BikeForm(
+                data: _bikeInfo,
+              ),
+      ),
+    );
   }
 }
