@@ -20,7 +20,7 @@ import 'package:greenwheel/widgets/addCharger/add_charger.dart';
 
 GoRouter routeGenerator(LoginService loginService) {
   return GoRouter(
-    initialLocation: '/',
+    initialLocation: '/login',
     refreshListenable: loginService,
     routes: [
       GoRoute(
@@ -61,7 +61,9 @@ GoRouter routeGenerator(LoginService loginService) {
       ),
     ],
     redirect: (BuildContext context, GoRouterState state) async {
-      if (!loginService.isLoggedIn && state.subloc != '/login') {
+      if (!loginService.isLoggedIn &&
+          state.subloc != '/login' &&
+          state.subloc != '/register') {
         return '/login';
       } else {
         return null;

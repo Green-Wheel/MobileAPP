@@ -1,5 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:greenwheel/services/backend_service.dart';
+
+import '../../../services/generalServices/LoginService.dart';
+import '../../home/home.dart';
 import 'bottom_text.dart';
 import 'top_text.dart';
 
@@ -25,8 +30,29 @@ class _LoginContentState extends State<LoginContent>
   void validateLogin() {
     var username = usernameController.value.text;
     var password = passwordController.value.text;
-    print("$username $password");
-    ScaffoldMessenger.of(context).showSnackBar(snackBarError);
+    var jsonMap = {
+      "username": username,
+      "password": password,
+    };
+    BackendService.post('users/login/', jsonMap).then((response) {
+      if (response.statusCode == 201) {
+        var jsonResponse = jsonDecode(response.body);
+        var apiKey = jsonResponse["apikey"];
+        final _loggedInStateInfo = LoginService();
+        _loggedInStateInfo.loginUser(apiKey);
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
+        print("Login successful");
+      } else if (response.statusCode == 400) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: const Text('Wrong password')));
+        print(response.body);
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: const Text('User not found')));
+        print(response.body);
+      }
+    });
   }
 
   Widget inputField(String hint, IconData iconData, controller) {
@@ -237,8 +263,4 @@ class _LoginContentState extends State<LoginContent>
       ],
     );
   }
-
-  var snackBarError = SnackBar(
-    content: const Text('ERROR'),
-  );
 }
