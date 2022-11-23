@@ -33,7 +33,7 @@ class _CurrentInfoState extends State<CurrentInfo> {
   void initState() {
     super.initState();
     _getCurrents();
-    _selected_current_types = widget.data["current"];
+    _selected_current_types = widget.data["current_type"];
   }
 
   @override
@@ -41,35 +41,15 @@ class _CurrentInfoState extends State<CurrentInfo> {
       return Scaffold(
           body: SingleChildScrollView(
             child: Column(children: [
+              const SizedBox(height: 50),
               Column(
                 children: [
-                  Column(
-                    children: _current_types
-                        .map((item) =>
-                        CheckboxListTile(
-                          title: Text(item.name),
-                          value: _selected_current_types!.contains(item.name),
-                          onChanged: (bool? value) {
-                            setState(() {
-                              if (value == true &&
-                                  !_selected_current_types.contains(item.name)) {
-                                _selected_current_types.add(item.name);
-                              } else if (value == false &&
-                                  _selected_current_types.contains(item.name)) {
-                                _selected_current_types.remove(item.name);
-                              }
-                              widget.data["current_type"] = _selected_current_types;
-                            });
-                          },
-                        ))
-                        .toList(),
-                  ),
                   Form(
                     key: _formKey,
                     child: Column(
                       children: [
-                        SizedBox(height: 10),
-                        Text("power"),
+                        const SizedBox(height: 10),
+                        const Text("Power"),
                         TextFormField(
                           initialValue: widget.data['power'],
                           keyboardType: TextInputType.number,
@@ -88,10 +68,30 @@ class _CurrentInfoState extends State<CurrentInfo> {
                         ),
                       ]
                     )
+                  ),
+                  Column(
+                    children: _current_types
+                        .map((item) =>
+                        CheckboxListTile(
+                          title: Text(item.name),
+                          value: _selected_current_types!.contains(item.id),
+                          onChanged: (bool? value) {
+                            setState(() {
+                              if (value == true &&
+                                  !_selected_current_types.contains(item.id)) {
+                                _selected_current_types.add(item.id);
+                              } else if (value == false &&
+                                  _selected_current_types.contains(item.id)) {
+                                _selected_current_types.remove(item.id);
+                              }
+                              widget.data["current_type"] = _selected_current_types;
+                            });
+                          },
+                        ))
+                        .toList(),
                   )
                 ],
               ),
-              SizedBox(height: 10),
               Center(
                 child: Row(
                   children: [

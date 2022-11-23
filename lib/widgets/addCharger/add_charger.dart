@@ -35,7 +35,7 @@ typedef void SetImages(images);
 
 class _AddChargerState extends State<AddCharger> {
 
-  int _page = 1;
+  int _page = 0;
 
   List<File> _images = [];
 
@@ -70,8 +70,8 @@ class _AddChargerState extends State<AddCharger> {
             'name': address.city,
             'province': address.province,
           },
-          _data['lat'] = localization.lat,
-          _data['lng'] = localization.lng
+          _data['latitude'] = localization.lat,
+          _data['longitude'] = localization.lng,
         });
   }
 
@@ -92,31 +92,27 @@ class _AddChargerState extends State<AddCharger> {
           _data['current_type'] = currents['current_type'],
           _data['power'] = currents['power'],
         });
-    if(widget.data == null){
-      PrivateChargersService.newCharger(_data, _images);
-    }
-    /*else {
-      PrivateChargersService.updateCharger(_data, _images);
-    }*/
+    PrivateChargersService.newCharger(_data, _images);
+    //TODO hacer pop del context
   }
 
   @override
   void initState() {
     super.initState();
     _data = widget.data ?? {
-      'title': '',
-      'description': '',
+      'title': 'titulo 1',
+      'description': 'descripcion 1',
       'direction': '',
-      'lat': 0.0,
-      'lng': 0.0,
+      'latitude': 0,
+      'longitude': 0,
       'town': {},
       'connection_type': [],
       'current_type': [],
       'speed': [],
-      'power': '',
+      'power': '55',
       'avg_rating': 0.0,
-      'charge_type': '',
-      'price': '',
+      'charge_type': 'private',
+      'price': '5',
     };
   }
 
@@ -141,7 +137,7 @@ class _AddChargerState extends State<AddCharger> {
           return LocalizationInfo(
             addres: _data['direction'],
             localization:
-                LatLang.fromJson({'lat': _data['lat'], 'lng': _data['lng']}),
+                LatLang.fromJson({'lat': _data['latitude'], 'lng': _data['longitude']}),
             callback: getLocalization,
             nextPage: nextPage,
             prevPage: previousPage,

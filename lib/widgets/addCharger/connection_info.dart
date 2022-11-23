@@ -47,16 +47,16 @@ class _ConnectionInfoState extends State<ConnectionInfo> {
           children: _connection_types
               .map((item) => CheckboxListTile(
                     title: Text(item.name),
-                    value: _selected_connection_types!.contains(item.name),
+                    value: _selected_connection_types!.contains(item.id),
                     onChanged: (bool? value) {
                       setState(() {
                         if (value == true &&
                             !_selected_connection_types
-                                .contains(item.name)) {
-                          _selected_connection_types.add(item.name);
+                                .contains(item.id)) {
+                          _selected_connection_types.add(item.id);
                         } else if (value == false &&
-                            _selected_connection_types.contains(item.name)) {
-                          _selected_connection_types.remove(item.name);
+                            _selected_connection_types.contains(item.id)) {
+                          _selected_connection_types.remove(item.id);
                         }
                         widget.data["connection_type"] =
                             _selected_connection_types;

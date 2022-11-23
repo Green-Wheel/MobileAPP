@@ -42,10 +42,10 @@ class PrivateChargersService{
 
   static Future<bool> newCharger(Map<String, dynamic> data, List<File> images) async {
     try {
-      var response = await BackendService.post('chargers/private/', data);
+      var response = await BackendService.post('chargers/', data);
       if (response.statusCode != 200) return false;
       var json = jsonDecode(response.body);
-      var response2  = await BackendService.postFiles('/images/${json['id']}/', images);
+      var response2  = await BackendService.postFiles('publications/${json['id']}/upload/', images);
       return response2.statusCode == 200;
     } catch (e) {
       print(e);
