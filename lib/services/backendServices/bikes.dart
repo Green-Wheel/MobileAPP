@@ -41,8 +41,11 @@ class BikeService {
     await BackendService.get('bikes/list/?page=$pag').then((response) { // bikes/list/?page=$pag
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
+        print('json response bicis $jsonResponse');
         List<dynamic> bikes = jsonResponse['results'] as List<dynamic>;
+        print('bikes list $bikes');
         result = bikes.map((e) => BikeList.fromJson(e)).toList();
+        print('result $result');
       } else {
         print('Error getting charger list!');
       }

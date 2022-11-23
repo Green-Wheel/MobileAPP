@@ -32,7 +32,7 @@ class Bike {
 
   int? id;
   Localization localization;
-  BikeType bike_type;
+  int bike_type;
 
   factory Bike.fromJson(Map<String, dynamic> json) =>
       _$BikeFromJson(json);
@@ -65,7 +65,7 @@ class DetailedBikeSerializer {
   Town town;
   List<ImageSerializer>? images;
   double? avg_rating;
-  BikeType bike_type;
+  int bike_type;
   double? power;
   double price;
 
@@ -75,7 +75,7 @@ class DetailedBikeSerializer {
   Map<String, dynamic> toJson() => _$DetailedBikeSerializerToJson(this);
 }
 
-
+// TODO canviar bike_type de int a bikeType
 @JsonSerializable()
 class BikeList {
   BikeList({
@@ -93,7 +93,7 @@ class BikeList {
   List<ImageSerializer>? images;
   Localization localization;
   double? avg_rating;
-  BikeType bike_type;
+  int bike_type;
   double price;
 
   factory BikeList.fromJson(Map<String, dynamic> json) =>

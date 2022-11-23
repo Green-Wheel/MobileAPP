@@ -87,7 +87,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _getCurrentLocation();
       is_visible = false;
     });
-    _getChargers();
     print(widget.index);
 
     if (widget.index == 0) {
@@ -308,7 +307,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   Widget buildSlidingUpPanelCharger({required ScrollController controller, required PanelController panelController}) {
-      String? descrip = utf8.decode(utf8.encode(markedCharger!.title!));
+      String? descrip = markedCharger!.title;
       //descrip = title_parser(descrip);
 
       //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
