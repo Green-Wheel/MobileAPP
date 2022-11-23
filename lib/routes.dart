@@ -10,8 +10,11 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
 
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/screens/bike/add_bike.dart';
+import 'package:greenwheel/screens/bike/edit_bike.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
+import 'package:greenwheel/screens/chargers/add_charger.dart';
 import 'package:greenwheel/screens/chargers/edit_charger.dart';
 import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/route/route.dart';
@@ -23,17 +26,25 @@ final GoRouter router = GoRouter(
       builder: (context, state) => const HomePage(key: Key("HomePage")),
       routes: [
         GoRoute(
-          //aun no funciona
-          path: 'chargers/add',//'chargers/:id/edit',
+          path: 'chargers/add',
           builder: (context, state) {
-            //final id = state.params['id'] as int;
-            return EditCharger(key: Key("EditCharger"), id: 2);
+            return const AddCharger(key: Key("AddCharger"));
           },
         ),
-        /*GoRoute(
-          path: 'chargers/add',
-          builder: (context, state) => const AddCharger(key: Key("EditCharger")),
-        ),*/
+        GoRoute(
+          path: 'chargers/:id/edit',
+          builder: (context, state) {
+            final id = state.params['id'] as int;
+            return EditCharger(key: Key("EditCharger"), id: id);
+          },
+        ),
+        GoRoute(path: 'bikes/add', builder: (context, state) {
+          return const AddBike(key: Key("AddBike"));
+        }),
+        GoRoute(path: 'bikes/:id/edit', builder: (context, state) {
+          final id = state.params['id'] as int;
+          return EditBike(key: Key("EditBike"), id: id);
+        }),
         GoRoute(
           path: 'chargers/list',
           builder: (context, state) =>
