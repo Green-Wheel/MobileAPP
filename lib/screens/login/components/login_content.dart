@@ -19,8 +19,17 @@ class _LoginContentState extends State<LoginContent>
     with TickerProviderStateMixin {
   late final List<Widget> createAccountContent;
   late final List<Widget> loginContent;
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  Widget inputField(String hint, IconData iconData) {
+  void validateLogin() {
+    var username = usernameController.value.text;
+    var password = passwordController.value.text;
+    print("$username $password");
+    ScaffoldMessenger.of(context).showSnackBar(snackBarError);
+  }
+
+  Widget inputField(String hint, IconData iconData, controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
       child: SizedBox(
@@ -31,6 +40,39 @@ class _LoginContentState extends State<LoginContent>
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(30),
           child: TextField(
+            controller: controller,
+            textAlignVertical: TextAlignVertical.bottom,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(30),
+                borderSide: BorderSide.none,
+              ),
+              filled: true,
+              fillColor: Colors.white,
+              hintText: hint,
+              prefixIcon: Icon(iconData),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget inputPasswordField(String hint, IconData iconData, controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
+      child: SizedBox(
+        height: 50,
+        child: Material(
+          elevation: 8,
+          shadowColor: Colors.black87,
+          color: Colors.transparent,
+          borderRadius: BorderRadius.circular(30),
+          child: TextField(
+            controller: controller,
+            obscureText: true,
+            enableSuggestions: false,
+            autocorrect: false,
             textAlignVertical: TextAlignVertical.bottom,
             decoration: InputDecoration(
               border: OutlineInputBorder(
@@ -52,7 +94,9 @@ class _LoginContentState extends State<LoginContent>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 135, vertical: 16),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          validateLogin();
+        },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: const StadiumBorder(),
@@ -136,18 +180,18 @@ class _LoginContentState extends State<LoginContent>
 
   @override
   void initState() {
-    createAccountContent = [
+    /*createAccountContent = [
       inputField('Username', Icons.person_outline),
       inputField('Email', Icons.mail_outline),
       inputField('Password', Icons.lock),
       loginButton('Sign Up'),
       //orDivider(),
       //logos(),
-    ];
+    ]; */
 
     loginContent = [
-      inputField('Username', Icons.person_outline),
-      inputField('Password', Icons.lock),
+      inputField('Username', Icons.person_outline, usernameController),
+      inputPasswordField('Password', Icons.lock, passwordController),
       loginButton('Log In'),
       //orDivider(),
       //logos(),
@@ -193,4 +237,8 @@ class _LoginContentState extends State<LoginContent>
       ],
     );
   }
+
+  var snackBarError = SnackBar(
+    content: const Text('ERROR'),
+  );
 }
