@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 
 class BackendService {
   // Variable en el .env con la dirección del backend. Ejemplo: BACKEND_API_URL=http://192.168.56.1:8000/api/
-  static String _baseUrl = FlutterConfig.get('BACKEND_API_URL');
+  //static final String _baseUrl = FlutterConfig.get('BACKEND_API_URL');
+  static const String _baseUrl = "http://172.20.10.2:8000/api/";
 
   /// Permite hacer un get genérico a cualquier endpoint de la api
   /// @param endpoint: Endpoint al que se quiere hacer el get (ejemplo: users/language/?id=1)
@@ -14,7 +15,7 @@ class BackendService {
     print(_baseUrl + endpoint);
     http.Response response = await http.get(
       Uri.parse(_baseUrl + endpoint),
-      headers: {"Accept": "application/json"},
+      headers: {"Accept": "application/json", "Content-Type": "application/json; charset=UTF-8"},
     );
     return response;
   }

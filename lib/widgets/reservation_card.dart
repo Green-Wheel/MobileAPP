@@ -28,11 +28,14 @@ class _ReservationCard extends State<ReservationCard> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return _buildCard(widget.bookings, widget.ratings, widget.id, widget.location, widget.rating, widget.distance,
-        widget.time);
+        widget.time, width, height);
   }
 
-  Widget _buildCard(List bookings, List ratings, int id, String location, String rating, int distance, String time) =>
+  Widget _buildCard(List bookings, List ratings, int id, String location,
+      String rating, int distance, String time, double width, double height) =>
       Visibility(
         visible: _isVisible,
         child: Card(
@@ -45,7 +48,7 @@ class _ReservationCard extends State<ReservationCard> {
           ),
           child: SizedBox(
             height: 175,
-            width: 400,
+            width: width * 0.9,
             child: Column(
               children: [
                 Padding(

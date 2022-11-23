@@ -101,7 +101,7 @@ class _RoutePageState extends State<RoutePage> {
         body: Stack(children: [
           Container(
             padding: const EdgeInsets.only(bottom: 135),
-            child: GoogleMapsWidget(polylines: polylines),
+            child: GoogleMapsWidget(index: 0, polylines: polylines),
           ),
           SlidingUpPanel(
               // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
