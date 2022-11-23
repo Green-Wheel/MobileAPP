@@ -12,7 +12,6 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
-import 'package:greenwheel/screens/chargers/add_charger.dart';
 import 'package:greenwheel/screens/chargers/edit_charger.dart';
 import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/route/route.dart';
@@ -28,7 +27,7 @@ final GoRouter router = GoRouter(
           path: 'chargers/add',//'chargers/:id/edit',
           builder: (context, state) {
             //final id = state.params['id'] as int;
-            return EditCharger(key: const Key("EditCharger"), id: 2);
+            return EditCharger(key: Key("EditCharger"), id: 2);
           },
         ),
         /*GoRoute(

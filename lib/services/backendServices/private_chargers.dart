@@ -53,6 +53,17 @@ class PrivateChargersService{
     }
   }
 
+  static Future<bool> updateCharger(Map<String, dynamic> data) async {
+    try {
+      var response = await BackendService.put('chargers/${data['id']}/', data);
+      if (response.statusCode != 200) return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
   static Future<Map<String, dynamic>> getChargerInfo(int id) async {
     //TODO: end parsing data
     try {
@@ -60,19 +71,20 @@ class PrivateChargersService{
       if (response.statusCode != 200) return {};
       var json = jsonDecode(response.body);
       var data = {
+        'id': json['id'],
         'title': json['title'] ?? '',
         'description': json['description'] ?? '',
         'direction': json['direction'] ?? '',
         'latitude': json['localization']['latitude'] ?? 0.0,
         'longitude': json['localization']['longitude'] ?? 0.0,
-        'town': json['town'] ?? {},
-        'connection_type': json['connection_type'].map((item) => item[0]) ?? [],
-        'current_type': json['current_type'].map((item) => item[0]) ?? [],
-        'speed': json['speed'].map((item) => item[0]) ?? [],
-        'power': json['power'] ?? 0.0,
-        'avg_rating': json['avg_rating'] ?? 0.0,
+        'town': {'name': json['town']['name'] ?? '', 'province': json['town']['province']['name']?? ''},
+        'connection_type': json['connection_type'].map((item) => item['id']).toList() ?? [],
+        'current_type': json['current_type'].map((item) => item['id']).toList() ?? [],
+        'speed': json['speed'].map((item) => item['id']).toList() ?? [],
+        'power': json['power'].toString() ?? '0.0',
+        'avg_rating': json['avg_rating'] ?? '',
         'charge_type': json['charge_type'] ?? '',
-        'price': json['price'] ?? 0.0,
+        'price': json['price'] ?? '0.0',
       };
       return data;
     } catch (e) {

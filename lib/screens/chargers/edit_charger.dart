@@ -5,6 +5,7 @@ import '../../services/backendServices/private_chargers.dart';
 
 class EditCharger extends StatefulWidget {
   final int id;
+
   const EditCharger({Key? key, required this.id}) : super(key: key);
 
   @override
@@ -12,7 +13,7 @@ class EditCharger extends StatefulWidget {
 }
 
 class _EditChargerState extends State<EditCharger> {
-  var _chargerInfo;
+  Map<String, dynamic> _chargerInfo = {};
 
   void getChargerInfo() async {
     var chargerI = await PrivateChargersService.getChargerInfo(widget.id);
@@ -29,13 +30,29 @@ class _EditChargerState extends State<EditCharger> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Charger'),
-      ),
-      body: const Center(
-        child: ChargerForm(),
-      ),
-    );
+    return _chargerInfo.isEmpty
+        ? Scaffold(
+            appBar: AppBar(
+              title: const Text('Edit Charger'),
+            ),
+            body: Center(
+              child: Container(
+                height: MediaQuery.of(context).size.height / 5,
+                width: MediaQuery.of(context).size.height / 5,
+                child: const CircularProgressIndicator(
+                  backgroundColor: Colors.white,
+                ),
+              ),
+            ))
+        : Scaffold(
+            appBar: AppBar(
+              title: const Text('Add Charger'),
+            ),
+            body: Center(
+              child: ChargerForm(
+                data: _chargerInfo.isEmpty ? null : _chargerInfo,
+              ),
+            ),
+          );
   }
 }

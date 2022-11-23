@@ -76,7 +76,11 @@ class _ChargerFormState extends State<ChargerForm> {
           _data['current_type'] = currents['current_type'],
           _data['power'] = currents['power'],
         });
-    PrivateChargersService.newCharger(_data, _images);
+    if (widget.data != null) {
+      PrivateChargersService.updateCharger(_data);
+    } else {
+      PrivateChargersService.newCharger(_data, _images);
+    }
     context.pop();
   }
 
