@@ -13,6 +13,7 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
 import 'package:greenwheel/screens/home/home.dart';
+import 'package:greenwheel/screens/register/signup.dart';
 import 'package:greenwheel/screens/route/route.dart';
 import 'package:greenwheel/widgets/addCharger/add_charger.dart';
 

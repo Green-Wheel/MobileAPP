@@ -35,7 +35,7 @@ packages:
       name: awesome_snackbar_content
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.9"
+    version: "0.1.0"
   badges:
     dependency: "direct main"
     description:
@@ -197,6 +197,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.2"
+  easy_search_bar:
+    dependency: "direct main"
+    description:
+      name: easy_search_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.4.2"
   fake_async:
     dependency: transitive
     description:

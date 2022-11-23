@@ -22,7 +22,6 @@ void main() async {
 
 class MainApp extends StatelessWidget {
   MainApp({super.key});
-
   LocaleLanguage localeLanguage = LocaleLanguage();
 
   // This widget is the root of your application.

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/screens/home/widgets/SearchBar.dart';
 import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/drawer.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
-
+import 'package:easy_search_bar/easy_search_bar.dart';
 import '../../serializers/users.dart';
 import '../../services/backendServices/user_service.dart';
 import '../../widgets/language_selector_widget.dart';
@@ -15,9 +16,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int index = 0;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  int index = 0;
+  final nameController = TextEditingController();
+  String searchValue = '';
+  final List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
   User? user;
 
   @override
@@ -35,19 +38,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(title: _searchTextField(),
-          leading: new IconButton(
-            icon: new Icon(Icons.account_circle),
-            onPressed: () => _scaffoldKey.currentState?.openDrawer(),
-          ),
-          backgroundColor: Colors.green , actions: [
-        IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              setState(() {});
-            })
-      ]),
+      extendBodyBehindAppBar : false,
+      appBar: SearchBar(),
+      /*
+          EasySearchBar(
+            iconTheme: IconThemeData(color: Colors.red),
+            title: Text('Example'),
+            onSearch: (value) => setState(() => searchValue = value),
+            suggestions: _suggestions,
+        ),
+
+       */
       body: SafeArea(
         child: GoogleMapsWidget(),
       ),
@@ -75,7 +76,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _searchTextField() {
-    return const TextField(
+    return TextField(
       autofocus: false,
       cursorColor: Colors.white,
       style: TextStyle(
@@ -86,7 +87,7 @@ class _HomePageState extends State<HomePage> {
       //Specify the action button on the keyboard
       decoration: InputDecoration(
         //Style of TextField
-        hintText: 'Search...', //Text that is displayed when nothing is entered.
+        hintText: "Search...", //Text that is displayed when nothing is entered.
         hintStyle: TextStyle(
           //Style of hintText
           color: Colors.white60,
