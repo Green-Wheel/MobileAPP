@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../services/backendServices/bikes.dart';
 import '../../widgets/bike_card_info.dart';
-import '../../widgets/infinite_list.dart';
+import '../../widgets/bike_infinite_list.dart';
 
 class BikeInfoList extends StatefulWidget {
   const BikeInfoList({Key? key}) : super(key: key);
@@ -63,33 +63,7 @@ class _BikeInfoListState extends State<BikeInfoList>{
           },
         ),
       ),
-      body: ListView.builder(
-          itemCount: markersList.length,
-          /*addAutomaticKeepAlives: false,
-        addRepaintBoundaries: false,
-        addSemanticIndexes: false,*/
-          itemBuilder: (context, position) {
-
-            //Arreglo del titulo del cargador respecto a los datos del json
-            String description = markersList[position]['description'];
-            description = title_parser(description);
-
-            //Mirar el tipo de la variable porque to_do  da null
-            bool avaliable = true;
-            //avaliable da null
-            if (markersList[position]['description'] == "false") avaliable = false;
-
-            //print(markersList[position]['connection_type']); //retorna numero de typos diferentes con el .lenght
-            //print(markersList[position]['current_type']); //puede ser 1 o 2 -> AC - DC
-
-            //Obtencion del numero de tipos de cargadores
-            int types = markersList[position]['connection_type'].length;
-
-            bool match = true;
-
-            return _cardBikeList(description, avaliable, match, types);
-          }
-      ),
+      body: BikeInfiniteList(),
     );
   }
 }
@@ -140,16 +114,4 @@ String title_parser(String description){
     description = description.replaceAll("m-", "m\n");
   }
   return description;
-}
-
-
-//funcion respectiva a la card de los cargadores
-Widget _cardBikeList(String direction, bool available, bool match, int types){
-  //Generación rate aleatoria (harcode rate)
-  Random random = Random();
-  int min = 2, max = 6;
-  int num = (min + random.nextInt(max - min));
-  double numd = num.toDouble();
-
-  return BikeCardInfoWidget(location: direction, rating: numd, types: types, available: available, match: match);
 }

@@ -21,8 +21,10 @@ Widget _locationBike(String location){
     padding: const EdgeInsets.only(left: 0, bottom: 3.0, top: 20.0),
     child: Row(
       children: [
-        Text(location,
-            style: const TextStyle(fontWeight: FontWeight.w600)
+        Flexible(child:
+          Text(location,
+              style: const TextStyle(fontWeight: FontWeight.w600)
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 5.0),

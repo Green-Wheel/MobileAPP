@@ -1,9 +1,26 @@
-import 'package:greenwheel/serializers/users.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'chargers.dart';
 
 part 'bikes.g.dart';
+
+
+@JsonSerializable()
+class BikeType {
+  BikeType({
+    this.id,
+    required this.name,
+  });
+
+  int? id;
+  String name;
+
+  factory BikeType.fromJson(Map<String, dynamic> json) =>
+      _$BikeTypeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BikeTypeToJson(this);
+}
+
 
 @JsonSerializable()
 class Bike {
@@ -56,23 +73,6 @@ class DetailedBikeSerializer {
       _$DetailedBikeSerializerFromJson(json);
 
   Map<String, dynamic> toJson() => _$DetailedBikeSerializerToJson(this);
-}
-
-
-@JsonSerializable()
-class BikeType {
-  BikeType({
-    this.id,
-    required this.name,
-  });
-
-  int? id;
-  String name;
-
-  factory BikeType.fromJson(Map<String, dynamic> json) =>
-      _$BikeTypeFromJson(json);
-
-  Map<String, dynamic> toJson() => _$BikeTypeToJson(this);
 }
 
 

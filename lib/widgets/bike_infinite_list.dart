@@ -1,15 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import '../../serializers/chargers.dart';
-import '../../widgets/card_info.dart';
-import '../services/backendServices/chargers.dart';
+import '../serializers/bikes.dart';
+import '../services/backendServices/bikes.dart';
+import 'bike_card_info.dart';
 
-class InfiniteList extends StatefulWidget {
-  const InfiniteList({Key? key}) : super(key: key);
+class BikeInfiniteList extends StatefulWidget {
+  const BikeInfiniteList({Key? key}) : super(key: key);
 
   @override
-  State<InfiniteList> createState() => _InfiniteList();
+  State<BikeInfiniteList> createState() => _BikeInfiniteList();
 
 }
 
@@ -17,12 +17,12 @@ void main(){
   runApp(const MaterialApp(
     title: 'chargeInfo try',
     home: Scaffold(
-      body: InfiniteList(),
+      body: BikeInfiniteList(),
     ),
   ));
 }
 
-class _InfiniteList extends State<InfiniteList>{
+class _BikeInfiniteList extends State<BikeInfiniteList>{
   @override
   Widget build(BuildContext context) {
     return buildPostsView();
@@ -33,8 +33,8 @@ class _InfiniteList extends State<InfiniteList>{
   late bool _error;
   late bool _loading;
   final int _numberOfPostsPerRequest = 10;
-  List<ChargerList> _markersList = [];
-  List<ChargerList> _markersListAll = [];
+  List<BikeList> _markersList = [];
+  List<BikeList> _markersListAll = [];
   final int _nextPageTrigger = 3;
 
   @override
@@ -48,19 +48,22 @@ class _InfiniteList extends State<InfiniteList>{
     fetchData();
   }
 
-  void _getChargersList(int page) async {
-    List<ChargerList> chargerList = await ChargerService.getChargerList(page);
+  void _getBikesList(int page) async {
+    List<BikeList> bikeList = await BikeService.getBikeList(page);
+    print('bikeeeee $bikeList');
     setState(() {
       //_markersList = chargerList;
-      _markersListAll.addAll(chargerList);
+      _markersListAll.addAll(bikeList);
     });
+    print('markerLIiiist $_markersList');
+    print('markerLIiiistAll $_markersListAll');
   }
 
 
   Future<void> fetchData() async {
     try {
       setState(() {
-        _getChargersList(_pageNumber);
+        _getBikesList(_pageNumber);
         _isLastPage = _markersListAll.length < _numberOfPostsPerRequest;
         _loading = false;
         _pageNumber = _pageNumber + 1;
@@ -115,59 +118,49 @@ class _InfiniteList extends State<InfiniteList>{
             ));
       } else if (_error) {
         return Center(
-          child: errorDialog(size: 20)
+            child: errorDialog(size: 20)
         );
       }
     }
     return ListView.builder(
-      itemCount: _markersListAll.length + (_isLastPage ? 0 : 1),
-      itemBuilder: (context, index) {
-        if (index == _markersListAll.length - _nextPageTrigger) {
-          fetchData();
-        }
-        if (index == _markersListAll.length) {
-          if (_error) {
-            return Center(
-              child: errorDialog(size: 15)
-            );
-          } else {
-            return const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: CircularProgressIndicator(),
-                )
-            );
+        itemCount: _markersListAll.length + (_isLastPage ? 0 : 1),
+        itemBuilder: (context, index) {
+          if (index == _markersListAll.length - _nextPageTrigger) {
+            fetchData();
           }
-        }
-        //final ChargerList charger = _markersListAll[index];
+          if (index == _markersListAll.length) {
+            if (_error) {
+              return Center(
+                  child: errorDialog(size: 15)
+              );
+            } else {
+              return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(8),
+                    child: CircularProgressIndicator(),
+                  )
+              );
+            }
+          }
+          //final ChargerList charger = _markersListAll[index];
 
-        String? description = _markersListAll[index].title; // falta description al backend de ChargerList
-        //description = title_parser(description);
+          String? description = _markersListAll[index].title; // falta description al backend de ChargerList
+          //description = title_parser(description);
 
-        bool avaliable = true;
+          bool avaliable = true;
 
-        List<ConnectionType> types = [];
-        for (int i = 0; i < _markersListAll[index].connection_type.length; ++i) {
-          types.add(_markersListAll[index].connection_type[i]);
-        }
-
-        bool match = true;
-
-        return Flexible(child: _cardChargerList(description!, avaliable, match, types));
-      });
+          return Flexible(child: _cardChargerList(description!, avaliable));
+        });
   }
 
   //funcion respectiva a la card de los cargadores
-  Widget _cardChargerList(String direction, bool avaliable, bool match, List<ConnectionType> types) {
+  Widget _cardChargerList(String direction, bool available) {
     //Generación rate aleatoria (harcode rate)
     Random random = Random();
     int min = 2, max = 6;
     int num = (min + random.nextInt(max - min));
     double numd = num.toDouble();
 
-    return CardInfoWidget(location: direction, rating: numd, types: types, available: avaliable, match: match);
+    return BikeCardInfoWidget(location: direction, rating: numd, available: available);
   }
-
-
-
 }

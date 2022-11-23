@@ -25,7 +25,7 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   }
 }
 
-Widget _buildCard(String location, double rating, bool avaliable, BuildContext context) {
+Widget _buildCard(String location, double rating, bool available, BuildContext context) {
   double width = MediaQuery.of(context).size.width;
   return Card(
     elevation: 10,
@@ -55,7 +55,7 @@ Widget _buildCard(String location, double rating, bool avaliable, BuildContext c
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
-                  child: AvaliableBikeWidget(avaliable: avaliable),
+                  child: AvaliableBikeWidget(avaliable: available),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(bottom: 15),

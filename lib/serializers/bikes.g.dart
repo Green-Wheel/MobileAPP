@@ -6,6 +6,16 @@ part of 'bikes.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+BikeType _$BikeTypeFromJson(Map<String, dynamic> json) => BikeType(
+      id: json['id'] as int?,
+      name: json['name'] as String,
+    );
+
+Map<String, dynamic> _$BikeTypeToJson(BikeType instance) => <String, dynamic>{
+      'id': instance.id,
+      'name': instance.name,
+    };
+
 Bike _$BikeFromJson(Map<String, dynamic> json) => Bike(
       id: json['id'] as int?,
       localization:
@@ -52,16 +62,6 @@ Map<String, dynamic> _$DetailedBikeSerializerToJson(
       'bike_type': instance.bike_type,
       'power': instance.power,
       'price': instance.price,
-    };
-
-BikeType _$BikeTypeFromJson(Map<String, dynamic> json) => BikeType(
-      id: json['id'] as int?,
-      name: json['name'] as String,
-    );
-
-Map<String, dynamic> _$BikeTypeToJson(BikeType instance) => <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
     };
 
 BikeList _$BikeListFromJson(Map<String, dynamic> json) => BikeList(

@@ -42,14 +42,14 @@ class BasicUser {
     required this.username,
     required this.first_name,
     required this.last_name,
-    required this.profile_picture,
+    this.profile_picture,
   });
 
   int? id;
   String username;
   String first_name;
   String last_name;
-  String profile_picture;
+  String? profile_picture;
 
   factory BasicUser.fromJson(Map<String, dynamic> json) => _$BasicUserFromJson(json);
 

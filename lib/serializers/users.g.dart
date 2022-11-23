@@ -40,7 +40,7 @@ BasicUser _$BasicUserFromJson(Map<String, dynamic> json) => BasicUser(
       username: json['username'] as String,
       first_name: json['first_name'] as String,
       last_name: json['last_name'] as String,
-      profile_picture: json['profile_picture'] as String,
+      profile_picture: json['profile_picture'] as String?,
     );
 
 Map<String, dynamic> _$BasicUserToJson(BasicUser instance) => <String, dynamic>{

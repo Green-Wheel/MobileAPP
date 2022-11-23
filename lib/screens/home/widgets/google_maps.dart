@@ -98,8 +98,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     super.initState();
   }
 
-  void _addBikeMarker(double lat, double log, int id) async{ // TODO: Falta BikeType com a argument
+  void _addBikeMarker(double lat, double log, int id) async { // TODO: Falta BikeType com a argument
     final iconMarker = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2,), "assets/images/punt_bicicleta.png");
+    print('afegir bici');
     final Marker marcador = Marker(
         markerId: MarkerId(id.toString()),
         position: LatLng(lat, log),
@@ -340,7 +341,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   Widget buildSlidingUpPanelBike({required ScrollController controller, required PanelController panelController}) {
-    String? descrip = utf8.decode(utf8.encode(markedCharger!.title!));
+    String? descrip = utf8.decode(utf8.encode(markedBike!.title!));
     //descrip = title_parser(descrip);
 
     //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
@@ -349,14 +350,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     int num = (min + random.nextInt(max - min));
     double numd = num.toDouble();
 
-    //Obtencion del numero de tipos de cargadores
-    List<ConnectionType> types = [];
-    for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
-      types.add(markedCharger!.connection_type[i]);
-    }
-
     // available
-    // match
 
     return BikeCardInfoWidget(location: descrip, rating: numd, available: true);
   }
@@ -401,7 +395,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       description = description.replaceAll(" (", "\n(");
       description = description.replaceAll("E L'", "E\nL'");
     }
-    if (description!.length < 40){
+    if (description.length < 40){
       description = description.replaceAll(") ", ")\n");
       description = description.replaceAll(" (", "\n(");
       description = description.replaceAll("m-", "m\n");
