@@ -51,6 +51,7 @@ class User {
     required this.level,
     required this.xp,
     this.rating,
+    this.image,
   });
 
   int? id;
@@ -63,6 +64,7 @@ class User {
   int level;
   int xp;
   double? rating;
+  String? image;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

@@ -103,7 +103,7 @@ class DataSearch extends SearchDelegate<String> {
   @override
   Widget buildSuggestions(BuildContext context) {
     //final suggestionList = query.isEmpty?recentCities: cities.where((p)=>p.startsWith(query)).toList();
-    List<String> autocompletation = AdressAutocompletation.getAdresses("");
+    List<String> autocompletation = AdressAutocompletation.getAdresses("") as List<String>;
     print("------------------------------- : "  + autocompletation.length.toString());
     return ListView.builder(
       itemBuilder: (context,index) => ListTile(

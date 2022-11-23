@@ -13,35 +13,6 @@ class SignupScreen extends StatelessWidget {
 
   SignupScreen({super.key});
 
-  Widget userInput(TextEditingController userInput, TextInputType keyboardType, BuildContext context,bool hide) {
-    //return Expanded(
-      //child: Row(
-        //children: [
-          return Container(
-          height: MediaQuery.of(context).size.height/16,
-          margin: EdgeInsets.only(bottom: 0),
-          decoration: BoxDecoration(color: Colors.white,border:Border.all(width:3.0), borderRadius: BorderRadius.all(Radius.circular(15.0))),
-          child: Padding(
-            padding: EdgeInsets.only(left: 25.0, top: 0, right: 25),
-            child: TextField(
-              obscureText: hide,
-              controller: userInput,
-              autocorrect: false,
-              enableSuggestions: false,
-              autofocus: false,
-              decoration: InputDecoration.collapsed(
-                hintText: "",
-                hintStyle: TextStyle(fontSize: 27, color: Colors.white70, fontStyle: FontStyle.italic),
-              ),
-              keyboardType: keyboardType,
-            ),
-          ),
-      //  )]
-      //)
-    );
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,12 +20,11 @@ class SignupScreen extends StatelessWidget {
       appBar: AppBar(title: Text("Register")),
       body: Container(
         child: Column(
-
           mainAxisSize : MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height*0.9 - Size.fromHeight(kToolbarHeight).height,
+              height: MediaQuery.of(context).size.height*0.8 - Size.fromHeight(kToolbarHeight).height,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -66,15 +36,6 @@ class SignupScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child:   Text("Register a new account",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )
-                        )
-                    ),
                     Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:  Text("Username",  style: TextStyle(fontSize: 18),)
@@ -94,12 +55,12 @@ class SignupScreen extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:  Text("FirstName",  style: TextStyle(fontSize: 18),)
                     ),
-                    userInput(firstNameController,  TextInputType.visiblePassword,context,false),
+                    userInput(firstNameController,  TextInputType.name,context,false),
                     Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:  Text("LastName",  style: TextStyle(fontSize: 18),)
                     ),
-                    userInput(lastNameController,  TextInputType.visiblePassword,context,false),
+                    userInput(lastNameController,  TextInputType.name,context,false),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -129,4 +90,32 @@ class SignupScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget userInput(TextEditingController userInput, TextInputType keyboardType, BuildContext context,bool hide) {
+  //return Expanded(
+  //child: Row(
+  //children: [
+  return Container(
+    height: MediaQuery.of(context).size.height/16,
+    margin: EdgeInsets.only(bottom: 0),
+    decoration: BoxDecoration(color: Colors.white,border:Border.all(width:3.0), borderRadius: BorderRadius.all(Radius.circular(15.0))),
+    child: Padding(
+      padding: EdgeInsets.only(left: 25.0, top: 0, right: 25),
+      child: TextField(
+        obscureText: hide,
+        controller: userInput,
+        autocorrect: false,
+        enableSuggestions: false,
+        autofocus: false,
+        decoration: InputDecoration.collapsed(
+          hintText: "",
+          hintStyle: TextStyle(fontSize: 27, color: Colors.white70, fontStyle: FontStyle.italic),
+        ),
+        keyboardType: keyboardType,
+      ),
+    ),
+    //  )]
+    //)
+  );
 }

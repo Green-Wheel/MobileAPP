@@ -5,7 +5,7 @@ import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import '../screens/home/widgets/drawer.dart';
 
 class SearchBar extends StatefulWidget{
-  SearchBar(Size size, {Key? key}) : super(key: key);
+  SearchBar(Size size, {Key? key}) : preferredSize = Size.fromHeight(kToolbarHeight), super(key: key);
 
   @override
   _SearchBar createState() => _SearchBar();

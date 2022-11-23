@@ -40,6 +40,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       level: json['level'] as int,
       xp: json['xp'] as int,
       rating: (json['rating'] as num?)?.toDouble(),
+      image: json['image'] as String?,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -53,4 +54,5 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'level': instance.level,
       'xp': instance.xp,
       'rating': instance.rating,
+      'image': instance.image,
     };
