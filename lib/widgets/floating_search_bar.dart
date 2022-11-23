@@ -9,6 +9,8 @@ class SearchBar extends StatefulWidget{
 
   @override
   _SearchBar createState() => _SearchBar();
+  @override
+  Size preferredSize;
 }
 
 class _SearchBar extends State<SearchBar> {
