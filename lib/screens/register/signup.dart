@@ -1,64 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:greenwheel/screens/register/widgets/greenButton.dart';
+import 'package:greenwheel/services/backendServices/user_service.dart';
 
 class SignupScreen extends StatelessWidget {
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
 
   SignupScreen({super.key});
 
-  Widget signUpWith(IconData icon) {
-    return Container(
-      height: 50,
-      width: 115,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.withOpacity(0.4), width: 1),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 24),
-          TextButton(onPressed: () {}, child: Text('Sign in')),
-        ],
-      ),
+  Widget userInput(TextEditingController userInput, TextInputType keyboardType, BuildContext context,bool hide) {
+    //return Expanded(
+      //child: Row(
+        //children: [
+          return Container(
+          height: MediaQuery.of(context).size.height/16,
+          margin: EdgeInsets.only(bottom: 0),
+          decoration: BoxDecoration(color: Colors.white,border:Border.all(width:3.0), borderRadius: BorderRadius.all(Radius.circular(15.0))),
+          child: Padding(
+            padding: EdgeInsets.only(left: 25.0, top: 0, right: 25),
+            child: TextField(
+              obscureText: hide,
+              controller: userInput,
+              autocorrect: false,
+              enableSuggestions: false,
+              autofocus: false,
+              decoration: InputDecoration.collapsed(
+                hintText: "",
+                hintStyle: TextStyle(fontSize: 27, color: Colors.white70, fontStyle: FontStyle.italic),
+              ),
+              keyboardType: keyboardType,
+            ),
+          ),
+      //  )]
+      //)
     );
   }
 
-  Widget userInput(TextEditingController userInput, TextInputType keyboardType) {
-    return Container(
-      height: 55,
-      margin: EdgeInsets.only(bottom: 15),
-      decoration: BoxDecoration(color: Colors.blueGrey.shade100,border:Border.all(width:3.0), borderRadius: BorderRadius.all(Radius.circular(15.0))),
-      child: Padding(
-        padding: const EdgeInsets.only(left: 25.0, top: 15, right: 25),
-        child: TextField(
-          controller: userInput,
-          autocorrect: false,
-          enableSuggestions: false,
-          autofocus: false,
-          decoration: InputDecoration.collapsed(
-            hintText: "",
-            hintStyle: TextStyle(fontSize: 18, color: Colors.white70, fontStyle: FontStyle.italic),
-          ),
-          keyboardType: keyboardType,
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset : false,
+      appBar: AppBar(title: Text("Register")),
       body: Container(
         child: Column(
+
+          mainAxisSize : MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              height: 510,
+              height: MediaQuery.of(context).size.height*0.9 - Size.fromHeight(kToolbarHeight).height,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -70,33 +66,40 @@ class SignupScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    SizedBox(height: 10),
                     Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:   Text("Register a new account",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            fontSize: 24,
+                            fontSize: 20,
                           )
                         )
                     ),
-
                     Padding(
-                        padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:  Text("Username",  style: TextStyle(fontSize: 18),)
                     ),
-                    userInput(nameController,  TextInputType.name),
-
+                    userInput(nameController,  TextInputType.name ,context,false),
                     Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:  Text("Email",  style: TextStyle(fontSize: 18),)
                     ),
-                    userInput(emailController, TextInputType.emailAddress),
+                    userInput(emailController, TextInputType.emailAddress,context,false),
                     Padding(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:  Text("Password",  style: TextStyle(fontSize: 18),)
                     ),
-                    userInput(passwordController,  TextInputType.visiblePassword),
+                    userInput(passwordController,  TextInputType.visiblePassword,context,true),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child:  Text("FirstName",  style: TextStyle(fontSize: 18),)
+                    ),
+                    userInput(firstNameController,  TextInputType.visiblePassword,context,false),
+                    Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        child:  Text("LastName",  style: TextStyle(fontSize: 18),)
+                    ),
+                    userInput(lastNameController,  TextInputType.visiblePassword,context,false),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -110,29 +113,13 @@ class SignupScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Container(
-                      height: 55,
-                      padding: const EdgeInsets.only(top: 5, left: 70, right: 70),
-                      child: ElevatedButton(
-                        style: ButtonStyle (
-                            backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.green)
-                              )
-                            )
-                        ),
-                        onPressed: () {
-                          print(emailController);
-                          print(passwordController);
-                          Navigator.of(context).pop();
-                        },
-                        child: Text('Sign up', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white,),),
-                      ),
+                    GreenButton('Sign Up',onPressed: (){
+                      UserService.registerUser(nameController.text,emailController.text
+                          , passwordController.text, firstNameController.text,
+                          lastNameController.text);
+                      //Navigator.pop(context);
+                      }
                     ),
-                    SizedBox(height: 14),
-                    Divider(thickness: 0, color: Colors.white),
                   ],
                 ),
               ),
