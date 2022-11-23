@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/widgets/addCharger/connection_info.dart';
-import 'package:greenwheel/widgets/addCharger/current_info.dart';
-import 'package:greenwheel/widgets/addCharger/localization_info.dart';
-import 'package:greenwheel/widgets/addCharger/speed_%20info.dart';
-import 'package:greenwheel/widgets/addCharger/basic_info.dart';
+import 'package:greenwheel/widgets/forms/connection_info.dart';
+import 'package:greenwheel/widgets/forms/current_info.dart';
+import 'package:greenwheel/widgets/forms/localization_info.dart';
+import 'package:greenwheel/widgets/forms/speed_%20info.dart';
+import 'package:greenwheel/widgets/forms/basic_info.dart';
 import '../../serializers/maps.dart';
 import '../../services/backendServices/private_chargers.dart';
 
