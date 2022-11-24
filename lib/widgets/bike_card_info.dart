@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/serializers/bikes.dart';
 import 'package:greenwheel/widgets/button_blue_route.dart';
 import 'package:greenwheel/widgets/image_bike.dart';
 import 'package:greenwheel/widgets/location_bike.dart';
-import 'package:greenwheel/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/widgets/stars_static_rate.dart';
 
 import 'available_bike.dart';
@@ -11,8 +11,9 @@ class BikeCardInfoWidget extends StatefulWidget {
   String location;
   double rating;
   bool available;
+  BikeType bikeType;
 
-  BikeCardInfoWidget({required this.location, required this.rating, required this.available, super.key});
+  BikeCardInfoWidget({required this.location, required this.rating, required this.available, required this.bikeType, super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
@@ -21,12 +22,12 @@ class BikeCardInfoWidget extends StatefulWidget {
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.available, context);
+    return _buildCard(widget.location, widget.rating, widget.available, widget.bikeType, context);
   }
 }
 
-Widget _buildCard(String location, double rating, bool available, BuildContext context) {
-  double width = MediaQuery.of(context).size.width;
+Widget _buildCard(String location, double rating, bool available, BikeType bikeType, BuildContext context) {
+  int? idBikeType = bikeType.id;
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -47,7 +48,7 @@ Widget _buildCard(String location, double rating, bool available, BuildContext c
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: 5, left: 25),
-                  child: LocationBikeWidget(location: location),
+                  child: LocationBikeWidget(location: location, bikeType: idBikeType),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
