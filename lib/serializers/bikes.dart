@@ -4,6 +4,7 @@ import 'chargers.dart';
 
 part 'bikes.g.dart';
 
+// TODO canviar bike_type de int a bikeType quan backend estigui preparat
 
 @JsonSerializable()
 class BikeType {
@@ -75,7 +76,7 @@ class DetailedBikeSerializer {
   Map<String, dynamic> toJson() => _$DetailedBikeSerializerToJson(this);
 }
 
-// TODO canviar bike_type de int a bikeType
+
 @JsonSerializable()
 class BikeList {
   BikeList({
