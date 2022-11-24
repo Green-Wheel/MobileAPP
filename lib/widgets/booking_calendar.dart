@@ -4,6 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'custom_calendar.dart';
 import 'hour_list.dart';
+import 'package:intl/intl.dart';
+import 'lib/services/backendServices/publications.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,8 +21,10 @@ class MyApp extends StatelessWidget {
   }
 }
 
+
 class bookingCalendar extends StatefulWidget {
   const bookingCalendar({Key? key}) : super(key: key);
+
 
 
   @override
@@ -30,16 +34,29 @@ class bookingCalendar extends StatefulWidget {
 class _bookingCalendarState extends State<bookingCalendar> {
   DateTime now = DateTime.now();
   DateTime selectedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
-  Map<DateTime, Set<TimeOfDay>> selectedDates = {};
-  Set<TimeOfDay> myReservations = {TimeOfDay(hour:1 ,minute: 0)};
-  Set<TimeOfDay> availableHours = {TimeOfDay(hour:1 ,minute: 0),TimeOfDay(hour:88 ,minute: 88),TimeOfDay(hour:1 ,minute: 30),TimeOfDay(hour: 2,minute: 0),TimeOfDay(hour:2 ,minute: 30),TimeOfDay(hour: 3, minute: 30),};
+  Map<DateTime, List<TimeOfDay>> selectedDates = {};
+  List<TimeOfDay> myReservations=[];
+  List<TimeOfDay> availableHours=[];
 
   @override
   void initState() {
     log(availableHours.toString());
     log(myReservations.toString());
-    selectedDates[selectedDate]=myReservations;
+    getHourAvailability_backend(selectedDate);
     super.initState();
+  }
+
+  void split_reservations(){
+
+    selectedDates.forEach((key, value) {
+
+
+    });
+  }
+
+  void make_reservations() {
+    split_reservations();
+
   }
 
   void getDate(DateTime date){
@@ -50,7 +67,7 @@ class _bookingCalendarState extends State<bookingCalendar> {
       else{
         log("seborra");
         log(selectedDates.toString());
-        myReservations = {};
+        getHourAvailability_backend(date);
       }
 
       log("dia seleccionado: $date");
@@ -58,19 +75,23 @@ class _bookingCalendarState extends State<bookingCalendar> {
   }
 
   void getHourAvailability_backend(date){
+    log("yvaamosss al backeeend");
+
     setState(() {
       selectedDate = date;
-      myReservations = {};
+      myReservations = [TimeOfDay(hour:8 ,minute: 0)];
+      availableHours = [TimeOfDay(hour:8 ,minute: 30),TimeOfDay(hour:10 ,minute: 88),TimeOfDay(hour:1 ,minute: 30),TimeOfDay(hour: 2,minute: 0),TimeOfDay(hour:2 ,minute: 30),TimeOfDay(hour: 3, minute: 30),];
+
       log(date.toString());
     });
   }
 
-  void getHourAvailability(Set<TimeOfDay> myReservations, Set<TimeOfDay> availableHours){
+  void getHourAvailability(List<TimeOfDay> myReservations){
     setState(() {
       this.myReservations = myReservations;
-      this.availableHours = availableHours;
+      this.myReservations.sort((a,b) => a.compareTo(b));
 
-      selectedDates[selectedDate]=myReservations;
+      selectedDates[selectedDate]=this.myReservations;
       log("Cambios en myReservations");
       log(selectedDates.toString());
     });
@@ -128,13 +149,15 @@ class _bookingCalendarState extends State<bookingCalendar> {
               ],
             ),
           ),
-          hourList(myReservations: myReservations, availableHours: availableHours, update_hours_availability: getHourAvailability,),
+          hourList(myReservations: myReservations.toSet(), availableHours: availableHours.toSet(), update_hours_availability: getHourAvailability,),
 
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 0.0),
             child: ElevatedButton(
 
-              onPressed: (){},
+              onPressed: (){
+                make_reservations();
+              },
 
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(MediaQuery.of(context).size.width*1, 50),
@@ -168,4 +191,6 @@ class _bookingCalendarState extends State<bookingCalendar> {
       ),
     );
   }
+
+
 }

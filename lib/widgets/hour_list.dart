@@ -1,9 +1,4 @@
-import 'dart:async';
-
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-
 
 class hourList extends StatefulWidget {
   var myReservations;
@@ -16,15 +11,26 @@ class hourList extends StatefulWidget {
   _hourListState createState() => _hourListState();
 }
 
+extension TimeOfDayExtension on TimeOfDay {
+  int compareTo(TimeOfDay other) {
+    if (hour < other.hour) return -1;
+    if (hour > other.hour) return 1;
+    if (minute < other.minute) return -1;
+    if (minute > other.minute) return 1;
+    return 0;
+  }
+}
+
+
 class _hourListState extends State<hourList> {
   List<TimeOfDay> hours = [];
   int time = 8;
 
   @override
   void initState() {
-    // TODO: implement initState
     var step = 30;
     var startHour = 7;
+
     for(var i=startHour*60;i<24*60+startHour*60;i+=step)
     {
       this.hours.add(TimeOfDay(hour: (i/60).floor()%24, minute: i%60));
@@ -32,7 +38,11 @@ class _hourListState extends State<hourList> {
     super.initState();
   }
 
-
+  List<TimeOfDay> transform_data(Set<TimeOfDay> myReservations){
+    List<TimeOfDay> res = myReservations.toList();
+    res.sort((a,b) => a.compareTo(b));
+    return res;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +54,7 @@ class _hourListState extends State<hourList> {
           padding: EdgeInsets.all(2),
           physics: ScrollPhysics(),
           shrinkWrap: false,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 5,
             crossAxisSpacing: 5.0,
             mainAxisSpacing: 5.0,
@@ -60,7 +70,7 @@ class _hourListState extends State<hourList> {
                       widget.myReservations.add(time);
                       widget.myReservations.toString();
                   }
-                  widget.update_hours_availability(widget.myReservations,widget.availableHours);
+                  widget.update_hours_availability(transform_data(widget.myReservations));
                 });
               },
               style: ElevatedButton.styleFrom(
