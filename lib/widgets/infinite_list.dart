@@ -9,7 +9,7 @@ import '../services/backendServices/chargers.dart';
 class InfiniteList extends StatefulWidget {
   const InfiniteList({Key? key}) : super(key: key);
 
-  get id => null;
+
 
   @override
   State<InfiniteList> createState() => _InfiniteList();
@@ -163,9 +163,9 @@ class _InfiniteList extends State<InfiniteList>{
     double numd = num.toDouble();
     return GestureDetector(
       onTap: () {
-        //TODO: ir a la pagina del cargador
+        //TODO: ir a la pagina del cargador, he de poner un int en esta classe?
         GoRouter.of(context)
-            .go('/${widget.id}');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
+            .go('chargers/:id');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
       },
       child: CardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: match, private: false, price: price, direction: direction, description: description2, private_list: private),
     );

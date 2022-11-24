@@ -20,9 +20,10 @@ import '../../../widgets/button_list_screen_bikes.dart';
 class GoogleMapsWidget extends StatefulWidget {
   int index;
   Set<Polyline>? polylines = {};
+  int? publicationId;
 
 
-  GoogleMapsWidget({Key? key, required this.index, this.polylines}) : super(key: key);
+  GoogleMapsWidget({Key? key, required this.index, this.polylines, this.publicationId}) : super(key: key);
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
@@ -53,6 +54,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   bool is_visible = false;
   final panelController = PanelController();
   bool scrolledup = false;
+
 
 
   void _getChargers() async {
@@ -341,7 +343,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
         types.add(markedCharger!.connection_type[i]);
       }
-
 
       bool private = markedCharger!.private != null ? true : false;
       double price = markedCharger!.private != null ? markedCharger!.private!.price : 0.0;

@@ -14,13 +14,14 @@ import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
 import 'package:greenwheel/screens/chargers/edit_charger.dart';
 import 'package:greenwheel/screens/home/home.dart';
+import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 import 'package:greenwheel/screens/route/route.dart';
 
 final GoRouter router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      builder: (context, state) => const HomePage(key: Key("HomePage")),
+      builder: (context, state) =>  HomePage(key: Key("HomePage")),
       routes: [
         GoRoute(
           //aun no funciona
@@ -38,6 +39,13 @@ final GoRouter router = GoRouter(
           path: 'chargers/list',
           builder: (context, state) =>
           const ChargeInfoList(key: Key("ChargersList")),
+        ),
+        GoRoute(
+          path: 'chargers/:id',
+          builder: (context, state) {
+            final id = state.params['id'] as int;
+            return HomePage(key: Key("HomePage"), publicationId: id);
+          },
         ),
         GoRoute(
           path: 'booking',
