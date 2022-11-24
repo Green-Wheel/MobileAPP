@@ -8,7 +8,7 @@ import 'package:greenwheel/widgets/stars_static_rate.dart';
 import 'available_bike.dart';
 
 class BikeCardInfoWidget extends StatefulWidget {
-  String location;
+  String? location;
   double rating;
   bool available;
 
@@ -25,7 +25,7 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   }
 }
 
-Widget _buildCard(String location, double rating, bool available, BuildContext context) {
+Widget _buildCard(String? location, double rating, bool available, BuildContext context) {
   double width = MediaQuery.of(context).size.width;
   return Card(
     elevation: 10,
@@ -47,7 +47,7 @@ Widget _buildCard(String location, double rating, bool available, BuildContext c
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: 5, left: 25),
-                  child: LocationBikeWidget(location: location),
+                  child: LocationBikeWidget(location: location!),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),

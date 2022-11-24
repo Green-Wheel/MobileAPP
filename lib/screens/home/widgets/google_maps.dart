@@ -21,6 +21,7 @@ class GoogleMapsWidget extends StatefulWidget {
   int index;
   Set<Polyline>? polylines = {};
 
+
   GoogleMapsWidget({Key? key, required this.index, this.polylines}) : super(key: key);
 
   @override
@@ -51,7 +52,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   DetailedBikeSerializer? markedBike;
   bool is_visible = false;
   final panelController = PanelController();
-  bool is_visible_panel = false;
+  bool scrolledup = false;
+
 
   void _getChargers() async {
     List chargersList = await ChargerService.getChargers();
@@ -86,6 +88,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getCurrentLocation();
       is_visible = false;
+      scrolledup = false;
     });
     print(widget.index);
 
@@ -134,6 +137,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           setState(() {
             id_marcador = id.toString();
             is_visible = true;
+            scrolledup = true;
             _getCharger(id);
           });
         } //_onMarkerTapped(MarkerId(id)),
@@ -244,17 +248,26 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         ),
         floatingActionButton:  Column(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: !is_visible? [
-            listButton(),
-            SizedBox(height: 10),
-            currentLocationActionButton(),
-            ] : <Widget>[
-              listButton(),
-              SizedBox(height: 10),
-              currentLocationActionButton(),
-              SizedBox(height: 200),],
+          children: scrolledup?  scrollDown() : scrollMiddel()
         ));
   }
+
+  List<Widget> scrollDown(){
+    return <Widget>[
+      listButton(),
+      SizedBox(height: 10),
+      currentLocationActionButton(),
+      SizedBox(height: 200)];
+  }
+
+
+  List<Widget> scrollMiddel(){
+    return <Widget>[
+    listButton(),
+    SizedBox(height: 10),
+    currentLocationActionButton()];
+  }
+
 
   Widget listButton() {
     if (widget.index == 0) {
@@ -275,6 +288,13 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           parallaxEnabled: true,
           parallaxOffset: 0.5,
           backdropEnabled: true,
+          onPanelSlide: (double pos) => setState(() {
+            if (pos < 0.2) {
+              scrolledup = true;
+            } else {
+              scrolledup = false;
+            }
+          }),
           panelBuilder: (controller) => buildSlidingUpPanelCharger(
             controller: controller,
             panelController: panelController,
@@ -308,7 +328,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   Widget buildSlidingUpPanelCharger({required ScrollController controller, required PanelController panelController}) {
       String? descrip = markedCharger!.title;
-      //descrip = title_parser(descrip);
+      descrip = title_parser(descrip);
 
       //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
       Random random = Random();
@@ -322,14 +342,15 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         types.add(markedCharger!.connection_type[i]);
       }
 
-      //TODO: poner atributos correctos
-      bool private = true; //markedCharger!.private != null;
-      double price = 10.0;//markedCharger.private.price;
-      if (price! <= 0.0) price = 0.0;
-      // available
-      // match
 
-      return CardInfoWidget(location: descrip, rating: numd, types: types, available: true, match: true, private: private, price: price);
+      bool private = markedCharger!.private != null ? true : false;
+      double price = markedCharger!.private != null ? markedCharger!.private!.price : 0.0;
+      String? direction = markedCharger!.direction;
+      direction = title_parser(direction);
+      String? description = markedCharger!.description;
+
+
+      return CardInfoWidget(location: descrip, rating: numd, types: types, available: true, match: true, private: private, price: price, direction: direction, description: description, private_list: false);
   }
 
 
@@ -344,8 +365,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   Widget buildSlidingUpPanelBike({required ScrollController controller, required PanelController panelController}) {
-    String? descrip = utf8.decode(utf8.encode(markedBike!.title!));
-    //descrip = title_parser(descrip);
+    String? descrip = markedBike!.title!;
+    descrip = title_parser(descrip);
 
     //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
     Random random = Random();

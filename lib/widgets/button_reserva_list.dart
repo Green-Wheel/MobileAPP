@@ -14,7 +14,7 @@ class _ButtonReservaListWidget extends State<ButtonReservaListWidget>{
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(105, 0, 0, 0),
+      padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
        child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.75,
           height: 63,
@@ -33,7 +33,7 @@ class _ButtonReservaListWidget extends State<ButtonReservaListWidget>{
             child: Row(
               children: const [
                 Padding(
-                padding: EdgeInsets.only(left: 30),
+                padding: EdgeInsets.only(left: 70),
                 child: Text(
                     'Go Bookings',
                     style: TextStyle(
