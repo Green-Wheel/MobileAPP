@@ -145,12 +145,12 @@ class _InfiniteList extends State<InfiniteList>{
           types.add(_markersListAll[index].connection_type[i]);
         }
         //TODO:poner atributo private correctamente
-        bool private = false;
+        bool private =  _markersListAll[index].private != null ? true : false;
         bool match = true;
         double price = 0.0;
         String? direction = "Calle 1";
         String? description2 = "description";
-        return Flexible(child: _cardChargerList(description!, avaliable!, match, types, private, price, direction!, description2!));
+        return Flexible(child: _cardChargerList(description!, avaliable, match, types, private, price, direction, description2));
       });
   }
 
@@ -165,7 +165,7 @@ class _InfiniteList extends State<InfiniteList>{
       onTap: () {
         //TODO: ir a la pagina del cargador
         GoRouter.of(context)
-            .go('/route/${widget.id}');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
+            .go('/${widget.id}');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
       },
       child: CardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: match, private: false, price: price, direction: direction, description: description2, private_list: private),
     );
