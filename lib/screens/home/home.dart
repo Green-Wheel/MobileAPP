@@ -7,7 +7,8 @@ import 'package:easy_search_bar/easy_search_bar.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  int? publicationId = -1;
+  HomePage({Key? key, this.publicationId}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -49,7 +50,8 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        child: GoogleMapsWidget(index: index, key: UniqueKey())
+        //TODO: Redireccionar a la pantalla de la publicación
+        child: GoogleMapsWidget(index: index, key: UniqueKey(), publicationId: widget.publicationId),
       ),
     );
   }
