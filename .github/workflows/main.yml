@@ -2,9 +2,9 @@ name: Flutter Workflow
 
 on:
   push:
-    branches: [ feature-163-CICD ]
+    branches: [ dev ]
   pull_request:
-    branches: [ feature-163-CICD ]
+    branches: [ dev ]
 jobs:
   build:
     runs-on: ubuntu-latest
