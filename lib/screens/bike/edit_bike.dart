@@ -14,7 +14,7 @@ class _EditBikeState extends State<EditBike> {
   Map<String, dynamic> _bikeInfo = {};
 
   void getBikeInfo() async {
-    var bikeI = await BikesService.getBikeInfo(widget.id);
+    var bikeI = await BikeService.getBikeInfo(widget.id);
     setState(() {
       _bikeInfo = bikeI;
     });

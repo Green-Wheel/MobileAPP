@@ -1,4 +1,3 @@
-
 /*import 'package:flutter/widgets.dart';
 import 'package:greenwheel/screens/home/home.dart';
 
@@ -10,17 +9,13 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
 
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/screens/bike/add_bike.dart';
-import 'package:greenwheel/screens/bike/edit_bike.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
 import 'package:greenwheel/screens/chargers/add_charger.dart';
-import 'package:greenwheel/screens/chargers/edit_charger.dart';
 import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/login/login_screen.dart';
 import 'package:greenwheel/screens/route/route.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
-import 'package:greenwheel/widgets/addCharger/add_charger.dart';
 
 GoRouter routeGenerator(LoginService loginService) {
   return GoRouter(
@@ -52,7 +47,7 @@ GoRouter routeGenerator(LoginService loginService) {
                 final long = state.params['long']!;
                 final lat = state.params['lat']!;
                 return RoutePage(
-                  key: Key("RoutePage"),
+                  key: const Key("RoutePage"),
                   lat: lat,
                   long: long,
                 );

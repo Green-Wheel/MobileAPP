@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 
@@ -64,6 +64,22 @@ class BackendService {
       Uri.parse(_baseUrl + endpoint),
       headers: {"Accept": "application/json"},
     );
+    return response;
+  }
+
+  ///Permite enviar ficheros a qualquier endpoint de la api
+  ///@param endpoint: Endpoint al que se quiere hacer el post (ejemplo: users/1/)
+  ///@param List<File> files: Lista de ficheros que se quieren enviar
+  static Future<http.StreamedResponse> postFiles(String endpoint,
+      List<File> files) async {
+    var request = http.MultipartRequest('POST', Uri.parse(_baseUrl + endpoint));
+    for (var file in files) {
+      request.files.add(await http.MultipartFile.fromBytes(
+          'file', file.readAsBytesSync(), filename: file.path
+          .split('/')
+          .last));
+    }
+    var response = await request.send();
     return response;
   }
 }

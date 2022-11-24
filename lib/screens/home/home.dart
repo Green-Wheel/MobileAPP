@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
         index: index,
         onChangedTab: _onChangeTab,
       ),
-      drawer: const SimpleDrawer(),
+      drawer: SimpleDrawer(),
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(

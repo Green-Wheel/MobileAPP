@@ -66,9 +66,9 @@ class _BikeFormState extends State<BikeForm> {
       _data['power'] = bike_info['power'];
     });
     if (widget.data == null) {
-      BikesService.newBike(_data, _images);
+      BikeService.newBike(_data, _images);
     } else {
-      BikesService.updateBike(_data);
+      BikeService.updateBike(_data);
     }
     context.pop();
   }
