@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../serializers/bikes.dart';
+import '../../services/backendServices/bikes.dart';
+
 class BikeInfo extends StatefulWidget {
   var data;
   final Function callback;
@@ -17,15 +20,11 @@ class BikeInfo extends StatefulWidget {
 }
 
 class _BikeInfoState extends State<BikeInfo> {
-  List<Map<String, dynamic>> _bike_types = [];
+  List<BikeType> _bike_types = [];
   final _formKey = GlobalKey<FormState>();
 
-  void _getBikeTypes() {
-    List<Map<String, dynamic>> bike_typesL = [
-      {"name": "Electric"},
-      {"name": "Hybrid"},
-      {"name": "Gas"},
-    ];
+  void _getBikeTypes() async {
+    List<BikeType> bike_typesL = await BikeService.getBikeTypes();
     setState(() {
       _bike_types = bike_typesL;
     });
@@ -47,19 +46,19 @@ class _BikeInfoState extends State<BikeInfo> {
             Container(
               width: 9 * MediaQuery.of(context).size.height / 10,
               child: DropdownButton(
-                value: widget.data["bike_type"]['name'],
+                value: widget.data["bike_type"].name ?? 'Select a type',
                 dropdownColor: Colors.white,
                 icon: const Icon(Icons.keyboard_arrow_down),
                 isExpanded: true,
                 items: _bike_types.map((item) {
                   return DropdownMenuItem(
-                    value: item['name'],
-                    child: Text(item["name"]),
+                    value: item,
+                    child: Text(item.name),
                   );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    widget.data["bike_type"]['name'] = value;
+                    widget.data["bike_type"] = value;
                   });
                 },
               ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../serializers/bikes.dart';
 import '../../services/backendServices/bikes.dart';
 import '../../widgets/forms/bike_form.dart';
 
@@ -11,12 +12,14 @@ class EditBike extends StatefulWidget {
 }
 
 class _EditBikeState extends State<EditBike> {
-  Map<String, dynamic> _bikeInfo = {};
+  late DetailedBikeSerializer _bikeInfo;
+  bool charged = false;
 
   void getBikeInfo() async {
     var bikeI = await BikeService.getBikeInfo(widget.id);
     setState(() {
       _bikeInfo = bikeI;
+      charged = true;
     });
   }
 
@@ -33,7 +36,7 @@ class _EditBikeState extends State<EditBike> {
         title: const Text('Edit Bike'),
       ),
       body: Center(
-        child: _bikeInfo.isEmpty
+        child: charged
             ? Container(
                 height: MediaQuery.of(context).size.height / 5,
                 width: MediaQuery.of(context).size.height / 5,
