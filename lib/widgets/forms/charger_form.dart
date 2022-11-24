@@ -81,7 +81,7 @@ class _ChargerFormState extends State<ChargerForm> {
     } else {
       PrivateChargersService.newCharger(_data, _images);
     }
-    context.pop();
+    GoRouter.of(context).go('/');
   }
 
   //widget functions
