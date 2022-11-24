@@ -67,14 +67,14 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
                 ),
                 SizedBox(height: 5),
                 Padding(
-                  padding: const EdgeInsets.only(right: 187),
+                  padding: const EdgeInsets.only(right: 193),
                   child: private ? const Text('Private',
                       style: TextStyle(fontWeight: FontWeight.w600, color: Colors.amberAccent)
                   ) : const Text('Public',
                       style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green)),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(right: 187),
+                  padding: const EdgeInsets.only(right: 193),
                   child: private_list ? const Text('Private',
                       style: TextStyle(fontWeight: FontWeight.w600, color: Colors.amberAccent)
                   ) : SizedBox()),
