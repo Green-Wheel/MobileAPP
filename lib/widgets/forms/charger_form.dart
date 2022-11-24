@@ -1,11 +1,11 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/widgets/addCharger/connection_info.dart';
-import 'package:greenwheel/widgets/addCharger/current_info.dart';
-import 'package:greenwheel/widgets/addCharger/localization_info.dart';
-import 'package:greenwheel/widgets/addCharger/speed_%20info.dart';
-import 'package:greenwheel/widgets/addCharger/basic_info.dart';
+import 'package:greenwheel/widgets/forms/connection_info.dart';
+import 'package:greenwheel/widgets/forms/current_info.dart';
+import 'package:greenwheel/widgets/forms/localization_info.dart';
+import 'package:greenwheel/widgets/forms/speed_%20info.dart';
+import 'package:greenwheel/widgets/forms/basic_info.dart';
 import '../../serializers/maps.dart';
 import '../../services/backendServices/private_chargers.dart';
 
@@ -19,12 +19,12 @@ class ChargerForm extends StatefulWidget {
 }
 
 class _ChargerFormState extends State<ChargerForm> {
+  //variables
   int _page = 0;
-
   List<File> _images = [];
-
   late final Map<String, dynamic> _data;
 
+  //functions
   void nextPage() {
     setState(() {
       ++_page;
@@ -84,6 +84,7 @@ class _ChargerFormState extends State<ChargerForm> {
     context.pop();
   }
 
+  //widget functions
   @override
   void initState() {
     super.initState();

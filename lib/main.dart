@@ -41,7 +41,7 @@ class MainApp extends StatelessWidget {
         child: MaterialApp.router(
           title: 'GreenWheel',
           theme: appTheme(),
-           routerConfig: _router,
+          routerConfig: _router,
           locale: context.locale,
           supportedLocales: context.supportedLocales,
           localizationsDelegates: context.localizationDelegates,
