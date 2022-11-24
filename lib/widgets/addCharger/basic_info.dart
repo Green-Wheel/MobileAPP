@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../select_image.dart';
 
 class BasicInfo extends StatefulWidget {
@@ -27,7 +26,6 @@ class _BasicInfoState extends State<BasicInfo> {
     });
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return Scaffold(
