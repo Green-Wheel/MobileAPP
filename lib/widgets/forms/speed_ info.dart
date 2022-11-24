@@ -32,11 +32,14 @@ class _SpeedInfoState extends State<SpeedInfo> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _getSpeeds();
+    _selected_speeds = widget.data["speed"];
+  }
+
+  @override
   Widget build(BuildContext context) {
-    if (_speeds.isEmpty) {
-      _getSpeeds();
-      _selected_speeds = widget.data["speed"];
-    }
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(children: [
@@ -44,15 +47,15 @@ class _SpeedInfoState extends State<SpeedInfo> {
           children: _speeds
               .map((item) => CheckboxListTile(
                     title: Text(item.name),
-                    value: _selected_speeds!.contains(item.name),
+                    value: _selected_speeds!.contains(item.id),
                     onChanged: (bool? value) {
                       setState(() {
                         if (value == true &&
-                            !_selected_speeds.contains(item.name)) {
-                          _selected_speeds.add(item.name);
+                            !_selected_speeds.contains(item.id)) {
+                          _selected_speeds.add(item.id);
                         } else if (value == false &&
-                            _selected_speeds.contains(item.name)) {
-                          _selected_speeds.remove(item.name);
+                            _selected_speeds.contains(item.id)) {
+                          _selected_speeds.remove(item.id);
                         }
                         widget.data["speed"] = _selected_speeds;
                       });

@@ -1,18 +1,13 @@
-import 'dart:convert';
 import 'dart:core';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/widgets/avaliable_public_charger.dart';
-import 'package:greenwheel/widgets/button_route.dart';
+import 'package:greenwheel/serializers/chargers.dart';
 import 'package:greenwheel/widgets/card_info.dart';
-import 'package:greenwheel/widgets/image_charger.dart';
-import 'package:greenwheel/widgets/location_charger.dart';
-import 'package:greenwheel/widgets/match_with_car.dart';
-import 'package:greenwheel/widgets/point_of_charge_dist.dart';
-import 'package:greenwheel/widgets/stars_static_rate.dart';
-import 'package:greenwheel/services/backend_service.dart';
+
+import '../../services/backendServices/chargers.dart';
+import '../../widgets/infinite_list.dart';
 
 class ChargeInfoList extends StatefulWidget {
   const ChargeInfoList({Key? key}) : super(key: key);
@@ -32,66 +27,31 @@ void main(){
 }
 
 class _ChargeInfoListState extends State<ChargeInfoList>{
-
   List markersList = [];
 
-  @override
+  /*@override
   void initState(){
     super.initState();
-    _getChargers();
+    _getChargersList();
   }
 
-  /*void _getPublicChargers() async {
-    BackendService.get('chargers/public/').then((response)  {
-      if (response.statusCode == 200) {
-        List<dynamic> jsonResponse = jsonDecode(response.body);
-        markersList = jsonResponse;
-        Marcador? mark;
-        for (int i = 0; i < markersList.length; i++) {
-          Map localization = markersList[i]['localization'];
-          double latitude = localization['latitude'];
-          double longitude = localization['longitude'];
-          String direction = "No description";
-          if (markersList[i]['direction'] != null) {
-            direction = markersList[i]['direction'];
-          }
-          double power =  markersList[i]['power'];
-          String town = markersList[i]['town'];
-          mark!.id = i;
-          mark!.latitude = latitude;
-          mark!.longitude = longitude;
-          mark!.direction = direction;
-          mark!.power = power;
-          mark!.town = town;
-          markers.add(mark);
-        }
-      }
+  void _getChargersList() async {
+    List chargerList = await ChargerService.getChargerList(1);
+    print(chargerList);
+    setState(() {
+      markersList = chargerList;
     });
   }*/
-
-  void _getChargers() async {
-    BackendService.get('chargers/public/').then((response)  {
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        print(jsonResponse);
-        setState(() {
-          markersList = jsonResponse;
-        });
-      } else {
-        print('Error getting chargers!');
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chargers Markers'),
+        title: const Text('Chargers'),
         centerTitle: true,
         actions: const [
         Padding(
-          padding: EdgeInsets.only(right: 105.0, left: 5.0),
+          padding: EdgeInsets.only(right: 125.0, left: 5.0),
           child: Icon(Icons.location_on_outlined),
           ),
         ],backgroundColor: Colors.green,
@@ -99,41 +59,10 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               GoRouter.of(context).go('/');
-            // Tornar a HomePage
-              /*Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const HomePage()),
-            );*/
           },
         ),
       ),
-      body: ListView.builder(
-        itemCount: markersList.length,
-        /*addAutomaticKeepAlives: false,
-        addRepaintBoundaries: false,
-        addSemanticIndexes: false,*/
-        itemBuilder: (context, position) {
-
-          //Arreglo del titulo del cargador respecto a los datos del json
-          String description = markersList[position]['description'];
-          description = title_parser(description);
-
-          //Mirar el tipo de la variable porque to_do  da null
-          bool avaliable = true;
-          //avaliable da null
-          if (markersList[position]['description'] == "false") avaliable = false;
-
-          //print(markersList[position]['connection_type']); //retorna numero de typos diferentes con el .lenght
-          //print(markersList[position]['current_type']); //puede ser 1 o 2 -> AC - DC
-
-          //Obtencion del numero de tipos de cargadores
-          int types = markersList[position]['connection_type'].length;
-
-          bool match = true;
-
-          return _cardChargerList(description, avaliable, match, types);
-        }
-      ),
+      body: InfiniteList(),
     );
   }
 }
@@ -188,12 +117,12 @@ String title_parser(String description){
 
 
 //funcion respectiva a la card de los cargadores
-Widget _cardChargerList(String direction, bool avaliable, bool match, int types){
+Widget _cardChargerList(String direction, bool avaliable, bool match, List<ConnectionType> types){
   //Generación rate aleatoria (harcode rate)
   Random random = Random();
   int min = 2, max = 6;
   int num = (min + random.nextInt(max - min));
   double numd = num.toDouble();
 
-  return CardInfoWidget(location: direction, rating: numd, types: types, avaliable: avaliable, match: match);
+  return CardInfoWidget(location: direction, rating: numd, types: types, available: avaliable, match: match);
 }

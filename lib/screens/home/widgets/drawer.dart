@@ -1,34 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/profile/myprofile.dart';
-import 'package:greenwheel/screens/register/signup.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import '../../../serializers/users.dart';
-import '../../../widgets/accountIcon.dart';
 
-class SimpleDrawer extends StatefulWidget {
-  SimpleDrawer(User? user, {Key? key}) : user2 = user,super(key: key);
+import '../../../services/generalServices/LoginService.dart';
 
-  @override
-  _SimpleDrawer createState() => _SimpleDrawer(user2);
-
-  User? user2;
-}
-
-class _SimpleDrawer extends State<SimpleDrawer> {
-  bool logged = true;
-  User? user;
-
-  _SimpleDrawer(User? user) : this.user = user;
-
+class SimpleDrawer extends StatelessWidget {
+  SimpleDrawer({Key? key}) : super(key: key);
+  final _loggedInStateInfo = LoginService();
+  var userData;
 
   @override
   Widget build(BuildContext context) {
+    userData = _loggedInStateInfo.user_info;
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/28),
         children: [
+          crossFirstRow(context),
+
           //crossFirstRow(context),
           Container(
             padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/20),
@@ -48,14 +39,16 @@ class _SimpleDrawer extends State<SimpleDrawer> {
               children: [
                 AccountIcon(percent: 0.5,path_image: user?.profile_picture ?? 'assets/images/default_user_img.jpg'),
                 Text(
-                  "${user?.username}",
+                  userData != null
+                      ? userData['first_name'] + " " + userData['last_name']
+                      : "User Name",
                   style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "Level ${user?.level}",
+                  "Nivel 10",
                   style: TextStyle(fontSize: 12, color: Colors.white70),
                 ),
               ],
@@ -214,5 +207,3 @@ class _SimpleDrawer extends State<SimpleDrawer> {
     );
   }
 }
-
-

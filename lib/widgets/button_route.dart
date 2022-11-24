@@ -16,9 +16,10 @@ class _ButtonRouteWidget extends State<ButtonRouteWidget>{
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 10, 5, 0),
+      padding: const EdgeInsets.fromLTRB(0, 5, 140, 0),
       child: SizedBox(
         height: 33,
+        width: 75,
         child: TextButton(
           style: ButtonStyle(
               backgroundColor:

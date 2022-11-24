@@ -75,14 +75,15 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
           title: const Text('Mis Reservas'),
           centerTitle: true,
-          actions: const [
+          actions: [
             Padding(
-              padding: EdgeInsets.only(right: 105.0),
-              child: Icon(Icons.calendar_month),
+              padding: EdgeInsets.only(right: width / 3.5),
+              child: const Icon(Icons.calendar_month),
             ),
           ],
           backgroundColor: Colors.green,
@@ -111,7 +112,6 @@ Widget buildList(bookings, ratings) => ListView.builder(
 
     // Nom de la publicació del carregador reservat
     List<dynamic> publicationName = bookings[index]['publication'];
-
     var endDate = DateTime.parse(bookings[index]['end_date']);
     var startDate = DateTime.parse(bookings[index]['start_date']);
     DateFormat formatterStart = DateFormat('HH:mm');

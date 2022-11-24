@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../routes.dart';
+import '../screens/charger-info-list/chargeInfoList.dart';
+import '../services/generalServices/LoginService.dart';
+
 class ButtonListScreenChargersWidget extends StatefulWidget {
   const ButtonListScreenChargersWidget({super.key});
 
@@ -13,15 +17,13 @@ class _ButtonListScreenChargersWidget extends State<ButtonListScreenChargersWidg
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        // do something
-        //context.go('../../charger-info-list/chargeInfoList.dart');
         GoRouter.of(context).go('/chargers/list');
       },
-      child: Icon(
+      backgroundColor: Colors.green,
+      child: const Icon(
         Icons.list,
         size: 35,
       ),
-      backgroundColor: Colors.green,
     );
     ElevatedButton(
       onPressed: () {

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:greenwheel/screens/home/widgets/SearchBar.dart';
 import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/drawer.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
-import '../../serializers/users.dart';
-import '../../services/backendServices/user_service.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,22 +15,16 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   int index = 0;
+
+  void _onChangeTab(int index) {
+    setState(() {
+      this.index = index;
+    });
+  }
+
   final nameController = TextEditingController();
   String searchValue = '';
   final List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
-  User? user;
-
-  @override
-  void initState() {
-    super.initState();
-    _getUser();
-  }
-  void _getUser() async {
-    User? aux = await UserService.getUser();
-    setState(() {
-      user = aux;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +40,16 @@ class _HomePageState extends State<HomePage> {
         ),
 
        */
-      body: SafeArea(
-        child: GoogleMapsWidget(),
-      ),
       bottomNavigationBar: BottomBarWidget(
         index: index,
         onChangedTab: _onChangeTab,
       ),
-      drawer: SimpleDrawer(user),
+      drawer: SimpleDrawer(),
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      body: SafeArea(
+        child: GoogleMapsWidget(index: index, key: UniqueKey())
+      ),
     );
   }
 

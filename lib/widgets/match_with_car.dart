@@ -17,7 +17,7 @@ class _MatchWithCarWidget extends State<MatchWithCarWidget>{
 
 //funcion para determinar la compatibilidad cargador con el coche
 Widget _matchCarWithCharger(bool match){
-  if (match){
+  if (match) {
     return Padding(
       padding: const EdgeInsets.only(left: 0.0),
       child: Row(
@@ -30,14 +30,14 @@ Widget _matchCarWithCharger(bool match){
           Padding(
             padding:EdgeInsets.only(left: 5.0, right: 0.0),
             child: Text('Matching with your car charger',
-              style: TextStyle(fontWeight: FontWeight.w600),
+              style: TextStyle(fontWeight: FontWeight.w500, color: Color.fromRGBO(69, 69, 69, 1), fontSize: 13),
             ),
           ),
         ],
       ),
     );
   }
-  else{
+  else {
     return Padding(
       padding: const EdgeInsets.only(left: 0.0),
       child: Row(
@@ -50,7 +50,7 @@ Widget _matchCarWithCharger(bool match){
           Padding(
             padding:EdgeInsets.only(left: 5.0, right: 0.0),
             child: Text('Not match with your car charger',
-              style: TextStyle(fontWeight: FontWeight.w600),
+              style: TextStyle(fontWeight: FontWeight.w500, color: Color.fromRGBO(69, 69, 69, 1), fontSize: 13),
             ),
           ),
         ],

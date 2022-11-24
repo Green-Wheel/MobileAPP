@@ -14,7 +14,7 @@ class BackendService {
     print(_baseUrl + endpoint);
     http.Response response = await http.get(
       Uri.parse(_baseUrl + endpoint),
-      headers: {"Accept": "application/json"},
+      headers: {"Accept": "application/json", "Content-Type": "application/json; charset=UTF-8"},
     );
     return response;
   }
@@ -41,9 +41,9 @@ class BackendService {
   /// @param endpoint: Endpoint al que se quiere hacer el put (ejemplo: users/1/)
   /// @param jsonMap: Mapa con los datos que se quieren enviar en el put en formato clave valor. Ejemplo: {"language": "es"}
   /// @return: Devuelve un Future con el resultado del put, al cual se le debe hacer un then para obtener el resultado
-  static Future<http.Response> put(String endpoint,
-      Map<String, dynamic> jsonMap) async {
-    print(Uri.parse(_baseUrl + endpoint));
+  static Future<http.Response> put(
+      String endpoint, Map<String, dynamic> jsonMap) async {
+    print(_baseUrl);
     http.Response response = await http.put(
       Uri.parse(_baseUrl + endpoint),
       headers: {

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import '../image_display.dart';
 import '../select_image.dart';
 
 class BasicInfo extends StatefulWidget {
@@ -29,12 +27,11 @@ class _BasicInfoState extends State<BasicInfo> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(8.0, 40.0, 8.0, 0.0),
+          padding: const EdgeInsets.fromLTRB(8.0, 8.0, 8.0, 0.0),
           child: Form(
             key: _formKey,
             child: Column(

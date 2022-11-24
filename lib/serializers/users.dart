@@ -1,42 +1,8 @@
+import 'package:greenwheel/serializers/chargers.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'dart:ffi';
 
-import 'package:json_annotation/json_annotation.dart';
-
 part 'users.g.dart';
-
-@JsonSerializable()
-class LoginMethods {
-  LoginMethods({
-    this.id,
-    required this.name,
-  });
-
-  int? id;
-  String name;
-
-  factory LoginMethods.fromJson(Map<String, dynamic> json) =>
-      _$LoginMethodsFromJson(json);
-
-  Map<String, dynamic> toJson() => _$LoginMethodsToJson(this);
-}
-
-@JsonSerializable()
-class Languages {
-  Languages({
-    this.id,
-    required this.shortName,
-    required this.name,
-  });
-
-  int? id;
-  String shortName;
-  String name;
-
-  factory Languages.fromJson(Map<String, dynamic> json) =>
-      _$LanguagesFromJson(json);
-
-  Map<String, dynamic> toJson() => _$LanguagesToJson(this);
-}
 
 @JsonSerializable()
 class User {
@@ -47,10 +13,10 @@ class User {
     required this.last_name,
     this.about,
     this.profile_picture,
-    this.language_id,
+    required this.language_id,
     required this.level,
     required this.xp,
-    this.rating,
+    required this.rating,
   });
 
   int? id;
@@ -58,14 +24,34 @@ class User {
   String first_name;
   String last_name;
   String? about;
-  int? language_id;
-  String? profile_picture;
+  ImageSerializer? profile_picture;
+  int language_id;
   int level;
   int xp;
-  double? rating;
+  double rating;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
+}
 
+@JsonSerializable()
+class BasicUser {
+  BasicUser({
+    this.id,
+    required this.username,
+    required this.first_name,
+    required this.last_name,
+    this.profile_picture,
+  });
+
+  int? id;
+  String username;
+  String first_name;
+  String last_name;
+  String? profile_picture;
+
+  factory BasicUser.fromJson(Map<String, dynamic> json) => _$BasicUserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BasicUserToJson(this);
 }

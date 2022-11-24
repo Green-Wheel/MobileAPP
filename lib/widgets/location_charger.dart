@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class LocationChargerWidget extends StatefulWidget {
-  String location;
+  String? location;
   LocationChargerWidget({required this.location, super.key});
 
   @override
@@ -16,13 +16,15 @@ class _LocationChargerWidget extends State<LocationChargerWidget>{
 }
 
 //funcion para mostrar la direccion del cargador en la card
-Widget _locationCharger(String location){
+Widget _locationCharger(String? location){
   return Padding(
     padding: const EdgeInsets.only(left:0.0, bottom: 3.0, top: 20.0) ,
     child: Row(
       children: [
-        Text(location,
-            style: const TextStyle(fontWeight: FontWeight.w600)
+        Flexible(child:
+          Text(location!,
+              style: const TextStyle(fontWeight: FontWeight.w600)
+          ),
         ),
         Icon(
           Icons.bolt,
