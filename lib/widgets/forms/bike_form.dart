@@ -67,7 +67,6 @@ class _BikeFormState extends State<BikeForm> {
     } else {
       BikeService.updateBike(_data);
     }
-    context.pop();
   }
 
   //widget functions
@@ -101,7 +100,7 @@ class _BikeFormState extends State<BikeForm> {
       case 1:
         {
           return LocalizationInfo(
-            addres: _data.direction,
+            addres: _data.direction ?? '',
             localization: _data.localization,
             callback: getLocalization,
             nextPage: nextPage,

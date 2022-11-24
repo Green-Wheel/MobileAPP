@@ -72,7 +72,19 @@ class BikeService {
 
   static Future<bool> newBike(DetailedBikeSerializer data, images) async {
     try {
-      var response = await BackendService.post('bikes/', data.toJson());
+      Map<String,dynamic> body = {
+        'latitude': data.localization.latitude,
+        'longitude': data.localization.longitude,
+        'town': data.town.name,
+        'province': data.town.province.name,
+        'title': data.title,
+        'description': data.description,
+        'direction': data.direction,
+        'bike_type': data.bike_type.id,
+        'price': data.price,
+        'power': data.power,
+      };
+      var response = await BackendService.post('bikes/', body);
       if (response.statusCode != 200) return false;
       var json = jsonDecode(response.body);
       var response2 = await BackendService.postFiles(
@@ -97,8 +109,20 @@ class BikeService {
 
   static Future<bool> updateBike(DetailedBikeSerializer data) async {
     try {
+      Map<String,dynamic> body = {
+        'latitude': data.localization.latitude,
+        'longitude': data.localization.longitude,
+        'town': data.town.name,
+        'province': data.town.province.name,
+        'title': data.title,
+        'description': data.description,
+        'direction': data.direction,
+        'bike_type': data.bike_type.id,
+        'price': data.price,
+        'power': data.power,
+      };
       var response =
-          await BackendService.put('bikes/${data.id}/', data.toJson());
+          await BackendService.put('bikes/${data.id}/', body);
       if (response.statusCode != 200) return false;
       return response.statusCode == 200;
     } catch (e) {
