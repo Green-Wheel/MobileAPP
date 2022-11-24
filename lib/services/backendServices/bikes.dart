@@ -8,7 +8,8 @@ import '../../serializers/chargers.dart';
 class BikeService {
   static Future<List<Bike>> getBikes() async {
     List<Bike> result = [];
-    await BackendService.get('bikes/').then((response) { // bikes/
+    await BackendService.get('bikes/').then((response) {
+      // bikes/
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         print(jsonResponse);
@@ -20,6 +21,7 @@ class BikeService {
     });
     return result;
   }
+
   /*
   static Future<List<Charger>> getBikes() async {
     List<Charger> result = [];
@@ -38,7 +40,8 @@ class BikeService {
 
   static Future<List<BikeList>> getBikeList(int pag) async {
     List<BikeList> result = [];
-    await BackendService.get('bikes/list/?page=$pag').then((response) { // bikes/list/?page=$pag
+    await BackendService.get('bikes/list/?page=$pag').then((response) {
+      // bikes/list/?page=$pag
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         print('json response bicis $jsonResponse');
@@ -113,9 +116,9 @@ class BikeService {
     return false;
   }
 
-  static Future<bool> newBike(Map<String, dynamic> data, images) async {
+  static Future<bool> newBike(DetailedBikeSerializer data, images) async {
     try {
-      var response = await BackendService.post('bikes/', data);
+      var response = await BackendService.post('bikes/', data.toJson());
       if (response.statusCode != 200) return false;
       var json = jsonDecode(response.body);
       var response2 = await BackendService.postFiles(
@@ -127,7 +130,7 @@ class BikeService {
     }
   }
 
-  static Future<Map<String, dynamic>> getBikeInfo(int id) async {
+  static Future<DetailedBikeSerializer> getBikeInfo(int id) async {
     Map<String, dynamic> result = {};
     var response = await BackendService.get('bikes/$id/');
     if (response.statusCode == 200) {
@@ -135,17 +138,35 @@ class BikeService {
     } else {
       throw Exception('Error getting bike info');
     }
-    return result;
+    return DetailedBikeSerializer.fromJson(result);
   }
 
-  static Future<bool> updateBike(Map<String, dynamic> data) async {
+  static Future<bool> updateBike(DetailedBikeSerializer data) async {
     try {
-      var response = await BackendService.put('bikes/${data['id']}/', data);
+      var response =
+          await BackendService.put('bikes/${data.id}/', data.toJson());
       if (response.statusCode != 200) return false;
       return response.statusCode == 200;
     } catch (e) {
       print(e);
       return false;
+    }
+  }
+
+  static Future<List<BikeType>> getBikeTypes() async {
+    try {
+      List<BikeType> result = [];
+      var response = await BackendService.get('bikes/types/');
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        result = jsonResponse.map((e) => BikeType.fromJson(e)).toList();
+      } else {
+        print('Error getting bike types!');
+      }
+      return result;
+    } catch (e) {
+      print(e);
+      return [];
     }
   }
 }
