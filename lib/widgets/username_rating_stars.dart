@@ -19,7 +19,7 @@ class Username_Rating extends StatelessWidget {
                       child: Row(
                           children: <Widget>[
                             Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                            if(edit_button) edit(),
+                            if(edit_button) edit(context),
                       ],
                     ),
             ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../services/backendServices/recover_password.dart';
+
 class ChangePassword extends StatefulWidget{
   const ChangePassword({Key? key}) : super(key: key);
 
@@ -83,7 +85,6 @@ class _ChangePassword extends State<ChangePassword> {
                           onPressed: (){
                             if(passwordController.text == password_againController.text && passwordController.text != ""){
                               //crida backend i ruta
-                              Navigator.pop(context);
                             }
                           },
                         ),

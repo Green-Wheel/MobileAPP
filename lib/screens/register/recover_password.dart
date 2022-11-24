@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math';
+import '../../services/backendServices/recover_password.dart';
 import 'change_password.dart';
 
 class ForgotPasswordScreen extends StatefulWidget{
@@ -13,13 +14,31 @@ class ForgotPasswordScreen extends StatefulWidget{
 
 class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
   final formKey = GlobalKey<FormState>();
-  final emailController = TextEditingController();
+  final nameController = TextEditingController();
   final codeController = TextEditingController();
+
   bool _show_code = false;
+  bool? _show_code2 ;
+  bool? good_code;
   String? code;
+
+  void _getRequest(String username) async {
+    bool? aux = await RecoverPassword.getRecover(username);
+    setState(() {
+      _show_code2 = aux;
+    });
+  }
+
+  void _getCode(String code) async {
+    bool? aux = await RecoverPassword.checkCode(code);
+    setState(() {
+      good_code = aux;
+    });
+  }
+
   @override
   void dispose(){
-      emailController.dispose();
+      nameController.dispose();
       super.dispose();
   }
 
@@ -47,27 +66,33 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                              Text("We will send you an email to reset the password",
-                                  textAlign: TextAlign.center,style: TextStyle(fontSize: 22)),
-                              Container(
-                                  color: Colors.white,
-                                  child: TextFormField(
-                                      style: TextStyle(color: Colors.black),
-                                      controller: emailController,
-                                      cursorColor: Colors.black ,
-                                      textInputAction: TextInputAction.done,
-                                      decoration: InputDecoration(
-                                        labelStyle: TextStyle(color: Colors.black),
-                                        labelText:'Email',
-                                        enabledBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(color: Colors.black),
+                              if(!_show_code) ...[
+                                Text("We will send you an email to reset the password",
+                                    textAlign: TextAlign.center,style: TextStyle(fontSize: 22)),
+                                Container(
+                                    color: Colors.white,
+                                    child: TextFormField(
+                                        style: TextStyle(color: Colors.black),
+                                        controller: nameController,
+                                        cursorColor: Colors.black ,
+                                        textInputAction: TextInputAction.done,
+                                        decoration: InputDecoration(
+                                          labelStyle: TextStyle(color: Colors.black),
+                                          labelText:'Username',
+                                          enabledBorder: UnderlineInputBorder(
+                                            borderSide: BorderSide(color: Colors.black),
+                                          ),
                                         ),
-                                      ),
-                                      autovalidateMode: AutovalidateMode.onUserInteraction,
-                                      validator: (email) => email != null && !EmailValidator.validate(email)
-                                          ? 'Enter a valid email' : null,
-                                  )
-                              ),
+                                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                                        validator: (userna) => userna != null && userna.isEmpty
+                                            ? 'Enter a username' : null,
+                                    )
+                                ),
+                              ]
+                              else ...[
+                                Text("Check your email and put the code below",
+                                    textAlign: TextAlign.center,style: TextStyle(fontSize: 22)),
+                              ],
                               if(_show_code) ...[
                                 SizedBox(height: MediaQuery.of(context).size.height/40),
                                 Container(
@@ -107,14 +132,12 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
                                   ),
                                   onPressed: (){
                                     //Comprobar CODE CORRECTE
-                                      if(_show_code == false && EmailValidator.validate(emailController.text)) {
-                                        setState(() {
-                                          code = generateRandomString(generateRandomNumber());
-                                          _show_code = true;
-                                        });
+                                      if(_show_code == false && nameController.text != "") {
+                                        _getRequest(nameController.text);
+                                        if(_show_code2 == true) _show_code = true;
                                       }
-                                      if(codeController.text == "code") {
-                                        GoRouter.of(context).push('/login/recover_password/change_password');
+                                      if(_show_code && codeController.text != "") {
+                                        if(good_code == true) GoRouter.of(context).push('/login/recover_password/change_password');
                                       }
                                     },
                               ),

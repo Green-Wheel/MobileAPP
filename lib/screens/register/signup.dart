@@ -18,31 +18,7 @@ class _SignUpScreen extends State<SignUpScreen> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
 
-  Widget userInput(TextEditingController userInput, TextInputType keyboardType, BuildContext context,bool hide) {
 
-          return Container(
-          height: MediaQuery.of(context).size.height/16,
-          margin: EdgeInsets.only(bottom: 0),
-          decoration: BoxDecoration(color: Colors.white,border:Border.all(width:3.0), borderRadius: BorderRadius.all(Radius.circular(15.0))),
-          child: Padding(
-            padding: EdgeInsets.only(left: 25.0, top: 0, right: 25),
-            child: TextField(
-              obscureText: hide,
-              controller: userInput,
-              autocorrect: false,
-              enableSuggestions: false,
-              autofocus: false,
-              decoration: InputDecoration.collapsed(
-                hintText: "",
-                hintStyle: TextStyle(fontSize: 27, color: Colors.white70, fontStyle: FontStyle.italic),
-              ),
-              keyboardType: keyboardType,
-            ),
-          ),
-      //  )]
-      //)
-    );
-  }
 
 
   @override
@@ -125,4 +101,29 @@ class _SignUpScreen extends State<SignUpScreen> {
       ),
     );
   }
+}
+Widget userInput(TextEditingController userInput, TextInputType keyboardType, BuildContext context,bool hide) {
+
+  return Container(
+    height: MediaQuery.of(context).size.height/16,
+    margin: EdgeInsets.only(bottom: 0),
+    decoration: BoxDecoration(color: Colors.white,border:Border.all(width:3.0), borderRadius: BorderRadius.all(Radius.circular(15.0))),
+    child: Padding(
+      padding: EdgeInsets.only(left: 25.0, top: 0, right: 25),
+      child: TextField(
+        obscureText: hide,
+        controller: userInput,
+        autocorrect: false,
+        enableSuggestions: false,
+        autofocus: false,
+        decoration: InputDecoration.collapsed(
+          hintText: "",
+          hintStyle: TextStyle(fontSize: 27, color: Colors.white70, fontStyle: FontStyle.italic),
+        ),
+        keyboardType: keyboardType,
+      ),
+    ),
+    //  )]
+    //)
+  );
 }
