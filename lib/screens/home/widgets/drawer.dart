@@ -198,7 +198,7 @@ class SimpleDrawer extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                   // LogoutService.logOutUser(context);
+                    LogoutService.logOutUser(context);
                   },
                 ),
               ): Text("")
