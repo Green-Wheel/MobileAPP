@@ -8,6 +8,7 @@ import '../../serializers/users.dart';
 
 const String registerUrl = "users/register/";
 const String userUrl = 'users/1/';
+const String editUrl = 'users/';
 
 class UserService extends ChangeNotifier {
 
@@ -49,4 +50,21 @@ class UserService extends ChangeNotifier {
     });
   }
 
+  static void editUser(String email, String image_path, String about, String firstName, String lastName) {
+    Map<String, dynamic> editMap = {
+      //"email": email,
+      "first_name": firstName,
+      "last_name": lastName,
+      "about": about
+    };
+    BackendService.put(editUrl, editMap).then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        print(jsonResponse);
+      }
+      else {
+        print('Error with the register!');
+      }
+    });
+  }
 }
