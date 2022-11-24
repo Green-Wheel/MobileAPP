@@ -40,7 +40,7 @@ class _InfoUser extends State<InfoUser>  {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      AccountIcon(percent: 0.5, path_image: user?.profile_picture ?? 'assets/images/default_user_img.jpg'),
+                      AccountIcon(percent: 0.5, path_image: 'assets/images/default_user_img.jpg'),
                       Column(
                         children: <Widget>[
                           if(_isEditable) Username_Rating(username: user?.username ?? "",

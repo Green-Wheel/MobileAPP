@@ -3,24 +3,29 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import '../../../services/backendServices/logout_service.dart';
 import '../../../services/generalServices/LoginService.dart';
+import '../../../widgets/accountIcon.dart';
+import '../../register/signup.dart';
 
 class SimpleDrawer extends StatelessWidget {
   SimpleDrawer({Key? key}) : super(key: key);
+
   final _loggedInStateInfo = LoginService();
   var userData;
+  bool logged = true;
 
   @override
   Widget build(BuildContext context) {
     userData = _loggedInStateInfo.user_info;
+    print("---------------------------");
+    print(userData);
+    print("---------------------------");
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
         padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/28),
         children: [
-          crossFirstRow(context),
-
-          //crossFirstRow(context),
           Container(
             padding: EdgeInsets.only(top: MediaQuery.of(context).size.height/20),
             height: MediaQuery.of(context).size.height/3.4,
@@ -37,7 +42,7 @@ class SimpleDrawer extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                AccountIcon(percent: 0.5,path_image: user?.profile_picture ?? 'assets/images/default_user_img.jpg'),
+                AccountIcon(percent: 0.5,path_image: 'assets/images/default_user_img.jpg'),
                 Text(
                   userData != null
                       ? userData['first_name'] + " " + userData['last_name']
@@ -66,7 +71,7 @@ class SimpleDrawer extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) =>  ProfilePage(user)),
+                  MaterialPageRoute(builder: (context) =>  ProfilePage()),
                 );
               },
             ),
@@ -95,10 +100,6 @@ class SimpleDrawer extends StatelessWidget {
                 child: const Text('History', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SignupScreen()),
-                );
               },
             ),
           ),
@@ -197,7 +198,7 @@ class SimpleDrawer extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    Navigator.pop(context);
+                   // LogoutService.logOutUser(context);
                   },
                 ),
               ): Text("")

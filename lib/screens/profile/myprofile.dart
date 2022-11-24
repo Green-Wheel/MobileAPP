@@ -5,18 +5,14 @@ import '../../serializers/users.dart';
 
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage(User? user, {Key? key}) : user = user, super(key: key);
+  ProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePage(user);
+  State<ProfilePage> createState() => _ProfilePage();
 
-  User? user;
 }
 
 class _ProfilePage extends State<ProfilePage> {
-  User? user;
-
-  _ProfilePage(User? user): user = user;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +39,7 @@ class _ProfilePage extends State<ProfilePage> {
           ),
           Container(
             padding: const EdgeInsets.only(top:5),
-            child: aboutMe(user?.about ?? "Not introuced an About Me"),
+            child: aboutMe("Not introuced an About Me"),//ficar user
           ),
           Container(
             padding : const EdgeInsets.only(top:5),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:go_router/go_router.dart';
 import 'dart:math';
 import 'change_password.dart';
 
 class ForgotPasswordScreen extends StatefulWidget{
+  const ForgotPasswordScreen({Key? key}) : super(key: key);
+
   @override
   _ForgotPasswordScreen createState() => _ForgotPasswordScreen();
 }
@@ -110,13 +113,8 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
                                           _show_code = true;
                                         });
                                       }
-                                      if(codeController.text == code) {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ChangePassword()),
-                                        );
+                                      if(codeController.text == "code") {
+                                        GoRouter.of(context).push('/login/recover_password/change_password');
                                       }
                                     },
                               ),

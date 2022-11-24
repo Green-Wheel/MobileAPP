@@ -35,7 +35,6 @@ dependencies:
   percent_indicator: ^4.2.2
   easy_search_bar: ^2.4.2
   searchfield: ^0.7.2
-  flutter_email_sender: ^5.2.0
   email_validator: ^2.1.17
   flutter_secure_storage: ^6.0.0
 

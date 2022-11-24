@@ -3,7 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/register/widgets/greenButton.dart';
 import 'package:greenwheel/services/backendServices/user_service.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
+
+  @override
+  _SignUpScreen createState() => _SignUpScreen();
+}
+
+class _SignUpScreen extends State<SignUpScreen> {
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -11,12 +18,8 @@ class SignupScreen extends StatelessWidget {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
 
-  SignupScreen({super.key});
-
   Widget userInput(TextEditingController userInput, TextInputType keyboardType, BuildContext context,bool hide) {
-    //return Expanded(
-      //child: Row(
-        //children: [
+
           return Container(
           height: MediaQuery.of(context).size.height/16,
           margin: EdgeInsets.only(bottom: 0),
@@ -49,7 +52,6 @@ class SignupScreen extends StatelessWidget {
       appBar: AppBar(title: Text("Register")),
       body: Container(
         child: Column(
-
           mainAxisSize : MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -96,7 +98,9 @@ class SignupScreen extends StatelessWidget {
                       children: [
                         Text('Have already an account? ', style: TextStyle(color: Colors.grey, fontStyle: FontStyle.italic),),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            GoRouter.of(context).go('login');
+                          },
                           child: Text(
                             'Log In',
                             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
@@ -104,10 +108,11 @@ class SignupScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    GreenButton('Sign Up',onPressed: (){
-                      UserService.registerUser(nameController.text,emailController.text
+                    GreenButton('Sign Up',onPressed: () {
+                         UserService.registerUser(context,nameController.text,emailController.text
                           , passwordController.text, firstNameController.text,
                           lastNameController.text);
+
                       //Navigator.pop(context);
                       }
                     ),

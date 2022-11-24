@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backend_service.dart';
+import 'package:greenwheel/services/generalServices/LoginService.dart';
 import '../../serializers/users.dart';
 
 const String registerUrl = "users/register/";
@@ -21,7 +24,7 @@ class UserService extends ChangeNotifier {
       }
     });
   }
-  static void registerUser(String username, String email, String password,String firstName,String lastName){
+  static void registerUser(BuildContext context,String username, String email, String password,String firstName,String lastName){
     Map<String,dynamic> registerMap = {
         'email': email,
         'username': username,
@@ -30,14 +33,13 @@ class UserService extends ChangeNotifier {
         'last_name': lastName
       };
 
-    BackendService.post(registerUrl,registerMap).then((response) {
+    BackendService.post(registerUrl,registerMap).then((response) async {
       if (response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
         print(jsonResponse);
-      }
-      else if(response.statusCode == 400){
-        var jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
+        LoginService ls = await LoginService();
+        ls.loginUser(jsonResponse['apikey']);
+        GoRouter.of(context).push('/');
       }
       else {
         var jsonResponse = jsonDecode(response.body);

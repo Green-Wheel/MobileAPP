@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/screens/home/widgets/SearchBar.dart';
 import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/drawer.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
@@ -58,12 +59,6 @@ class _HomePageState extends State<HomePage> {
       context: context,
       builder: (context) => const LanguageSelectorWidget(),
     );
-  }
-
-  void _onChangeTab(int index) {
-    setState(() {
-      this.index = index;
-    });
   }
 
   Widget _searchTextField() {
