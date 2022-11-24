@@ -34,13 +34,17 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     localeLanguage.fetchLocale(context);
     _loggedInStateInfo.checkLoggedIn();
-    return MaterialApp.router(
-      title: 'GreenWheel',
-      theme: appTheme(),
-      routerConfig: _router,
-      locale: context.locale,
-      supportedLocales: context.supportedLocales,
-      localizationsDelegates: context.localizationDelegates,
-    );
+    return GestureDetector(
+        onTap: () {
+          FocusManager.instance.primaryFocus?.unfocus();
+        },
+        child: MaterialApp.router(
+          title: 'GreenWheel',
+          theme: appTheme(),
+           routerConfig: _router,
+          locale: context.locale,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
+        ));
   }
 }

@@ -13,20 +13,14 @@ class Booking {
     required this.publication,
     required this.start_date,
     required this.end_date,
-    required this.confirmed,
-    required this.finished,
-    required this.cancelled,
     required this.created,
   });
 
   int? id;
-  User user;
+  BasicUser user;
   Publication publication;
   DateTime start_date;
   DateTime end_date;
-  bool confirmed;
-  bool finished;
-  bool cancelled;
   DateTime created;
 
   factory Booking.fromJson(Map<String, dynamic> json) =>
@@ -35,6 +29,7 @@ class Booking {
   Map<String, dynamic> toJson() => _$BookingToJson(this);
 }
 
+/*
 @JsonSerializable()
 class Bookings {
   Bookings({
@@ -53,4 +48,4 @@ class Bookings {
       _$BookingsFromJson(json);
 
   Map<String, dynamic> toJson() => _$BookingsToJson(this);
-}
+}*/

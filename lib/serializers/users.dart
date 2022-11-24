@@ -1,78 +1,57 @@
+import 'package:greenwheel/serializers/chargers.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'dart:ffi';
 
 part 'users.g.dart';
-
-@JsonSerializable()
-class LoginMethods {
-  LoginMethods({
-    this.id,
-    required this.name,
-  });
-
-  int? id;
-  String name;
-
-  factory LoginMethods.fromJson(Map<String, dynamic> json) =>
-      _$LoginMethodsFromJson(json);
-
-  Map<String, dynamic> toJson() => _$LoginMethodsToJson(this);
-}
-
-@JsonSerializable()
-class Languages {
-  Languages({
-    this.id,
-    required this.shortName,
-    required this.name,
-  });
-
-  int? id;
-  String shortName;
-  String name;
-
-  factory Languages.fromJson(Map<String, dynamic> json) =>
-      _$LanguagesFromJson(json);
-
-  Map<String, dynamic> toJson() => _$LanguagesToJson(this);
-}
 
 @JsonSerializable()
 class User {
   User({
     this.id,
-    required this.lastLogin,
     required this.username,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.isStaff,
-    required this.isActive,
-    required this.dateJoined,
-    required this.about,
-    required this.profilePicture,
-    required this.language,
-    required this.loginMethod,
+    required this.first_name,
+    required this.last_name,
+    this.about,
+    this.profile_picture,
+    required this.language_id,
     required this.level,
     required this.xp,
+    required this.rating,
   });
 
   int? id;
-  DateTime? lastLogin;
   String username;
-  String firstName;
-  String lastName;
-  String email;
-  bool isStaff;
-  bool isActive;
-  DateTime dateJoined;
-  String about;
-  String profilePicture;
-  Languages language;
-  LoginMethods loginMethod;
+  String first_name;
+  String last_name;
+  String? about;
+  ImageSerializer? profile_picture;
+  int language_id;
   int level;
   int xp;
+  double rating;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserToJson(this);
+}
+
+@JsonSerializable()
+class BasicUser {
+  BasicUser({
+    this.id,
+    required this.username,
+    required this.first_name,
+    required this.last_name,
+    this.profile_picture,
+  });
+
+  int? id;
+  String username;
+  String first_name;
+  String last_name;
+  String? profile_picture;
+
+  factory BasicUser.fromJson(Map<String, dynamic> json) => _$BasicUserFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BasicUserToJson(this);
 }
