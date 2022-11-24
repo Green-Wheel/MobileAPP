@@ -112,6 +112,7 @@ class BikeService {
         'latitude': data.localization.latitude,
         'longitude': data.localization.longitude,
         'town': data.town.name,
+        'province': data.town.province.name,
         'title': data.title,
         'description': data.description,
         'direction': data.direction,
