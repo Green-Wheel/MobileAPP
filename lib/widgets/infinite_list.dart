@@ -148,12 +148,14 @@ class _InfiniteList extends State<InfiniteList>{
         bool private = false;
         bool match = true;
         double price = 0.0;
-        return Flexible(child: _cardChargerList(description!, avaliable!, match, types, private, price));
+        String? direction = "Calle 1";
+        String? description2 = "description";
+        return Flexible(child: _cardChargerList(description!, avaliable!, match, types, private, price, direction!, description2!));
       });
   }
 
   //funcion respectiva a la card de los cargadores
-  Widget _cardChargerList(String direction, bool avaliable, bool match, List<ConnectionType> types, bool private, double  price) {
+  Widget _cardChargerList(String description, bool avaliable, bool match, List<ConnectionType> types, bool private, double  price, String direction, String description2) {
     //Generación rate aleatoria (harcode rate)
     Random random = Random();
     int min = 2, max = 6;
@@ -165,7 +167,7 @@ class _InfiniteList extends State<InfiniteList>{
         GoRouter.of(context)
             .go('/route/${widget.id}');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
       },
-      child: CardInfoWidget(location: direction, rating: numd, types: types, available: avaliable, match: match, private: private, price: price,),
+      child: CardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: match, private: false, price: price, direction: direction, description: description2, private_list: private),
     );
 
   }
