@@ -51,8 +51,7 @@ class _ConnectionInfoState extends State<ConnectionInfo> {
                     onChanged: (bool? value) {
                       setState(() {
                         if (value == true &&
-                            !_selected_connection_types
-                                .contains(item.id)) {
+                            !_selected_connection_types.contains(item.id)) {
                           _selected_connection_types.add(item.id);
                         } else if (value == false &&
                             _selected_connection_types.contains(item.id)) {

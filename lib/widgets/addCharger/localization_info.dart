@@ -78,9 +78,6 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Localization'),
-      ),
       body: Column(
         children: [
           SizedBox(
