@@ -21,8 +21,8 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run unit tests
-        run: flutter test --coverage
+#      - name: Run unit tests
+#        run: flutter test --coverage
 
       - name: Upload APK
         uses: actions/upload-artifact@v3
