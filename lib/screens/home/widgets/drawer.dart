@@ -3,11 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
+import '../../../services/generalServices/LoginService.dart';
+
 class SimpleDrawer extends StatelessWidget {
-  const SimpleDrawer({Key? key}) : super(key: key);
+  SimpleDrawer({Key? key}) : super(key: key);
+  final _loggedInStateInfo = LoginService();
+  var userData;
 
   @override
   Widget build(BuildContext context) {
+    userData = _loggedInStateInfo.user_info;
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
@@ -16,7 +21,6 @@ class SimpleDrawer extends StatelessWidget {
           crossFirstRow(context),
 
           DrawerHeader(
-
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -47,7 +51,9 @@ class SimpleDrawer extends StatelessWidget {
                   height: 10,
                 ),
                 Text(
-                  "Isslam Benali",
+                  userData != null
+                      ? userData['first_name'] + " " + userData['last_name']
+                      : "User Name",
                   style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,

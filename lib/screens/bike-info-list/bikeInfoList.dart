@@ -3,43 +3,44 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/serializers/chargers.dart';
-import 'package:greenwheel/widgets/card_info.dart';
 
-import '../../services/backendServices/chargers.dart';
-import '../../widgets/infinite_list.dart';
+import '../../services/backendServices/bikes.dart';
+import '../../widgets/bike_card_info.dart';
+import '../../widgets/bike_infinite_list.dart';
 
-class ChargeInfoList extends StatefulWidget {
-  const ChargeInfoList({Key? key}) : super(key: key);
+class BikeInfoList extends StatefulWidget {
+  const BikeInfoList({Key? key}) : super(key: key);
 
   @override
-  State<ChargeInfoList> createState() => _ChargeInfoListState();
+  State<BikeInfoList> createState() => _BikeInfoListState();
 
 }
 
 void main(){
   runApp(const MaterialApp(
-    title: 'chargeInfo try',
+    title: 'BikeInfo try',
     home: Scaffold(
-      body: ChargeInfoList(),
+      body: BikeInfoList(),
     ),
   ));
 }
 
-class _ChargeInfoListState extends State<ChargeInfoList>{
-  List markersList = [];
+class _BikeInfoListState extends State<BikeInfoList>{
 
-  /*@override
+  List markersList = [];
+  /*
+  @override
   void initState(){
     super.initState();
-    _getChargersList();
+    _getBikesList();
   }
 
-  void _getChargersList() async {
-    List chargerList = await ChargerService.getChargerList(1);
-    print(chargerList);
+  void _getBikesList() async {
+    List? BikeList = await BikeService.getBikeList(pag); // es canviarà a bikes quan estiguin des de backend
     setState(() {
-      markersList = chargerList;
+      if (BikeList != null) {
+        markersList = BikeList;
+      }
     });
   }*/
 
@@ -47,22 +48,22 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chargers'),
+        title: const Text('Bikes'),
         centerTitle: true,
         actions: const [
-        Padding(
-          padding: EdgeInsets.only(right: 125.0, left: 5.0),
-          child: Icon(Icons.location_on_outlined),
+          Padding(
+            padding: EdgeInsets.only(right: 125.0, left: 5.0),
+            child: Icon(Icons.directions_bike_outlined),
           ),
-        ],backgroundColor: Colors.green,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              GoRouter.of(context).go('/');
+        ],backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).go('/');
           },
         ),
       ),
-      body: InfiniteList(),
+      body: BikeInfiniteList(),
     );
   }
 }
@@ -113,16 +114,4 @@ String title_parser(String description){
     description = description.replaceAll("m-", "m\n");
   }
   return description;
-}
-
-
-//funcion respectiva a la card de los cargadores
-Widget _cardChargerList(String direction, bool avaliable, bool match, List<ConnectionType> types){
-  //Generación rate aleatoria (harcode rate)
-  Random random = Random();
-  int min = 2, max = 6;
-  int num = (min + random.nextInt(max - min));
-  double numd = num.toDouble();
-
-  return CardInfoWidget(location: direction, rating: numd, types: types, available: avaliable, match: match);
 }
