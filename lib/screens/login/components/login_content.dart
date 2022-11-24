@@ -1,10 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backend_service.dart';
 
 import '../../../services/generalServices/LoginService.dart';
-import '../../home/home.dart';
 import 'bottom_text.dart';
 import 'top_text.dart';
 
@@ -40,8 +40,7 @@ class _LoginContentState extends State<LoginContent>
         var apiKey = jsonResponse["apikey"];
         final _loggedInStateInfo = LoginService();
         _loggedInStateInfo.loginUser(apiKey);
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const HomePage()));
+        GoRouter.of(context).go('/');
         print("Login successful");
       } else if (response.statusCode == 400) {
         ScaffoldMessenger.of(context)
