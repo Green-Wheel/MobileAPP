@@ -28,7 +28,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'chargers/add',
           builder: (context, state) {
-            return const AddCharger(key: Key("AddCharger"));
+            return const AddBike(key: Key("AddCharger"));
           },
         ),
         GoRoute(

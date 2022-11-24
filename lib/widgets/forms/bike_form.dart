@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/forms/basic_info.dart';
+import 'package:greenwheel/widgets/forms/bike_info.dart';
 import 'package:greenwheel/widgets/forms/localization_info.dart';
 import '../../serializers/maps.dart';
 import '../../serializers/maps.dart';
+import '../../services/backendServices/bikes.dart';
 
 class BikeForm extends StatefulWidget {
   final data;
@@ -48,11 +51,26 @@ class _BikeFormState extends State<BikeForm> {
               '${address.street}, ${address.streetNumber}, ${address.postalCode}',
           _data['town'] = {
             'name': address.city,
-            'province': address.province,
+            'province': {'name': address.province},
           },
-          _data['latitude'] = localization.lat,
-          _data['longitude'] = localization.lng,
+          _data['localization'] = {
+            'latitude': localization.lat,
+            'longitude': localization.lng,
+          }
         });
+  }
+
+  void getBikeInfo(bike_info) {
+    setState(() {
+      _data['bike_type'] = bike_info['bike_type'];
+      _data['power'] = bike_info['power'];
+    });
+    if (widget.data == null) {
+      BikesService.newBike(_data, _images);
+    } else {
+      BikesService.updateBike(_data);
+    }
+    context.pop();
   }
 
   //widget functions
@@ -63,14 +81,22 @@ class _BikeFormState extends State<BikeForm> {
         {
           'title': '',
           'description': '',
-          'price': 0,
+          'price': '',
           'direction': '',
+          'localization': {
+            'latitude': 0.0,
+            'longitude': 0.0,
+          },
           'town': {
             'name': '',
-            'province': '',
+            'province': {
+              'name': '',
+            },
           },
-          'latitude': 0,
-          'longitude': 0,
+          'bike_type': {
+            'name': 'Electric',
+          },
+          'power': '0.0',
         };
   }
 
@@ -94,11 +120,23 @@ class _BikeFormState extends State<BikeForm> {
         {
           return LocalizationInfo(
             addres: _data['direction'],
-            localization: LatLang.fromJson(
-                {'lat': _data['latitude'], 'lng': _data['longitude']}),
+            localization: LatLang(
+                lat: _data['localization']['latitude'],
+                lng: _data['localization']['longitude']),
             callback: getLocalization,
             nextPage: nextPage,
             prevPage: previousPage,
+          );
+        }
+      case 2:
+        {
+          return BikeInfo(
+              data: {
+                'bike_type': _data['bike_type'],
+                'power': _data['power'],
+              },
+              callback: getBikeInfo,
+              prevPage: previousPage
           );
         }
     }
