@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 import '../../serializers/bikes.dart';
@@ -21,12 +23,18 @@ class BikeInfo extends StatefulWidget {
 
 class _BikeInfoState extends State<BikeInfo> {
   List<BikeType> _bike_types = [];
+  var _bike_name = [];
+  var _selected = '';
   final _formKey = GlobalKey<FormState>();
 
   void _getBikeTypes() async {
     List<BikeType> bike_typesL = await BikeService.getBikeTypes();
     setState(() {
       _bike_types = bike_typesL;
+      _bike_name = bike_typesL.map((e) => e.name).toList();
+      _selected = widget.data['bike_type'].name != ''
+          ? widget.data['bike_type'].name
+          : _bike_name.first;
     });
   }
 
@@ -46,24 +54,24 @@ class _BikeInfoState extends State<BikeInfo> {
             Container(
               width: 9 * MediaQuery.of(context).size.height / 10,
               child: DropdownButton(
-                value: widget.data["bike_type"].name ?? 'Select a type',
+                value: _selected,
                 dropdownColor: Colors.white,
                 icon: const Icon(Icons.keyboard_arrow_down),
                 isExpanded: true,
-                items: _bike_types.map((item) {
+                items: _bike_name.map((item) {
                   return DropdownMenuItem(
                     value: item,
-                    child: Text(item.name),
+                    child: Text(item),
                   );
                 }).toList(),
                 onChanged: (value) {
                   setState(() {
-                    widget.data["bike_type"] = value;
+                    _selected = value as String;
                   });
                 },
               ),
             ),
-            widget.data["bike_type"]['name'] == 'Electric'
+            _selected == 'Electric'
                 ? Form(
                     key: _formKey,
                     child: Column(
@@ -71,11 +79,14 @@ class _BikeInfoState extends State<BikeInfo> {
                         const SizedBox(height: 10),
                         const Text("Power", textAlign: TextAlign.left),
                         TextFormField(
-                          initialValue: widget.data["power"],
+                          initialValue:
+                              widget.data["power"].toString() != 'null'
+                                  ? widget.data["power"].toString()
+                                  : '',
                           keyboardType: TextInputType.number,
                           onChanged: (value) {
                             setState(() {
-                              widget.data["power"] = value;
+                              widget.data["power"] = double.parse(value);
                             });
                           },
                           decoration: const InputDecoration(
@@ -104,9 +115,11 @@ class _BikeInfoState extends State<BikeInfo> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      if (widget.data["bike_type"]['name'] != 'Electric' ||
-                          (widget.data["bike_type"]['name'] != 'Electric' &&
+                      if (_selected != 'Electric' ||
+                          (_selected == 'Electric' &&
                               _formKey.currentState!.validate())) {
+                        widget.data["bike_type"] = _bike_types
+                            .firstWhere((element) => element.name == _selected);
                         widget.callback(widget.data);
                       }
                     },

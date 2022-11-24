@@ -36,7 +36,7 @@ class _EditBikeState extends State<EditBike> {
         title: const Text('Edit Bike'),
       ),
       body: Center(
-        child: charged
+        child: !charged
             ? Container(
                 height: MediaQuery.of(context).size.height / 5,
                 width: MediaQuery.of(context).size.height / 5,
