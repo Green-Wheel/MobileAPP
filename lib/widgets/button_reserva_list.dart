@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ButtonReservaListWidget extends StatefulWidget {
-
+  //final int id;
   const ButtonReservaListWidget(
-      {super.key});
+      {super.key,}); //required this.id
 
   @override
   State<StatefulWidget> createState() => _ButtonReservaListWidget();
@@ -13,40 +13,45 @@ class ButtonReservaListWidget extends StatefulWidget {
 class _ButtonReservaListWidget extends State<ButtonReservaListWidget>{
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 33,
-      child: TextButton(
-        style: ButtonStyle(
-            backgroundColor:
-            MaterialStateProperty.all<Color>(Colors.lightGreen[50]!),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    side: const BorderSide(color: Colors.green)))),
-        onPressed: () {
-          GoRouter.of(context)
-              .go('/bookings/');
-        },
-        child: Row(
-          children: const [
-            Padding(
-            padding: EdgeInsets.only(left: 18),
-            child: Text(
-                'Go Bookings',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600, color: Colors.lightGreen),
-              ),
-            ),
-            Padding(
-                padding: EdgeInsets.only(left: 5),
-                child:Icon(
-                  Icons.calendar_month,
-                  size: 18,
-                  color: Colors.green,
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(105, 0, 0, 0),
+       child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.75,
+          height: 63,
+          child: TextButton(
+            style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                        side: const BorderSide(color: Colors.green)))),
+            onPressed: () {
+              //TODO: Redireccion a la pantalla del calendario
+              GoRouter.of(context)
+                  .go('/bookings/'); //${widget.id}
+            },
+            child: Row(
+              children: const [
+                Padding(
+                padding: EdgeInsets.only(left: 30),
+                child: Text(
+                    'Go Bookings',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w800, color: Colors.white),
+                        textAlign: TextAlign.center,
+                  ),
                 ),
+                Padding(
+                    padding: EdgeInsets.only(left: 5),
+                    child:Icon(
+                      Icons.calendar_month,
+                      size: 18,
+                      color: Colors.white,
+                    ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
       ),
     );
   }

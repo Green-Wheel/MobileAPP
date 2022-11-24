@@ -170,6 +170,10 @@ GoRouter routeGenerator(LoginService loginService) {
         ),
       ]
     ),
+    GoRoute(
+      path: '/chargers/list',
+      builder: (context, state) => const ChargeInfoList(key: Key("ChargersList")),
+    ),
   ],
   redirect: (BuildContext context, GoRouterState state) async {
 
