@@ -50,13 +50,10 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
 
   void _getBikesList(int page) async {
     List<BikeList> bikeList = await BikeService.getBikeList(page);
-    print('bikeeeee $bikeList');
     setState(() {
       //_markersList = chargerList;
       _markersListAll.addAll(bikeList);
     });
-    print('markerLIiiist $_markersList');
-    print('markerLIiiistAll $_markersListAll');
   }
 
 
@@ -149,18 +146,20 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
 
           bool avaliable = true;
 
-          return Flexible(child: _cardChargerList(description!, avaliable));
+          BikeType bikeType = _markersListAll[index].bike_type;
+
+          return Flexible(child: _cardBikeList(description!, avaliable, bikeType));
         });
   }
 
   //funcion respectiva a la card de los cargadores
-  Widget _cardChargerList(String direction, bool available) {
+  Widget _cardBikeList(String direction, bool available, BikeType bikeType){
     //Generación rate aleatoria (harcode rate)
     Random random = Random();
     int min = 2, max = 6;
     int num = (min + random.nextInt(max - min));
     double numd = num.toDouble();
 
-    return BikeCardInfoWidget(location: direction, rating: numd, available: available);
+    return BikeCardInfoWidget(location: direction, rating: numd, available: available, bikeType: bikeType);
   }
 }

@@ -58,6 +58,10 @@ Publication _$PublicationFromJson(Map<String, dynamic> json) => Publication(
           ? null
           : DetailedCharherSerializer.fromJson(
               json['charger'] as Map<String, dynamic>),
+      bike: json['bike'] == null
+          ? null
+          : DetailedBikeSerializer.fromJson(
+              json['bike'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$PublicationToJson(Publication instance) =>
@@ -65,6 +69,7 @@ Map<String, dynamic> _$PublicationToJson(Publication instance) =>
       'id': instance.id,
       'type': instance.type,
       'charger': instance.charger,
+      'bike': instance.bike,
     };
 
 SpeedType _$SpeedTypeFromJson(Map<String, dynamic> json) => SpeedType(
