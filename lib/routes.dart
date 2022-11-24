@@ -10,6 +10,8 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/bike-info-list/bikeInfoList.dart';
+import 'package:greenwheel/screens/bike/add_bike.dart';
+import 'package:greenwheel/screens/bike/edit_bike.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
 import 'package:greenwheel/screens/chargers/add_charger.dart';
@@ -30,7 +32,7 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'chargers/add',
               builder: (context, state) =>
-                  const AddCharger(key: Key("AddCharger")),
+                  const EditBike(key: Key("AddBike"), id: 418),
             ),
             GoRoute(
               path: 'chargers/list',

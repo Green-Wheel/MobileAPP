@@ -66,7 +66,7 @@ class DetailedBikeSerializer {
   Town town;
   List<ImageSerializer>? images;
   double? avg_rating;
-  int bike_type;
+  BikeType bike_type;
   double? power;
   double price;
 
@@ -94,7 +94,7 @@ class BikeList {
   List<ImageSerializer>? images;
   Localization localization;
   double? avg_rating;
-  int bike_type;
+  BikeType bike_type;
   double price;
 
   factory BikeList.fromJson(Map<String, dynamic> json) =>

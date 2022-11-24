@@ -43,7 +43,7 @@ DetailedBikeSerializer _$DetailedBikeSerializerFromJson(
           ?.map((e) => ImageSerializer.fromJson(e as Map<String, dynamic>))
           .toList(),
       avg_rating: (json['avg_rating'] as num?)?.toDouble(),
-      bike_type: json['bike_type'] as int,
+      bike_type: BikeType.fromJson(json['bike_type'] as Map<String, dynamic>),
       power: (json['power'] as num?)?.toDouble(),
       price: (json['price'] as num).toDouble(),
     );
@@ -73,7 +73,7 @@ BikeList _$BikeListFromJson(Map<String, dynamic> json) => BikeList(
       localization:
           Localization.fromJson(json['localization'] as Map<String, dynamic>),
       avg_rating: (json['avg_rating'] as num?)?.toDouble(),
-      bike_type: json['bike_type'] as int,
+      bike_type: BikeType.fromJson(json['bike_type'] as Map<String, dynamic>),
       price: (json['price'] as num).toDouble(),
     );
 

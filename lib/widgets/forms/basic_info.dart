@@ -73,10 +73,10 @@ class _BasicInfoState extends State<BasicInfo> {
                 SizedBox(height: 10),
                 Text("Price"),
                 TextFormField(
-                  initialValue: widget.data['price'],
+                  initialValue: widget.data['price'].toString() != '0.0' ? widget.data['price'].toString() : '',
                   keyboardType: TextInputType.number,
                   onSaved: (value) {
-                    widget.data['price'] = value!;
+                    widget.data['price'] = double.parse(value!);
                   },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
