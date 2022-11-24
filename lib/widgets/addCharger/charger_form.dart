@@ -1,89 +1,29 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:greenwheel/services/backend_service.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/addCharger/connection_info.dart';
 import 'package:greenwheel/widgets/addCharger/current_info.dart';
 import 'package:greenwheel/widgets/addCharger/localization_info.dart';
 import 'package:greenwheel/widgets/addCharger/speed_%20info.dart';
 import 'package:greenwheel/widgets/addCharger/basic_info.dart';
 import '../../serializers/maps.dart';
+import '../../services/backendServices/private_chargers.dart';
 
-class charger extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return (MaterialApp(
-      title: 'addCharger try',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Formulary'),
-        ),
-        body: const AddCharger(),
-      ),
-    ));
-  }
-}
+class ChargerForm extends StatefulWidget {
+  final data;
 
-class AddCharger extends StatefulWidget {
-  const AddCharger({Key? key}) : super(key: key);
+  const ChargerForm({Key? key, this.data}) : super(key: key);
 
   @override
-  State<AddCharger> createState() => _AddChargerState();
+  State<ChargerForm> createState() => _ChargerFormState();
 }
 
-typedef void SetImages(images);
-
-class _AddChargerState extends State<AddCharger> {
-  final _formKey0 = GlobalKey<FormState>();
-  final _formKey1 = GlobalKey<FormState>();
-
-  int _page = 2;
+class _ChargerFormState extends State<ChargerForm> {
+  int _page = 0;
 
   List<File> _images = [];
 
-  final _data = {
-    'title': '',
-    'description': '',
-    'direction': '',
-    'lat': 0.0,
-    'lng': 0.0,
-    'town': {},
-    'connection_type': [],
-    'current_type': [],
-    'speed': [],
-    'power': '',
-    'avg_rating': 0.0,
-    'charge_type': '',
-    'price': '',
-  };
-
-  void send_data() async {
-    try {
-      var response = await BackendService.post('chargers/private/', _data);
-      if (response.statusCode == 200) {
-        print('Charger added');
-      } else {
-        throw Exception('Failed to add charger');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
-
-/*
-  void getConnectionTypes() {
-    BackendService.get('chargers/connection/').then((response) async {
-      if (response.statusCode == 200) {
-        var json = jsonDecode(response.body);
-        setState(() {
-          _connection_types = json;
-        });
-      } else {
-        print('Error getting connection types');
-        print(response.statusCode);
-      }
-    });
-  }
-*/
+  late final Map<String, dynamic> _data;
 
   void nextPage() {
     setState(() {
@@ -114,8 +54,8 @@ class _AddChargerState extends State<AddCharger> {
             'name': address.city,
             'province': address.province,
           },
-          _data['lat'] = localization.lat,
-          _data['lng'] = localization.lng
+          _data['latitude'] = localization.lat,
+          _data['longitude'] = localization.lng,
         });
   }
 
@@ -136,7 +76,33 @@ class _AddChargerState extends State<AddCharger> {
           _data['current_type'] = currents['current_type'],
           _data['power'] = currents['power'],
         });
-    send_data();
+    if (widget.data != null) {
+      PrivateChargersService.updateCharger(_data);
+    } else {
+      PrivateChargersService.newCharger(_data, _images);
+    }
+    context.pop();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _data = widget.data ??
+        {
+          'title': '',
+          'description': '',
+          'direction': '',
+          'latitude': 0,
+          'longitude': 0,
+          'town': {},
+          'connection_type': [],
+          'current_type': [],
+          'speed': [],
+          'power': '55',
+          'avg_rating': 0.0,
+          'charge_type': '',
+          'price': '',
+        };
   }
 
   @override
@@ -159,8 +125,8 @@ class _AddChargerState extends State<AddCharger> {
         {
           return LocalizationInfo(
             addres: _data['direction'],
-            localization:
-                LatLang.fromJson({'lat': _data['lat'], 'lng': _data['lng']}),
+            localization: LatLang.fromJson(
+                {'lat': _data['latitude'], 'lng': _data['longitude']}),
             callback: getLocalization,
             nextPage: nextPage,
             prevPage: previousPage,
@@ -191,7 +157,7 @@ class _AddChargerState extends State<AddCharger> {
         }
       default:
         {
-          return Center(
+          return const Center(
               child: Scaffold(
             body: SingleChildScrollView(child: Text("PAGE NOT EXISTENT")),
           ));

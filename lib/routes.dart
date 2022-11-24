@@ -10,50 +10,52 @@ final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
 
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/screens/bike-info-list/bikeInfoList.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
+import 'package:greenwheel/screens/chargers/edit_charger.dart';
 import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/route/route.dart';
-import 'package:greenwheel/widgets/addCharger/add_charger.dart';
 
 final GoRouter router = GoRouter(
   routes: [
     GoRoute(
       path: '/',
       builder: (context, state) => const HomePage(key: Key("HomePage")),
-    ),
-    GoRoute(
-      path: '/route/:lat/:long',
-      builder: (context, state) {
-        final long = state.params['long']!;
-        final lat = state.params['lat']!;
-        return RoutePage(
-          key: Key("RoutePage"),
-          lat: lat,
-          long: long,
-        );
-      },
-    ),
-    GoRoute(
-      path: '/booking',
-      builder: (context, state) => const MyBookings(key: Key("Booking")),
-    ),
-    GoRoute(
-      path: '/chargers/list',
-      builder: (context, state) => const ChargeInfoList(key: Key("ChargersList")),
-    ),
-    GoRoute(
-      path: '/bikes/list',
-      builder: (context, state) => const BikeInfoList(key: Key("BikesList")),
-    ),
-    GoRoute(
-      path: '/chargers/add',
-      builder: (context, state) => const AddCharger(key: Key("AddCharger")),
-    ),
-    GoRoute(
-      path: '/chargers/list',
-      builder: (context, state) => const ChargeInfoList(key: Key("ChargersList")),
+      routes: [
+        GoRoute(
+          //aun no funciona
+          path: 'chargers/add',//'chargers/:id/edit',
+          builder: (context, state) {
+            //final id = state.params['id'] as int;
+            return EditCharger(key: Key("EditCharger"), id: 2);
+          },
+        ),
+        /*GoRoute(
+          path: 'chargers/add',
+          builder: (context, state) => const AddCharger(key: Key("EditCharger")),
+        ),*/
+        GoRoute(
+          path: 'chargers/list',
+          builder: (context, state) =>
+          const ChargeInfoList(key: Key("ChargersList")),
+        ),
+        GoRoute(
+          path: 'booking',
+          builder: (context, state) => const MyBookings(key: Key("Booking")),
+        ),
+        GoRoute(
+          path: 'route/:lat/:long',
+          builder: (context, state) {
+            final long = state.params['long']!;
+            final lat = state.params['lat']!;
+            return RoutePage(
+              key: Key("RoutePage"),
+              lat: lat,
+              long: long,
+            );
+          },
+        ),
+      ]
     ),
   ],
 );

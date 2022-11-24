@@ -53,7 +53,7 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
 
     setPointAddress(prov, address!);
   }
-
+  //TODO: add direction to the search bar
   void submitPoint(LatLng point) async {
     LatLang p = LatLang(lat: point.latitude, lng: point.longitude);
     Address? address = await Geocoding.getAddressFromLatLang(p);
@@ -78,9 +78,6 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Localization'),
-      ),
       body: Column(
         children: [
           SizedBox(
