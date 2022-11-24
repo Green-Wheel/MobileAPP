@@ -51,5 +51,9 @@ final GoRouter router = GoRouter(
       path: '/chargers/add',
       builder: (context, state) => const AddCharger(key: Key("AddCharger")),
     ),
+    GoRoute(
+      path: '/chargers/list',
+      builder: (context, state) => const ChargeInfoList(key: Key("ChargersList")),
+    ),
   ],
 );

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../serializers/chargers.dart';
 import '../../widgets/card_info.dart';
 import '../services/backendServices/chargers.dart';
@@ -8,18 +9,11 @@ import '../services/backendServices/chargers.dart';
 class InfiniteList extends StatefulWidget {
   const InfiniteList({Key? key}) : super(key: key);
 
+  get id => null;
+
   @override
   State<InfiniteList> createState() => _InfiniteList();
 
-}
-
-void main(){
-  runApp(const MaterialApp(
-    title: 'chargeInfo try',
-    home: Scaffold(
-      body: InfiniteList(),
-    ),
-  ));
 }
 
 class _InfiniteList extends State<InfiniteList>{
@@ -144,28 +138,36 @@ class _InfiniteList extends State<InfiniteList>{
         String? description = _markersListAll[index].title; // falta description al backend de ChargerList
         //description = title_parser(description);
 
-        bool avaliable = true;
+        bool? avaliable = true;
 
         List<ConnectionType> types = [];
         for (int i = 0; i < _markersListAll[index].connection_type.length; ++i) {
           types.add(_markersListAll[index].connection_type[i]);
         }
-
+        //TODO:poner atributo private correctamente
+        bool private = false;
         bool match = true;
-
-        return Flexible(child: _cardChargerList(description!, avaliable, match, types));
+        double price = 0.0;
+        return Flexible(child: _cardChargerList(description!, avaliable!, match, types, private, price));
       });
   }
 
   //funcion respectiva a la card de los cargadores
-  Widget _cardChargerList(String direction, bool avaliable, bool match, List<ConnectionType> types) {
+  Widget _cardChargerList(String direction, bool avaliable, bool match, List<ConnectionType> types, bool private, double  price) {
     //Generación rate aleatoria (harcode rate)
     Random random = Random();
     int min = 2, max = 6;
     int num = (min + random.nextInt(max - min));
     double numd = num.toDouble();
+    return GestureDetector(
+      onTap: () {
+        //TODO: ir a la pagina del cargador
+        GoRouter.of(context)
+            .go('/route/${widget.id}');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
+      },
+      child: CardInfoWidget(location: direction, rating: numd, types: types, available: avaliable, match: match, private: private, price: price,),
+    );
 
-    return CardInfoWidget(location: direction, rating: numd, types: types, available: avaliable, match: match);
   }
 
 

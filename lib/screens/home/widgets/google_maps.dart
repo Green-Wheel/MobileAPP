@@ -252,7 +252,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               listButton(),
               SizedBox(height: 10),
               currentLocationActionButton(),
-              SizedBox(height: 165),],
+              SizedBox(height: 200),],
         ));
   }
 
@@ -269,8 +269,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       print("do charger");
       return SlidingUpPanel(
         // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-          minHeight: 175.0,
+          maxHeight: MediaQuery.of(context).size.height * 0.6,
+          minHeight: 210.0,
           controller: panelController,
           parallaxEnabled: true,
           parallaxOffset: 0.5,
@@ -284,7 +284,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       return SlidingUpPanel(
         // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
           maxHeight: MediaQuery.of(context).size.height * 0.8,
-          minHeight: 175.0,
+          minHeight: 185.0,
           controller: panelController,
           parallaxEnabled: true,
           parallaxOffset: 0.5,
@@ -322,10 +322,14 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         types.add(markedCharger!.connection_type[i]);
       }
 
+      //TODO: poner atributos correctos
+      bool private = true; //markedCharger!.private != null;
+      double price = 10.0;//markedCharger.private.price;
+      if (price! <= 0.0) price = 0.0;
       // available
       // match
 
-      return CardInfoWidget(location: descrip, rating: numd, types: types, available: true, match: true);
+      return CardInfoWidget(location: descrip, rating: numd, types: types, available: true, match: true, private: private, price: price);
   }
 
 

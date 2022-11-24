@@ -15,9 +15,7 @@ class ButtonRouteWidget extends StatefulWidget {
 class _ButtonRouteWidget extends State<ButtonRouteWidget>{
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 5, 140, 0),
-      child: SizedBox(
+    return SizedBox(
         height: 33,
         width: 75,
         child: TextButton(
@@ -34,21 +32,20 @@ class _ButtonRouteWidget extends State<ButtonRouteWidget>{
           },
           child: Row(
             children: const [
-              Text(
-                'Route ',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600, color: Colors.lightGreen),
-              ),
               Icon(
                 Icons.directions,
                 size: 18,
                 color: Colors.green,
               ),
+              Text(
+                'Route ',
+                style: TextStyle(
+                    fontWeight: FontWeight.w600, color: Colors.lightGreen),
+              ),
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
 
