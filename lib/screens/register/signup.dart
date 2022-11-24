@@ -54,7 +54,7 @@ class SignupScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              height: MediaQuery.of(context).size.height*0.9 - Size.fromHeight(kToolbarHeight).height,
+              height: MediaQuery.of(context).size.height*0.8 - Size.fromHeight(kToolbarHeight).height,
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -66,15 +66,6 @@ class SignupScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child:   Text("Register a new account",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          )
-                        )
-                    ),
                     Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:  Text("Username",  style: TextStyle(fontSize: 18),)

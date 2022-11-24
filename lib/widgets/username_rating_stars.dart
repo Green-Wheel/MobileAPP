@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:greenwheel/widgets/rating_stars.dart';
 
+import '../screens/register/recover_password.dart';
+
 class Username_Rating extends StatelessWidget {
   String username;
   String rating;
@@ -17,7 +19,7 @@ class Username_Rating extends StatelessWidget {
                       child: Row(
                           children: <Widget>[
                             Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                            if(edit_button) edit(),
+                            if(edit_button) edit(context),
                       ],
                     ),
             ),
@@ -28,10 +30,16 @@ class Username_Rating extends StatelessWidget {
     );
   }
 
-  Widget edit() {
+  Widget edit(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
+        /*
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) =>   ForgotPasswordScreen()),
+         );
+         */
       },
     );
   }

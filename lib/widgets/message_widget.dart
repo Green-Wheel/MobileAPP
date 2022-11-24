@@ -51,7 +51,7 @@ main() {
           _messageWidget("shdkshldhsalssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", false, true, DateTime.now(), DateTime.now()),
         ]
       ),
-      drawer: SimpleDrawer(),
+   //   drawer: SimpleDrawer(),
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     ),
