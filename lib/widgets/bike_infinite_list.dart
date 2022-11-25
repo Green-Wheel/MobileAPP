@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../serializers/bikes.dart';
 import '../services/backendServices/bikes.dart';
 import 'bike_card_info.dart';
@@ -138,13 +139,13 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
           double price = _markersListAll[index].price;
           //TODO: atributos bikes
           bool avaliable = true;
-
-          return Flexible(child: _cardBikeList(description!, avaliable, bikeType, price));
+          int? id = _markersListAll[index].id;
+          return Flexible(child: _cardBikeList(description!, avaliable, bikeType, price, id!));
         });
   }
 
   //funcion respectiva a la card de los cargadores
-  Widget _cardBikeList(String direction, bool available, BikeType bikeType, double price) {
+  Widget _cardBikeList(String direction, bool available, BikeType bikeType, double price, int id) {
     //Generación rate aleatoria (harcode rate)
     Random random = Random();
     int min = 2, max = 6;
@@ -153,6 +154,13 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
     //TODO: redireccionar a la vista de la bici
     String? description = "Nice";
     String? direction1 = "Calle 1";
-    return BikeCardInfoWidget(location: direction, rating: numd, available: available, type: bikeType, price: price, direction: direction1, description: description, bike_list: true, power: 0);
+    return GestureDetector(
+      onTap: () {
+        GoRouter.of(context)
+            .go('/bike/$id');
+      },
+      child: BikeCardInfoWidget(location: direction, rating: numd, available: available, type: bikeType, price: price, direction: direction1, description: description, bike_list: true, power: 0),
+    );
+
   }
 }

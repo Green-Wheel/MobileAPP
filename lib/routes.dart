@@ -48,6 +48,13 @@ final GoRouter router = GoRouter(
           },
         ),
         GoRoute(
+          path: 'bikes/:id',
+          builder: (context, state) {
+            final id = int.parse(state.params['id']!);
+            return HomePage(key: Key("HomePage"), publicationId: id);
+          },
+        ),
+        GoRoute(
           path: 'booking',
           builder: (context, state) => const MyBookings(key: Key("Booking")),
         ),
