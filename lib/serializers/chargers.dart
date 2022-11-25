@@ -4,6 +4,7 @@ import 'package:greenwheel/serializers/users.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import './maps.dart';
+import 'bikes.dart';
 
 part 'chargers.g.dart';
 
@@ -77,13 +78,15 @@ class Publication {
   Publication({
     this.id,
     required this.type,
-    this.charger
+    this.charger,
+    this.bike
     //required this.bike
   });
 
   int? id;
   String type;
   DetailedCharherSerializer? charger;
+  DetailedBikeSerializer? bike;
   //BikeDetailedSerializer bike;
 
   factory Publication.fromJson(Map<String, dynamic> json) =>

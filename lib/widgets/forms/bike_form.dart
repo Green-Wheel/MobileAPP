@@ -7,7 +7,6 @@ import 'package:greenwheel/widgets/forms/localization_info.dart';
 import '../../serializers/bikes.dart';
 import '../../serializers/chargers.dart';
 import '../../serializers/maps.dart';
-import '../../serializers/maps.dart';
 import '../../services/backendServices/bikes.dart';
 
 class BikeForm extends StatefulWidget {
@@ -68,7 +67,6 @@ class _BikeFormState extends State<BikeForm> {
     } else {
       BikeService.updateBike(_data);
     }
-    context.pop();
   }
 
   //widget functions
@@ -79,7 +77,7 @@ class _BikeFormState extends State<BikeForm> {
         DetailedBikeSerializer(
             localization: Localization(latitude: 0.0, longitude: 0.0),
             town: Town(name: '', province: Province(name: '')),
-            bike_type: 0,
+            bike_type: BikeType(name: ''),
             price: 0.0);
   }
 
@@ -102,7 +100,7 @@ class _BikeFormState extends State<BikeForm> {
       case 1:
         {
           return LocalizationInfo(
-            addres: _data.direction,
+            addres: _data.direction ?? '',
             localization: _data.localization,
             callback: getLocalization,
             nextPage: nextPage,

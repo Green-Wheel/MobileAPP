@@ -4,7 +4,6 @@ import 'chargers.dart';
 
 part 'bikes.g.dart';
 
-// TODO canviar bike_type de int a bikeType quan backend estigui preparat
 
 @JsonSerializable()
 class BikeType {
@@ -54,7 +53,7 @@ class DetailedBikeSerializer {
     this.images,
     this.avg_rating,
     required this.bike_type,
-    this.power, // ???????
+    this.power,
     required this.price,
   });
 
@@ -66,7 +65,7 @@ class DetailedBikeSerializer {
   Town town;
   List<ImageSerializer>? images;
   double? avg_rating;
-  int bike_type;
+  BikeType bike_type;
   double? power;
   double price;
 
@@ -94,7 +93,7 @@ class BikeList {
   List<ImageSerializer>? images;
   Localization localization;
   double? avg_rating;
-  int bike_type;
+  BikeType bike_type;
   double price;
 
   factory BikeList.fromJson(Map<String, dynamic> json) =>

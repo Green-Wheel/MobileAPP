@@ -350,8 +350,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     double numd = num.toDouble();
 
     // available
+    BikeType? bikeType = markedBike!.bike_type;
 
-    return BikeCardInfoWidget(location: descrip, rating: numd, available: true);
+    return BikeCardInfoWidget(location: descrip, rating: numd, available: true, bikeType: bikeType);
   }
 
   String? title_parser(String? description){

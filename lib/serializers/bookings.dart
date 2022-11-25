@@ -6,6 +6,22 @@ import 'chargers.dart';
 part 'bookings.g.dart';
 
 @JsonSerializable()
+class BookingStatus {
+  BookingStatus({
+    this.id,
+    required this.name,
+  });
+
+  int? id;
+  String name;
+
+  factory BookingStatus.fromJson(Map<String, dynamic> json) =>
+      _$BookingStatusFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BookingStatusToJson(this);
+}
+
+@JsonSerializable()
 class Booking {
   Booking({
     this.id,
@@ -13,6 +29,7 @@ class Booking {
     required this.publication,
     required this.start_date,
     required this.end_date,
+    required this.status,
     required this.created,
   });
 
@@ -21,6 +38,7 @@ class Booking {
   Publication publication;
   DateTime start_date;
   DateTime end_date;
+  BookingStatus status;
   DateTime created;
 
   factory Booking.fromJson(Map<String, dynamic> json) =>
@@ -28,24 +46,3 @@ class Booking {
 
   Map<String, dynamic> toJson() => _$BookingToJson(this);
 }
-
-/*
-@JsonSerializable()
-class Bookings {
-  Bookings({
-    required this.count,
-    required this.next,
-    required this.previous,
-    required this.results,
-  });
-
-  int count;
-  dynamic next;
-  dynamic previous;
-  List<Booking> results;
-
-  factory Bookings.fromJson(Map<String, dynamic> json) =>
-      _$BookingsFromJson(json);
-
-  Map<String, dynamic> toJson() => _$BookingsToJson(this);
-}*/
