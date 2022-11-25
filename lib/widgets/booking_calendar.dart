@@ -43,6 +43,11 @@ class Reservation{
   Reservation(this.start_date, this.end_date);
 }
 
+class Modification{
+  late DateTime start_date;
+  late int type;
+}
+
 class _bookingCalendarState extends State<bookingCalendar> {
   Map<String, dynamic> data = Map();
   DateTime now = DateTime.now();
