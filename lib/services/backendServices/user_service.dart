@@ -73,7 +73,7 @@ class UserService extends ChangeNotifier {
         Future.delayed(Duration.zero, () => showAlert(context,"Done","You have changed your image"));
       }
       else {
-        Future.delayed(Duration.zero, () => showAlert(context,"Error","We cannot retrieve the iamge"));
+        Future.delayed(Duration.zero, () => showAlert(context,"Error","We cannot retrieve the image"));
       }
     });
   }
