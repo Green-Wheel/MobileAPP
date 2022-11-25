@@ -1,5 +1,6 @@
-import 'dart:async';
+import 'dart:core';
 import 'dart:developer';
+import 'package:greenwheel/services/backendServices/bookings.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'custom_calendar.dart';
@@ -10,7 +11,6 @@ import 'lib/services/backendServices/publications.dart';
 void main() => runApp(MyApp());
 
 //TODO: exportar colores a clase
-//TODO:
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -31,6 +31,18 @@ class bookingCalendar extends StatefulWidget {
   _bookingCalendarState createState() => _bookingCalendarState();
 }
 
+class Reservation{
+  late DateTime start_date;
+  late DateTime end_date;
+
+  @override
+  String toString(){
+    return "Reserva: "+start_date.toString()+" ->"+end_date.toString()+"\n";
+  }
+
+  Reservation(this.start_date, this.end_date);
+}
+
 class _bookingCalendarState extends State<bookingCalendar> {
   DateTime now = DateTime.now();
   DateTime selectedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -46,17 +58,58 @@ class _bookingCalendarState extends State<bookingCalendar> {
     super.initState();
   }
 
-  void split_reservations(){
 
-    selectedDates.forEach((key, value) {
+  bool are_contiguous(DateTime d1,DateTime d2){
+    String as="Si ";
+    if (d1.difference(d2).inMinutes.abs() <= 30)
+      as = "No ";
 
+    log(as+"son contiguos---> ${d1} | ${d2} difference ${d1.difference(d2).inMinutes}");
+    return d1.difference(d2).inMinutes.abs() <= 30;
+  }
 
-    });
+  List<Reservation> split_reservations(){
+    List<Reservation> reservations = [];
+    DateTime firstDate = selectedDates.keys.toList().first;
+    TimeOfDay firstHour = selectedDates[firstDate]!.first;
+    DateTime start = DateTime(firstDate.year,firstDate.month,firstDate.day,
+                                    firstHour.hour,firstHour.minute);
+    DateTime last = DateTime(firstDate.year,firstDate.month,firstDate.day,
+                    firstHour.hour,firstHour.minute);
+
+    if(selectedDates.isNotEmpty)
+    {
+      selectedDates.forEach((date, hours) {
+        for(var hour in hours){
+          DateTime currentDate = DateTime(date.year,date.month,date.day,
+              hour.hour, hour.minute);
+          if(!are_contiguous(last,currentDate)){
+            DateTime end = DateTime(date.year, date.month, date.day, last.hour, last.minute+29);
+            reservations.add(Reservation(start, end));
+            start = currentDate;
+          }
+          last = currentDate;
+        }
+      });
+      DateTime end = DateTime(last.year, last.month, last.day, last.hour, last.minute+29);
+      reservations.add(Reservation(start, end));
+    }
+    log("LAS RESERVAS:");
+    log(reservations.toString());
+    return reservations;
+
   }
 
   void make_reservations() {
-    split_reservations();
-
+    if(selectedDates.isEmpty) return;
+    selectedDates = Map.fromEntries(
+        selectedDates.entries.toList()..sort((e1, e2) => e1.key.compareTo(e2.key)));
+    log("Making reservations");
+    log(selectedDates.toString());
+    List<Reservation> reservations = split_reservations();
+    for(var reservation in reservations){
+      //BookingService.newBooking(reservation);
+    }
   }
 
   void getDate(DateTime date){
@@ -79,8 +132,8 @@ class _bookingCalendarState extends State<bookingCalendar> {
 
     setState(() {
       selectedDate = date;
-      myReservations = [TimeOfDay(hour:8 ,minute: 0)];
-      availableHours = [TimeOfDay(hour:8 ,minute: 30),TimeOfDay(hour:10 ,minute: 88),TimeOfDay(hour:1 ,minute: 30),TimeOfDay(hour: 2,minute: 0),TimeOfDay(hour:2 ,minute: 30),TimeOfDay(hour: 3, minute: 30),];
+      myReservations = [TimeOfDay(hour:8 ,minute: 30)];
+      availableHours = [TimeOfDay(hour:8 ,minute: 30),TimeOfDay(hour:10 ,minute: 88),TimeOfDay(hour:1 ,minute: 30),TimeOfDay(hour:1 ,minute: 0),TimeOfDay(hour:0 ,minute: 30),TimeOfDay(hour: 2,minute: 0),TimeOfDay(hour:4,minute: 30),TimeOfDay(hour: 3, minute: 30),];
 
       log(date.toString());
     });
