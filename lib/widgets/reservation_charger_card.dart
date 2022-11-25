@@ -50,6 +50,8 @@ class _ReservationChargerCard extends State<ReservationChargerCard> {
       id = booking.id!;
     }
 
+    String statusName = booking.status.name;
+
     return Visibility(
       visible: _isVisible,
       child: Card(
@@ -99,8 +101,8 @@ class _ReservationChargerCard extends State<ReservationChargerCard> {
         padding: const EdgeInsets.only(left: 15.0, bottom: 4.0),
         child: Row(
           children: [
-            const Text('Available: ',
-              style: TextStyle(
+            Text('$statusName: ',
+              style: const TextStyle(
                   fontWeight: FontWeight.w600, color: Colors.green),
             ),
             Text('$formattedTimeStart-$formattedTimeEnd',

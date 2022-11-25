@@ -24,7 +24,7 @@ class BookingService {
 
   static Future<List<Booking>> getBookingsOrderedBy(String orderBy) async {
     List<Booking> result = [];
-    await BackendService.get('bookings/?order=$orderBy').then((response) {
+    await BackendService.get('bookings/?orderby=$orderBy').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         print('bookings json $jsonResponse');
