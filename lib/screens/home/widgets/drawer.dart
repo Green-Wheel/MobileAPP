@@ -39,7 +39,7 @@ class SimpleDrawer extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                AccountIcon(percent: 0.5,path_image: 'assets/images/default_user_img.jpg'),
+                AccountIcon(percent: 0.5,path_image: userData["profile_picture"]),
                 Text(
                   userData != null
                       ? userData['first_name'] + " " + userData['last_name']
@@ -49,8 +49,7 @@ class SimpleDrawer extends StatelessWidget {
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  "Nivel 10",
+                Text("Level ${userData['level']} ",
                   style: TextStyle(fontSize: 12, color: Colors.white70),
                 ),
               ],

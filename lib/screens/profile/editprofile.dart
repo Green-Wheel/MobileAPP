@@ -1,12 +1,15 @@
+
 import 'package:flutter/material.dart';
 import 'package:greenwheel/screens/register/signup.dart';
 import 'package:greenwheel/screens/register/widgets/greenButton.dart';
 
 import '../../services/backendServices/user_service.dart';
+import '../../services/generalServices/LoginService.dart';
+import '../../widgets/alert_dialog.dart';
+import '../../widgets/forms/profile_edit_image.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({Key? key}) : super(key: key);
-
   @override
   State<EditProfile> createState() => _EditProfile();
 
@@ -14,10 +17,29 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfile extends State<EditProfile> {
   String image_path ="";
-  final nameController = TextEditingController();
-  final aboutController = TextEditingController();
-  final firstNameController = TextEditingController();
-  final lastNameController = TextEditingController();
+  var emailController;
+  var aboutController;
+  var firstNameController;
+  var lastNameController;
+
+  final _loggedInStateInfo = LoginService();
+  var userData;
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+  void _getData() async {
+    var data = _loggedInStateInfo.user_info;
+    print(data);
+    setState(() {
+      userData = data;
+      emailController = TextEditingController(text : userData['email']);
+      aboutController = TextEditingController(text : userData['about']);
+      firstNameController = TextEditingController(text : userData['first_name']);
+      lastNameController = TextEditingController(text : userData['last_name']);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +51,7 @@ class _EditProfile extends State<EditProfile> {
           mainAxisSize : MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            //ProfileWidget();/*
-           // ClipOval(child:Material(color:Colors.transparent, child: Ink.image(
-            //      image: user?.profile_picture ?? 'assets/images/default_user_img.jpg',
-              //    fit: BoxFit.cover,
-                //  width:MediaQuery.of(context).size.width/8,
-                 // height: MediaQuery.of(context).size.height/8,
-                  //child: InkWell(onTap: onClicked),
-               //)
-             //)
-           //);
+            SelectImageEdit(userData["profile_picture"]),
             Container(
               height: MediaQuery.of(context).size.height*0.7 - Size.fromHeight(kToolbarHeight).height,
               width: double.infinity,
@@ -56,7 +69,7 @@ class _EditProfile extends State<EditProfile> {
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:  Text("Email",  style: TextStyle(fontSize: 18),)
                     ),
-                    userInput(nameController,  TextInputType.name ,context,false),
+                    userInput(emailController,  TextInputType.name ,context,false),
                     Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
                         child:  Text("About",  style: TextStyle(fontSize: 18),)
@@ -73,10 +86,11 @@ class _EditProfile extends State<EditProfile> {
                     ),
                     userInput(lastNameController,  TextInputType.name,context,false),
                     GreenButton('Edit profile',onPressed: (){
-                      print(nameController.text);
-                      UserService.editUser(nameController.text,image_path
-                          , aboutController.text, firstNameController.text,
-                          lastNameController.text,context);
+                      if(emailController.text != "" || aboutController.text !="" ||
+                        firstNameController.text != "" || lastNameController.text != "")
+                                UserService.editUser(emailController.text,image_path, aboutController.text,
+                                    firstNameController.text, lastNameController.text,context);
+                      else Future.delayed(Duration.zero, () => showAlert(context,"Error Message","Fill atleast one field"));
                       }
                     ),
                   ],
