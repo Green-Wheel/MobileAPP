@@ -67,7 +67,7 @@ class _BikeFormState extends State<BikeForm> {
     } else {
       BikeService.updateBike(_data);
     }
-    GoRouter.of(context).go('/');
+    GoRouter.of(context).push('/');
   }
 
   //widget functions

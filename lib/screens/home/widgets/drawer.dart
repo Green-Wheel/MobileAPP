@@ -143,13 +143,27 @@ class _SimpleDrawer extends State<SimpleDrawer>{
             padding: EdgeInsets.only(left: 10.0, right: 0.0),
             child: ListTile(
               visualDensity: VisualDensity(vertical: -2),
-              leading: const Icon(Icons.add, size: 30),
+              leading: const Icon(Icons.charging_station, size: 30),
               title: Hero(
-                tag: "6",
-                child: const Text('Add Point', style: TextStyle(fontSize: 18)),
+                tag: "12",
+                child: const Text('Add Charger', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
-                GoRouter.of(context).go('/chargers/add');
+                GoRouter.of(context).push('/chargers/add');
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 0.0),
+            child: ListTile(
+              visualDensity: VisualDensity(vertical: -2),
+              leading: const Icon(Icons.directions_bike_sharp, size: 30),
+              title: Hero(
+                tag: "6",
+                child: const Text('Add Bikes', style: TextStyle(fontSize: 18)),
+              ),
+              onTap: () {
+                GoRouter.of(context).push('/bikes/add');
               },
             ),
           ),
