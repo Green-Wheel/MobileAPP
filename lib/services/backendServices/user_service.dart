@@ -5,12 +5,16 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import '../../serializers/users.dart';
+import '../../widgets/alert_dialog.dart';
 
 const String registerUrl = "users/register/";
 const String userUrl = 'users/1/';
 const String editUrl = 'users/';
 
+
+
 class UserService extends ChangeNotifier {
+
 
   static Future<User>? getUser() {
     User user;
@@ -26,26 +30,26 @@ class UserService extends ChangeNotifier {
     });
   }
   static void registerUser(BuildContext context,String username, String email, String password,String firstName,String lastName){
-    Map<String,dynamic> registerMap = {
-        'email': email,
-        'username': username,
-        'password': password,
-        'first_name': firstName,
-        'last_name': lastName
-      };
+      Map<String,dynamic> registerMap = {
+          'email': email,
+          'username': username,
+          'password': password,
+          'first_name': firstName,
+          'last_name': lastName
+        };
 
-    BackendService.post(registerUrl,registerMap).then((response) async {
-      if (response.statusCode == 201) {
-        var jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
-        LoginService ls = await LoginService();
-        ls.loginUser(jsonResponse['apikey']);
-        GoRouter.of(context).push('/');
-      }
-      else {
-        var jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
-        print('Error with the register!');
+      BackendService.post(registerUrl,registerMap).then((response) async {
+        if (response.statusCode == 201) {
+          var jsonResponse = jsonDecode(response.body);
+          LoginService ls = await LoginService();
+          ls.loginUser(jsonResponse['apikey']);
+          GoRouter.of(context).push('/');
+
+        }
+        else {
+          var jsonResponse = jsonDecode(response.body);
+          String value = jsonResponse["res"];
+          Future.delayed(Duration.zero, () => showAlert(context,"Error Message",value));
       }
     });
   }

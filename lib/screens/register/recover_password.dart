@@ -22,7 +22,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
   String? code;
 
   void _getRequest(String username) async {
-    bool? aux = await RecoverPasswordService.getRecover(username);
+    bool? aux = await RecoverPasswordService.getRecover(username,context);
     setState(()  {
         _show_code2 = aux;
         if(_show_code2 == true) _show_code = true;

@@ -85,10 +85,9 @@ class _SignUpScreen extends State<SignUpScreen> {
                       ],
                     ),
                     GreenButton('Sign Up',onPressed: () {
-                         UserService.registerUser(context,nameController.text,emailController.text
+                          UserService.registerUser(context,nameController.text,emailController.text
                           , passwordController.text, firstNameController.text,
                           lastNameController.text);
-
                       //Navigator.pop(context);
                       }
                     ),
@@ -102,6 +101,7 @@ class _SignUpScreen extends State<SignUpScreen> {
     );
   }
 }
+
 Widget userInput(TextEditingController userInput, TextInputType keyboardType, BuildContext context,bool hide) {
 
   return Container(

@@ -55,8 +55,6 @@ class _ChangePassword extends State<ChangePassword> {
                                 ),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
-                              validator: (password) => password != null
-                                  ? 'Enter a valid password' : null,
                             )
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height/40,),
@@ -76,8 +74,6 @@ class _ChangePassword extends State<ChangePassword> {
                                 ),
                               ),
                               autovalidateMode: AutovalidateMode.onUserInteraction,
-                              validator: (password) => password != null
-                                  ? 'Enter a valid password' : null,
                             )
                         ),
                         SizedBox(height: MediaQuery.of(context).size.height/40,),
