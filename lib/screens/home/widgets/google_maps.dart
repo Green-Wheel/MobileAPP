@@ -94,7 +94,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       is_visible = false;
       scrolledup = false;
     });
-    print(widget.index);
 
     if (widget.index == 0) {
       _getChargers();
@@ -109,7 +108,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 3.2,),
         "assets/images/punt_bicicleta.png");
-    print('afegir bici');
+    //print('afegir bici');
     final Marker marcador = Marker(
         markerId: MarkerId(id.toString()),
         position: LatLng(lat, log),
@@ -119,6 +118,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           setState(() {
             id_marcador = id.toString();
             is_visible = true;
+            scrolledup = true;
             _getBike(id);
           });
         } //_onMarkerTapped(MarkerId(id)),
@@ -218,8 +218,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void _setCardView()  {
-    print('\n\n\n\n\n');
-    print(widget.publicationId!);
     _getCharger(widget.publicationId!);
     setState(() {
       id_marcador = widget.publicationId.toString();
@@ -228,11 +226,22 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
     });
   }
+  void _setCardBikeView()  {
+    _getBike(widget.publicationId!);
+    setState(() {
+      id_marcador = widget.publicationId.toString();
+      is_visible = true;
+      scrolledup = true;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (!is_visible && widget.publicationId != -1) {
+    if (!is_visible && widget.publicationId != -1 && widget.index == 0) {
       _setCardView();
+    }
+    if (!is_visible && widget.publicationId != -1 && widget.index == 1) {
+      _setCardBikeView();
     }
     return Scaffold(
         body: Stack(
@@ -298,9 +307,7 @@ Widget listButton() {
 
 Widget show_card() {
   if (widget.index == 0) {
-    print("do charger");
     return SlidingUpPanel(
-      // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
         maxHeight: MediaQuery
             .of(context)
             .size
@@ -325,9 +332,7 @@ Widget show_card() {
             ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
   } else {
-    print("do bike");
     return SlidingUpPanel(
-      // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
         maxHeight: MediaQuery
             .of(context)
             .size
@@ -337,6 +342,14 @@ Widget show_card() {
         parallaxEnabled: true,
         parallaxOffset: 0.5,
         backdropEnabled: true,
+        onPanelSlide: (double pos) =>
+            setState(() {
+              if (pos < 0.2) {
+                scrolledup = true;
+              } else {
+                scrolledup = false;
+              }
+            }),
         panelBuilder: (controller) =>
             buildSlidingUpPanelBike(
               controller: controller,
@@ -417,10 +430,16 @@ Widget buildSlidingUpPanelBike(
       max = 6;
   int num = (min + random.nextInt(max - min));
   double numd = num.toDouble();
+  BikeType bikeType = markedBike?.bike_type as BikeType;
+  String? direction = markedBike!.direction;
+  direction = title_parser(direction);
+  String? description = markedBike!.description;
+  double price = markedBike!.price;
+  double? power = markedBike!.power;
 
-  // available
 
-  return BikeCardInfoWidget(location: descrip, rating: numd, available: true);
+
+  return BikeCardInfoWidget(location: descrip, rating: numd, available: true, type: bikeType, description: description, direction: direction, price: price, power: power!, bike_list: false);
 }
 
 String? title_parser(String? description) {

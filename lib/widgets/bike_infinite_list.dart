@@ -13,15 +13,6 @@ class BikeInfiniteList extends StatefulWidget {
 
 }
 
-void main(){
-  runApp(const MaterialApp(
-    title: 'chargeInfo try',
-    home: Scaffold(
-      body: BikeInfiniteList(),
-    ),
-  ));
-}
-
 class _BikeInfiniteList extends State<BikeInfiniteList>{
   @override
   Widget build(BuildContext context) {
@@ -50,13 +41,12 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
 
   void _getBikesList(int page) async {
     List<BikeList> bikeList = await BikeService.getBikeList(page);
-    print('bikeeeee $bikeList');
+    //print('bikeeeee $bikeList');
     setState(() {
-      //_markersList = chargerList;
       _markersListAll.addAll(bikeList);
     });
-    print('markerLIiiist $_markersList');
-    print('markerLIiiistAll $_markersListAll');
+    //print('markerLIiiist $_markersList');
+    //print('markerLIiiistAll $_markersListAll');
   }
 
 
@@ -101,7 +91,7 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
                   fetchData();
                 });
               },
-              child: const Text("Retry", style: TextStyle(fontSize: 20, color: Colors.green),)),
+              child: const Text("Retry", style: TextStyle(fontSize: 20, color: Colors.blueAccent),)),
         ],
       ),
     );
@@ -143,24 +133,26 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
             }
           }
           //final ChargerList charger = _markersListAll[index];
-
-          String? description = _markersListAll[index].title; // falta description al backend de ChargerList
-          //description = title_parser(description);
-
+          BikeType bikeType = _markersListAll[index].bike_type as BikeType;
+          String? description = _markersListAll[index].title;
+          double price = _markersListAll[index].price;
+          //TODO: atributos bikes
           bool avaliable = true;
 
-          return Flexible(child: _cardChargerList(description!, avaliable));
+          return Flexible(child: _cardBikeList(description!, avaliable, bikeType, price));
         });
   }
 
   //funcion respectiva a la card de los cargadores
-  Widget _cardChargerList(String direction, bool available) {
+  Widget _cardBikeList(String direction, bool available, BikeType bikeType, double price) {
     //Generación rate aleatoria (harcode rate)
     Random random = Random();
     int min = 2, max = 6;
     int num = (min + random.nextInt(max - min));
     double numd = num.toDouble();
-
-    return BikeCardInfoWidget(location: direction, rating: numd, available: available);
+    //TODO: redireccionar a la vista de la bici
+    String? description = "Nice";
+    String? direction1 = "Calle 1";
+    return BikeCardInfoWidget(location: direction, rating: numd, available: available, type: bikeType, price: price, direction: direction1, description: description, bike_list: true, power: 0);
   }
 }

@@ -45,7 +45,6 @@ class _InfiniteList extends State<InfiniteList>{
   void _getChargersList(int page) async {
     List<ChargerList> chargerList = await ChargerService.getChargerList(page);
     setState(() {
-      //_markersList = chargerList;
       _markersListAll.addAll(chargerList);
     });
   }
@@ -144,7 +143,6 @@ class _InfiniteList extends State<InfiniteList>{
         for (int i = 0; i < _markersListAll[index].connection_type.length; ++i) {
           types.add(_markersListAll[index].connection_type[i]);
         }
-        //TODO:poner atributo private correctamente
         bool private =  _markersListAll[index].private != null ? true : false;
         bool match = true;
         double price = 0.0;
@@ -163,8 +161,6 @@ class _InfiniteList extends State<InfiniteList>{
     double numd = num.toDouble();
     return GestureDetector(
       onTap: () {
-        print(id);
-        //TODO: ir a la pagina del cargador
         GoRouter.of(context)
             .go('/chargers/$id');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
       },
