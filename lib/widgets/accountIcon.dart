@@ -5,7 +5,7 @@ import '../services/generalServices/LoginService.dart';
 
 class AccountIcon extends StatefulWidget {
   double percent;
-  String path_image;
+  var path_image;
   ImageProvider<Object>? image_profile;
 
   AccountIcon({required this.percent, required this.path_image, super.key});
@@ -21,7 +21,9 @@ class _AccountIcon extends State<AccountIcon> {
   void initState() {
     super.initState();
     _getData();
-    if(widget.path_image != null)  widget.image_profile = NetworkImage(widget.path_image);
+    if(widget.path_image != null) {
+      widget.image_profile = NetworkImage(widget.path_image);
+    }
     else widget.image_profile = AssetImage('assets/images/default_user_img.jpg');
   }
   void _getData() async {
