@@ -25,8 +25,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   final nameController = TextEditingController();
-  String searchValue = '';
-  final List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
 
   @override
   Widget build(BuildContext context) {
