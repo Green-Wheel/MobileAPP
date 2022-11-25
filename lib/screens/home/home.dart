@@ -6,8 +6,8 @@ import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
-  int? publicationId = -1;
-  HomePage({Key? key, this.publicationId}) : super(key: key);
+  int publicationId;
+  HomePage({Key? key,  this.publicationId = -1}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();

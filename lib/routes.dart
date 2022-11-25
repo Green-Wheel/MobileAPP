@@ -43,7 +43,7 @@ final GoRouter router = GoRouter(
         GoRoute(
           path: 'chargers/:id',
           builder: (context, state) {
-            final id = state.params['id'] as int;
+            final id = int.parse(state.params['id']!);
             return HomePage(key: Key("HomePage"), publicationId: id);
           },
         ),

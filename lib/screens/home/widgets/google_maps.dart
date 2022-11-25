@@ -23,7 +23,9 @@ class GoogleMapsWidget extends StatefulWidget {
   int? publicationId;
 
 
-  GoogleMapsWidget({Key? key, required this.index, this.polylines, this.publicationId}) : super(key: key);
+  GoogleMapsWidget(
+      {Key? key, required this.index, this.polylines, this.publicationId})
+      : super(key: key);
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
@@ -43,6 +45,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       speedAccuracy: 1);
   Set<Marker> markers = {};
   final Map<MarkerId, Marker> markerMap = {};
+
   //late Position _actualMarcador = _position;
   late double latitud_act;
   late double longitud_act;
@@ -54,7 +57,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   bool is_visible = false;
   final panelController = PanelController();
   bool scrolledup = false;
-
 
 
   void _getChargers() async {
@@ -85,7 +87,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _getCurrentLocation();
@@ -102,8 +104,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     super.initState();
   }
 
-  void _addBikeMarker(double lat, double log, int id) async { // TODO: Falta BikeType com a argument
-    final iconMarker = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2,), "assets/images/punt_bicicleta.png");
+  void _addBikeMarker(double lat, double log, int id) async {
+    // TODO: Falta BikeType com a argument
+    final iconMarker = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(devicePixelRatio: 3.2,),
+        "assets/images/punt_bicicleta.png");
     print('afegir bici');
     final Marker marcador = Marker(
         markerId: MarkerId(id.toString()),
@@ -125,17 +130,16 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     markerMap[MarkerId(id.toString())] = marcador;
   }
 
-  void _addMarker(double lat, double log, String chargerType, int id) async{
-    final iconMarker = await BitmapDescriptor.fromAssetImage(const ImageConfiguration(devicePixelRatio: 3.2,), "assets/images/punt_carregador.png");
+  void _addMarker(double lat, double log, String chargerType, int id) async {
+    final iconMarker = await BitmapDescriptor.fromAssetImage(
+        const ImageConfiguration(devicePixelRatio: 3.2,),
+        "assets/images/punt_carregador.png");
     final Marker marcador = Marker(
         markerId: MarkerId(id.toString()),
         position: LatLng(lat, log),
         onDrag: null,
         icon: iconMarker,
         onTap: () {
-          setState(() {
-            is_visible = false;
-          });
           setState(() {
             id_marcador = id.toString();
             is_visible = true;
@@ -216,31 +220,47 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     //print('$cameraPosition');
   }
 
+  void _setCardView()  {
+    print('\n\n\n\n\n');
+    print(widget.publicationId!);
+    _getCharger(widget.publicationId!);
+    setState(() {
+      id_marcador = widget.publicationId.toString();
+      is_visible = true;
+      scrolledup = true;
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    if (!is_visible && widget.publicationId != -1) {
+      _setCardView();
+    }
     return Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: _kInitialPosition,
-            markers: markers,
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            compassEnabled: true,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: false,
-            trafficEnabled: true,
-            mapToolbarEnabled: false,
-            rotateGesturesEnabled: true,
-            scrollGesturesEnabled: true,
-            tiltGesturesEnabled: true,
-            liteModeEnabled: false,
-            onTap: (latLong) {
+        body: Stack(
+          children: [
+            GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: _kInitialPosition,
+              markers: markers,
+              mapType: MapType.normal,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              compassEnabled: true,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: false,
+              trafficEnabled: true,
+              mapToolbarEnabled: false,
+              rotateGesturesEnabled: true,
+              scrollGesturesEnabled: true,
+              tiltGesturesEnabled: true,
+              liteModeEnabled: false,
+              onTap: (latLong) {
                 (SnackBar(
                   content: Text(
-                      'Tapped location LatLong is (${latLong.latitude},${latLong.longitude})'),
+                      'Tapped location LatLong is (${latLong.latitude},${latLong
+                          .longitude})'),
                 ));
               },
               onCameraMove: onCameraMove,
@@ -248,217 +268,241 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
             is_visible ? show_card() : Container(),
           ],
         ),
-        floatingActionButton:  Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: scrolledup?  scrollDown() : scrollMiddel()
+        floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: scrolledup ? scrollDown() : scrollMiddel()
         ));
   }
 
-  List<Widget> scrollDown(){
-    return <Widget>[
-      listButton(),
-      SizedBox(height: 10),
-      currentLocationActionButton(),
-      SizedBox(height: 200)];
-  }
+List<Widget> scrollDown() {
+  return <Widget>[
+    listButton(),
+    SizedBox(height: 10),
+    currentLocationActionButton(),
+    SizedBox(height: 200)];
+}
 
 
-  List<Widget> scrollMiddel(){
-    return <Widget>[
+List<Widget> scrollMiddel() {
+  return <Widget>[
     listButton(),
     SizedBox(height: 10),
     currentLocationActionButton()];
-  }
-
-
-  Widget listButton() {
-    if (widget.index == 0) {
-      return const ButtonListScreenChargersWidget();
-    } else {
-      return const ButtonListScreenBikesWidget();
-    }
-  }
-
-  Widget show_card() {
-    if (widget.index == 0) {
-      print("do charger");
-      return SlidingUpPanel(
-        // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
-          maxHeight: MediaQuery.of(context).size.height * 0.6,
-          minHeight: 210.0,
-          controller: panelController,
-          parallaxEnabled: true,
-          parallaxOffset: 0.5,
-          backdropEnabled: true,
-          onPanelSlide: (double pos) => setState(() {
-            if (pos < 0.2) {
-              scrolledup = true;
-            } else {
-              scrolledup = false;
-            }
-          }),
-          panelBuilder: (controller) => buildSlidingUpPanelCharger(
-            controller: controller,
-            panelController: panelController,
-          ), borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
-    } else {
-      print("do bike");
-      return SlidingUpPanel(
-        // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
-          maxHeight: MediaQuery.of(context).size.height * 0.8,
-          minHeight: 185.0,
-          controller: panelController,
-          parallaxEnabled: true,
-          parallaxOffset: 0.5,
-          backdropEnabled: true,
-          panelBuilder: (controller) => buildSlidingUpPanelBike(
-            controller: controller,
-            panelController: panelController,
-          ), borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
-    }
-  }
-
-  void _getCharger(int id) async {
-    DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
-    print(charger);
-    if (charger != null) {
-      setState(() {
-        markedCharger = charger;
-      });
-    }
-  }
-
-  Widget buildSlidingUpPanelCharger({required ScrollController controller, required PanelController panelController}) {
-      String? descrip = markedCharger!.title;
-      descrip = title_parser(descrip);
-
-      //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
-      Random random = Random();
-      int min = 2, max = 6;
-      int num = (min + random.nextInt(max - min));
-      double numd = num.toDouble();
-
-      //Obtencion del numero de tipos de cargadores
-      List<ConnectionType> types = [];
-      for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
-        types.add(markedCharger!.connection_type[i]);
-      }
-
-      bool private = markedCharger!.private != null ? true : false;
-      double price = markedCharger!.private != null ? markedCharger!.private!.price : 0.0;
-      String? direction = markedCharger!.direction;
-      direction = title_parser(direction);
-      String? description = markedCharger!.description;
-
-
-      return CardInfoWidget(location: descrip, rating: numd, types: types, available: true, match: true, private: private, price: price, direction: direction, description: description, private_list: false);
-  }
-
-
-  void _getBike(int id) async {
-    DetailedBikeSerializer? bike = await BikeService.getBike(id);
-    print(bike);
-    if (bike != null) {
-      setState(() {
-        markedBike = bike;
-      });
-    }
-  }
-
-  Widget buildSlidingUpPanelBike({required ScrollController controller, required PanelController panelController}) {
-    String? descrip = markedBike!.title!;
-    descrip = title_parser(descrip);
-
-    //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
-    Random random = Random();
-    int min = 2, max = 6;
-    int num = (min + random.nextInt(max - min));
-    double numd = num.toDouble();
-
-    // available
-
-    return BikeCardInfoWidget(location: descrip, rating: numd, available: true);
-  }
-
-  String? title_parser(String? description){
-    description = description?.replaceAll("Ãa", "i");
-    description = description?.replaceAll("Ã", "à");
-    description = description?.replaceAll("àa", "ia");
-    description = description?.replaceAll("Ã³", "ó");
-    description = description?.replaceAll("à³", "ó");
-    description = description?.replaceAll("Ã²", "ò");
-    description = description?.replaceAll("à²", "ò");
-    description = description?.replaceAll("Ã§", "ç");
-    description = description?.replaceAll("à§", "ç");
-    description = description?.replaceAll("Ã©", "é");
-    description = description?.replaceAll("à¨", "è");
-    description = description?.replaceAll("à©", "è");
-    description = description?.replaceAll("2 -", "2\n");
-    description = description?.replaceAll("6 -  ", "6\n");
-    description = description?.replaceAll("³-", "\n");
-    description = description?.replaceAll("er-Al", "er\nAl");
-    description = description?.replaceAll("a-Ca", "a\nCa");
-    description = description?.replaceAll(", Ap", "\nAp");
-    description = description?.replaceAll("-Ca", "\nCa");
-    description = description?.replaceAll(", Ca", "\nCa");
-    description = description?.replaceAll(" QR", "\nQR");
-    description = description?.replaceAll("37 - S", "37\nS");
-    description = description?.replaceAll("res SO", "res\nSO");
-    description = description?.replaceAll("-Ca", "\nCa");
-    description = description?.replaceAll("ó-Pl", "ó\nPl");
-    description = description?.replaceAll("mans i ", "mans\ni ");
-    description = description?.replaceAll("T-I", "T\nI");
-    description = description?.replaceAll("A  Torr", "A\nTorr");
-    description = description?.replaceAll("Mont-Roig", "Mont\nRoig");
-    description = description?.replaceAll("a Sup", "a\nSup");
-    description = description?.replaceAll("Despà", "Despí");
-    if (description!.length >= 40){
-      description = description.replaceAll(" - ", "\n");
-      //description = description.replaceAll("-", "\n");
-      description = description.replaceAll("- ", "\n");
-      description = description.replaceAll(")(", ")\n(");
-      description = description.replaceAll(" (", "\n(");
-      description = description.replaceAll("E L'", "E\nL'");
-    }
-    if (description.length < 40){
-      description = description.replaceAll(") ", ")\n");
-      description = description.replaceAll(" (", "\n(");
-      description = description.replaceAll("m-", "m\n");
-    }
-    return description;
-  }
-
-
-
-  Widget currentLocationActionButton() {
-    if (widget.index == 0) {
-      return FloatingActionButton(
-        heroTag: "btn1",
-        onPressed: _updateCurrentLocation,
-        backgroundColor: Colors.white,
-        child: permissionGranted
-            ? const Icon(Icons.my_location, color: Colors.green, size: 30.0)
-            : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
-      );
-    } else {
-      return FloatingActionButton(
-        heroTag: "btn2",
-        onPressed: _updateCurrentLocation,
-        backgroundColor: Colors.white,
-        child: permissionGranted
-            ? const Icon(Icons.my_location, color: Colors.blue, size: 30.0)
-            : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
-      );
-    }
-  }
-
-  var snackBarLocation = SnackBar(
-      content: const Text('snackbar_location_denied_label').tr(),
-      action: SnackBarAction(
-        textColor: Colors.green,
-        label: 'snackbar_location_denied_action'.tr(),
-        onPressed: () {
-          openAppSettings();
-        },
-      ));
 }
+
+
+Widget listButton() {
+  if (widget.index == 0) {
+    return const ButtonListScreenChargersWidget();
+  } else {
+    return const ButtonListScreenBikesWidget();
+  }
+}
+
+Widget show_card() {
+  if (widget.index == 0) {
+    print("do charger");
+    return SlidingUpPanel(
+      // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
+        maxHeight: MediaQuery
+            .of(context)
+            .size
+            .height * 0.6,
+        minHeight: 210.0,
+        controller: panelController,
+        parallaxEnabled: true,
+        parallaxOffset: 0.5,
+        backdropEnabled: true,
+        onPanelSlide: (double pos) =>
+            setState(() {
+              if (pos < 0.2) {
+                scrolledup = true;
+              } else {
+                scrolledup = false;
+              }
+            }),
+        panelBuilder: (controller) =>
+            buildSlidingUpPanelCharger(
+              controller: controller,
+              panelController: panelController,
+            ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
+  } else {
+    print("do bike");
+    return SlidingUpPanel(
+      // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
+        maxHeight: MediaQuery
+            .of(context)
+            .size
+            .height * 0.8,
+        minHeight: 185.0,
+        controller: panelController,
+        parallaxEnabled: true,
+        parallaxOffset: 0.5,
+        backdropEnabled: true,
+        panelBuilder: (controller) =>
+            buildSlidingUpPanelBike(
+              controller: controller,
+              panelController: panelController,
+            ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
+  }
+}
+
+void _getCharger(int id) async {
+  DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
+  print(charger);
+  if (charger != null) {
+    setState(() {
+      markedCharger = charger;
+    });
+  }
+}
+
+Widget buildSlidingUpPanelCharger(
+    {required ScrollController controller, required PanelController panelController}) {
+  String? descrip = markedCharger!.title;
+  descrip = title_parser(descrip);
+
+  //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
+  Random random = Random();
+  int min = 2,
+      max = 6;
+  int num = (min + random.nextInt(max - min));
+  double numd = num.toDouble();
+
+  //Obtencion del numero de tipos de cargadores
+  List<ConnectionType> types = [];
+  for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
+    types.add(markedCharger!.connection_type[i]);
+  }
+
+  bool private = markedCharger!.private != null ? true : false;
+  double price = markedCharger!.private != null
+      ? markedCharger!.private!.price
+      : 0.0;
+  String? direction = markedCharger!.direction;
+  direction = title_parser(direction);
+  String? description = markedCharger!.description;
+
+
+  return CardInfoWidget(location: descrip,
+      rating: numd,
+      types: types,
+      available: true,
+      match: true,
+      private: private,
+      price: price,
+      direction: direction,
+      description: description,
+      private_list: false);
+}
+
+
+void _getBike(int id) async {
+  DetailedBikeSerializer? bike = await BikeService.getBike(id);
+  print(bike);
+  if (bike != null) {
+    setState(() {
+      markedBike = bike;
+    });
+  }
+}
+
+Widget buildSlidingUpPanelBike(
+    {required ScrollController controller, required PanelController panelController}) {
+  String? descrip = markedBike!.title!;
+  descrip = title_parser(descrip);
+
+  //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
+  Random random = Random();
+  int min = 2,
+      max = 6;
+  int num = (min + random.nextInt(max - min));
+  double numd = num.toDouble();
+
+  // available
+
+  return BikeCardInfoWidget(location: descrip, rating: numd, available: true);
+}
+
+String? title_parser(String? description) {
+  description = description?.replaceAll("Ãa", "i");
+  description = description?.replaceAll("Ã", "à");
+  description = description?.replaceAll("àa", "ia");
+  description = description?.replaceAll("Ã³", "ó");
+  description = description?.replaceAll("à³", "ó");
+  description = description?.replaceAll("Ã²", "ò");
+  description = description?.replaceAll("à²", "ò");
+  description = description?.replaceAll("Ã§", "ç");
+  description = description?.replaceAll("à§", "ç");
+  description = description?.replaceAll("Ã©", "é");
+  description = description?.replaceAll("à¨", "è");
+  description = description?.replaceAll("à©", "è");
+  description = description?.replaceAll("2 -", "2\n");
+  description = description?.replaceAll("6 -  ", "6\n");
+  description = description?.replaceAll("³-", "\n");
+  description = description?.replaceAll("er-Al", "er\nAl");
+  description = description?.replaceAll("a-Ca", "a\nCa");
+  description = description?.replaceAll(", Ap", "\nAp");
+  description = description?.replaceAll("-Ca", "\nCa");
+  description = description?.replaceAll(", Ca", "\nCa");
+  description = description?.replaceAll(" QR", "\nQR");
+  description = description?.replaceAll("37 - S", "37\nS");
+  description = description?.replaceAll("res SO", "res\nSO");
+  description = description?.replaceAll("-Ca", "\nCa");
+  description = description?.replaceAll("ó-Pl", "ó\nPl");
+  description = description?.replaceAll("mans i ", "mans\ni ");
+  description = description?.replaceAll("T-I", "T\nI");
+  description = description?.replaceAll("A  Torr", "A\nTorr");
+  description = description?.replaceAll("Mont-Roig", "Mont\nRoig");
+  description = description?.replaceAll("a Sup", "a\nSup");
+  description = description?.replaceAll("Despà", "Despí");
+  if (description!.length >= 40) {
+    description = description.replaceAll(" - ", "\n");
+    //description = description.replaceAll("-", "\n");
+    description = description.replaceAll("- ", "\n");
+    description = description.replaceAll(")(", ")\n(");
+    description = description.replaceAll(" (", "\n(");
+    description = description.replaceAll("E L'", "E\nL'");
+  }
+  if (description.length < 40) {
+    description = description.replaceAll(") ", ")\n");
+    description = description.replaceAll(" (", "\n(");
+    description = description.replaceAll("m-", "m\n");
+  }
+  return description;
+}
+
+
+Widget currentLocationActionButton() {
+  if (widget.index == 0) {
+    return FloatingActionButton(
+      heroTag: "btn1",
+      onPressed: _updateCurrentLocation,
+      backgroundColor: Colors.white,
+      child: permissionGranted
+          ? const Icon(Icons.my_location, color: Colors.green, size: 30.0)
+          : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
+    );
+  } else {
+    return FloatingActionButton(
+      heroTag: "btn2",
+      onPressed: _updateCurrentLocation,
+      backgroundColor: Colors.white,
+      child: permissionGranted
+          ? const Icon(Icons.my_location, color: Colors.blue, size: 30.0)
+          : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
+    );
+  }
+}
+
+var snackBarLocation = SnackBar(
+    content: const Text('snackbar_location_denied_label').tr(),
+    action: SnackBarAction(
+      textColor: Colors.green,
+      label: 'snackbar_location_denied_action'.tr(),
+      onPressed: () {
+        openAppSettings();
+      },
+    ));}

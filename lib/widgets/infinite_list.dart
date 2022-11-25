@@ -137,7 +137,7 @@ class _InfiniteList extends State<InfiniteList>{
 
         String? description = _markersListAll[index].title; // falta description al backend de ChargerList
         //description = title_parser(description);
-
+        int? id = _markersListAll[index].id;
         bool? avaliable = true;
 
         List<ConnectionType> types = [];
@@ -150,12 +150,12 @@ class _InfiniteList extends State<InfiniteList>{
         double price = 0.0;
         String? direction = "Calle 1";
         String? description2 = "description";
-        return Flexible(child: _cardChargerList(description!, avaliable, match, types, private, price, direction, description2));
+        return Flexible(child: _cardChargerList(description!, avaliable, match, types, private, price, direction, description2, id!));
       });
   }
 
   //funcion respectiva a la card de los cargadores
-  Widget _cardChargerList(String description, bool avaliable, bool match, List<ConnectionType> types, bool private, double  price, String direction, String description2) {
+  Widget _cardChargerList(String description, bool avaliable, bool match, List<ConnectionType> types, bool private, double  price, String direction, String description2, int id) {
     //Generación rate aleatoria (harcode rate)
     Random random = Random();
     int min = 2, max = 6;
@@ -163,9 +163,10 @@ class _InfiniteList extends State<InfiniteList>{
     double numd = num.toDouble();
     return GestureDetector(
       onTap: () {
-        //TODO: ir a la pagina del cargador, he de poner un int en esta classe?
+        print(id);
+        //TODO: ir a la pagina del cargador
         GoRouter.of(context)
-            .go('chargers/:id');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
+            .go('/chargers/$id');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
       },
       child: CardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: match, private: false, price: price, direction: direction, description: description2, private_list: private),
     );
