@@ -17,15 +17,6 @@ class ChargeInfoList extends StatefulWidget {
 
 }
 
-void main(){
-  runApp(const MaterialApp(
-    title: 'chargeInfo try',
-    home: Scaffold(
-      body: ChargeInfoList(),
-    ),
-  ));
-}
-
 class _ChargeInfoListState extends State<ChargeInfoList>{
   List markersList = [];
 

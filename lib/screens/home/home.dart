@@ -50,7 +50,6 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        //TODO: Redireccionar a la pantalla de la publicación
         child: GoogleMapsWidget(index: index, key: UniqueKey(), publicationId: widget.publicationId),
       ),
     );

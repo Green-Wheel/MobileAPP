@@ -42,7 +42,7 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
     elevation: 10,
     shape:  const RoundedRectangleBorder(
       side: BorderSide(
-        color: Colors.white, //Color(0xff43802a),
+        color: Colors.white,
         width: 2,
       ),
       borderRadius: BorderRadius.all(Radius.circular(18)),
