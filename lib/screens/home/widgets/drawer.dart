@@ -8,16 +8,31 @@ import '../../../services/generalServices/LoginService.dart';
 import '../../../widgets/accountIcon.dart';
 import '../../register/signup.dart';
 
-class SimpleDrawer extends StatelessWidget {
+class SimpleDrawer extends StatefulWidget {
   SimpleDrawer({Key? key}) : super(key: key);
+
+  State<SimpleDrawer> createState() =>_SimpleDrawer();
+}
+
+class _SimpleDrawer extends State<SimpleDrawer>{
 
   final _loggedInStateInfo = LoginService();
   var userData;
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+  void _getData() async {
+    var data = await _loggedInStateInfo.user_info;
+    setState(() {
+      userData = data;
+    });
+  }
   bool logged = true;
 
   @override
   Widget build(BuildContext context) {
-    userData = _loggedInStateInfo.user_info;
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
@@ -39,7 +54,7 @@ class SimpleDrawer extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                AccountIcon(percent: 0.5,path_image: userData["profile_picture"]),
+                AccountIcon(percent: 0.5,path_image: userData['profile_picture']),
                 Text(
                   userData != null
                       ? userData['first_name'] + " " + userData['last_name']

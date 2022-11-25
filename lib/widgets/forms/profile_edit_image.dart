@@ -4,26 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../services/backendServices/user_service.dart';
-import '../select_image.dart';
 
 class SelectImageEdit extends StatefulWidget{
   SelectImageEdit(this.image_url);
-
+  bool fake = false;
   @override
   State<SelectImageEdit> createState() => _SelectImageEdit();
-  String image_url;
+  var image_url;
   ImageProvider<Object>? image_profile;
+
+
 }
 
 class _SelectImageEdit extends State<SelectImageEdit> {
   File? image;
-
+  var image_provisional;
   @override
   void initState(){
     super.initState();
+    print(widget.image_url);
     if(widget.image_url != null)  widget.image_profile = NetworkImage(widget.image_url);
     else widget.image_profile = AssetImage('assets/images/default_user_img.jpg');
   }
+
   void _pickedImage() {
     showDialog<ImageSource>(
       context: context,
@@ -46,7 +49,12 @@ class _SelectImageEdit extends State<SelectImageEdit> {
         setState(() => image = File(pickedFile!.path));
         if(image!= null) {
           UserService.putImage(context, image!);
-          print(image?.path);
+          setState(() {
+            widget.image_profile = Image.file(image!) as ImageProvider<Object>?;
+          });
+          //setState(() {
+           // widget.image_profile = Image.file(image!) as ImageProvider<Object>?;
+          //});
         }
         else  print("BBBBBBBBBBBBBBBBBBBBBBBBBBB");
       }else {
@@ -57,10 +65,8 @@ class _SelectImageEdit extends State<SelectImageEdit> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      if(widget.image_url != null)  widget.image_profile = NetworkImage(widget.image_url);
-      else widget.image_profile = AssetImage('assets/images/default_user_img.jpg');
-    });
+
+
     return Stack(
       children: [
         CircleAvatar(
