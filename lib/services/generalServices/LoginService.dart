@@ -40,9 +40,11 @@ class LoginService extends ChangeNotifier {
           "username": jsonResponse["username"],
           "first_name": jsonResponse["first_name"],
           "last_name": jsonResponse["last_name"],
+          "about": jsonResponse["about"],
           "profile_picture": jsonResponse["profile_picture"],
           "level": jsonResponse["level"],
           "xp": jsonResponse["xp"],
+          "rating": jsonResponse["rating"]
         };
       }
     });

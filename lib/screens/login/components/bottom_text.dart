@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomText extends StatefulWidget {
   const BottomText({Key? key}) : super(key: key);
@@ -18,7 +19,9 @@ class _BottomTextState extends State<BottomText> {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: TextButton(
-        onPressed: () {},
+        onPressed: () {
+          GoRouter.of(context).push('/login/register');
+        },
         child: RichText(
           text: const TextSpan(
             style: TextStyle(
