@@ -26,7 +26,7 @@ class User {
   String last_name;
   String? email;
   String? about;
-  ImageSerializer? profile_picture;
+  String? profile_picture;
   int language_id;
   int level;
   int xp;

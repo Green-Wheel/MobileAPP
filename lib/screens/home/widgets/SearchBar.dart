@@ -31,13 +31,19 @@ class _SearchBar extends State<SearchBar>{
   @override
   Widget build(BuildContext context) {
     return AppBar(
-            title: Text("Home Screen"),//_searchTextField(),
+            title: Text("Search"),//_searchTextField(),
             actions:<Widget>[
                 IconButton(
                    icon: Icon(Icons.search),
                    onPressed: () {
-                   showSearch(context:context,delegate:DataSearch());
-               })
+                       //showSearch(context:context,delegate:DataSearch());
+                   }
+                 ),
+                IconButton(
+                    icon: Icon(Icons.language),
+                    onPressed: () {
+                    }
+                )
              ]
         );
   }
