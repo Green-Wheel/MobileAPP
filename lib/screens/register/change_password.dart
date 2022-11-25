@@ -88,7 +88,7 @@ class _ChangePassword extends State<ChangePassword> {
                               style: TextStyle(fontSize: 22)
                           ),
                           onPressed: (){
-                            if(!reset_done && passwordController.text == password_againController.text && passwordController.text != ""){
+                            if(!reset_done){
                               _checkPassword(passwordController.text,context);
                             }
                           },

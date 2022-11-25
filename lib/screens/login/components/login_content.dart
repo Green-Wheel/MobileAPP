@@ -40,7 +40,7 @@ class _LoginContentState extends State<LoginContent>
         var apiKey = jsonResponse["apikey"];
         final _loggedInStateInfo = LoginService();
         _loggedInStateInfo.loginUser(apiKey);
-        GoRouter.of(context).go('/');
+        GoRouter.of(context).push('/');
         print("Login successful");
       } else if (response.statusCode == 400) {
         ScaffoldMessenger.of(context)
