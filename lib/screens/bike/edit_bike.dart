@@ -34,6 +34,7 @@ class _EditBikeState extends State<EditBike> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Bike'),
+
       ),
       body: Center(
         child: !charged
