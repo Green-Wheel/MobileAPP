@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -8,27 +9,13 @@ import '../../serializers/users.dart';
 import '../../widgets/alert_dialog.dart';
 
 const String registerUrl = "users/register/";
-const String userUrl = 'users/1/';
 const String editUrl = 'users/';
+const String uploadImageUrl = 'users/upload/';
 
 
 
 class UserService extends ChangeNotifier {
 
-
-  static Future<User>? getUser() {
-    User user;
-    return BackendService.get(userUrl).then((response) {
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        user = User.fromJson(jsonResponse);
-        return user;
-      }
-      else {
-        return throw Exception('Error getting user!');
-      }
-    });
-  }
   static void registerUser(BuildContext context,String username, String email, String password,String firstName,String lastName){
       Map<String,dynamic> registerMap = {
           'email': email,
@@ -64,13 +51,29 @@ class UserService extends ChangeNotifier {
       "about": about
     };
     BackendService.put(editUrl, editMap).then((response) {
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 ) {
         var _loginService = LoginService();
         _loginService.update_user_info();
         GoRouter.of(context).push('/');
+        Future.delayed(Duration.zero, () => showAlert(context,"Done","You have changed your profile"));
       }
       else {
-        print('Error with the register!');
+        Future.delayed(Duration.zero, () => showAlert(context,"Suggestion","Set a correct email"));
+      }
+    });
+  }
+
+  static void putImage(BuildContext context, File file) {
+    List<File> image =[];
+    image.add(file);
+    BackendService.postFiles(uploadImageUrl, image).then((response) {
+      if (response.statusCode == 200 ) {
+        var _loginService = LoginService();
+        _loginService.update_user_info();
+        Future.delayed(Duration.zero, () => showAlert(context,"Done","You have changed your image"));
+      }
+      else {
+        Future.delayed(Duration.zero, () => showAlert(context,"Error","We cannot retrieve the iamge"));
       }
     });
   }

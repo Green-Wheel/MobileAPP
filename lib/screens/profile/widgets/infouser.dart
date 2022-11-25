@@ -41,7 +41,7 @@ class _InfoUser extends State<InfoUser>  {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      AccountIcon(percent: 0.5, path_image: 'assets/images/default_user_img.jpg'),
+                      AccountIcon(percent: 0.5, path_image: userData["profile_picture"]),
                       Column(
                         children: <Widget>[
                           Center(
