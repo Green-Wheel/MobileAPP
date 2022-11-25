@@ -40,8 +40,8 @@ class _ReservationBikeCard extends State<ReservationBikeCard> {
 
     int distance = 2;
 
-    DateFormat formatterStart = DateFormat('HH:mm');
-    DateFormat formatterEnd = DateFormat('HH:mm');
+    DateFormat formatterStart = DateFormat('dd-MM (kk:mm)');
+    DateFormat formatterEnd = DateFormat('dd-MM (kk:mm)');
     String formattedTimeStart = formatterStart.format(booking.start_date);
     String formattedTimeEnd = formatterEnd.format(booking.end_date);
 
@@ -49,6 +49,8 @@ class _ReservationBikeCard extends State<ReservationBikeCard> {
     if (booking.id != null) {
       id = booking.id!;
     }
+
+    String statusName = booking.status.name;
 
     return Visibility(
       visible: _isVisible,
@@ -99,11 +101,11 @@ class _ReservationBikeCard extends State<ReservationBikeCard> {
               padding: const EdgeInsets.only(left: 15.0, bottom: 4.0),
               child: Row(
                 children: [
-                  const Text('Available: ',
-                    style: TextStyle(
+                  Text('$statusName: ',
+                    style: const TextStyle(
                         fontWeight: FontWeight.w600, color: Colors.green),
                   ),
-                  Text('$formattedTimeStart-$formattedTimeEnd',
+                  Text('$formattedTimeStart - $formattedTimeEnd',
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ],
