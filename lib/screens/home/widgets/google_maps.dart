@@ -117,9 +117,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         icon: iconMarker,
         onTap: () {
           setState(() {
-            is_visible = false;
-          });
-          setState(() {
             id_marcador = id.toString();
             is_visible = true;
             _getBike(id);
