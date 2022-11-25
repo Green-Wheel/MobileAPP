@@ -4,7 +4,6 @@ import 'chargers.dart';
 
 part 'bikes.g.dart';
 
-// TODO canviar bike_type de int a bikeType quan backend estigui preparat
 
 @JsonSerializable()
 class BikeType {
@@ -54,7 +53,7 @@ class DetailedBikeSerializer {
     this.images,
     this.avg_rating,
     required this.bike_type,
-    this.power, // ???????
+    this.power,
     required this.price,
   });
 

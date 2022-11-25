@@ -7,7 +7,6 @@ import 'package:greenwheel/widgets/forms/localization_info.dart';
 import '../../serializers/bikes.dart';
 import '../../serializers/chargers.dart';
 import '../../serializers/maps.dart';
-import '../../serializers/maps.dart';
 import '../../services/backendServices/bikes.dart';
 
 class BikeForm extends StatefulWidget {

@@ -32,7 +32,7 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'chargers/add',
               builder: (context, state) =>
-                  const EditBike(key: Key("AddBike"), id: 418),
+                  const AddBike(key: Key("AddBike")),
             ),
             GoRoute(
               path: 'chargers/list',

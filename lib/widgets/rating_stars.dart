@@ -39,7 +39,7 @@ class _RatingStarsWidget extends State<RatingStars> {
         Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: Text(rating.toString(),
-            style: const TextStyle(fontWeight: FontWeight.w600),
+            style: const TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
       ],

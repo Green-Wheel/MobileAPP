@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import '../screens/bookings/bookings.dart';
+import '../serializers/bookings.dart';
+import '../services/backendServices/bookings.dart';
 
 class ActionButtonsReservation extends StatefulWidget {
-  List<dynamic>? bookings;
+  List<Booking> bookings;
   List<dynamic>? ratings;
 
   ActionButtonsReservation({required this.bookings, required this.ratings, super.key});
@@ -16,10 +18,48 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
   bool pressFilterByChargers = false;
   bool pressFilterByBikes = false;
   bool pressFilterByLocation = false;
+  List<Booking> bookingOfChargers = [];
+  List<Booking> bookingOfBikes = [];
 
   @override
   Widget build(BuildContext context) {
     return _actionButtonsReservation(widget.bookings, widget.ratings);
+  }
+
+  void _getBookingsOrderedBy(String orderBy) async {
+    List<Booking> bookingList = await BookingService.getBookingsOrderedBy(orderBy);
+    setState(() {
+      widget.bookings = bookingList;
+    });
+  }
+
+  void _getBookings() async {
+    List<Booking> bookingList = await BookingService.getBookings();
+    setState(() {
+      widget.bookings = bookingList;
+    });
+  }
+
+  void _getBookingsOfChargers() {
+    for (int i = 0; i < widget.bookings.length; i++) {
+      if (widget.bookings[i].publication.type == "Charger") {
+        bookingOfChargers.add(widget.bookings[i]);
+      }
+    }
+    setState(() {
+      widget.bookings = bookingOfChargers;
+    });
+  }
+
+  void _getBookingsOfBikes() {
+    for (int i = 0; i < widget.bookings.length; i++) {
+      if (widget.bookings[i].publication.type == "Bike") {
+        bookingOfBikes.add(widget.bookings[i]);
+      }
+    }
+    setState(() {
+      widget.bookings = bookingOfBikes;
+    });
   }
 
   Widget _actionButtonsReservation(List<dynamic>? bookings, List<dynamic>? ratings) {
@@ -49,11 +89,11 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                     onPressed: () {
                       setState(() => pressFilterByDate = !pressFilterByDate);
                       if (pressFilterByDate) {
-                        bookings!.sort((a, b) => a['start_date'].compareTo(b['start_date'])); //pillar del backend ordenat per data
+                        _getBookingsOrderedBy("date");
                       } else {
-                        bookings!.sort((a, b) => a['id'].compareTo(b['id']));
+                        _getBookings();
                       }
-                      buildList(bookings, ratings);
+                      buildList(widget.bookings, ratings);
                     },
                     child: Row(
                       children: [
@@ -88,7 +128,14 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                             )
                         )
                     ),
-                    onPressed: () => setState(() => pressFilterByChargers = !pressFilterByChargers),
+                    onPressed: () {
+                      setState(() => pressFilterByChargers = !pressFilterByChargers);
+                      if (pressFilterByChargers) {
+                        _getBookingsOfChargers();
+                      } else {
+                        _getBookings();
+                      }
+                    },
                     child: Row(
                       children: [
                         Icon(
@@ -118,7 +165,14 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                             )
                         )
                     ),
-                    onPressed: () => setState(() => pressFilterByBikes = !pressFilterByBikes),
+                    onPressed: () {
+                      setState(() => pressFilterByBikes = !pressFilterByBikes);
+                      if (pressFilterByBikes) {
+                        _getBookingsOfBikes();
+                      } else {
+                        _getBookings();
+                      }
+                    },
                     child: Row(
                       children: [
                         Icon(
@@ -131,7 +185,7 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                   ),
                 ),
               ),
-              Padding(
+              /*Padding(
                 padding: const EdgeInsets.only(left: 10.0, top: 7.5, bottom: 1),
                 child: SizedBox(
                   height: 35,
@@ -165,12 +219,12 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                     ),
                   ),
                 ),
-              ),
+              ),*/
             ],
           ),
         ),
         Expanded(
-          child: buildList(bookings, ratings),
+          child: buildList(widget.bookings, ratings),
         ),
       ],
     );
