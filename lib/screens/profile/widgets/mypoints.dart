@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../widgets/card_info.dart';
+
 class MyPoints extends StatelessWidget {
   const MyPoints( {Key? key}) : super(key: key);
 
@@ -12,7 +14,7 @@ class MyPoints extends StatelessWidget {
       child: Row(
         children: <Widget> [
           Text("My Points",style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-
+          //CardInfoWidget(),
         ],
       )
     );

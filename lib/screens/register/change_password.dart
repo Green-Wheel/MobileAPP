@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-import '../../services/backendServices/recover_password.dart';
+import '../../services/backendServices/change_password.dart';
+
 
 class ChangePassword extends StatefulWidget{
   const ChangePassword({Key? key}) : super(key: key);
@@ -13,6 +15,13 @@ class _ChangePassword extends State<ChangePassword> {
   final formKey = GlobalKey<FormState>();
   final passwordController = TextEditingController();
   final password_againController = TextEditingController();
+
+  bool reset_done = false;
+  bool? reset_done2;
+
+  void _checkPassword(String password,BuildContext context) async {
+     ChangePasswordService.checkPassword(password,context);
+  }
 
   @override
   Widget build(BuildContext context) =>
@@ -83,8 +92,8 @@ class _ChangePassword extends State<ChangePassword> {
                               style: TextStyle(fontSize: 22)
                           ),
                           onPressed: (){
-                            if(passwordController.text == password_againController.text && passwordController.text != ""){
-                              //crida backend i ruta
+                            if(!reset_done && passwordController.text == password_againController.text && passwordController.text != ""){
+                              _checkPassword(passwordController.text,context);
                             }
                           },
                         ),

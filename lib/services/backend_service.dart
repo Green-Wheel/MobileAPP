@@ -53,7 +53,7 @@ class BackendService {
       Map<String, dynamic> jsonMap) async {
     var apiKey = _loggedInStateInfo.apiKey;
     apiKey ??= "";
-    print(_baseUrl);
+    print(Uri.parse(_baseUrl + endpoint));
     http.Response response = await http.put(
       Uri.parse(_baseUrl + endpoint),
       headers: {

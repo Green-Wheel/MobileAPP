@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../serializers/users.dart';
-import '../../../services/backendServices/user_service.dart';
+import '../../../services/generalServices/LoginService.dart';
 import '../../../widgets/accountIcon.dart';
 import '../../../widgets/username_rating_stars.dart';
 
@@ -12,23 +11,25 @@ class InfoUser extends StatefulWidget {
 }
 
 class _InfoUser extends State<InfoUser>  {
-  bool _isEditable = true;
-  User? user;
 
+  final _loggedInStateInfo = LoginService();
+  var userData;
   @override
   void initState() {
     super.initState();
-    _getUser();
+    _getData();
   }
-  void _getUser() async {
-    User? aux = await UserService.getUser();
+  void _getData() async {
+    var data = _loggedInStateInfo.user_info;
+    print(data);
     setState(() {
-      user = aux;
+      userData = data;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
         padding: const EdgeInsets.only(top:0,left:0,right:0),
         width: MediaQuery.of(context).size.width,
@@ -43,13 +44,14 @@ class _InfoUser extends State<InfoUser>  {
                       AccountIcon(percent: 0.5, path_image: 'assets/images/default_user_img.jpg'),
                       Column(
                         children: <Widget>[
-                          if(_isEditable) Username_Rating(username: user?.username ?? "",
-                              rating : user?.rating?.toString() ?? "1",
-                            edit_button: true,)
-                          else Username_Rating(username: user?.username ?? "",
-                            rating : user?.rating?.toString() ?? "1",
-                            edit_button: false,),
-                          Text("lvl ${user?.level} |  ${user?.xp} xp" ?? "1 + | 0 xp"),
+                          Center(
+                          child: Username_Rating(username: userData != null
+                              ? userData['first_name'] + " " + userData['last_name']
+                                  : "User Name",
+                              rating :userData['rating']!=null ? userData['rating'].toString() : "2.5",
+                              edit_button: true),
+                          ),
+                          Text("lvl ${userData['level']} |  lvl ${userData['xp']} xp" ?? "1 + | 0 xp"),
                           Text("Trophies")
                         ],
                       ),

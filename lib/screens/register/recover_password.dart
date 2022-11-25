@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:email_validator/email_validator.dart';
 import 'package:go_router/go_router.dart';
 import 'dart:math';
 import '../../services/backendServices/recover_password.dart';
-import 'change_password.dart';
 
 class ForgotPasswordScreen extends StatefulWidget{
   const ForgotPasswordScreen({Key? key}) : super(key: key);
@@ -18,22 +16,21 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
   final codeController = TextEditingController();
 
   bool _show_code = false;
-  bool? _show_code2 ;
+  bool? _show_code2;
   bool? good_code;
+  bool good_code2 = false;
   String? code;
 
   void _getRequest(String username) async {
-    bool? aux = await RecoverPassword.getRecover(username);
-    setState(() {
-      _show_code2 = aux;
+    bool? aux = await RecoverPasswordService.getRecover(username);
+    setState(()  {
+        _show_code2 = aux;
+        if(_show_code2 == true) _show_code = true;
     });
   }
 
-  void _getCode(String code) async {
-    bool? aux = await RecoverPassword.checkCode(code);
-    setState(() {
-      good_code = aux;
-    });
+  void _getCode(String code,String username,BuildContext context) async {
+    RecoverPasswordService.checkCode(code,username,context);
   }
 
   @override
@@ -134,10 +131,10 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
                                     //Comprobar CODE CORRECTE
                                       if(_show_code == false && nameController.text != "") {
                                         _getRequest(nameController.text);
-                                        if(_show_code2 == true) _show_code = true;
                                       }
-                                      if(_show_code && codeController.text != "") {
-                                        if(good_code == true) GoRouter.of(context).push('/login/recover_password/change_password');
+                                      if(_show_code && (codeController.text != "")) {
+                                        _getCode(codeController.text,nameController.text,context);
+
                                       }
                                     },
                               ),
@@ -148,3 +145,5 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
           )
       );
 }
+
+

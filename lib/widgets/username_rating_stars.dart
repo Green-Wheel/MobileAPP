@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/rating_stars.dart';
 
+import '../screens/profile/editprofile.dart';
 import '../screens/register/recover_password.dart';
 
 class Username_Rating extends StatelessWidget {
@@ -34,12 +36,7 @@ class Username_Rating extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
-        /*
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) =>   ForgotPasswordScreen()),
-         );
-         */
+        GoRouter.of(context).push('/profile/edit');
       },
     );
   }

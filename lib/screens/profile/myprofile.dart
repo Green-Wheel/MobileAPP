@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:greenwheel/screens/profile/widgets/infouser.dart';
 import 'package:greenwheel/screens/profile/widgets/mypoints.dart';
 import '../../serializers/users.dart';
+import '../../services/generalServices/LoginService.dart';
 
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePage();
@@ -13,7 +14,20 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
-
+  final _loggedInStateInfo = LoginService();
+  var userData;
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+  void _getData() async {
+    var data = _loggedInStateInfo.user_info;
+    print(data);
+    setState(() {
+      userData = data;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +53,7 @@ class _ProfilePage extends State<ProfilePage> {
           ),
           Container(
             padding: const EdgeInsets.only(top:5),
-            child: aboutMe("Not introuced an About Me"),//ficar user
+            child: aboutMe( userData['about'] != null ? userData['about'] : "No content aboutMe"),//ficar user
           ),
           Container(
             padding : const EdgeInsets.only(top:5),

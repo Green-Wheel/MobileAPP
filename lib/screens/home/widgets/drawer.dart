@@ -18,9 +18,6 @@ class SimpleDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     userData = _loggedInStateInfo.user_info;
-    print("---------------------------");
-    print(userData);
-    print("---------------------------");
     return Drawer(
       backgroundColor: Colors.white,
       child: ListView(
@@ -69,10 +66,7 @@ class SimpleDrawer extends StatelessWidget {
                         child: const Text('My Profile', style: TextStyle(fontSize: 18)),
                       ),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>  ProfilePage()),
-                );
+                GoRouter.of(context).push('/profile');
               },
             ),
           ),
@@ -164,6 +158,7 @@ class SimpleDrawer extends StatelessWidget {
                           )
                     ),
           ),
+          /*
           Padding(
             padding: EdgeInsets.only(left: 10.0, right: 10.0),
             child: Align(
@@ -183,6 +178,7 @@ class SimpleDrawer extends StatelessWidget {
                 )
             ),
           ),
+           */
           Padding(
               padding: EdgeInsets.only(left: 10.0, right: 10.0),
               child: logged ?

@@ -1,43 +1,41 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
-import '../../serializers/users.dart';
+
 
 String get_recover = 'users/password/recovery?username=';
+String get_code = 'users/password/recovery/';
 
-class RecoverPassword extends ChangeNotifier {
+class RecoverPasswordService extends ChangeNotifier {
 
-  static Future<bool>? getRecover(String username) {
-
-    print(get_recover + username);
-      BackendService.get(get_recover + username).then((response) {
+  static Future<bool?> getRecover(String username) async {
+      return await BackendService.get(get_recover + username).then((response) {
       if (response.statusCode == 200) {
-        print("Correct");
         return true;
       }
       else {
-        print("Error getting user");
-        print(response.statusCode);
         return false;
         throw Exception('Error getting user!');
       }
     });
   }
 
-  static Future<bool>? checkCode(String code) {
+  static void checkCode(String code , String username,BuildContext context)  async {
     Map<String, dynamic> checkCode = {
-      "code": code
+      "username": username,
+      "code": int.parse(code)
     };
-    BackendService.put(get_recover, checkCode).then((response) {
+    return  await BackendService.put(get_code, checkCode).then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        return true;
-        print(jsonResponse);
+        LoginService ls = LoginService();
+        ls.loginUser(jsonResponse['apikey']);
+        GoRouter.of(context).go('/login/recover_password/change_password');
       }
       else {
-        return false;
         print('Code is not the same!');
       }
     });

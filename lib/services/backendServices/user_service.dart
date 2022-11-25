@@ -50,17 +50,18 @@ class UserService extends ChangeNotifier {
     });
   }
 
-  static void editUser(String email, String image_path, String about, String firstName, String lastName) {
+  static void editUser(String email, String image_path, String about, String firstName, String lastName,BuildContext context) {
     Map<String, dynamic> editMap = {
-      //"email": email,
+      "email": email,
       "first_name": firstName,
       "last_name": lastName,
       "about": about
     };
     BackendService.put(editUrl, editMap).then((response) {
       if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        print(jsonResponse);
+        var _loginService = LoginService();
+        _loginService.update_user_info();
+        GoRouter.of(context).push('/');
       }
       else {
         print('Error with the register!');

@@ -5,7 +5,7 @@ import 'package:greenwheel/screens/register/widgets/greenButton.dart';
 import '../../services/backendServices/user_service.dart';
 
 class EditProfile extends StatefulWidget {
-  EditProfile({Key? key}) : super(key: key);
+  const EditProfile({Key? key}) : super(key: key);
 
   @override
   State<EditProfile> createState() => _EditProfile();
@@ -54,7 +54,7 @@ class _EditProfile extends State<EditProfile> {
                   children: [
                     Padding(
                         padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                        child:  Text("Username",  style: TextStyle(fontSize: 18),)
+                        child:  Text("Email",  style: TextStyle(fontSize: 18),)
                     ),
                     userInput(nameController,  TextInputType.name ,context,false),
                     Padding(
@@ -76,9 +76,8 @@ class _EditProfile extends State<EditProfile> {
                       print(nameController.text);
                       UserService.editUser(nameController.text,image_path
                           , aboutController.text, firstNameController.text,
-                          lastNameController.text);
-                      //Navigator.pop(context);
-                    }
+                          lastNameController.text,context);
+                      }
                     ),
                   ],
                 ),
