@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:developer';
 import 'package:greenwheel/services/backendServices/bookings.dart';
+import 'package:greenwheel/services/backendServices/publications.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'custom_calendar.dart';
@@ -14,18 +15,17 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Booking calendar',
-      home: bookingCalendar(),
+      home: bookingCalendar(id: 1),
     );
   }
 }
 
 
 class bookingCalendar extends StatefulWidget {
-  const bookingCalendar({Key? key}) : super(key: key);
-
-
+  var id;
+  bookingCalendar({Key? key,required this.id}) : super(key: key);
 
   @override
   _bookingCalendarState createState() => _bookingCalendarState();
@@ -44,17 +44,20 @@ class Reservation{
 }
 
 class _bookingCalendarState extends State<bookingCalendar> {
+  Map<String, dynamic> data = Map();
   DateTime now = DateTime.now();
   DateTime selectedDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   Map<DateTime, List<TimeOfDay>> selectedDates = {};
   List<TimeOfDay> myReservations=[];
   List<TimeOfDay> availableHours=[];
 
+
   @override
   void initState() {
     log(availableHours.toString());
     log(myReservations.toString());
     getHourAvailability_backend(selectedDate);
+    data['id'] = widget.id;
     super.initState();
   }
 
@@ -108,7 +111,10 @@ class _bookingCalendarState extends State<bookingCalendar> {
     log(selectedDates.toString());
     List<Reservation> reservations = split_reservations();
     for(var reservation in reservations){
-      //BookingService.newBooking(reservation);
+      data['startdate'] = reservation.start_date;
+      data['enddate'] = reservation.end_date;
+      //TODO: PONER MENSAJE DE ALERTA SI FALLA
+      BookingService.newBooking(data);
     }
   }
 
@@ -134,7 +140,11 @@ class _bookingCalendarState extends State<bookingCalendar> {
       selectedDate = date;
       myReservations = [TimeOfDay(hour:8 ,minute: 30)];
       availableHours = [TimeOfDay(hour:8 ,minute: 30),TimeOfDay(hour:10 ,minute: 88),TimeOfDay(hour:1 ,minute: 30),TimeOfDay(hour:1 ,minute: 0),TimeOfDay(hour:0 ,minute: 30),TimeOfDay(hour: 2,minute: 0),TimeOfDay(hour:4,minute: 30),TimeOfDay(hour: 3, minute: 30),];
+      data['year'] = date.year;
+      data['month'] = date.month;
+      data['day'] = date.day;
 
+      PublicationService.getBlockedHoursByDay(data);
       log(date.toString());
     });
   }
