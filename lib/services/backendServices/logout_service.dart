@@ -18,15 +18,8 @@ class LogoutService extends ChangeNotifier {
         ls.logout();
         GoRouter.of(context).push('/login');
       }
-      else if (response.statusCode == 404) {
-        print("User not found");
-      }
-      else if (response.statusCode == 403) {
-        print("Maiu");
-      }
       else {
         var jsonResponse = jsonDecode(response.body);
-        print(response.statusCode);
         print('Error with the logout!');
       }
     });

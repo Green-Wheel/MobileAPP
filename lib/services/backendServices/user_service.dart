@@ -38,18 +38,20 @@ class UserService extends ChangeNotifier {
           'last_name': lastName
         };
 
-      BackendService.post(registerUrl,registerMap).then((response) async {
+      BackendService.post(registerUrl,registerMap).then((response)  {
         if (response.statusCode == 201) {
           var jsonResponse = jsonDecode(response.body);
-          LoginService ls = await LoginService();
+          LoginService ls =  LoginService();
           ls.loginUser(jsonResponse['apikey']);
           GoRouter.of(context).push('/');
 
         }
         else {
+          String x = "Error: duplicate key value violates unique constraint";
           var jsonResponse = jsonDecode(response.body);
           String value = jsonResponse["res"];
-          Future.delayed(Duration.zero, () => showAlert(context,"Error Message",value));
+          if(response.body.contains(x)) Future.delayed(Duration.zero, () => showAlert(context,"Error Message","Username already exists"));
+          else Future.delayed(Duration.zero, () => showAlert(context,"Error Message",value));
       }
     });
   }
