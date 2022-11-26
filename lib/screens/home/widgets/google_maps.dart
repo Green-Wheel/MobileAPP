@@ -59,6 +59,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   bool scrolledup = false;
   bool loading_charger = false;
   bool loading_bike = false;
+  bool _publicationloaded = false;
 
 
   void _getChargers() async {
@@ -341,10 +342,10 @@ Widget show_card() {
               }
             }),
         panelBuilder: (controller) =>
-            buildSlidingUpPanelCharger(
-              controller: controller,
-              panelController: panelController,
-            ),
+          _publicationloaded ? buildSlidingUpPanelCharger(
+            controller: controller,
+            panelController: panelController,
+          ) : Container(),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
   } else {
     return SlidingUpPanel(
@@ -366,10 +367,10 @@ Widget show_card() {
               }
             }),
         panelBuilder: (controller) =>
-            buildSlidingUpPanelBike(
-              controller: controller,
-              panelController: panelController,
-            ),
+          _publicationloaded ? buildSlidingUpPanelBike(
+            controller: controller,
+            panelController: panelController,
+          ) : Container(),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
   }
 }
@@ -380,6 +381,7 @@ void _getCharger(int id) async {
   if (charger != null) {
     setState(() {
       //loading_charger = true;
+      _publicationloaded = true;
       markedCharger = charger;
     });
   }
@@ -436,6 +438,7 @@ void _getBike(int id) async {
   //TODO: carregaar simbol
   if (bike != null) {
     setState(() {
+      _publicationloaded = true;
       widget.index = 1;
       markedBike = bike;
     });
@@ -460,8 +463,7 @@ Widget buildSlidingUpPanelBike(
   double price = markedBike!.price;
   double? power = markedBike!.power;
 
-    // available
-
+  print('power: $power');
 
   return BikeCardInfoWidget(location: descrip, rating: numd, available: true, type: bikeType, description: description, direction: direction, price: price, power: power!, bike_list: false);
 }
