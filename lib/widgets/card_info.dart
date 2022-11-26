@@ -22,9 +22,11 @@ class CardInfoWidget extends StatefulWidget {
   String? description;
   String? direction;
   bool private_list;
+  double latitude;
+  double longitude;
 
   CardInfoWidget({required this.location, required this.rating, required this.types, required this.available, required this.match, required this.private, required this.price, required this.description, required
-  this.direction, required this.private_list, super.key});
+  this.direction, required this.private_list, required this.latitude, required this.longitude, super.key});
 
   @override
   State<StatefulWidget> createState() => _CardInfoWidget();
@@ -33,11 +35,11 @@ class CardInfoWidget extends StatefulWidget {
 class _CardInfoWidget extends State<CardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price, widget.description, widget.direction, widget.private_list, context);
+    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price, widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, context);
   }
 }
 
-Widget _buildCard(String? location, double rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price, String? description, String? direction, bool private_list, BuildContext context){
+Widget _buildCard(String? location, double rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price, String? description, String? direction, bool private_list, double latitude, double longitude, BuildContext context){
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -66,13 +68,21 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
                   child: PointOfChargeDistWidget(types: types),
                 ),
                 SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.only(right: 193),
-                  child: private ? const Text('Private',
-                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.amberAccent)
-                  ) : const Text('Public',
-                      style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green)),
-                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.725,
+                  child: private ?
+                      Padding(
+                          padding: EdgeInsets.only(left: 25),
+                          child: const Text('Private',
+                          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.amberAccent))
+                          ,
+                        )
+                      : Padding(
+                            padding: EdgeInsets.only(left: 25),
+                            child: const Text('Public',
+                                style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green)),
+                        )
+                  ),
                 Padding(
                   padding: const EdgeInsets.only(right: 193),
                   child: private_list ? const Text('Private',
@@ -157,12 +167,12 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
                   SizedBox(height: 30),
                   ImageChargerWidget(),
                   SizedBox(height: 10),
-                  ButtonRouteWidget(latitude: 41.3874, longitude: 2.1686),
+                  ButtonRouteWidget(latitude: latitude, longitude: longitude),
                   private? SizedBox(height: 155): SizedBox(height: 35),
                   private?  Padding(
                   padding: EdgeInsets.only(right: 0),
-                  child: ChatButtonWidget(longitude: 42.012, latitude: 41.675)
-                  ,): SizedBox(height: 25)
+                  child: ChatButtonWidget(),
+                  ): SizedBox(height: 25)
               ],
             ),
           ),

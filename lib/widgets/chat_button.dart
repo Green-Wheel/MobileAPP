@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ChatButtonWidget extends StatefulWidget {
-  final longitude;
-  final latitude;
 
   const ChatButtonWidget(
-      {super.key, required this.longitude, required this.latitude});
+      {super.key});
 
   @override
   State<StatefulWidget> createState() => _ChatButtonWidget();
