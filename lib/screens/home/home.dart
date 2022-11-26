@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenwheel/screens/home/widgets/SearchBar.dart';
+import 'package:greenwheel/screens/home/widgets/searchBar.dart';
 import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/drawer.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
@@ -24,8 +24,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   final nameController = TextEditingController();
-  String searchValue = '';
-  final List<String> _suggestions = ['Afeganistan', 'Albania', 'Algeria', 'Australia', 'Brazil', 'German', 'Madagascar', 'Mozambique', 'Portugal', 'Zambia'];
 
   @override
   Widget build(BuildContext context) {

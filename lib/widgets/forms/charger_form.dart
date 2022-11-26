@@ -81,7 +81,7 @@ class _ChargerFormState extends State<ChargerForm> {
     } else {
       PrivateChargersService.newCharger(_data, _images);
     }
-    GoRouter.of(context).go('/');
+    GoRouter.of(context).push('/');
   }
 
   //widget functions
@@ -99,7 +99,7 @@ class _ChargerFormState extends State<ChargerForm> {
           'connection_type': [],
           'current_type': [],
           'speed': [],
-          'power': '55',
+          'power': "",
           'avg_rating': 0.0,
           'charge_type': '',
           'price': '',

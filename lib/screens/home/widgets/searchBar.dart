@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/utils/address_autocompletation.dart';
+
+import '../../../widgets/language_selector_widget.dart';
 
 class SearchBar extends StatefulWidget implements PreferredSizeWidget{
   SearchBar({Key? key}) : preferredSize = Size.fromHeight(kToolbarHeight),super(key: key);
@@ -27,17 +30,31 @@ class _SearchBar extends State<SearchBar>{
     });
   }
 */
+  void _changeLanguage() {
+    showDialog(
+      context: context,
+      builder: (context) => const LanguageSelectorWidget(),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-            title: Text("Home Screen"),//_searchTextField(),
+            title: Text("Search"),//_searchTextField(),
             actions:<Widget>[
                 IconButton(
                    icon: Icon(Icons.search),
                    onPressed: () {
-                   showSearch(context:context,delegate:DataSearch());
-               })
+                       //showSearch(context:context,delegate:DataSearch());
+                   }
+                 ),
+                IconButton(
+                    icon: Icon(Icons.language),
+                    onPressed: () {
+                      _changeLanguage();
+                    }
+                )
              ]
         );
   }
