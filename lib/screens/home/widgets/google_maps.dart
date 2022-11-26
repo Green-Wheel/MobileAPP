@@ -417,6 +417,8 @@ Widget buildSlidingUpPanelCharger(
   String? direction = markedCharger!.direction;
   direction = title_parser(direction);
   String? description = markedCharger!.description;
+  double latitude = markedCharger!.localization.latitude;
+  double longitude = markedCharger!.localization.longitude;
 
 
   return CardInfoWidget(location: descrip,
@@ -428,6 +430,8 @@ Widget buildSlidingUpPanelCharger(
       price: price,
       direction: direction,
       description: description,
+      latitude: latitude,
+      longitude: longitude,
       private_list: false);
 }
 

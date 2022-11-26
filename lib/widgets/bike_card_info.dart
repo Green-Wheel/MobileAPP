@@ -59,15 +59,20 @@ Widget _buildCard(String? location, double rating, bool available, BikeType type
                 child:  StarsStaticRateWidget(rate: 4.0),
               ),
               SizedBox(height: 5),
-              Padding(
-                padding: const EdgeInsets.only(right: 190),
-                child: type.name == "Electric" ?
-                Padding(
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.725,
+                child: type.name == "Electric" ? Padding(
                 padding: EdgeInsets.only(left: 25),
-                child: Text('Electric: $power W',
+                child: !bike_list ? Text('Electric: $power W',
                     style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green)
-                )) : const Text('Manual',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: Colors.amberAccent))),
+                ) : Text('Electric', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green))) :
+                Padding(
+                    padding: EdgeInsets.only(left: 25),
+                    child: const Text('Manual',
+                        style: TextStyle(fontWeight: FontWeight.w600, color: Colors.amberAccent)),
+                )
+              ),
+              SizedBox(height: 5),
               Padding(
                 padding: EdgeInsets.only(left: 25),
                 child: AvaliableBikeWidget(avaliable: available),
@@ -111,17 +116,21 @@ Widget _buildCard(String? location, double rating, bool available, BikeType type
                       !bike_list? SizedBox(height: 10): SizedBox(height: 0),
                       !bike_list? Column(
                           children: [
-                            Padding(
-                                padding: EdgeInsets.only(right: 55),
-                                child:Text("Address:  $direction",
-                                    style: const TextStyle(fontWeight: FontWeight.w600)
-                                )
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.925,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 25),
+                                  child: Text("Address:  $direction",style: const TextStyle(fontWeight: FontWeight.w600))
+                                    ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(right: 115),
-                              child: Text("Description:  $description",
-                                  style: const TextStyle(fontWeight: FontWeight.w600)
-                              ),
+                            SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.925,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 25),
+                                  child: Text("Description:  $description",
+                                      style: const TextStyle(fontWeight: FontWeight.w600)
+                                  ),
+                                ),
                             ),
                           ]): SizedBox(height: 0),
                       SizedBox(height: 10)
