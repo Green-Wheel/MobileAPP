@@ -28,7 +28,7 @@ class _ButtonReservaListWidget extends State<ButtonReservaListWidget>{
             onPressed: () {
               //Redireccion a la pantalla del calendario
               GoRouter.of(context)
-                  .go('/bookings/resevation/');
+                  .go('/bookings/${widget.id}');
             },
             child: Row(
               children: const [
