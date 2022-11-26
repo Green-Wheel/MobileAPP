@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:developer';
 import 'package:greenwheel/services/backend_service.dart';
 import '../../serializers/bookings.dart';
 
@@ -39,6 +39,15 @@ class BookingService {
     return result;
   }
 
+  static Future<bool> newBooking(Map<String, dynamic> data) async {
+    try {
+      var response = await BackendService.post('bookings/', data);
+      return response.statusCode == 200;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
   static bool deleteBookings(id) {
     BackendService.delete('bookings/$id/').then((response) {
       if (response.statusCode == 204) {
