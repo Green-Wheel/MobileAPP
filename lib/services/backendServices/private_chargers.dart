@@ -67,7 +67,6 @@ class PrivateChargersService {
   }
 
   static Future<Map<String, dynamic>> getChargerInfo(int id) async {
-    //TODO: end parsing data
     try {
       var response = await BackendService.get('chargers/$id/');
       if (response.statusCode != 200) return {};
