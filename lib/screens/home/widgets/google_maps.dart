@@ -465,7 +465,7 @@ Widget buildSlidingUpPanelBike(
 
   print('power: $power');
 
-  return BikeCardInfoWidget(location: descrip, rating: numd, available: true, type: bikeType, description: description, direction: direction, price: price, power: power!, bike_list: false);
+  return BikeCardInfoWidget(location: descrip, rating: numd, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false);
 }
 
 String? title_parser(String? description) {
