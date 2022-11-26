@@ -57,6 +57,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   bool is_visible = false;
   final panelController = PanelController();
   bool scrolledup = false;
+  bool loading_charger = false;
+  bool loading_bike = false;
 
 
   void _getChargers() async {
@@ -70,6 +72,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         String chargerType = markersList[i].charger_type;
         _addMarker(latitude, longitude, chargerType, id);
       }
+      loading_charger = true;
     });
   }
 
@@ -83,6 +86,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         double longitude = markersList[i].localization.longitude;
         _addBikeMarker(latitude, longitude, id);
       }
+      loading_bike = true;
     });
   }
 
@@ -100,11 +104,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     } else if (widget.index == 1) {
       _getBikes();
     }
-    super.initState();
+    //super.initState();
   }
 
   void _addBikeMarker(double lat, double log, int id) async {
-    // TODO: Falta BikeType com a argument
+    // Falta BikeType com a argument
     final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 3.2,),
         "assets/images/punt_bicicleta.png");
@@ -223,6 +227,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       id_marcador = widget.publicationId.toString();
       is_visible = true;
       scrolledup = true;
+      loading_charger = true;
 
     });
   }
@@ -232,12 +237,13 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       id_marcador = widget.publicationId.toString();
       is_visible = true;
       scrolledup = true;
+      loading_bike = true;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!is_visible && widget.publicationId != -1 && widget.index == 0) {
+    if (!is_visible && widget.publicationId != -1 && widget.index == 0 ) {
       _setCardView();
     }
     if (!is_visible && widget.publicationId != -1 && widget.index == 1) {
@@ -271,7 +277,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               },
               onCameraMove: onCameraMove,
             ),
-            is_visible ? show_card() : Container(),
+            is_visible ? show_card(widget.index) : Container(),
           ],
         ),
         floatingActionButton: Column(
@@ -305,7 +311,7 @@ Widget listButton() {
   }
 }
 
-Widget show_card() {
+Widget show_card(int index) {
   if (widget.index == 0) {
     return SlidingUpPanel(
         maxHeight: MediaQuery
@@ -367,6 +373,11 @@ void _getCharger(int id) async {
       markedCharger = charger;
     });
   }
+  /*else {
+    setState(() {
+      markedCharger = null;
+    });
+  }*/
 }
 
 Widget buildSlidingUpPanelCharger(
@@ -412,6 +423,7 @@ Widget buildSlidingUpPanelCharger(
 void _getBike(int id) async {
   DetailedBikeSerializer? bike = await BikeService.getBike(id);
   print(bike);
+  //TODO: carregaar simbol
   if (bike != null) {
     setState(() {
       markedBike = bike;

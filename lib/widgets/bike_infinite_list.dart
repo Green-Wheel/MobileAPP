@@ -137,7 +137,6 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
           BikeType bikeType = _markersListAll[index].bike_type as BikeType;
           String? description = _markersListAll[index].title;
           double price = _markersListAll[index].price;
-          //TODO: atributos bikes
           bool avaliable = true;
           int? id = _markersListAll[index].id;
           return Flexible(child: _cardBikeList(description!, avaliable, bikeType, price, id!));
@@ -151,7 +150,6 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
     int min = 2, max = 6;
     int num = (min + random.nextInt(max - min));
     double numd = num.toDouble();
-    //TODO: redireccionar a la vista de la bici
     String? description = "Nice";
     String? direction1 = "Calle 1";
     return GestureDetector(

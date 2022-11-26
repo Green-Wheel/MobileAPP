@@ -13,33 +13,14 @@ class _ButtonListScreenChargersWidget extends State<ButtonListScreenChargersWidg
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        // do something
-        //context.go('../../charger-info-list/chargeInfoList.dart');
         GoRouter.of(context).go('/chargers/list');
       },
-      child: Icon(
+      child: const Icon(
         Icons.list,
         size: 35,
       ),
       backgroundColor: Colors.green,
     );
-    ElevatedButton(
-      onPressed: () {
-        // do something
-        //context.go('../../charger-info-list/chargeInfoList.dart');
-      },
-      style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all<Color>(Colors.green),
-        shape: MaterialStateProperty.all<CircleBorder>(CircleBorder()),
-        padding:
-            MaterialStateProperty.all<EdgeInsetsGeometry>(EdgeInsets.all(12)),
-      ),
-      child: Icon(
-        Icons.list,
-        size: 35,
-      ),
-    );
   }
 }
 
-//funcion del boton route situado en la car
