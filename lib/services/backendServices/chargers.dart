@@ -57,7 +57,7 @@ class ChargerService {
     return result;
   }
 
-
+/*
   static Future<DetailedCharherSerializer?> getCharger(int id) async {
     DetailedCharherSerializer? result;
     await BackendService.get('chargers/$id/').then((response) {
@@ -68,6 +68,18 @@ class ChargerService {
         print('Error getting charger!');
       }
     });
+    return result;
+  }*/
+
+  static Future<DetailedCharherSerializer?> getCharger(int id) async {
+    DetailedCharherSerializer? result;
+    var response = await BackendService.get('chargers/$id/');
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      result = DetailedCharherSerializer.fromJson(jsonResponse);
+    } else {
+      throw Exception('Error getting speeds');
+    }
     return result;
   }
 
