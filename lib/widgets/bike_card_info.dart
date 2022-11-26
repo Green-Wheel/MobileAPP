@@ -20,8 +20,9 @@ class BikeCardInfoWidget extends StatefulWidget {
   String? direction;
   double power;
   bool bike_list;
+  int? id;
 
-  BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,  required this.power,  required this.bike_list, super.key});
+  BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,  required this.power,  required this.bike_list, required this.id, super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
@@ -30,11 +31,11 @@ class BikeCardInfoWidget extends StatefulWidget {
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, context);
+    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.id, context);
   }
 }
 
-Widget _buildCard(String? location, double rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, BuildContext context) {
+Widget _buildCard(String? location, double rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, int? id, BuildContext context) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -111,7 +112,7 @@ Widget _buildCard(String? location, double rating, bool available, BikeType type
                 child: Flexible(
                   child: Column(
                     children:[
-                      !bike_list? ButtonReservaListBikeWidget(): SizedBox(height: 0),
+                      !bike_list? ButtonReservaListBikeWidget(id: id): SizedBox(height: 0),
                       !bike_list? SizedBox(height: 10): SizedBox(height: 0),
                       !bike_list? SizedBox(height: 10): SizedBox(height: 0),
                       !bike_list? Column(

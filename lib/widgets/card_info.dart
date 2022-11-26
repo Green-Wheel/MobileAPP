@@ -24,9 +24,10 @@ class CardInfoWidget extends StatefulWidget {
   bool private_list;
   double latitude;
   double longitude;
+  int id;
 
   CardInfoWidget({required this.location, required this.rating, required this.types, required this.available, required this.match, required this.private, required this.price, required this.description, required
-  this.direction, required this.private_list, required this.latitude, required this.longitude, super.key});
+  this.direction, required this.private_list, required this.latitude, required this.longitude, required this.id, super.key});
 
   @override
   State<StatefulWidget> createState() => _CardInfoWidget();
@@ -35,11 +36,11 @@ class CardInfoWidget extends StatefulWidget {
 class _CardInfoWidget extends State<CardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price, widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, context);
+    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price, widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, widget.id, context);
   }
 }
 
-Widget _buildCard(String? location, double rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price, String? description, String? direction, bool private_list, double latitude, double longitude, BuildContext context){
+Widget _buildCard(String? location, double rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price, String? description, String? direction, bool private_list, double latitude, double longitude, int id, BuildContext context){
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -104,7 +105,7 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
                     children: [
                       private? SizedBox(height: 10): SizedBox(height: 0),
                       private? SizedBox(height: 60) : SizedBox(height: 0),
-                      private? ButtonReservaListWidget() : SizedBox(height: 0),
+                      private? ButtonReservaListWidget(id: id) : SizedBox(height: 0),
                       private? SizedBox(height: 20):  SizedBox(height: 0),
 
                       //private? SizedBox(height: 10): SizedBox(height: 0),

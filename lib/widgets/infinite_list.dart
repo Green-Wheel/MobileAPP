@@ -166,7 +166,7 @@ class _InfiniteList extends State<InfiniteList>{
         GoRouter.of(context)
             .go('/chargers/$id');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
       },
-      child: CardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: match, private: false, price: price, direction: direction, description: description2, private_list: private, latitude: latitude, longitude: longitude),
+      child: CardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: match, private: false, price: price, direction: direction, description: description2, private_list: private, latitude: latitude, longitude: longitude, id: id),
     );
 
   }

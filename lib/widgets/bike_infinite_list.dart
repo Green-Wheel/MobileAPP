@@ -157,7 +157,7 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
         GoRouter.of(context)
             .go('/bikes/$id');
       },
-      child: BikeCardInfoWidget(location: direction, rating: numd, available: available, type: bikeType, price: price, direction: direction1, description: description, bike_list: true, power: 0),
+      child: BikeCardInfoWidget(location: direction, rating: numd, available: available, type: bikeType, price: price, direction: direction1, description: description, bike_list: true, power: 0, id: id),
     );
 
   }

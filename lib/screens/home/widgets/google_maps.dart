@@ -419,6 +419,7 @@ Widget buildSlidingUpPanelCharger(
   String? description = markedCharger!.description;
   double latitude = markedCharger!.localization.latitude;
   double longitude = markedCharger!.localization.longitude;
+  int? id = markedCharger!.id;
 
 
   return CardInfoWidget(location: descrip,
@@ -432,7 +433,7 @@ Widget buildSlidingUpPanelCharger(
       description: description,
       latitude: latitude,
       longitude: longitude,
-      private_list: false);
+      private_list: false, id: id!);
 }
 
 
@@ -466,10 +467,11 @@ Widget buildSlidingUpPanelBike(
   String? description = markedBike!.description;
   double price = markedBike!.price;
   double? power = markedBike!.power;
+  int? id = markedBike!.id;
 
   print('power: $power');
 
-  return BikeCardInfoWidget(location: descrip, rating: numd, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false);
+  return BikeCardInfoWidget(location: descrip, rating: numd, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, id: id!);
 }
 
 String? title_parser(String? description) {
