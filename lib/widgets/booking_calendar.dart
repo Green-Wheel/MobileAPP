@@ -81,9 +81,9 @@ class _bookingCalendarState extends State<bookingCalendar> {
     DateTime firstDate = selectedDates.keys.toList().first;
     TimeOfDay firstHour = selectedDates[firstDate]!.first;
     DateTime start = DateTime(firstDate.year,firstDate.month,firstDate.day,
-                                    firstHour.hour,firstHour.minute);
+        firstHour.hour,firstHour.minute);
     DateTime last = DateTime(firstDate.year,firstDate.month,firstDate.day,
-                    firstHour.hour,firstHour.minute);
+        firstHour.hour,firstHour.minute);
 
     if(selectedDates.isNotEmpty)
     {
@@ -177,15 +177,15 @@ class _bookingCalendarState extends State<bookingCalendar> {
             width: double.infinity,
             padding: EdgeInsets.all(10),
             decoration: const BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                color: Colors.blue,
-                blurRadius: 8,
-                spreadRadius: 4,
-                offset: Offset(0, 10),
-              ),
-            ],
-              color: Colors.white
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.blue,
+                    blurRadius: 8,
+                    spreadRadius: 4,
+                    offset: Offset(0, 10),
+                  ),
+                ],
+                color: Colors.white
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -194,8 +194,8 @@ class _bookingCalendarState extends State<bookingCalendar> {
                   child: Text(
                     "Horas disponibles:",
                     style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 18
+                        color: Colors.green,
+                        fontSize: 18
                     ),
                   ),
                 ),
@@ -203,7 +203,7 @@ class _bookingCalendarState extends State<bookingCalendar> {
                   child: Center(
                     child: Text(
                       DateFormat('yyyy-MM-dd').format(selectedDate) ==
-                      DateFormat('yyyy-MM-dd').format(DateTime.now())?
+                          DateFormat('yyyy-MM-dd').format(DateTime.now())?
                       "Hoy":
                       DateFormat('dd · MM · yyyy').format(selectedDate).toString(),
                       style: const TextStyle(
@@ -232,12 +232,12 @@ class _bookingCalendarState extends State<bookingCalendar> {
                 maximumSize: Size(MediaQuery.of(context).size.width*1, double.infinity),
                 padding: EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0.0),
-                  side: BorderSide(
-                      width: 2,
-                      color: Colors.green.shade800
-                  )
-                  ),
+                    borderRadius: BorderRadius.circular(0.0),
+                    side: BorderSide(
+                        width: 2,
+                        color: Colors.green.shade800
+                    )
+                ),
                 backgroundColor:  Colors.green,
               ),
               child: Row(
@@ -246,7 +246,7 @@ class _bookingCalendarState extends State<bookingCalendar> {
                   Text(
                     "Reservar ",
                     style: TextStyle(
-                      fontSize: 22
+                        fontSize: 22
                     ),
 
                   ),
