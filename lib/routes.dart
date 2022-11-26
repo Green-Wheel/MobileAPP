@@ -90,14 +90,14 @@ GoRouter routeGenerator(LoginService loginService) {
               path: 'chargers/:id',
               builder: (context, state) {
                 final id = int.parse(state.params['id']!);
-                return HomePage(key: Key("HomePage"), publicationId: id);
+                return HomePage(key: Key("HomePage"), publicationId: id, index: 0);
               },
             ),
             GoRoute(
               path: 'bikes/:id',
               builder: (context, state) {
                 final id = int.parse(state.params['id']!);
-                return HomePage(key: Key("HomePage"), publicationId: id);
+                return HomePage(key: Key("HomePage"), publicationId: id, index: 1);
               },
             ),
             GoRoute(
