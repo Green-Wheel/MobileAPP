@@ -7,7 +7,9 @@ import 'package:easy_search_bar/easy_search_bar.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  int index;
+  int publicationId;
+  HomePage({Key? key, this.index = 0, this.publicationId = -1}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -15,11 +17,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  int index = 0;
-
   void _onChangeTab(int index) {
     setState(() {
-      this.index = index;
+      widget.index = index;
     });
   }
 
@@ -30,24 +30,16 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar : false,
       appBar: SearchBar(),
-      /*
-          EasySearchBar(
-            iconTheme: IconThemeData(color: Colors.red),
-            title: Text('Example'),
-            onSearch: (value) => setState(() => searchValue = value),
-            suggestions: _suggestions,
-        ),
 
-       */
       bottomNavigationBar: BottomBarWidget(
-        index: index,
+        index: widget.index,
         onChangedTab: _onChangeTab,
       ),
       drawer: SimpleDrawer(),
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        child: GoogleMapsWidget(index: index, key: UniqueKey())
+        child: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId),
       ),
     );
   }
@@ -60,7 +52,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _searchTextField() {
-    return TextField(
+    return const TextField(
       autofocus: false,
       cursorColor: Colors.white,
       style: TextStyle(

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../serializers/chargers.dart';
 import '../../widgets/card_info.dart';
 import '../services/backendServices/chargers.dart';
@@ -8,18 +9,11 @@ import '../services/backendServices/chargers.dart';
 class InfiniteList extends StatefulWidget {
   const InfiniteList({Key? key}) : super(key: key);
 
+
+
   @override
   State<InfiniteList> createState() => _InfiniteList();
 
-}
-
-void main(){
-  runApp(const MaterialApp(
-    title: 'chargeInfo try',
-    home: Scaffold(
-      body: InfiniteList(),
-    ),
-  ));
 }
 
 class _InfiniteList extends State<InfiniteList>{
@@ -51,7 +45,6 @@ class _InfiniteList extends State<InfiniteList>{
   void _getChargersList(int page) async {
     List<ChargerList> chargerList = await ChargerService.getChargerList(page);
     setState(() {
-      //_markersList = chargerList;
       _markersListAll.addAll(chargerList);
     });
   }
@@ -143,29 +136,37 @@ class _InfiniteList extends State<InfiniteList>{
 
         String? description = _markersListAll[index].title; // falta description al backend de ChargerList
         //description = title_parser(description);
-
-        bool avaliable = true;
+        int? id = _markersListAll[index].id;
+        bool? avaliable = true;
 
         List<ConnectionType> types = [];
         for (int i = 0; i < _markersListAll[index].connection_type.length; ++i) {
           types.add(_markersListAll[index].connection_type[i]);
         }
-
+        bool private =  _markersListAll[index].private != null ? true : false;
         bool match = true;
-
-        return Flexible(child: _cardChargerList(description!, avaliable, match, types));
+        double price = 0.0;
+        String? direction = "Calle 1";
+        String? description2 = "description";
+        return Flexible(child: _cardChargerList(description!, avaliable, match, types, private, price, direction, description2, id!));
       });
   }
 
   //funcion respectiva a la card de los cargadores
-  Widget _cardChargerList(String direction, bool avaliable, bool match, List<ConnectionType> types) {
+  Widget _cardChargerList(String description, bool avaliable, bool match, List<ConnectionType> types, bool private, double  price, String direction, String description2, int id) {
     //Generación rate aleatoria (harcode rate)
     Random random = Random();
     int min = 2, max = 6;
     int num = (min + random.nextInt(max - min));
     double numd = num.toDouble();
+    return GestureDetector(
+      onTap: () {
+        GoRouter.of(context)
+            .go('/chargers/$id');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
+      },
+      child: CardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: match, private: false, price: price, direction: direction, description: description2, private_list: private),
+    );
 
-    return CardInfoWidget(location: direction, rating: numd, types: types, available: avaliable, match: match);
   }
 
 

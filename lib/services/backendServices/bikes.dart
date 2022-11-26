@@ -39,7 +39,7 @@ class BikeService {
     });
     return result;
   }
-
+/*
   static Future<DetailedBikeSerializer?> getBike(int id) async {
     DetailedBikeSerializer? result;
     await BackendService.get('bikes/$id/').then((response) {
@@ -53,6 +53,18 @@ class BikeService {
         print('Error getting charger!');
       }
     });
+    return result;
+  }*/
+
+  static Future<DetailedBikeSerializer?> getBike(int id) async {
+    DetailedBikeSerializer? result;
+    var response = await BackendService.get('bikes/$id/');
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      result = DetailedBikeSerializer.fromJson(jsonResponse);
+    } else {
+      throw Exception('Error getting speeds');
+    }
     return result;
   }
 
