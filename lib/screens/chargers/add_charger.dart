@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenwheel/widgets/addCharger/charger_form.dart';
+import 'package:greenwheel/widgets/forms/charger_form.dart';
 
 class AddCharger extends StatefulWidget {
   const AddCharger({Key? key}) : super(key: key);

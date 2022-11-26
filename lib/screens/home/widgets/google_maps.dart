@@ -98,6 +98,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       is_visible = false;
       scrolledup = false;
     });
+    print(widget.index);
 
     if (widget.index == 0) {
       _getChargers();
@@ -120,6 +121,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         icon: iconMarker,
         onTap: () {
           setState(() {
+            is_visible = false;
+          });
+          setState(() {
             id_marcador = id.toString();
             is_visible = true;
             scrolledup = true;
@@ -141,6 +145,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         onDrag: null,
         icon: iconMarker,
         onTap: () {
+          setState(() {
+            is_visible = false;
+          });
           setState(() {
             id_marcador = id.toString();
             is_visible = true;
@@ -277,7 +284,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               },
               onCameraMove: onCameraMove,
             ),
-            is_visible ? show_card(widget.index) : Container(),
+            is_visible ? show_card() : Container(),
           ],
         ),
         floatingActionButton: Column(
@@ -311,7 +318,7 @@ Widget listButton() {
   }
 }
 
-Widget show_card(int index) {
+Widget show_card() {
   if (widget.index == 0) {
     return SlidingUpPanel(
         maxHeight: MediaQuery
@@ -449,6 +456,7 @@ Widget buildSlidingUpPanelBike(
   double price = markedBike!.price;
   double? power = markedBike!.power;
 
+    // available
 
 
   return BikeCardInfoWidget(location: descrip, rating: numd, available: true, type: bikeType, description: description, direction: direction, price: price, power: power!, bike_list: false);

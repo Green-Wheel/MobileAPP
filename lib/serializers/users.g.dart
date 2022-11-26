@@ -11,11 +11,9 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       username: json['username'] as String,
       first_name: json['first_name'] as String,
       last_name: json['last_name'] as String,
+      email: json['email'] as String?,
       about: json['about'] as String?,
-      profile_picture: json['profile_picture'] == null
-          ? null
-          : ImageSerializer.fromJson(
-              json['profile_picture'] as Map<String, dynamic>),
+      profile_picture: json['profile_picture'] as String?,
       language_id: json['language_id'] as int,
       level: json['level'] as int,
       xp: json['xp'] as int,
@@ -27,6 +25,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'username': instance.username,
       'first_name': instance.first_name,
       'last_name': instance.last_name,
+      'email': instance.email,
       'about': instance.about,
       'profile_picture': instance.profile_picture,
       'language_id': instance.language_id,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import '../../../services/generalServices/LoginService.dart';
+import '../../../widgets/accountIcon.dart';
+import '../../../widgets/username_rating_stars.dart';
 
 class InfoUser extends StatefulWidget {
   const InfoUser({Key? key}) : super(key: key);
@@ -9,11 +11,29 @@ class InfoUser extends StatefulWidget {
 }
 
 class _InfoUser extends State<InfoUser>  {
-  bool _isEditable = false;
+
+  final _loggedInStateInfo = LoginService();
+  var userData;
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+  void _getData() async {
+    var data = _loggedInStateInfo.user_info;
+    print(data);
+    setState(() {
+      userData = data;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+
     return Container(
-        padding: const EdgeInsets.only(top:0,left:20,right:20),
+        padding: const EdgeInsets.only(top:0,left:0,right:0),
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height/4,
         child: Column(
             children : <Widget>[
               Align(
@@ -21,13 +41,18 @@ class _InfoUser extends State<InfoUser>  {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      const Icon(Icons.account_circle,size:120,color:Colors.green),
+                      AccountIcon(percent: 0.5, path_image: userData["profile_picture"]),
                       Column(
                         children: <Widget>[
-                          name_edit(),
-                          ratingIndicator(),
-                          const Text("lvl 10 | 10.846 points"),
-                          const Text("Trophies")
+                          Center(
+                          child: Username_Rating(username: userData != null
+                              ? userData['first_name'] + " " + userData['last_name']
+                                  : "User Name",
+                              rating :userData['rating']!=null ? userData['rating'].toString() : "2.5",
+                              edit_button: true),
+                          ),
+                          Text("lvl ${userData['level']} |  lvl ${userData['xp']} xp" ?? "1 + | 0 xp"),
+                          Text("Trophies")
                         ],
                       ),
                     ],
@@ -37,39 +62,5 @@ class _InfoUser extends State<InfoUser>  {
         )
     );
   }
-  Widget name_edit() {
-    return Row(
-        children: <Widget>[
-          SizedBox(width: 50),
-          const Text("Isslam Benali",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {
-              setState(() {
-                Navigator.pop(context);
-              });
-            },
-          ),
-        ]
-    );
-  }
-    Widget ratingIndicator(){
-      return Row(
-          children: <Widget>[
-              Text("3",style: TextStyle(fontSize: 18)),
-              RatingBarIndicator(
-                rating: 3,
-                itemBuilder: (context, index) => const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                ),
-                itemCount: 5,
-                itemSize: 22.0,
-                direction: Axis.horizontal,
-              ),
-         ]
-      );
-    }
 }
 

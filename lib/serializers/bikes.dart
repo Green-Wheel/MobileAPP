@@ -53,7 +53,7 @@ class DetailedBikeSerializer {
     this.images,
     this.avg_rating,
     required this.bike_type,
-    this.power, // ???????
+    this.power,
     required this.price,
   });
 

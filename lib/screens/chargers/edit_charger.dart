@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:greenwheel/widgets/addCharger/charger_form.dart';
+import 'package:greenwheel/widgets/forms/charger_form.dart';
 
 import '../../services/backendServices/private_chargers.dart';
 
@@ -30,29 +30,23 @@ class _EditChargerState extends State<EditCharger> {
 
   @override
   Widget build(BuildContext context) {
-    return _chargerInfo.isEmpty
-        ? Scaffold(
-            appBar: AppBar(
-              title: const Text('Edit Charger'),
-            ),
-            body: Center(
-              child: Container(
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Edit charger'),
+      ),
+      body: Center(
+        child: _chargerInfo.isEmpty
+            ? Container(
                 height: MediaQuery.of(context).size.height / 5,
                 width: MediaQuery.of(context).size.height / 5,
                 child: const CircularProgressIndicator(
                   backgroundColor: Colors.white,
                 ),
+              )
+            : ChargerForm(
+                data: _chargerInfo,
               ),
-            ))
-        : Scaffold(
-            appBar: AppBar(
-              title: const Text('Add Charger'),
-            ),
-            body: Center(
-              child: ChargerForm(
-                data: _chargerInfo.isEmpty ? null : _chargerInfo,
-              ),
-            ),
-          );
+      ),
+    );
   }
 }

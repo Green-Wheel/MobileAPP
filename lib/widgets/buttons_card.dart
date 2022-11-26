@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'reservation_card.dart';
+import 'reservation_charger_card.dart';
 
 import '../services/backendServices/bookings.dart';
 

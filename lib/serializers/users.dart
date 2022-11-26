@@ -11,6 +11,7 @@ class User {
     required this.username,
     required this.first_name,
     required this.last_name,
+    this.email,
     this.about,
     this.profile_picture,
     required this.language_id,
@@ -23,8 +24,9 @@ class User {
   String username;
   String first_name;
   String last_name;
+  String? email;
   String? about;
-  ImageSerializer? profile_picture;
+  String? profile_picture;
   int language_id;
   int level;
   int xp;
