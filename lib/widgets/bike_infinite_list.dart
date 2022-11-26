@@ -155,7 +155,7 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
     return GestureDetector(
       onTap: () {
         GoRouter.of(context)
-            .go('/bike/$id');
+            .go('/bikes/$id');
       },
       child: BikeCardInfoWidget(location: direction, rating: numd, available: available, type: bikeType, price: price, direction: direction1, description: description, bike_list: true, power: 0),
     );

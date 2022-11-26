@@ -231,6 +231,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   void _setCardView()  {
     _getCharger(widget.publicationId!);
     setState(() {
+      widget.index = 0;
       id_marcador = widget.publicationId.toString();
       is_visible = true;
       scrolledup = true;
@@ -241,6 +242,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   void _setCardBikeView()  {
     _getBike(widget.publicationId!);
     setState(() {
+      widget.index = 1;
       id_marcador = widget.publicationId.toString();
       is_visible = true;
       scrolledup = true;
@@ -253,7 +255,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     if (!is_visible && widget.publicationId != -1 && widget.index == 0 ) {
       _setCardView();
     }
-    if (!is_visible && widget.publicationId != -1 && widget.index == 1) {
+    if (!is_visible && widget.publicationId != -1 && widget.index != 0) {
       _setCardBikeView();
     }
     return Scaffold(
@@ -377,12 +379,13 @@ void _getCharger(int id) async {
   print(charger);
   if (charger != null) {
     setState(() {
+      //loading_charger = true;
       markedCharger = charger;
     });
   }
   /*else {
     setState(() {
-      markedCharger = null;
+      loading_charger = false;
     });
   }*/
 }
@@ -433,6 +436,7 @@ void _getBike(int id) async {
   //TODO: carregaar simbol
   if (bike != null) {
     setState(() {
+      widget.index = 1;
       markedBike = bike;
     });
   }
