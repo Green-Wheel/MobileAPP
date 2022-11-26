@@ -1,13 +1,11 @@
 import 'dart:core';
 import 'dart:developer';
-import 'package:greenwheel/services/backendServices/bookings.dart';
-import 'package:greenwheel/services/backendServices/publications.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'custom_calendar.dart';
 import 'hour_list.dart';
 import 'package:intl/intl.dart';
-import 'lib/services/backendServices/publications.dart';
+
 
 void main() => runApp(MyApp());
 
