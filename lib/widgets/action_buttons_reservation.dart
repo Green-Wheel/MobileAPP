@@ -18,6 +18,9 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
   bool pressFilterByChargers = false;
   bool pressFilterByBikes = false;
   bool pressFilterByLocation = false;
+  bool disableDate = true;
+  bool disableCharger = true;
+  bool disableBike = true;
   List<Booking> bookingOfChargers = [];
   List<Booking> bookingOfBikes = [];
 
@@ -86,15 +89,19 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                             )
                         )
                     ),
-                    onPressed: () {
-                      setState(() => pressFilterByDate = !pressFilterByDate);
+                    onPressed: disableDate ? () {
+                      setState(() {
+                        pressFilterByDate = !pressFilterByDate;
+                        disableBike = !disableBike;
+                        disableCharger = !disableCharger;
+                      });
                       if (pressFilterByDate) {
                         _getBookingsOrderedBy("date");
                       } else {
                         _getBookings();
                       }
                       buildList(widget.bookings, ratings);
-                    },
+                    } : null,
                     child: Row(
                       children: [
                         Text('Date ',
@@ -128,14 +135,18 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                             )
                         )
                     ),
-                    onPressed: () {
-                      setState(() => pressFilterByChargers = !pressFilterByChargers);
+                    onPressed: disableCharger ? () {
+                      setState(() {
+                        pressFilterByChargers = !pressFilterByChargers;
+                        disableBike = !disableBike;
+                        disableDate = !disableDate;
+                      });
                       if (pressFilterByChargers) {
                         _getBookingsOfChargers();
                       } else {
                         _getBookings();
                       }
-                    },
+                    } : null,
                     child: Row(
                       children: [
                         Icon(
@@ -165,14 +176,18 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                             )
                         )
                     ),
-                    onPressed: () {
-                      setState(() => pressFilterByBikes = !pressFilterByBikes);
+                    onPressed: disableBike ? () {
+                      setState(() {
+                        pressFilterByBikes = !pressFilterByBikes;
+                        disableCharger = !disableCharger;
+                        disableDate = !disableDate;
+                      });
                       if (pressFilterByBikes) {
                         _getBookingsOfBikes();
                       } else {
                         _getBookings();
                       }
-                    },
+                    } : null,
                     child: Row(
                       children: [
                         Icon(
@@ -230,6 +245,3 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
     );
   }
 }
-
-
-
