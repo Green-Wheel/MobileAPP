@@ -1,13 +1,3 @@
-
-/*import 'package:flutter/widgets.dart';
-import 'package:greenwheel/screens/home/home.dart';
-
-final Map<String, WidgetBuilder> routes = <String, WidgetBuilder>{
-  "/": (BuildContext context) => const HomePage(key: Key("HomePage")),
-  "/addCharger": (BuildContext context) => charger(),
-};
-*/
-
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/bike-info-list/bikeInfoList.dart';
@@ -24,7 +14,6 @@ import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:greenwheel/screens/register/change_password.dart';
 import 'package:greenwheel/screens/register/recover_password.dart';
 import 'package:greenwheel/screens/register/signup.dart';
-import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 import 'package:greenwheel/screens/route/route.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/language_selector_widget.dart';
@@ -36,7 +25,7 @@ GoRouter routeGenerator(LoginService loginService) {
     routes: [
       GoRoute(
           path: '/',
-          builder: (context, state) =>  HomePage(key: Key("HomePage")),
+          builder: (context, state) =>  HomePage(key: const Key("HomePage")),
           routes: [
             GoRoute(
                 path: 'profile',
@@ -62,7 +51,7 @@ GoRouter routeGenerator(LoginService loginService) {
               path: 'charger/edit/:id',
               builder: (context, state) {
                 final int id = int.parse(state.params['id']!);
-                return EditCharger(key: Key("AddBike"), id: id);
+                return EditCharger(key: const Key("AddBike"), id: id);
               },
             ),
             GoRoute(
@@ -73,7 +62,7 @@ GoRouter routeGenerator(LoginService loginService) {
               path: 'bikes/edit/:id',
               builder: (context, state) {
                 final int id = int.parse(state.params['id']!);
-                return EditBike(key: Key("AddBike"), id: id);
+                return EditBike(key: const Key("AddBike"), id: id);
               },
             ),
             GoRoute(
@@ -90,14 +79,14 @@ GoRouter routeGenerator(LoginService loginService) {
               path: 'chargers/:id',
               builder: (context, state) {
                 final id = int.parse(state.params['id']!);
-                return HomePage(key: Key("HomePage"), publicationId: id, index: 0);
+                return HomePage(key: const Key("HomePage"), publicationId: id, index: 0);
               },
             ),
             GoRoute(
               path: 'bikes/:id',
               builder: (context, state) {
                 final id = int.parse(state.params['id']!);
-                return HomePage(key: Key("HomePage"), publicationId: id, index: 1);
+                return HomePage(key: const Key("HomePage"), publicationId: id, index: 1);
               },
             ),
             GoRoute(
@@ -142,7 +131,6 @@ GoRouter routeGenerator(LoginService loginService) {
           ]),
     ],
     redirect: (BuildContext context, GoRouterState state) async {
-      print(state.subloc);
       if (!loginService.isLoggedIn &&
           state.subloc != '/login' &&
           state.subloc != '/login/register' &&

@@ -17,8 +17,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  //int index = 0;
-
   void _onChangeTab(int index) {
     setState(() {
       widget.index = index;
@@ -32,15 +30,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar : false,
       appBar: SearchBar(),
-      /*
-          EasySearchBar(
-            iconTheme: IconThemeData(color: Colors.red),
-            title: Text('Example'),
-            onSearch: (value) => setState(() => searchValue = value),
-            suggestions: _suggestions,
-        ),
 
-       */
       bottomNavigationBar: BottomBarWidget(
         index: widget.index,
         onChangedTab: _onChangeTab,
