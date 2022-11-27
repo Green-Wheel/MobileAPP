@@ -1,134 +1,37 @@
 import 'dart:core';
 import 'dart:developer';
-import 'package:greenwheel/services/backendServices/bookings.dart';
-import 'package:greenwheel/services/backendServices/publications.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'custom_calendar.dart';
 import 'hour_list.dart';
-import 'package:intl/intl.dart';
-import 'lib/services/backendServices/publications.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
-//TODO: exportar colores a clase
+//TODO: exportar colores
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Booking calendar',
-      home: bookingCalendar(id: 1),
+      home: BookingCalendar(id: 1),
     );
   }
 }
 
-
-class DateStates{
-  late List<DateState> dateStates;
-
-/*  static List<DateState> generateOperations(List<TimeOfDay> hours){
-    List<DateState> operations=[];
-    for( var time in hours ) {
-      operations.add(DateState(time,0));
-    }
-
-    return operations;
-  }*/
-  List<TimeOfDay> getMyReservationsOnDay(DateTime date){
-    List<TimeOfDay> reservations=[];
-    for (var dateState in dateStates)
-    {
-      TimeOfDay time = TimeOfDay(hour: dateState.time.hour, minute: dateState.time.minute);
-      reservations.add(time);
-    }
-    return reservations;
-  }
-
-  List<DateState> getDateStatesAt(DateTime date)
-  {
-    return [];
-  }
-
-  List<TimeOfDay> getAvailableHours(DateTime date) {
-    List<TimeOfDay> hours = [];
-    int time = 8;
-
-    var step = 30;
-    var startHour = 7;
-
-    for(var i=startHour*60;i<24*60+startHour*60;i+=step)
-    {
-      hours.add(TimeOfDay(hour: (i/60).floor()%24, minute: i%60));
-    }
-    ///////////
-    List<DateState> currentDateStates = getDateStatesAt(date);
-    //TODO: ESTA HARDCODED
-    return hours;
-/*    if (currentDateStates.isNotEmpty)
-    {
-      for(var i=startHour*60;i<24*60+startHour*60;i+=step)
-      {
-        var hour = DateTime(date.year,date.month,date.day, (i/60).floor()%24, i%60);
-        if(!currentDateStates.contains(hour) || currentDateStates[currentDateStates.indexOf(hour)].type==1)
-        {
-          availableHours.add(TimeOfDay(hour: hour.hour, minute: hour.minute));
-        }
-      }
-    }
-    return availableHours;*/
-  }
-
-  static List<DateState> generateStates(List<DateTime> reservations, List<DateTime> blocked){
-    List<DateState> dateStates=[];
-    for( var date in reservations ) {
-      dateStates.add(DateState(date,0));
-    }
-    for( var date in blocked ) {
-      dateStates.add(DateState(date,-1));
-    }
-
-    return dateStates;
-  }
-
-  static List<TimeOfDay> getHours(List<DateState> dateStates){
-    List<TimeOfDay> hours=[];
-    for( DateState dateState in dateStates ) {
-      hours.add(TimeOfDay(hour: dateState.time.hour, minute: dateState.time.minute));
-    }
-
-    return hours;
-  }
-
-  DateStates(List<DateTime> reservations, List<DateTime> blocked ){
-    dateStates = DateStates.generateStates(reservations, blocked);
-    log(dateStates.toString());
-  }
-
-
-
-}
-
-class DateState{
-  late DateTime time;
-  late int type;
-  // constructor
-  DateState(this.time, this.type);
-}
-
-
-class bookingCalendar extends StatefulWidget {
+class BookingCalendar extends StatefulWidget {
   int id;
   late DateTime selectedDate;
   late DateStates datesState;
-  bookingCalendar({Key? key, required this.id}) : super(key: key);
+  late BackendOperations backendOperations;
+  BookingCalendar({Key? key, required this.id}) : super(key: key);
 
   @override
-  State<bookingCalendar> createState() => _bookingCalendarState();
+  State<BookingCalendar> createState() => BookingCalendarState();
 }
 
-class _bookingCalendarState extends State<bookingCalendar> {
-
-
+class BookingCalendarState extends State<BookingCalendar> {
 
   @override
   Widget build(BuildContext context) {
@@ -137,10 +40,10 @@ class _bookingCalendarState extends State<bookingCalendar> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
 
-          customCalendar(get_selected_date: getDate),
+          customCalendar(get_selected_date: getDateFromCalendar),
           Container(
             width: double.infinity,
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             decoration: const BoxDecoration(
                 boxShadow: [
                   BoxShadow(
@@ -182,9 +85,9 @@ class _bookingCalendarState extends State<bookingCalendar> {
               ],
             ),
           ),
-          hourList(myReservations: widget.datesState.getMyReservationsOnDay(widget.selectedDate).toSet(),
-                  availableHours: widget.datesState.getAvailableHours(widget.selectedDate).toSet(),
-                  update_hours_availability: getMyReservations,),
+          hourList(reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
+                  availableHours: widget.datesState.getAvailableHours(widget.selectedDate),
+                  return_change_in_reservations: updateWithHourListReservation,),
 
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 0.0),
@@ -197,7 +100,7 @@ class _bookingCalendarState extends State<bookingCalendar> {
               style: ElevatedButton.styleFrom(
                 minimumSize: Size(MediaQuery.of(context).size.width*1, 50),
                 maximumSize: Size(MediaQuery.of(context).size.width*1, double.infinity),
-                padding: EdgeInsets.symmetric(vertical: 15),
+                padding: const EdgeInsets.symmetric(vertical: 15),
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(0.0),
                     side: BorderSide(
@@ -227,47 +130,410 @@ class _bookingCalendarState extends State<bookingCalendar> {
     );
   }
 
-  //////////////////////--FUNCTIONS--///////////////////////
+  ///###########################--Widget Functions--############################
+
+  //---------------------------------[ BACKEND ]------------------------------//
+
   List getHourAvailabilityFromBackend() {
 
     return [];
   }
-//CALLBACKS
+  //--------------------------------[ CALLBACKS ]-----------------------------//
   //callbacks custom_calendar
-  void getDate(DateTime date){
+  void getDateFromCalendar(DateTime date){
     setState(() {
       widget.selectedDate = date;
       log("dia seleccionado: $date");
     });
   }
 
-  //callbacks hour list
-  void getMyReservations()
+  //callbacks hour_list
+  void updateWithHourListReservation(TimeOfDay reservation, Operation operation)
   {
-
+    Availability availability =
+      (operation == Operation.add)?
+      Availability.reserved:Availability.available;
+    widget.datesState.add(reservation.toDateTime(widget.selectedDate),availability);
+    widget.backendOperations.add(reservation.toDateTime(widget.selectedDate),operation);
   }
 
- /////////////////////////
+  //----------------------------------[ UTILS ]-------------------------------//
 
-  void initDateState(){
-    var now = DateTime.now();
-    List<DateTime> bloquedDates = [];
-    List<DateTime> myReservedDates =  [DateTime(now.year,now.month,now.day,now.hour,now.minute),DateTime(now.year,now.month,now.day,now.hour,now.minute+30),DateTime(now.year,now.month,now.day,now.hour+1,now.minute),];//PublicationService.getBlockedHoursByDay(widget.selectedDate);
+  List<DateTime> convertToDateTime(List<TimeOfDay> hours,DateTime date){
+    List<DateTime> dates = [];
+    for(var hour in hours)
+    {
+      dates.add(hour.toDateTime(date));
+    }
+    return dates;
+  }
+
+  void makeReservations(){
+    widget.backendOperations.mergeBackendOperations();
+  }
+
+  void initDateState(List<DateTime> blockedDates, List<DateTime> reservations){
+
     log("ejecutando init--------------");
-    widget.datesState = DateStates(myReservedDates, bloquedDates);
+    widget.datesState = DateStates(reservations, blockedDates);
   }
+
+  void initBackendOperations(List<DateTime> reservations){
+
+    widget.backendOperations = BackendOperations(reservations);
+
+  }
+
+  //--------------------------------[ OVERRIDES ]-----------------------------//
 
   @override
   void initState() {
     var now = DateTime.now();
+    List<DateTime> blockedDates = [];
+    List<DateTime> reservations =  [DateTime(now.year,now.month,now.day,now.hour,0),DateTime(now.year,now.month,now.day+1,now.hour,0),DateTime(now.year,now.month,now.day,now.hour,30),DateTime(now.year,now.month,now.day,now.hour+1,0),];//PublicationService.getBlockedHoursByDay(widget.selectedDate);
+
     widget.selectedDate = DateTime(now.year,now.month,now.day);
-    initDateState();
+    initDateState(blockedDates,reservations);
+    initBackendOperations(reservations);
 
     super.initState();
   }
 
-  void makeReservations(){
+}
+///#################################-- Enums --#################################
 
+enum Operation {
+  add,
+  delete,
+  nothing
+}
+
+enum Availability {
+  blocked,
+  available,
+  reserved
+}
+
+///################################-- Classes --################################
+
+class DateState{
+  late DateTime date;
+  late Availability availability;
+  // constructor
+  DateState(this.date, this.availability);
+
+  @override
+  String toString(){
+    String s = "Time-> $date Type-> $availability";
+    return s;
   }
 }
 
+class DateStates{
+  late List<DateState> dateStates;
+  
+  bool dateStatesContains(DateTime date)
+  {
+    for(var dateState in dateStates){
+      if(dateState.date == date) return true;
+    }
+    return false;
+  }
+
+  int dateStatesIndexOf(DateTime date){
+    int index = -1;
+    int len = dateStates.length;
+    for(int i=0; i < len; ++i){
+      index=i;
+      if(dateStates[i].date == date) return index;
+    }
+    return index;
+  }
+//TODO: controlar el tipo que se añade y su operación de backend.
+  void add(DateTime date, Availability availability){
+
+    if(!dateStatesContains(date)) {
+      DateState dateState = DateState(date, availability);
+      dateStates.add(dateState);
+    }
+    else {
+      int i = dateStatesIndexOf(date);
+      if(dateStates[i].availability != Availability.blocked) {
+        dateStates.removeAt(i);
+      }
+    }
+  }
+
+/*  void addAll(List<DateTime> dates, Availability availability){
+    for (var date in dates){
+      add(date, availability);
+    }
+  }*/
+
+  List<TimeOfDay> getMyReservationsAt(DateTime date){
+    List<TimeOfDay> reservations=[];
+    List<DateState> dateStatesAtDate = getDateStatesAt(date);
+    for (var dateState in dateStatesAtDate)
+    {
+      TimeOfDay time = TimeOfDay(hour: dateState.date.hour, minute: dateState.date.minute);
+      reservations.add(time);
+    }
+    return reservations;
+  }
+
+  List<DateState> getDateStatesAt(DateTime date) {
+    List<DateState> dateStatesAtDate = [];
+    for (var dateState in dateStates){
+      if(DateFormat('yyyy-MM-dd').format(dateState.date) ==
+         DateFormat('yyyy-MM-dd').format(date)) {
+        dateStatesAtDate.add(dateState);
+      }
+    }
+    return dateStatesAtDate;
+  }
+
+  List<TimeOfDay> getAvailableHours(DateTime date) {
+    List<TimeOfDay> availableHours = [];
+    Duration step = Config.minTimeOfReservation;
+    DateTime startHour = Config.startingHour.toDateTime(date);
+    DateTime endHour = Config.endingHour.toDateTime(date);
+
+    for(DateTime hour = startHour; hour < endHour; hour = hour.add(step))
+    {
+      availableHours.add(hour.toTimeOfDay());
+    }
+
+    return availableHours;
+  }
+
+  static List<DateState> generateStates(List<DateTime> reservations, List<DateTime> blocked){
+    List<DateState> dateStates=[];
+    for( var date in reservations ) {
+      dateStates.add(DateState(date,Availability.reserved));
+    }
+    for( var date in blocked ) {
+      dateStates.add(DateState(date,Availability.blocked));
+    }
+
+    return dateStates;
+  }
+
+/*  static List<TimeOfDay> getHours(List<DateState> dateStates){
+    List<TimeOfDay> hours=[];
+    for( DateState dateState in dateStates ) {
+      hours.add(TimeOfDay(hour: dateState.date.hour, minute: dateState.date.minute));
+    }
+
+    return hours;
+  }*/
+
+  DateStates(List<DateTime> reservations, List<DateTime> blocked ){
+    dateStates = DateStates.generateStates(reservations, blocked);
+    log(toString());
+  }
+
+  @override
+  String toString(){
+    String s="[-DateStates-]\n";
+    for(var elem in dateStates){
+      s+="$elem\n";
+    }
+    return s;
+  }
+
+}
+
+class BackendOperations{  
+  
+  List<BackendOperation> backendOperations = [];
+
+  void orderByDateBackendOperations(){
+    backendOperations.sort((a,b) => a.compareTo(b));
+    log("BackendOperations ordenado ------> $backendOperations");
+  }
+
+  void mergeBackendOperations(){
+    if(backendOperations.isEmpty) return;
+    orderByDateBackendOperations();
+
+    var resizeBackendOperation = backendOperations[0];
+    for(int i=1; i < backendOperations.length; ++i){
+      var current = backendOperations[i];
+      log("current: $current");
+      log("resizing: $resizeBackendOperation");
+      if(current.operation != Operation.nothing &&
+          resizeBackendOperation.isContiguousWith(current) &&
+          resizeBackendOperation.operation == current.operation){
+
+        resizeBackendOperation.endDate = current.endDate;
+        backendOperations.removeAt(i);
+      }
+      resizeBackendOperation = backendOperations[i];
+
+    }
+    log("[-BACKEND OPERATIONS COMPRESSED-]\n $backendOperations");
+  }
+
+  bool backendOperationContains(DateTime date)
+  {
+    for(var backendOperation in backendOperations){
+      if(backendOperation.contains(date)) return true;
+    }
+    return false;
+  }
+
+  int backendOperationsIndexOf(DateTime date){
+    int index = -1;
+    int len = backendOperations.length;
+    for(int i=0; i < len; ++i){
+      index=i;
+      if(backendOperations[i].contains(date)) return index;
+    }
+    return index;
+  }
+  
+  void add(DateTime date, Operation operation){
+  
+    if(!backendOperationContains(date))
+    {
+      log("Añadiendo a backend operations ---------$date");
+      var backendOperation  = BackendOperation(date,
+          date.add(Config.minTimeOfReservation - const Duration(minutes: 1)),
+          operation);
+      backendOperations.add(backendOperation);
+    }
+    else{
+      int i = backendOperationsIndexOf(date);
+      if(backendOperations[i].operation == Operation.nothing) {
+        backendOperations[i].operation = operation;
+      }
+      else{
+        backendOperations.removeAt(i);
+      }
+    }
+    log("[-Backend Operations-]\n $backendOperations");
+  }
+
+  BackendOperations(List<DateTime> reservations){
+    for(var reservation in reservations){
+      add(reservation, Operation.nothing);
+    }
+  }
+}
+
+class BackendOperation{
+  late DateTime startDate;
+  late DateTime endDate;
+
+  late Operation operation;
+
+  bool contains(DateTime date){
+    return ( date >= startDate && date < endDate );
+  }
+
+  bool isContiguousWith(BackendOperation b){
+    bool contiguous = endDate.difference(b.startDate).inMinutes.abs() <= Config.minTimeOfReservation.inMinutes;
+    log("iscontigousu ---->diference ${endDate.difference(b.startDate).inMinutes.abs()} <= ${Config.minTimeOfReservation.inMinutes} | ${(contiguous)?"Si":"No"}");
+
+    return contiguous;
+  }
+
+  @override
+  String toString(){
+    return "BackendOperation: $startDate ->$endDate | [$operation]\n";
+  }
+
+  @override
+  int compareTo(BackendOperation b){
+    //log("Comparación: ${startDate.compareTo(b.startDate)} + ${startDate.toTimeOfDay().compareTo(b.startDate.toTimeOfDay())}");
+    return startDate.compareTo(b.startDate)*2 +
+        startDate.toTimeOfDay().compareTo(b.startDate.toTimeOfDay());
+  }
+
+  BackendOperation(this.startDate, this.endDate, this.operation);
+}
+
+class Config{
+  static Duration minTimeOfReservation = const Duration(minutes: 30);
+  static TimeOfDay hourListFirstHour = const TimeOfDay(hour: 7, minute: 0);
+  static TimeOfDay startingHour = const TimeOfDay(hour: 0, minute: 0);
+  static TimeOfDay endingHour = const TimeOfDay(hour: 23, minute: 59);
+}
+
+///###########################-- Class Extensions --############################
+
+extension DatetimeExtension on DateTime {
+  TimeOfDay toTimeOfDay(){
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+
+
+
+
+  bool operator >= (DateTime b)
+  {
+    return compareTo(b) == 1 || compareTo(b) == 0;
+  }
+
+  bool operator <= (DateTime b)
+  {
+    return compareTo(b) == -1 || compareTo(b) == 0;
+  }
+
+  bool operator > (DateTime b)
+  {
+    return compareTo(b) == 1;
+  }
+
+  bool operator < (DateTime b)
+  {
+    return compareTo(b) == -1;
+  }
+}
+
+extension TimeOfDayExtension on TimeOfDay {
+  DateTime toDateTime(date){
+    return DateTime( date.year, date.month, date.day, hour, minute);
+  }
+
+  TimeOfDay operator + (TimeOfDay b)
+  {
+    int hoursSum = hour + b.hour;
+    int minutesSum = minute + b.minute;
+    return TimeOfDay(hour: hoursSum%24 + ((minutesSum)/60).floor(),
+                     minute: (minutesSum)%60);
+  }
+
+  TimeOfDay operator - (TimeOfDay b)
+  {
+    return TimeOfDay(hour: hour - b.hour, minute: minute - b.minute);
+  }
+
+  int compareTo(TimeOfDay b) {
+    if (hour < b.hour) return -1;
+    if (hour > b.hour) return 1;
+    if (minute <  b.minute) return -1;
+    if (minute > b.minute) return 1;
+    return 0;
+  }
+
+  bool operator >= (TimeOfDay b)
+  {
+    return compareTo(b) == 1 || compareTo(b) == 0;
+  }
+
+  bool operator <= (TimeOfDay b)
+  {
+    return compareTo(b) == -1 || compareTo(b) == 0;
+  }
+
+  bool operator > (TimeOfDay b)
+  {
+    return compareTo(b) == 1;
+  }
+
+  bool operator < (TimeOfDay b)
+  {
+    return compareTo(b) == -1;
+  }
+}

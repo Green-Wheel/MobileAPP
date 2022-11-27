@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
+import 'dart:developer';
+
+import 'package:greenwheel/widgets/booking_calendar2.dart';
 
 class hourList extends StatefulWidget {
-  var myReservations;
+  var reservations;
   var availableHours;
-  final Function update_hours_availability;
-  hourList({Key? key,required this.myReservations,
-            required this.availableHours, required this.update_hours_availability}) : super(key: key);
+  final Function return_change_in_reservations;
+  hourList({Key? key,required this.reservations,
+            required this.availableHours, required this.return_change_in_reservations}) : super(key: key);
 
   @override
   _hourListState createState() => _hourListState();
 }
 
-extension TimeOfDayExtension on TimeOfDay {
-  int compareTo(TimeOfDay other) {
-    if (hour < other.hour) return -1;
-    if (hour > other.hour) return 1;
-    if (minute < other.minute) return -1;
-    if (minute > other.minute) return 1;
-    return 0;
-  }
-}
 
+//TODO: exportat generacion de hours a booking_calendar
 class _hourListState extends State<hourList> {
   List<TimeOfDay> hours = [];
   int time = 8;
@@ -34,14 +29,17 @@ class _hourListState extends State<hourList> {
     {
       this.hours.add(TimeOfDay(hour: (i/60).floor()%24, minute: i%60));
     }
+
     super.initState();
   }
 
-  List<TimeOfDay> transform_data(Set<TimeOfDay> myReservations){
+/*
+  List<TimeOfDay> orderHours(List<TimeOfDay> myReservations){
     List<TimeOfDay> res = myReservations.toList();
     res.sort((a,b) => a.compareTo(b));
     return res;
   }
+*/
 
   @override
   Widget build(BuildContext context) {
@@ -64,18 +62,21 @@ class _hourListState extends State<hourList> {
             return ElevatedButton(
               onPressed: (){
                 setState(() {
-                  if(!widget.myReservations.remove(time) && widget.availableHours.contains(time))
-                  {
-                      widget.myReservations.add(time);
-                      widget.myReservations.toString();
+                  if(widget.availableHours.contains(time)) {
+                    Operation operation = Operation.delete;
+                    if(!widget.reservations.remove(time) && widget.availableHours.contains(time)) {
+                      widget.reservations.add(time);
+                      widget.reservations.toString();
+                      operation = Operation.add;
+                    }
+                    widget.return_change_in_reservations(time,operation);
                   }
-                  widget.update_hours_availability(transform_data(widget.myReservations));
                 });
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: Size.zero,
                 padding: EdgeInsets.zero,
-                backgroundColor: widget.availableHours.contains(time)? widget.myReservations.contains(time)? Colors.green : Colors.white : Colors.blueGrey.shade100,
+                backgroundColor: widget.availableHours.contains(time)? widget.reservations.contains(time)? Colors.green : Colors.white : Colors.blueGrey.shade100,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
 
                 shape:
@@ -93,10 +94,10 @@ class _hourListState extends State<hourList> {
                     "${time.hour}:${time.minute} ",
                     style: TextStyle(
                       fontSize: 17,
-                      color: widget.availableHours.contains(time)? widget.myReservations.contains(time)? Colors.white: Colors.green: Colors.blueGrey,
+                      color: widget.availableHours.contains(time)? widget.reservations.contains(time)? Colors.white: Colors.green: Colors.blueGrey,
                     ),
                   ),
-                  widget.availableHours.contains(time)? widget.myReservations.contains(time)?  Icon(Icons.check_circle_rounded, color: Colors.white, size: 18,): Icon(Icons.schedule, color: Colors.green, size: 18,):
+                  widget.availableHours.contains(time)? widget.reservations.contains(time)?  Icon(Icons.check_circle_rounded, color: Colors.white, size: 18,): Icon(Icons.schedule, color: Colors.green, size: 18,):
                   Icon(Icons.lock, color: Colors.blueGrey, size: 18,),
                 ],
               ),
