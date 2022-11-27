@@ -4,10 +4,12 @@ import '../../widgets/booking_calendar.dart';
 
 
 
-void main() => runApp(MyApp());
+void main() => runApp(Reservate(id: 1));
 
 //TODO: exportar colores a clase
-class MyApp extends StatelessWidget {
+class Reservate extends StatelessWidget {
+  int id;
+  Reservate({super.key, required this.id});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

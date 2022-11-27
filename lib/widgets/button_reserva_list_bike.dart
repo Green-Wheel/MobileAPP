@@ -26,7 +26,6 @@ class _ButtonReservaListBikeWidget extends State<ButtonReservaListBikeWidget>{
                       borderRadius: BorderRadius.circular(10.0),
                       side: const BorderSide(color: Colors.blue)))),
           onPressed: () {
-            //TODO: Redireccion a la pantalla del calendario
             GoRouter.of(context)
                 .go('/bookings/${widget.id}');
           },
