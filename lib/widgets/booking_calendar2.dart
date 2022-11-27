@@ -1,5 +1,7 @@
 import 'dart:core';
 import 'dart:developer';
+import 'package:greenwheel/services/backendServices/bookings.dart';
+import 'package:greenwheel/services/backendServices/publications.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'custom_calendar.dart';
@@ -94,7 +96,7 @@ class BookingCalendarState extends State<BookingCalendar> {
             child: ElevatedButton(
 
               onPressed: (){
-                makeReservations();
+                applyToBackend();
               },
 
               style: ElevatedButton.styleFrom(
@@ -138,6 +140,8 @@ class BookingCalendarState extends State<BookingCalendar> {
 
     return [];
   }
+
+
   //--------------------------------[ CALLBACKS ]-----------------------------//
   //callbacks custom_calendar
   void getDateFromCalendar(DateTime date){
@@ -168,8 +172,12 @@ class BookingCalendarState extends State<BookingCalendar> {
     return dates;
   }
 
-  void makeReservations(){
+  void applyToBackend(){
     widget.backendOperations.mergeBackendOperations();
+    if(widget.backendOperations.applyBackendOperations()){
+      log("Se han aplicado correctamente los cambios al backend");
+    }
+
   }
 
   void initDateState(List<DateTime> blockedDates, List<DateTime> reservations){
@@ -347,6 +355,19 @@ class BackendOperations{
   
   List<BackendOperation> backendOperations = [];
 
+  bool applyBackendOperations() {
+    for(var backendOperation in backendOperations){
+      if(backendOperation.operation==Operation.add){
+        log(backendOperation.toString());
+      }
+      if(backendOperation.operation==Operation.delete){
+        log(backendOperation.toString());
+      }
+    }
+
+    return true;
+  }
+
   void orderByDateBackendOperations(){
     backendOperations.sort((a,b) => a.compareTo(b));
     log("BackendOperations ordenado ------> $backendOperations");
@@ -355,6 +376,9 @@ class BackendOperations{
   void mergeBackendOperations(){
     if(backendOperations.isEmpty) return;
     orderByDateBackendOperations();
+
+
+    List<BackendOperation> toRemove=[];
 
     var resizeBackendOperation = backendOperations[0];
     for(int i=1; i < backendOperations.length; ++i){
@@ -366,10 +390,16 @@ class BackendOperations{
           resizeBackendOperation.operation == current.operation){
 
         resizeBackendOperation.endDate = current.endDate;
-        backendOperations.removeAt(i);
+        log("[$i] resized es ahora--->$resizeBackendOperation");
+        toRemove.add(current);
       }
-      resizeBackendOperation = backendOperations[i];
-
+      else{
+        resizeBackendOperation = backendOperations[i];
+      }
+    }
+    log(toRemove.toString());
+    for(var backendOperation in toRemove){
+      backendOperations.remove(backendOperation);
     }
     log("[-BACKEND OPERATIONS COMPRESSED-]\n $backendOperations");
   }
