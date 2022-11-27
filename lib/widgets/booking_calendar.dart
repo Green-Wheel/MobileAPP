@@ -6,13 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'custom_calendar.dart';
 import 'hour_list.dart';
-import 'package:intl/intl.dart';
-//import 'lib/services/backendServices/publications.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 //TODO: exportar colores a clase
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
 
 
 class bookingCalendar extends StatefulWidget {
-  var id;
+  int id;
   bookingCalendar({Key? key,required this.id}) : super(key: key);
 
   @override
@@ -32,15 +32,15 @@ class bookingCalendar extends StatefulWidget {
 }
 
 class Reservation{
-  late DateTime start_date;
+  late DateTime startDate;
   late DateTime end_date;
 
   @override
   String toString(){
-    return "Reserva: "+start_date.toString()+" ->"+end_date.toString()+"\n";
+    return "Reserva: "+startDate.toString()+" ->"+end_date.toString()+"\n";
   }
 
-  Reservation(this.start_date, this.end_date);
+  Reservation(this.startDate, this.end_date);
 }
 
 class Modification{
@@ -116,7 +116,7 @@ class _bookingCalendarState extends State<bookingCalendar> {
     log(selectedDates.toString());
     List<Reservation> reservations = split_reservations();
     for(var reservation in reservations){
-      data['startdate'] = reservation.start_date;
+      data['startdate'] = reservation.startDate;
       data['enddate'] = reservation.end_date;
       //TODO: PONER MENSAJE DE ALERTA SI FALLA
       BookingService.newBooking(data);
@@ -157,7 +157,7 @@ class _bookingCalendarState extends State<bookingCalendar> {
   void getHourAvailability(List<TimeOfDay> myReservations){
     setState(() {
       this.myReservations = myReservations;
-      this.myReservations.sort((a,b) => a.compareTo(b));
+      //this.myReservations.sort((a,b) => a.compareTo(b));
 
       selectedDates[selectedDate]=this.myReservations;
       log("Cambios en myReservations");
@@ -217,7 +217,7 @@ class _bookingCalendarState extends State<bookingCalendar> {
               ],
             ),
           ),
-          hourList(myReservations: myReservations.toSet(), availableHours: availableHours.toSet(), update_hours_availability: getHourAvailability,),
+          hourList(reservations: myReservations.toSet(), availableHours: availableHours.toSet(), return_change_in_reservations: getHourAvailability,),
 
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 0.0),
