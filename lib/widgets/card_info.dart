@@ -140,17 +140,23 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                       private? SizedBox(height: 10): SizedBox(height: 0),
                       private? Column(
                         children: [
-                          Padding(
-                              padding: EdgeInsets.only(right: 35),
-                              child:Text("Address:  $direction",
-                                  style: const TextStyle(fontWeight: FontWeight.w600)
-                              )
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.925,
+                            child:  Padding(
+                                padding: EdgeInsets.only(left: 25),
+                                child:Text("Address:  $direction",
+                                    style: const TextStyle(fontWeight: FontWeight.w600)
+                                )
+                            ),
                           ),
-                          Padding(
-                              padding: EdgeInsets.only(right: 115),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.925,
+                            child:Padding(
+                              padding: EdgeInsets.only(left: 25),
                               child:Text("Description:  $description",
                                   style: const TextStyle(fontWeight: FontWeight.w600)
                               ),
+                            ),
                           ),
                         ]): SizedBox(height: 0),
                       SizedBox(height: 10),
