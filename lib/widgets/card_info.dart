@@ -13,7 +13,7 @@ import '../serializers/chargers.dart';
 
 class CardInfoWidget extends StatefulWidget {
   String? location;
-  double rating;
+  double? rating;
   List<ConnectionType> types;
   bool available;
   bool match;
@@ -39,7 +39,7 @@ class _CardInfoWidget extends State<CardInfoWidget>{
   }
 }
 
-Widget _buildCard(String? location, double rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price, String? description, String? direction, bool private_list, double latitude, double longitude, BuildContext context){
+Widget _buildCard(String? location, double? rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price, String? description, String? direction, bool private_list, double latitude, double longitude, BuildContext context){
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -61,7 +61,7 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 20),
-                  child: StarsStaticRateWidget(rate: rating),//StarsStaticRateWidget(rate: 4.0),
+                  child: StarsStaticRateWidget(rate: rating!),//StarsStaticRateWidget(rate: 4.0),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
@@ -106,8 +106,6 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
                       private? SizedBox(height: 60) : SizedBox(height: 0),
                       private? ButtonReservaListWidget() : SizedBox(height: 0),
                       private? SizedBox(height: 20):  SizedBox(height: 0),
-
-                      //private? SizedBox(height: 10): SizedBox(height: 0),
                       private? Padding(
                           padding: EdgeInsets.only(left: 30),
                           child:Row(
@@ -139,17 +137,23 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
                       private? SizedBox(height: 10): SizedBox(height: 0),
                       private? Column(
                         children: [
-                          Padding(
-                              padding: EdgeInsets.only(right: 35),
-                              child:Text("Address:  $direction",
-                                  style: const TextStyle(fontWeight: FontWeight.w600)
-                              )
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.925,
+                            child: Padding(
+                                padding: EdgeInsets.only(left: 25),
+                                child:Text("Address:  $direction",
+                                    style: const TextStyle(fontWeight: FontWeight.w600)
+                                )
+                            ),
                           ),
-                          Padding(
-                              padding: EdgeInsets.only(right: 115),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.925,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 25),
                               child:Text("Description:  $description",
                                   style: const TextStyle(fontWeight: FontWeight.w600)
                               ),
+                            ),
                           ),
                         ]): SizedBox(height: 0),
                       SizedBox(height: 10),

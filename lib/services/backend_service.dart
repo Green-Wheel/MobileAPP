@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'generalServices/LoginService.dart';
 
 class BackendService {
-  // Variable en el .env con la dirección del backend. Ejemplo: BACKEND_API_URL=http://192.168.56.1:8000/api/
+  // Variable en el .env con la dirección del backend. Ejemplo: BACKEND_API_URL=http://54.72.13.162:80/api/
   static final String _baseUrl = 'http://54.72.13.162:80/api/';
   static final _loggedInStateInfo = LoginService();
 

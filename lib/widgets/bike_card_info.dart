@@ -12,7 +12,7 @@ import 'button_reserva_list_bike.dart';
 
 class BikeCardInfoWidget extends StatefulWidget {
   String? location;
-  double rating;
+  double? rating;
   bool available;
   BikeType type;
   double price;
@@ -20,8 +20,11 @@ class BikeCardInfoWidget extends StatefulWidget {
   String? direction;
   double power;
   bool bike_list;
+  double latitude;
+  double longitude;
 
-  BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,  required this.power,  required this.bike_list, super.key});
+  BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,
+    required this.power,  required this.bike_list, required this.latitude, required this.longitude, super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
@@ -30,11 +33,11 @@ class BikeCardInfoWidget extends StatefulWidget {
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, context);
+    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.latitude, widget.latitude, context);
   }
 }
 
-Widget _buildCard(String? location, double rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, BuildContext context) {
+Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, double latitude, double longitude, BuildContext context) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -56,7 +59,7 @@ Widget _buildCard(String? location, double rating, bool available, BikeType type
               ),
               Padding(
                 padding: EdgeInsets.only(left: 25),
-                child:  StarsStaticRateWidget(rate: 4.0),
+                child:  StarsStaticRateWidget(rate: rating!),
               ),
               SizedBox(height: 5),
               SizedBox(
@@ -148,7 +151,7 @@ Widget _buildCard(String? location, double rating, bool available, BikeType type
               SizedBox(height: 20),
               ImageBikeWidget(),
               SizedBox(height: 10),
-              ButtonBlueRouteWidget(latitude: 41.3874, longitude: 2.1686),
+              ButtonBlueRouteWidget(latitude: latitude, longitude: longitude),
             ],
           ),
         )
