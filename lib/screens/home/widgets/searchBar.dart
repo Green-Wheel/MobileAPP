@@ -5,7 +5,8 @@ import 'package:greenwheel/utils/address_autocompletation.dart';
 import '../../../widgets/language_selector_widget.dart';
 
 class SearchBar extends StatefulWidget implements PreferredSizeWidget{
-  SearchBar({Key? key}) : preferredSize = Size.fromHeight(kToolbarHeight),super(key: key);
+  final bool index;
+  SearchBar({Key? key, required this.index}) : preferredSize = Size.fromHeight(kToolbarHeight),super(key: key);
 
   @override
   State<SearchBar> createState()=> _SearchBar();
@@ -41,16 +42,17 @@ class _SearchBar extends State<SearchBar>{
   @override
   Widget build(BuildContext context) {
     return AppBar(
-            title: Text("Search"),//_searchTextField(),
+            title: const Text("Search"),//_searchTextField(),
+            backgroundColor: widget.index ? Colors.blue : Colors.green,
             actions:<Widget>[
                 IconButton(
-                   icon: Icon(Icons.search),
+                   icon: const Icon(Icons.search),
                    onPressed: () {
                        //showSearch(context:context,delegate:DataSearch());
                    }
                  ),
                 IconButton(
-                    icon: Icon(Icons.language),
+                    icon: const Icon(Icons.language),
                     onPressed: () {
                       _changeLanguage();
                     }
@@ -91,7 +93,7 @@ class DataSearch extends SearchDelegate<String> {
   @override
   List<Widget> buildActions(BuildContext context){
     return [
-      IconButton(icon: Icon(Icons.clear),
+      IconButton(icon: const Icon(Icons.clear),
           onPressed: (){
             query= "";
           })
@@ -121,24 +123,24 @@ class DataSearch extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
     //final suggestionList = query.isEmpty?recentCities: cities.where((p)=>p.startsWith(query)).toList();
     List<String> autocompletation = AdressAutocompletation.getAdresses("") as List<String>;
-    print("------------------------------- : "  + autocompletation.length.toString());
+    print("------------------------------- : ${autocompletation.length}");
     return ListView.builder(
       itemBuilder: (context,index) => ListTile(
         onTap: (){
           selectioned = autocompletation[index];
           query = autocompletation[index];
           _SearchBar()._selectioned = selectioned;
-          print("------------------------------- : "  + _SearchBar()._selectioned);
-          print("------------------------------- : "  + selectioned);
+          print("------------------------------- : ${_SearchBar()._selectioned}");
+          print("------------------------------- : $selectioned");
           showResults(context);
         },
-        leading: Icon(Icons.location_city),
+        leading: const Icon(Icons.location_city),
         title: RichText(
           text: TextSpan(text: autocompletation[index].substring(0,query.length),
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               children:  [
                 TextSpan(text: autocompletation[index].substring(query.length),
-                    style: TextStyle(color: Colors.grey))
+                    style: const TextStyle(color: Colors.grey))
               ]
           ),
         ),
