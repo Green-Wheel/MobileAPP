@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'reservation_charger_card.dart';
 
 import '../services/backendServices/bookings.dart';
 
@@ -18,6 +17,41 @@ class ButtonsCard extends StatefulWidget {
 }
 
 class _ButtonsCard extends State<ButtonsCard> {
+  void _showAvisCancelarReserva() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Cancel booking'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Are you sure want to cancel booking?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                BookingService.deleteBookings(widget.id);
+                widget.function();
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -123,8 +157,7 @@ class _ButtonsCard extends State<ButtonsCard> {
                     )
                 ),
                 onPressed: () {
-                  BookingService.deleteBookings(widget.id);
-                  widget.function();
+                  _showAvisCancelarReserva();
                 },
                 child: Row(
                   children: const [
