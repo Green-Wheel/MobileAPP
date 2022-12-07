@@ -72,8 +72,38 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
     }
   }
 
+  void _showAvisNoEsPodenCarregarBookings() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Bookings Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load bookings'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _getBookings() async {
     List<Booking> bookingList = await BookingService.getBookings();
+    if (bookingList.isEmpty) {
+      _showAvisNoEsPodenCarregarBookings();
+    }
     print("bookings: $bookingList");
     setState(() {
       bookings = bookingList;

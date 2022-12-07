@@ -48,6 +48,33 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
     fetchData();
   }
 
+  void _showAvisNoEsPodenCarregarLlistaBicis() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Bike Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load bikes'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _getBikesList(int page) async {
     List<BikeList> bikeList = await BikeService.getBikeList(page);
     setState(() {

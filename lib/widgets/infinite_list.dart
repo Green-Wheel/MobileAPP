@@ -42,8 +42,38 @@ class _InfiniteList extends State<InfiniteList>{
     fetchData();
   }
 
+  void _showAvisNoEsPodenCarregarLlistaCarregadors() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Chargers Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load chargers'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _getChargersList(int page) async {
     List<ChargerList> chargerList = await ChargerService.getChargerList(page);
+    if (chargerList.isEmpty) {
+      _showAvisNoEsPodenCarregarLlistaCarregadors();
+    }
     setState(() {
       _markersListAll.addAll(chargerList);
     });

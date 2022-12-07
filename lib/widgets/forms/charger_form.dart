@@ -71,15 +71,41 @@ class _ChargerFormState extends State<ChargerForm> {
         });
   }
 
-  void getCurrents(currents) {
+  Future<void> getCurrents(currents) async {
     setState(() => {
           _data['current_type'] = currents['current_type'],
           _data['power'] = currents['power'],
         });
     if (widget.data != null) {
-      PrivateChargersService.updateCharger(_data);
+      bool bPrivUpdateCharger = await PrivateChargersService.updateCharger(_data);
+      if (!bPrivUpdateCharger) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(const Duration(seconds: 3), () {
+              Navigator.of(context).pop(true);
+            });
+            return const AlertDialog(
+              title: Text('Charger Updated Successfully'),
+            );
+          }
+        );
+      }
     } else {
-      PrivateChargersService.newCharger(_data, _images);
+      bool bPrivNewCharger = await PrivateChargersService.newCharger(_data, _images);
+      if (!bPrivNewCharger) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(const Duration(seconds: 3), () {
+              Navigator.of(context).pop(true);
+            });
+            return const AlertDialog(
+              title: Text('Charger Created Successfully'),
+            );
+          }
+        );
+      }
     }
     GoRouter.of(context).push('/');
   }
