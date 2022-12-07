@@ -39,22 +39,6 @@ class BikeService {
     });
     return result;
   }
-/*
-  static Future<DetailedBikeSerializer?> getBike(int id) async {
-    DetailedBikeSerializer? result;
-    await BackendService.get('bikes/$id/').then((response) {
-      if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        print('heyyy $jsonResponse');
-        print(result);
-        result = DetailedBikeSerializer.fromJson(jsonResponse);
-        print('detailed $result');
-      } else {
-        print('Error getting charger!');
-      }
-    });
-    return result;
-  }*/
 
   static Future<DetailedBikeSerializer?> getBike(int id) async {
     DetailedBikeSerializer? result;
