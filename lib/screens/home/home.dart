@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar : false,
-      appBar: SearchBar(),
+      appBar: SearchBar(index: widget.index == 1),
 
       bottomNavigationBar: BottomBarWidget(
         index: widget.index,
