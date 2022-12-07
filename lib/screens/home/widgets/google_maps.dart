@@ -61,9 +61,65 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   bool loading_bike = false;
   bool _publicationloaded = false;
 
+  void _showAvisNoEsPodenCarregarCarregadors() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Chargers Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load chargers'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAvisNoEsPodenCarregarBicis() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Bike Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load bikes'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _getChargers() async {
     List chargersList = await ChargerService.getChargers();
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
     setState(() {
       markersList = chargersList;
       for (int i = 0; i < markersList.length; i++) {
@@ -79,6 +135,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _getBikes() async {
     List bikeList = await BikeService.getBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
     setState(() {
       markersList = bikeList;
       for (int i = 0; i < markersList.length; i++) {
@@ -375,21 +434,44 @@ Widget show_card() {
   }
 }
 
+  void _showAvisNoEsPotCarregarCarregador() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Charger Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load charger info'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 void _getCharger(int id) async {
   DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
-  print(charger);
   if (charger != null) {
     setState(() {
       //loading_charger = true;
       _publicationloaded = true;
       markedCharger = charger;
     });
+  } else {
+    _showAvisNoEsPotCarregarCarregador();
   }
-  /*else {
-    setState(() {
-      loading_charger = false;
-    });
-  }*/
 }
 
 Widget buildSlidingUpPanelCharger(
@@ -435,17 +517,43 @@ Widget buildSlidingUpPanelCharger(
       private_list: false);
 }
 
+  void _showAvisNoEsPotCarregarBici() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Bike Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load bike info'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 void _getBike(int id) async {
   DetailedBikeSerializer? bike = await BikeService.getBike(id);
-  print(bike);
-  //TODO: carregaar simbol
   if (bike != null) {
     setState(() {
       _publicationloaded = true;
       widget.index = 1;
       markedBike = bike;
     });
+  } else {
+    _showAvisNoEsPotCarregarBici();
   }
 }
 
