@@ -1,11 +1,16 @@
 import 'dart:core';
 import 'dart:developer';
-import 'package:greenwheel/services/backendServices/bookings.dart';
+import 'package:flutter/foundation.dart';
 import 'package:greenwheel/services/backendServices/publications.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'custom_calendar.dart';
 import 'hour_list.dart';
+import 'dart:convert';
+
+//ASK: que pasa si se reservan de 23:00 a 2am por ejemplo?
+
+
 
 void main() => runApp(const MyApp());
 
@@ -17,12 +22,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Booking calendar',
-      home: BookingCalendar(id: 1),
+      home: BookingCalendar(id: 417),
     );
   }
 }
 
 class BookingCalendar extends StatefulWidget {
+  Map<String, dynamic> data = Map();
   int id;
   late DateTime selectedDate;
   late DateStates datesState;
@@ -88,7 +94,7 @@ class BookingCalendarState extends State<BookingCalendar> {
             ),
           ),
           hourList(reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
-                  availableHours: widget.datesState.getAvailableHours(widget.selectedDate),
+                  blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
                   return_change_in_reservations: updateWithHourListReservation,),
 
           Padding(
@@ -136,9 +142,66 @@ class BookingCalendarState extends State<BookingCalendar> {
 
   //---------------------------------[ BACKEND ]------------------------------//
 
-  List getHourAvailabilityFromBackend() {
 
-    return [];
+  List getAvailabilityFromBackend(DateTime date) {
+    //List<>BookingService.getBookingHours(widget.id);
+    widget.data['id'] = widget.id;
+    widget.data['year'] = date.year;
+    widget.data['month'] = date.month;
+    widget.data['day'] = date.day;
+    log("-------@@@@@@@@–2--------ABAJHBDKJABDJAHDBAKJHDBAKSJHDB:    LA FECHA ${date.month}");
+    //var blockedHours = PublicationService.getBlockedHoursByDay(widget.data);
+    var backendHours = [
+      {
+        "start_time": "11:30:24",
+        "end_time": "12:30:23",
+        "id": 4,
+        "occupation_range_type": 2
+      },
+      {
+        "start_time": "12:30:24",
+        "end_time": "13:30:23",
+        "id": 5,
+        "occupation_range_type": 2
+      },
+      {
+        "start_time": "13:30:24",
+        "end_time": "14:30:23",
+        "id": 6,
+        "occupation_range_type": 1,
+        "booking": {
+          "id": 1,
+          "user": {
+            "id": 1,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "profile_picture": null
+          },
+          "publication": null
+        }
+      }
+    ];
+    List<DateTime> blockedHours=[];
+    List<DateTime> myReservedHours=[];
+    //parseBackendHours(bloquedHours);
+    for(var hour in backendHours){
+      var occupation = Occupation.fromJson(date, hour);
+      log("Occupatttttttion@@@@@@@@@@@@@@"+occupation.toString());
+      log(occupation.split(Duration(minutes: 30)).toString());
+      List<DateTime> dateTimeChunks = occupation.split(Config.minTimeOfReservation);
+
+      if(occupation.belongsToUserWithId(1)) {
+        myReservedHours.addAll(dateTimeChunks);
+      }
+      else{
+        blockedHours.addAll(dateTimeChunks);
+      }
+
+    }
+
+    log(PublicationService.getBlockedHoursByDay(widget.data).toString());
+    return [myReservedHours,blockedHours];
   }
 
 
@@ -163,6 +226,8 @@ class BookingCalendarState extends State<BookingCalendar> {
 
   //----------------------------------[ UTILS ]-------------------------------//
 
+
+
   List<DateTime> convertToDateTime(List<TimeOfDay> hours,DateTime date){
     List<DateTime> dates = [];
     for(var hour in hours)
@@ -172,17 +237,22 @@ class BookingCalendarState extends State<BookingCalendar> {
     return dates;
   }
 
+
+
   void applyToBackend(){
     widget.backendOperations.mergeBackendOperations();
     if(widget.backendOperations.applyBackendOperations()){
       log("Se han aplicado correctamente los cambios al backend");
     }
-
+    else{
+      log("Ha habido un error al aplicar los cambios al backend");
+    }
   }
 
   void initDateState(List<DateTime> blockedDates, List<DateTime> reservations){
 
     log("ejecutando init--------------");
+
     widget.datesState = DateStates(reservations, blockedDates);
   }
 
@@ -197,9 +267,11 @@ class BookingCalendarState extends State<BookingCalendar> {
   @override
   void initState() {
     var now = DateTime.now();
-    List<DateTime> blockedDates = [];
-    List<DateTime> reservations =  [DateTime(now.year,now.month,now.day,now.hour,0),DateTime(now.year,now.month,now.day+1,now.hour,0),DateTime(now.year,now.month,now.day,now.hour,30),DateTime(now.year,now.month,now.day,now.hour+1,0),];//PublicationService.getBlockedHoursByDay(widget.selectedDate);
+    List availability = getAvailabilityFromBackend(now);
+    List<DateTime> reservations = availability[0];
+    List<DateTime> blockedDates = availability[1];
 
+    log("ESTAS DEBERIAN BLOQUEARSE $blockedDates");
     widget.selectedDate = DateTime(now.year,now.month,now.day);
     initDateState(blockedDates,reservations);
     initBackendOperations(reservations);
@@ -232,7 +304,7 @@ class DateState{
 
   @override
   String toString(){
-    String s = "Time-> $date Type-> $availability";
+    String s = "(Time-> $date Type-> $availability)";
     return s;
   }
 }
@@ -291,15 +363,23 @@ class DateStates{
 
   List<DateState> getDateStatesAt(DateTime date) {
     List<DateState> dateStatesAtDate = [];
+    log("fskskjbffnlskjnlckjnlkjanclkjsancjamcdklksajhskdnclskjncjsnclklskmclk\n");
     for (var dateState in dateStates){
+      log(dateState.toString());
+      log("${DateFormat('yyyy-MM-dd').format(dateState.date)} == ${DateFormat('yyyy-MM-dd').format(date)}");
       if(DateFormat('yyyy-MM-dd').format(dateState.date) ==
          DateFormat('yyyy-MM-dd').format(date)) {
+        log("Se ha añadido");
         dateStatesAtDate.add(dateState);
+      }
+      else{
+        log("NO se ha añadido");
       }
     }
     return dateStatesAtDate;
   }
 
+  //TODO: no tiene en cuenta las horas bloqueadas, añade todas como disponibles
   List<TimeOfDay> getAvailableHours(DateTime date) {
     List<TimeOfDay> availableHours = [];
     Duration step = Config.minTimeOfReservation;
@@ -314,15 +394,30 @@ class DateStates{
     return availableHours;
   }
 
+  //TODO: no tiene en cuenta las horas bloqueadas, añade todas como disponibles
+  List<TimeOfDay> getBlockedHours(DateTime date) {
+    List<DateState> dateStatesAtDate = getDateStatesAt(date);
+    log("Lo que pillas en la fecha $dateStatesAtDate");
+    List<TimeOfDay> blockedHours = [];
+    for(var dateState in dateStatesAtDate){
+      log(dateState.availability.toString());
+      if(dateState.availability==Availability.blocked ) {
+        blockedHours.add(dateState.date.toTimeOfDay());
+      }
+    }
+    log("ESTO ES LO QUE LE ENVIAS AL HOURLIST $date --> $blockedHours");
+    return blockedHours;
+  }
+
   static List<DateState> generateStates(List<DateTime> reservations, List<DateTime> blocked){
     List<DateState> dateStates=[];
+
     for( var date in reservations ) {
       dateStates.add(DateState(date,Availability.reserved));
     }
     for( var date in blocked ) {
       dateStates.add(DateState(date,Availability.blocked));
     }
-
     return dateStates;
   }
 
@@ -336,6 +431,7 @@ class DateStates{
   }*/
 
   DateStates(List<DateTime> reservations, List<DateTime> blocked ){
+    log(blocked.toString());
     dateStates = DateStates.generateStates(reservations, blocked);
     log(toString());
   }
@@ -348,7 +444,6 @@ class DateStates{
     }
     return s;
   }
-
 }
 
 class BackendOperations{  
@@ -490,15 +585,163 @@ class Config{
   static TimeOfDay endingHour = const TimeOfDay(hour: 23, minute: 59);
 }
 
+
+///################################-- Models --#################################
+
+class Occupation {
+  Occupation({
+    required this.startTime,
+    required this.endTime,
+    required this.id,
+    required this.occupationRangeType,
+    this.booking,
+  });
+
+  String startTime;
+  String endTime;
+  int id;
+  int occupationRangeType;
+  var booking;
+
+  factory Occupation.fromRawJson(DateTime date, String str) =>
+      Occupation.fromJson(date, json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Occupation.fromJson(DateTime date,Map<String, dynamic> json){
+    String dateString = date.toString().substring(0,
+                        11);
+
+    String startT = dateString +
+                    json["start_time"].substring(0,
+                    json["start_time"].length-3);
+
+    String endT = dateString +
+                  json["end_time"].substring(0,
+                  json["end_time"].length-3);
+
+    return Occupation(
+      startTime: startT,
+      endTime: endT,
+      id: json["id"],
+      occupationRangeType: json["occupation_range_type"],
+      booking: json["booking"] == null ? null : Booking.fromJson(
+          json["booking"]),
+    );
+  }
+
+    Map<String, dynamic> toJson() => {
+      "start_time": startTime,
+      "end_time": endTime,
+      "id": id,
+      "occupation_range_type": occupationRangeType,
+      "booking": booking == null ? null : booking.toJson(),
+    };
+
+    List<DateTime> split(Duration chunkTime){
+      DateTime startTimeDate = DateFormat("yyyy-MM-dd HH:mm").parse(startTime);
+      DateTime endTimeDate = DateFormat("yyyy-MM-dd HH:mm").parse(endTime);
+      //Duration aux = Duration(hours: startTimeDate.hour, minutes: startTimeDate.minute);
+      //Duration diff = DateTime.parse(endTime).difference(startTimeDate);
+      //diff.inSeconds % Duration(days: startTimeDate.day)
+      DateTime currentDateTime = startTimeDate;
+      List<DateTime> chunks = [];
+      log(currentDateTime.toString()+"  |  "+endTimeDate.toString());
+      while(currentDateTime < endTimeDate)
+      {
+
+        chunks.add(currentDateTime);
+        //log(currentDateTime.toString());
+        currentDateTime = currentDateTime.add(chunkTime);
+      }
+      //log("chunks"+chunks.toString());
+      return chunks;
+    }
+
+    @override
+    String toString() {
+
+      return startTime.toString()+" -> "+endTime.toString();
+    }
+
+  bool belongsToUserWithId(int id) {
+      log("Tu atecion !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      return (booking!=null && booking.id == id);
+  }
+}
+
+
+class Booking {
+  Booking({
+    required this.id,
+    required this.user,
+    this.publication,
+  });
+
+  int id;
+  User user;
+  dynamic publication;
+
+  factory Booking.fromRawJson(String str) => Booking.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Booking.fromJson(Map<String, dynamic> json) => Booking(
+    id: json["id"],
+    user: User.fromJson(json["user"]),
+    publication: json["publication"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "user": user.toJson(),
+    "publication": publication,
+  };
+}
+
+class User {
+  User({
+    required this.id,
+    required this.username,
+    this.firstName,
+    this.lastName,
+    this.profilePicture,
+  });
+
+  int id;
+  String username;
+  var firstName;
+  var lastName;
+  dynamic profilePicture;
+
+  factory User.fromRawJson(String str) => User.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory User.fromJson(Map<String, dynamic> json) => User(
+    id: json["id"],
+    username: json["username"],
+    firstName: json["first_name"],
+    lastName: json["last_name"],
+    profilePicture: json["profile_picture"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "username": username,
+    "first_name": firstName,
+    "last_name": lastName,
+    "profile_picture": profilePicture,
+  };
+}
+
+
 ///###########################-- Class Extensions --############################
 
 extension DatetimeExtension on DateTime {
   TimeOfDay toTimeOfDay(){
     return TimeOfDay(hour: hour, minute: minute);
   }
-
-
-
 
   bool operator >= (DateTime b)
   {

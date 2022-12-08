@@ -5,10 +5,10 @@ import 'package:greenwheel/widgets/booking_calendar2.dart';
 
 class hourList extends StatefulWidget {
   var reservations;
-  var availableHours;
+  var blockedHours;
   final Function return_change_in_reservations;
   hourList({Key? key,required this.reservations,
-            required this.availableHours, required this.return_change_in_reservations}) : super(key: key);
+            required this.blockedHours, required this.return_change_in_reservations}) : super(key: key);
 
   @override
   _hourListState createState() => _hourListState();
@@ -62,9 +62,9 @@ class _hourListState extends State<hourList> {
             return ElevatedButton(
               onPressed: (){
                 setState(() {
-                  if(widget.availableHours.contains(time)) {
+                  if(!widget.blockedHours.contains(time)) {
                     Operation operation = Operation.delete;
-                    if(!widget.reservations.remove(time) && widget.availableHours.contains(time)) {
+                    if(!widget.reservations.remove(time) && !widget.blockedHours.contains(time)) {
                       widget.reservations.add(time);
                       widget.reservations.toString();
                       operation = Operation.add;
@@ -76,13 +76,13 @@ class _hourListState extends State<hourList> {
               style: ElevatedButton.styleFrom(
                 minimumSize: Size.zero,
                 padding: EdgeInsets.zero,
-                backgroundColor: widget.availableHours.contains(time)? widget.reservations.contains(time)? Colors.green : Colors.white : Colors.blueGrey.shade100,
+                backgroundColor: !widget.blockedHours.contains(time)? widget.reservations.contains(time)? Colors.green : Colors.white : Colors.blueGrey.shade100,
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
 
                 shape:
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
-                    side: BorderSide(width:1.5,color: widget.availableHours.contains(time)? Colors.green: Colors.black45)
+                    side: BorderSide(width:1.5,color: !widget.blockedHours.contains(time)? Colors.green: Colors.black45)
                   )
               ),
 
@@ -94,10 +94,10 @@ class _hourListState extends State<hourList> {
                     "${time.hour}:${time.minute} ",
                     style: TextStyle(
                       fontSize: 17,
-                      color: widget.availableHours.contains(time)? widget.reservations.contains(time)? Colors.white: Colors.green: Colors.blueGrey,
+                      color: !widget.blockedHours.contains(time)? widget.reservations.contains(time)? Colors.white: Colors.green: Colors.blueGrey,
                     ),
                   ),
-                  widget.availableHours.contains(time)? widget.reservations.contains(time)?  Icon(Icons.check_circle_rounded, color: Colors.white, size: 18,): Icon(Icons.schedule, color: Colors.green, size: 18,):
+                  !widget.blockedHours.contains(time)? widget.reservations.contains(time)?  Icon(Icons.check_circle_rounded, color: Colors.white, size: 18,): Icon(Icons.schedule, color: Colors.green, size: 18,):
                   Icon(Icons.lock, color: Colors.blueGrey, size: 18,),
                 ],
               ),
