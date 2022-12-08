@@ -12,7 +12,7 @@ import 'button_reserva_list_bike.dart';
 
 class BikeCardInfoWidget extends StatefulWidget {
   String? location;
-  double rating;
+  double? rating;
   bool available;
   BikeType type;
   double price;
@@ -35,7 +35,7 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   }
 }
 
-Widget _buildCard(String? location, double rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, int? id, BuildContext context) {
+Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, int? id, BuildContext context) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -57,7 +57,7 @@ Widget _buildCard(String? location, double rating, bool available, BikeType type
               ),
               Padding(
                 padding: EdgeInsets.only(left: 25),
-                child:  StarsStaticRateWidget(rate: 4.0),
+                child:  StarsStaticRateWidget(rate: rating!),
               ),
               SizedBox(height: 5),
               SizedBox(

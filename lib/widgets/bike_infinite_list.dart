@@ -139,17 +139,13 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
           double price = _markersListAll[index].price;
           bool avaliable = true;
           int? id = _markersListAll[index].id;
-          return Flexible(child: _cardBikeList(description!, avaliable, bikeType, price, id!));
+          double? rate = _markersListAll[index].avg_rating;
+          return Flexible(child: _cardBikeList(description!, avaliable, bikeType, price, id!, rate!));
         });
   }
 
   //funcion respectiva a la card de los cargadores
-  Widget _cardBikeList(String direction, bool available, BikeType bikeType, double price, int id) {
-    //Generación rate aleatoria (harcode rate)
-    Random random = Random();
-    int min = 2, max = 6;
-    int num = (min + random.nextInt(max - min));
-    double numd = num.toDouble();
+  Widget _cardBikeList(String direction, bool available, BikeType bikeType, double price, int id, double rate) {
     String? description = "Nice";
     String? direction1 = "Calle 1";
     return GestureDetector(
@@ -157,7 +153,7 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
         GoRouter.of(context)
             .go('/bikes/$id');
       },
-      child: BikeCardInfoWidget(location: direction, rating: numd, available: available, type: bikeType, price: price, direction: direction1, description: description, bike_list: true, power: 0, id: id),
+      child: BikeCardInfoWidget(location: direction, rating: rate, available: available, type: bikeType, price: price, direction: direction1, description: description, bike_list: true, power: 0, id: id),
     );
 
   }

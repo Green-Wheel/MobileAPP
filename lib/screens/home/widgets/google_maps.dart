@@ -397,13 +397,6 @@ Widget buildSlidingUpPanelCharger(
   String? descrip = markedCharger!.title;
   descrip = title_parser(descrip);
 
-  //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
-  Random random = Random();
-  int min = 2,
-      max = 6;
-  int num = (min + random.nextInt(max - min));
-  double numd = num.toDouble();
-
   //Obtencion del numero de tipos de cargadores
   List<ConnectionType> types = [];
   for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
@@ -420,10 +413,11 @@ Widget buildSlidingUpPanelCharger(
   double latitude = markedCharger!.localization.latitude;
   double longitude = markedCharger!.localization.longitude;
   int? id = markedCharger!.id;
+  double? rate = markedCharger!.avg_rating;
 
 
   return CardInfoWidget(location: descrip,
-      rating: numd,
+      rating: rate,
       types: types,
       available: true,
       match: true,
@@ -454,13 +448,6 @@ Widget buildSlidingUpPanelBike(
     {required ScrollController controller, required PanelController panelController}) {
   String? descrip = markedBike!.title!;
   descrip = title_parser(descrip);
-
-  //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
-  Random random = Random();
-  int min = 2,
-      max = 6;
-  int num = (min + random.nextInt(max - min));
-  double numd = num.toDouble();
   BikeType bikeType = markedBike?.bike_type as BikeType;
   String? direction = markedBike!.direction;
   direction = title_parser(direction);
@@ -468,10 +455,12 @@ Widget buildSlidingUpPanelBike(
   double price = markedBike!.price;
   double? power = markedBike!.power;
   int? id = markedBike!.id;
+  double? rate = markedBike!.avg_rating;
+
 
   print('power: $power');
 
-  return BikeCardInfoWidget(location: descrip, rating: numd, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, id: id!);
+  return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, id: id!);
 }
 
 String? title_parser(String? description) {
