@@ -45,8 +45,7 @@ class BookingCalendarState extends State<BookingCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    bool selectedDayIsToday = DateFormat('yyyy-MM-dd').format(widget.selectedDate) ==
-        DateFormat('yyyy-MM-dd').format(DateTime.now());
+
     return Scaffold(
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -82,7 +81,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                 Expanded(
                   child: Center(
                     child: Text(
-                      (selectedDayIsToday)?
+                      (widget.selectedDate.isToday())?
                       "Hoy":
                       DateFormat('dd · MM · yyyy').format(widget.selectedDate).toString(),
                       style: const TextStyle(
@@ -116,7 +115,7 @@ class BookingCalendarState extends State<BookingCalendar> {
             child:
               Column(
                 children: [
-                  hourList(showHoursStartingAtCurrentHour: selectedDayIsToday,reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
+                  hourList(showHoursStartingAtCurrentHour: widget.selectedDate.isToday(),reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
                           blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
                           return_change_in_reservations: updateWithHourListReservation,),
                   Padding(
@@ -373,8 +372,7 @@ class DateStates{
     for (var dateState in dateStates){
       log(dateState.toString());
       log("${DateFormat('yyyy-MM-dd').format(dateState.date)} == ${DateFormat('yyyy-MM-dd').format(date)}");
-      if(DateFormat('yyyy-MM-dd').format(dateState.date) ==
-         DateFormat('yyyy-MM-dd').format(date)) {
+      if(DateFormat('yyyy-MM-dd').format(dateState.date) == DateFormat('yyyy-MM-dd').format(date)) {
         log("Se ha añadido");
         dateStatesAtDate.add(dateState);
       }
@@ -749,6 +747,13 @@ extension DatetimeExtension on DateTime {
     return TimeOfDay(hour: hour, minute: minute);
   }
 
+  bool isToday(){
+    DateTime now = DateTime.now();
+
+    return DateFormat('yyyy-MM-dd').format(now) ==
+        DateFormat('yyyy-MM-dd').format(this);
+  }
+
   bool operator >= (DateTime b)
   {
     return compareTo(b) == 1 || compareTo(b) == 0;
@@ -816,3 +821,4 @@ extension TimeOfDayExtension on TimeOfDay {
     return compareTo(b) == -1;
   }
 }
+

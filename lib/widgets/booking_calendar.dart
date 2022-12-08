@@ -217,7 +217,7 @@ class _bookingCalendarState extends State<bookingCalendar> {
               ],
             ),
           ),
-          hourList(reservations: myReservations.toSet(), blockedHours: availableHours.toSet(), return_change_in_reservations: getHourAvailability,),
+          //hourList(reservations: myReservations.toSet(), blockedHours: availableHours.toSet(), return_change_in_reservations: getHourAvailability,),
 
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 0.0),

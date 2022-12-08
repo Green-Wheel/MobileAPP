@@ -5,11 +5,11 @@ import 'dart:developer';
 import 'package:greenwheel/widgets/booking_calendar2.dart';
 
 class hourList extends StatefulWidget {
-  bool showHoursStartingAtCurrentHour = false;
+  late bool showHoursStartingAtCurrentHour;
   var reservations;
   var blockedHours;
   final Function return_change_in_reservations;
-  hourList({Key? key,required showHoursStartingAtCurrentHour,required this.reservations,
+  hourList({Key? key,required this.showHoursStartingAtCurrentHour,required this.reservations,
     required this.blockedHours, required this.return_change_in_reservations}) : super(key: key);
 
   @override
@@ -22,10 +22,12 @@ class _hourListState extends State<hourList> {
   List<TimeOfDay> hours = [];
   int time = 8;
 
-  @override
-  void initState() {
+
+
+  void initHours(){
+    hours = [];
     var step = 30;
-    var startHour = DateTime.now().hour;
+    var startHour = widget.showHoursStartingAtCurrentHour? DateTime.now().hour: 0;
     log("**************************************${widget.showHoursStartingAtCurrentHour}");
     var now = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
     //se puede mejorar importando funcionalidades de timeofday y datetime de booking_calendar2
@@ -35,11 +37,15 @@ class _hourListState extends State<hourList> {
       //se puede mejorar importando funcionalidades de timeofday y datetime de booking_calendar2
 
       if(hour.compareTo(TimeOfDay(hour: now.hour, minute: now.minute)) >= 0 ||
-          widget.showHoursStartingAtCurrentHour){
+          !widget.showHoursStartingAtCurrentHour){
         hours.add(hour);
       }
-
     }
+  }
+
+  @override
+  void initState() {
+    initHours();
 
     super.initState();
   }
@@ -54,6 +60,7 @@ class _hourListState extends State<hourList> {
 
   @override
   Widget build(BuildContext context) {
+    initHours();
 
     return Expanded(
       child: Container(
