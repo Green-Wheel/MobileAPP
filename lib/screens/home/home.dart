@@ -30,7 +30,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       extendBodyBehindAppBar : false,
       appBar: SearchBar(index: widget.index == 1),
-
       bottomNavigationBar: BottomBarWidget(
         index: widget.index,
         onChangedTab: _onChangeTab,

@@ -16,6 +16,7 @@ import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
+import 'charger_filters_map.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
@@ -319,56 +320,76 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _setCardBikeView();
     }
     return Scaffold(
-        body: Stack(
-          children: [
-            GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: _kInitialPosition,
-              markers: markers,
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              compassEnabled: true,
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: false,
-              trafficEnabled: true,
-              mapToolbarEnabled: false,
-              rotateGesturesEnabled: true,
-              scrollGesturesEnabled: true,
-              tiltGesturesEnabled: true,
-              liteModeEnabled: false,
-              onTap: (latLong) {
-                (SnackBar(
-                  content: Text(
-                      'Tapped location LatLong is (${latLong.latitude},${latLong
-                          .longitude})'),
-                ));
-              },
-              onCameraMove: onCameraMove,
-            ),
-            is_visible ? show_card() : Container(),
-          ],
-        ),
-        floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: scrolledup ? scrollDown() : scrollMiddel()
-        ));
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: _kInitialPosition,
+            markers: markers,
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            compassEnabled: true,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            trafficEnabled: true,
+            mapToolbarEnabled: false,
+            rotateGesturesEnabled: true,
+            scrollGesturesEnabled: true,
+            tiltGesturesEnabled: true,
+            liteModeEnabled: false,
+            onTap: (latLong) {
+              (SnackBar(
+                content: Text(
+                    'Tapped location LatLong is (${latLong.latitude},${latLong
+                        .longitude})'),
+              ));
+            },
+            onCameraMove: onCameraMove,
+          ),
+          is_visible ? show_card() : Container(),
+        ],
+      ),
+      floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: scrolledup ? scrollDown() : scrollMiddle()
+      )
+    );
   }
 
 List<Widget> scrollDown() {
   return <Widget>[
     listButton(),
-    SizedBox(height: 10),
+    const SizedBox(height: 10),
     currentLocationActionButton(),
-    SizedBox(height: 200)];
+    const SizedBox(height: 200)];
 }
 
+Widget filterMap() {
+  double height = MediaQuery.of(context).size.height;
+  if (widget.index == 0) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: height * 0.49),
+      child: ChargerFilterMap(),
+    );
+  }
+  return Container();
+}
 
-List<Widget> scrollMiddel() {
+List<Widget> scrollMiddle() {
+  double width = MediaQuery.of(context).size.width;
   return <Widget>[
-    listButton(),
-    SizedBox(height: 10),
-    currentLocationActionButton()];
+    filterMap(),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: listButton(),
+    ),
+    const SizedBox(height: 10),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: currentLocationActionButton(),
+    ),
+  ];
 }
 
 

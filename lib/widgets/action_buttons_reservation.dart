@@ -200,41 +200,6 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                   ),
                 ),
               ),
-              /*Padding(
-                padding: const EdgeInsets.only(left: 10.0, top: 7.5, bottom: 1),
-                child: SizedBox(
-                  height: 35,
-                  child: TextButton(
-                    style: ButtonStyle(
-                        backgroundColor: pressFilterByLocation ? MaterialStateProperty.all<Color>(Colors.green[50]!) : MaterialStateProperty.all<Color>(Colors.white),
-                        shape: MaterialStateProperty.all<
-                            RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    7.5),
-                                side: BorderSide(
-                                    color: pressFilterByLocation ? Colors.green : Colors.grey[700]!)
-                            )
-                        )
-                    ),
-                    onPressed: () => setState(() => pressFilterByLocation = !pressFilterByLocation),
-                    child: Row(
-                      children: [
-                        Text('Location',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              color: pressFilterByLocation ? Colors.green : Colors.grey[700]!),
-                        ),
-                        Icon(
-                            Icons.location_on,
-                            size: 20,
-                            color: pressFilterByLocation ? Colors.green : Colors.grey[700]!
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),*/
             ],
           ),
         ),
