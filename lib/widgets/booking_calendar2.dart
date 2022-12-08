@@ -363,7 +363,6 @@ class DateStates{
 
   List<DateState> getDateStatesAt(DateTime date) {
     List<DateState> dateStatesAtDate = [];
-    log("fskskjbffnlskjnlckjnlkjanclkjsancjamcdklksajhskdnclskjncjsnclklskmclk\n");
     for (var dateState in dateStates){
       log(dateState.toString());
       log("${DateFormat('yyyy-MM-dd').format(dateState.date)} == ${DateFormat('yyyy-MM-dd').format(date)}");
