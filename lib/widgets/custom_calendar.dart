@@ -83,7 +83,7 @@ class _customCalendarState extends State<customCalendar> {
       },
 
       onPageChanged: (focusedDay) {
-        selectedDate = focusedDay;
+        //selectedDate = focusedDay;
       },
 
   );

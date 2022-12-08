@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'custom_calendar.dart';
 import 'hour_list.dart';
 import 'dart:convert';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 //ASK: que pasa si se reservan de 23:00 a 2am por ejemplo?
 
@@ -29,8 +30,9 @@ class MyApp extends StatelessWidget {
 
 class BookingCalendar extends StatefulWidget {
   Map<String, dynamic> data = Map();
+  bool waitingBakendForHourAvailability = true;
   int id;
-  late DateTime selectedDate;
+  DateTime selectedDate = DateTime.now();
   late DateStates datesState;
   late BackendOperations backendOperations;
   BookingCalendar({Key? key, required this.id}) : super(key: key);
@@ -47,7 +49,7 @@ class BookingCalendarState extends State<BookingCalendar> {
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-
+          SizedBox(height: MediaQuery.of(context).size.height*0.04),
           customCalendar(get_selected_date: getDateFromCalendar),
           Container(
             width: double.infinity,
@@ -70,7 +72,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                   child: Text(
                     "Horas disponibles:",
                     style: TextStyle(
-                        color: Colors.green,
+                        color: Color(0x70052e42),
                         fontSize: 18
                     ),
                   ),
@@ -93,46 +95,70 @@ class BookingCalendarState extends State<BookingCalendar> {
               ],
             ),
           ),
-          hourList(reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
-                  blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
-                  return_change_in_reservations: updateWithHourListReservation,),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0.0),
-            child: ElevatedButton(
-
-              onPressed: (){
-                applyToBackend();
-              },
-
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(MediaQuery.of(context).size.width*1, 50),
-                maximumSize: Size(MediaQuery.of(context).size.width*1, double.infinity),
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(0.0),
-                    side: BorderSide(
-                        width: 2,
-                        color: Colors.green.shade800
-                    )
+          widget.waitingBakendForHourAvailability?
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white70
                 ),
-                backgroundColor:  Colors.green,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Text(
-                    "Reservar ",
-                    style: TextStyle(
-                        fontSize: 22
-                    ),
+                child: Center(
+                  child:  LoadingAnimationWidget.discreteCircle(
+                      color: Colors.green.shade50,
+                      size: 70,
+                      secondRingColor: Colors.green.shade200,
+                      thirdRingColor: Color(0x10052e42)),
+                ),
+              )
+            ):
 
-                  ),
-                  Icon(Icons.event_available,size: 25,)
+          Expanded(
+            child:
+              Column(
+                children: [
+                  hourList(reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
+                          blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
+                          return_change_in_reservations: updateWithHourListReservation,),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0.0),
+                    child: ElevatedButton(
+
+                      onPressed: (){
+                        applyToBackend();
+                      },
+
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(MediaQuery.of(context).size.width*1, 40),
+                        maximumSize: Size(MediaQuery.of(context).size.width*1, double.infinity),
+                        padding: const EdgeInsets.symmetric(vertical: 15),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0.0),
+                            side: BorderSide(
+                                width: 2,
+                                color: Colors.green.shade800
+                            )
+                        ),
+                        backgroundColor:  Colors.green,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          Text(
+                            "Reservar ",
+                            style: TextStyle(
+                                fontSize: 20
+                            ),
+
+                          ),
+                          Icon(Icons.event_available,size: 22,)
+                        ],
+                      ),
+                    ),
+                  )
                 ],
               ),
-            ),
-          )
+
+
+          ),
         ],
       ),
     );
@@ -143,49 +169,19 @@ class BookingCalendarState extends State<BookingCalendar> {
   //---------------------------------[ BACKEND ]------------------------------//
 
 
-  List getAvailabilityFromBackend(DateTime date) {
+  Future<List> getAvailabilityFromBackend(DateTime date) async {
     //List<>BookingService.getBookingHours(widget.id);
     widget.data['id'] = widget.id;
     widget.data['year'] = date.year;
     widget.data['month'] = date.month;
     widget.data['day'] = date.day;
     log("-------@@@@@@@@–2--------ABAJHBDKJABDJAHDBAKJHDBAKSJHDB:    LA FECHA ${date.month}");
-    //var blockedHours = PublicationService.getBlockedHoursByDay(widget.data);
-    var backendHours = [
-      {
-        "start_time": "11:30:24",
-        "end_time": "12:30:23",
-        "id": 4,
-        "occupation_range_type": 2
-      },
-      {
-        "start_time": "12:30:24",
-        "end_time": "13:30:23",
-        "id": 5,
-        "occupation_range_type": 2
-      },
-      {
-        "start_time": "13:30:24",
-        "end_time": "14:30:23",
-        "id": 6,
-        "occupation_range_type": 1,
-        "booking": {
-          "id": 1,
-          "user": {
-            "id": 1,
-            "username": "admin",
-            "first_name": "",
-            "last_name": "",
-            "profile_picture": null
-          },
-          "publication": null
-        }
-      }
-    ];
+    List? backendHours = await PublicationService.getBlockedHoursByDay(widget.data);
+
     List<DateTime> blockedHours=[];
     List<DateTime> myReservedHours=[];
     //parseBackendHours(bloquedHours);
-    for(var hour in backendHours){
+    for(var hour in backendHours!){
       var occupation = Occupation.fromJson(date, hour);
       log("Occupatttttttion@@@@@@@@@@@@@@"+occupation.toString());
       log(occupation.split(Duration(minutes: 30)).toString());
@@ -264,19 +260,31 @@ class BookingCalendarState extends State<BookingCalendar> {
 
   //--------------------------------[ OVERRIDES ]-----------------------------//
 
-  @override
-  void initState() {
+  Future<void> backendInitState() async {
+    widget.waitingBakendForHourAvailability = true;
     var now = DateTime.now();
-    List availability = getAvailabilityFromBackend(now);
+    List availability = await getAvailabilityFromBackend(now);
     List<DateTime> reservations = availability[0];
     List<DateTime> blockedDates = availability[1];
 
     log("ESTAS DEBERIAN BLOQUEARSE $blockedDates");
     widget.selectedDate = DateTime(now.year,now.month,now.day);
+
     initDateState(blockedDates,reservations);
     initBackendOperations(reservations);
+    widget.waitingBakendForHourAvailability = false;
+    setState(() {
 
+    });
+  }
+
+  @override
+  void initState() {
+
+    var now = DateTime.now();
+    backendInitState();
     super.initState();
+
   }
 
 }
