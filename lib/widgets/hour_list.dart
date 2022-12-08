@@ -5,10 +5,11 @@ import 'dart:developer';
 import 'package:greenwheel/widgets/booking_calendar2.dart';
 
 class hourList extends StatefulWidget {
+  bool showHoursStartingAtCurrentHour = false;
   var reservations;
   var blockedHours;
   final Function return_change_in_reservations;
-  hourList({Key? key,required this.reservations,
+  hourList({Key? key,required showHoursStartingAtCurrentHour,required this.reservations,
     required this.blockedHours, required this.return_change_in_reservations}) : super(key: key);
 
   @override
@@ -25,7 +26,7 @@ class _hourListState extends State<hourList> {
   void initState() {
     var step = 30;
     var startHour = DateTime.now().hour;
-
+    log("**************************************${widget.showHoursStartingAtCurrentHour}");
     var now = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
     //se puede mejorar importando funcionalidades de timeofday y datetime de booking_calendar2
     for(var i=startHour*60;i<24*60+startHour*60;i+=step)
@@ -33,7 +34,8 @@ class _hourListState extends State<hourList> {
       var hour = TimeOfDay(hour: (i/60).floor()%24, minute: i%60);
       //se puede mejorar importando funcionalidades de timeofday y datetime de booking_calendar2
 
-      if(hour.compareTo(TimeOfDay(hour: now.hour, minute: now.minute)) >= 0){
+      if(hour.compareTo(TimeOfDay(hour: now.hour, minute: now.minute)) >= 0 ||
+          widget.showHoursStartingAtCurrentHour){
         hours.add(hour);
       }
 
@@ -57,11 +59,11 @@ class _hourListState extends State<hourList> {
       child: Container(
         color: Colors.white,
         child: GridView.builder(
-          padding: EdgeInsets.all(1),
+          padding: EdgeInsets.all(2),
           physics: ScrollPhysics(),
           shrinkWrap: false,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 6,
+            crossAxisCount: 5,
             crossAxisSpacing: 5.0,
             mainAxisSpacing: 5.0,
           ),
@@ -91,7 +93,7 @@ class _hourListState extends State<hourList> {
                   shape:
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.0),
-                      side: BorderSide(width:1.5,color: !widget.blockedHours.contains(time)? Colors.green: Colors.black45)
+                      side: BorderSide(width:1.5,color: !widget.blockedHours.contains(time)? widget.reservations.contains(time)? Colors.green :Colors.green.shade100: Colors.black45)
                   )
               ),
 
@@ -103,12 +105,12 @@ class _hourListState extends State<hourList> {
                     //se puede mejorar importando las funcionalidades de timeofday y datetime de booking-calendar2
                     "${DateFormat("HH:mm").format(DateTime(2000,1,1, time.hour, time.minute))} ",
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: 14,
                       color: !widget.blockedHours.contains(time)? widget.reservations.contains(time)? Colors.white: Colors.green: Colors.blueGrey,
                     ),
                   ),
                   !widget.blockedHours.contains(time)? widget.reservations.contains(time)?  Icon(Icons.check_circle_rounded, color: Colors.white, size: 14,): Icon(Icons.schedule, color: Colors.green, size: 14,):
-                  Icon(Icons.lock, color: Colors.blueGrey, size: 14,),
+                  Icon(Icons.lock, color: Colors.blueGrey, size: 16,),
                 ],
               ),
             );

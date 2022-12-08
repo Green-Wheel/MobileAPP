@@ -25,9 +25,9 @@ class _customCalendarState extends State<customCalendar> {
       lastDay:   DateTime.utc(DateTime.now().year+10,1,1),
       headerStyle: HeaderStyle(
         titleTextStyle:
-        const TextStyle(fontSize: 20.0, color:Colors.white),
-        decoration: const BoxDecoration(
-            color: Color(0xf0052e42),
+        const TextStyle(fontSize: 20.0, color:Color(0xc0052e42)),
+        decoration: BoxDecoration(
+            color: Colors.white,
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(0),
                 topRight: Radius.circular(0))),
