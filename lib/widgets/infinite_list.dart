@@ -4,12 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../serializers/chargers.dart';
 import '../../widgets/card_info.dart';
+import '../screens/home/widgets/list_charger_filters_map.dart';
 import '../services/backendServices/chargers.dart';
 
 class InfiniteList extends StatefulWidget {
   const InfiniteList({Key? key}) : super(key: key);
-
-
 
   @override
   State<InfiniteList> createState() => _InfiniteList();
@@ -79,6 +78,45 @@ class _InfiniteList extends State<InfiniteList>{
     });
   }
 
+  void _getChargersListByDate(int page) async {
+    List<ChargerList> chargerList = await ChargerService.getChargersListByDate(page);
+    if (chargerList.isEmpty) {
+      _showAvisNoEsPodenCarregarLlistaCarregadors();
+    }
+    setState(() {
+      _markersListAll.addAll(chargerList);
+    });
+  }
+
+  void _getChargersListByProximity(int page) async {
+    List<ChargerList> chargerList = await ChargerService.getChargersListByProximity(page);
+    if (chargerList.isEmpty) {
+      _showAvisNoEsPodenCarregarLlistaCarregadors();
+    }
+    setState(() {
+      _markersListAll.addAll(chargerList);
+    });
+  }
+
+  void _getPublicChargersList(int page) async {
+    List<ChargerList> chargerList = await ChargerService.getPublicChargerList(page);
+    if (chargerList.isEmpty) {
+      _showAvisNoEsPodenCarregarLlistaCarregadors();
+    }
+    setState(() {
+      _markersListAll.addAll(chargerList);
+    });
+  }
+
+  void _getPrivateChargersList(int page) async {
+    List<ChargerList> chargerList = await ChargerService.getPrivateChargerList(page);
+    if (chargerList.isEmpty) {
+      _showAvisNoEsPodenCarregarLlistaCarregadors();
+    }
+    setState(() {
+      _markersListAll.addAll(chargerList);
+    });
+  }
 
   Future<void> fetchData() async {
     try {
@@ -142,46 +180,61 @@ class _InfiniteList extends State<InfiniteList>{
         );
       }
     }
-    return ListView.builder(
-      itemCount: _markersListAll.length + (_isLastPage ? 0 : 1),
-      itemBuilder: (context, index) {
-        if (index == _markersListAll.length - _nextPageTrigger) {
-          fetchData();
-        }
-        if (index == _markersListAll.length) {
-          if (_error) {
-            return Center(
-              child: errorDialog(size: 15)
-            );
-          } else {
-            return const Center(
-                child: Padding(
-                  padding: EdgeInsets.all(8),
-                  child: CircularProgressIndicator(),
-                )
-            );
-          }
-        }
-        //final ChargerList charger = _markersListAll[index];
+    return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 5),
+            child: ListChargerFilterMap(functionPublic: _getPublicChargersList,
+                functionPrivate: _getPrivateChargersList,
+                functionAll: _getChargersList,
+                functionProximity: _getChargersListByProximity,
+                functionDate: _getChargersListByDate)
+          ),
+          Expanded(
+            child: ListView.builder(
+                itemCount: _markersListAll.length + (_isLastPage ? 0 : 1),
+                itemBuilder: (context, index) {
+                  if (index == _markersListAll.length - _nextPageTrigger) {
+                    fetchData();
+                  }
+                  if (index == _markersListAll.length) {
+                    if (_error) {
+                      return Center(
+                          child: errorDialog(size: 15)
+                      );
+                    } else {
+                      return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: CircularProgressIndicator(),
+                          )
+                      );
+                    }
+                  }
+                  //final ChargerList charger = _markersListAll[index];
 
-        String? description = _markersListAll[index].title; // falta description al backend de ChargerList
-        //description = title_parser(description);
-        int? id = _markersListAll[index].id;
-        bool? avaliable = true;
+                  String? description = _markersListAll[index].title; // falta description al backend de ChargerList
+                  //description = title_parser(description);
+                  int? id = _markersListAll[index].id;
+                  bool? avaliable = true;
 
-        List<ConnectionType> types = [];
-        for (int i = 0; i < _markersListAll[index].connection_type.length; ++i) {
-          types.add(_markersListAll[index].connection_type[i]);
-        }
-        bool private =  _markersListAll[index].private != null ? true : false;
-        bool match = true;
-        double price = 0.0;
-        String? direction = "Calle 1";
-        String? description2 = "description";
-        double latitude = _markersListAll[index]!.localization.latitude;
-        double longitude = _markersListAll[index]!.localization.longitude;
-        return Flexible(child: _cardChargerList(description!, avaliable, match, types, private, price, direction, description2, id!, latitude, longitude));
-      });
+                  List<ConnectionType> types = [];
+                  for (int i = 0; i < _markersListAll[index].connection_type.length; ++i) {
+                    types.add(_markersListAll[index].connection_type[i]);
+                  }
+                  bool private =  _markersListAll[index].private != null ? true : false;
+                  bool match = true;
+                  double price = 0.0;
+                  String? direction = "Calle 1";
+                  String? description2 = "description";
+                  double latitude = _markersListAll[index]!.localization.latitude;
+                  double longitude = _markersListAll[index]!.localization.longitude;
+                  return Flexible(child: _cardChargerList(description!, avaliable, match, types, private, price, direction, description2, id!, latitude, longitude));
+                }
+            ),
+          )
+        ]
+    );
   }
 
   //funcion respectiva a la card de los cargadores

@@ -57,19 +57,61 @@ class ChargerService {
     return result;
   }
 
-/*
-  static Future<DetailedCharherSerializer?> getCharger(int id) async {
-    DetailedCharherSerializer? result;
-    await BackendService.get('chargers/$id/').then((response) {
+  static Future<List<ChargerList>> getChargersListByDate(int pag) async {
+    List<ChargerList> result = [];
+    await BackendService.get('chargers/list/?orderby=date&page=$pag').then((response) { // per pàgines
       if (response.statusCode == 200) {
-        Map<String, dynamic> jsonResponse = jsonDecode(response.body);
-        result = DetailedCharherSerializer.fromJson(jsonResponse);
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> chargers = jsonResponse['results'] as List<dynamic>;
+        result = chargers.map((e) => ChargerList.fromJson(e)).toList();
       } else {
-        print('Error getting charger!');
+        print('Error getting ordered charger list!');
       }
     });
     return result;
-  }*/
+  }
+
+  static Future<List<ChargerList>> getChargersListByProximity(int pag) async {
+    List<ChargerList> result = [];
+    await BackendService.get('chargers/list/?orderby=date&page=$pag').then((response) { // ordery by proximity
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> chargers = jsonResponse['results'] as List<dynamic>;
+        result = chargers.map((e) => ChargerList.fromJson(e)).toList();
+      } else {
+        print('Error getting ordered charger list!');
+      }
+    });
+    return result;
+  }
+
+  static Future<List<ChargerList>> getPublicChargerList(int pag) async {
+    List<ChargerList> result = [];
+    await BackendService.get('chargers/list/?type=public&page=$pag').then((response) { // per pàgines
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> chargers = jsonResponse['results'] as List<dynamic>;
+        result = chargers.map((e) => ChargerList.fromJson(e)).toList();
+      } else {
+        print('Error getting ordered charger list!');
+      }
+    });
+    return result;
+  }
+
+  static Future<List<ChargerList>> getPrivateChargerList(int pag) async {
+    List<ChargerList> result = [];
+    await BackendService.get('chargers/list/?type=private&page=$pag').then((response) { // per pàgines
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> chargers = jsonResponse['results'] as List<dynamic>;
+        result = chargers.map((e) => ChargerList.fromJson(e)).toList();
+      } else {
+        print('Error getting ordered charger list!');
+      }
+    });
+    return result;
+  }
 
   static Future<DetailedCharherSerializer?> getCharger(int id) async {
     DetailedCharherSerializer? result;
