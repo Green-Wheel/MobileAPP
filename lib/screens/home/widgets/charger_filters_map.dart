@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
 
-void main(){
-  runApp(
-    MaterialApp(
-      title: 'chargeFilterMap try',
-      home: Scaffold(
-        body: ChargerFilterMap(),
-      ),
-    )
-  );
-}
-
 class ChargerFilterMap extends StatefulWidget {
+  Function functionPublic;
+  Function functionPrivate;
+  Function functionAll;
 
-  ChargerFilterMap({super.key});
+  ChargerFilterMap({required this.functionPublic, required this.functionPrivate,
+    required this.functionAll, super.key});
 
   @override
   State<StatefulWidget> createState() => _ChargerFilterMapWidget();
@@ -97,6 +90,11 @@ class _ChargerFilterMapWidget extends State<ChargerFilterMap> {
                         pressFilterPrivate = false;
                         pressFilterCompatible = false;
                       });
+                      if (pressFilterPublic) {
+                        widget.functionPublic();
+                      } else {
+                        widget.functionAll();
+                      }
                     },
                     child: Row(
                       children: [
@@ -136,6 +134,11 @@ class _ChargerFilterMapWidget extends State<ChargerFilterMap> {
                         pressFilterPublic = false;
                         pressFilterCompatible = false;
                       });
+                      if (pressFilterPrivate) {
+                        widget.functionPrivate();
+                      } else {
+                        widget.functionAll();
+                      }
                     },
                     child: Row(
                       children: [

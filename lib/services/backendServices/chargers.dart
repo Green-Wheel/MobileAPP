@@ -17,9 +17,9 @@ class ChargerService {
     return result;
   }
 
-  static List<Charger>? getPublicChargers() {
-    List<Charger>? result = [];
-    BackendService.get('chargers/?type=public/').then((response) {
+  static Future<List<Charger>> getPublicChargers() async {
+    List<Charger> result = [];
+    await BackendService.get('chargers/?type=public').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         result = jsonResponse.map((e) => Charger.fromJson(e)).toList();
@@ -30,9 +30,9 @@ class ChargerService {
     return result;
   }
 
-  static List<Charger>? getPrivateChargers() {
-    List<Charger>? result = [];
-    BackendService.get('chargers/?type=private/').then((response) {
+  static Future<List<Charger>> getPrivateChargers() async {
+    List<Charger> result = [];
+    await BackendService.get('chargers/?type=private').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         result = jsonResponse.map((e) => Charger.fromJson(e)).toList();

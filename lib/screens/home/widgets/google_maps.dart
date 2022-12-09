@@ -123,6 +123,49 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
+      removeChargeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        String chargerType = markersList[i].charger_type;
+        _addMarker(latitude, longitude, chargerType, id);
+      }
+      loading_charger = true;
+    });
+  }
+
+  void _getPublicChargers() async {
+    List chargersList = await ChargerService.getPublicChargers();
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
+    setState(() {
+      markersList = chargersList;
+      removeChargeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        String chargerType = markersList[i].charger_type;
+        _addMarker(latitude, longitude, chargerType, id);
+      }
+      loading_charger = true;
+    });
+  }
+
+  void _getPrivateChargers() async {
+    List chargersList = await ChargerService.getPrivateChargers();
+    for (int i = 0; i < chargersList.length; i++) {
+      print(chargersList[i].charger_type);
+    }
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
+    setState(() {
+      markersList = chargersList;
+      removeChargeMarkers();
+      print(markersList.length);
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -196,6 +239,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     markerMap[MarkerId(id.toString())] = marcador;
   }
 
+  void removeChargeMarkers() {
+    Set<Marker> markersToRemove = {};
+    markers = markersToRemove;
+  }
+  
   void _addMarker(double lat, double log, String chargerType, int id) async {
     final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 3.2,),
@@ -358,10 +406,17 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
 List<Widget> scrollDown() {
+  double width = MediaQuery.of(context).size.width;
   return <Widget>[
-    listButton(),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: listButton(),
+    ),
     const SizedBox(height: 10),
-    currentLocationActionButton(),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: currentLocationActionButton(),
+    ),
     const SizedBox(height: 200)];
 }
 
@@ -370,7 +425,8 @@ Widget filterMap() {
   if (widget.index == 0) {
     return Padding(
       padding: EdgeInsets.only(bottom: height * 0.49),
-      child: ChargerFilterMap(),
+      child: ChargerFilterMap(functionPublic: _getPublicChargers,
+          functionPrivate: _getPrivateChargers, functionAll: _getChargers),
     );
   }
   return Container();
