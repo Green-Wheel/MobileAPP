@@ -16,6 +16,7 @@ import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
+import 'bike_filters_map.dart';
 import 'charger_filters_map.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
@@ -123,7 +124,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
-      removeChargeMarkers();
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -142,7 +143,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
-      removeChargeMarkers();
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -164,7 +165,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
-      removeChargeMarkers();
+      removeMarkers();
       print(markersList.length);
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
@@ -184,6 +185,43 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = bikeList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        _addBikeMarker(latitude, longitude, id);
+      }
+      loading_bike = true;
+    });
+  }
+
+  void _getNormalBikes() async {
+    List bikeList = await BikeService.getNormalBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
+    setState(() {
+      markersList = bikeList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        _addBikeMarker(latitude, longitude, id);
+      }
+      loading_bike = true;
+    });
+  }
+
+  void _getElectricBikes() async {
+    List bikeList = await BikeService.getElectricBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
+    setState(() {
+      markersList = bikeList;
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -239,7 +277,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     markerMap[MarkerId(id.toString())] = marcador;
   }
 
-  void removeChargeMarkers() {
+  void removeMarkers() {
     Set<Marker> markersToRemove = {};
     markers = markersToRemove;
   }
@@ -428,8 +466,13 @@ Widget filterMap() {
       child: ChargerFilterMap(functionPublic: _getPublicChargers,
           functionPrivate: _getPrivateChargers, functionAll: _getChargers),
     );
+  } else {
+    return Padding(
+      padding: EdgeInsets.only(bottom: height * 0.49),
+      child: BikeFilterMap(functionNormal: _getNormalBikes,
+          functionElectric: _getElectricBikes, functionAll: _getBikes),
+    );
   }
-  return Container();
 }
 
 List<Widget> scrollMiddle() {
