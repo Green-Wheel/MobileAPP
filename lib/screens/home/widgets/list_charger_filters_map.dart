@@ -57,6 +57,11 @@ class _ListChargerFilterMapWidget extends State<ListChargerFilterMap> {
                         pressFilterCompatible = false;
                         pressFilterDate = false;
                       });
+                      if (pressFilterProximity) {
+                        widget.functionProximity(1);
+                      } else {
+                        widget.functionAll(1);
+                      }
                     },
                     child: Row(
                       children: [
@@ -97,6 +102,11 @@ class _ListChargerFilterMapWidget extends State<ListChargerFilterMap> {
                         pressFilterCompatible = false;
                         pressFilterProximity = false;
                       });
+                      if (pressFilterDate) {
+                        widget.functionDate(1);
+                      } else {
+                        widget.functionAll(1);
+                      }
                     },
                     child: Row(
                       children: [
@@ -179,9 +189,9 @@ class _ListChargerFilterMapWidget extends State<ListChargerFilterMap> {
                         pressFilterProximity = false;
                       });
                       if (pressFilterPublic) {
-                        widget.functionPublic();
+                        widget.functionPublic(1);
                       } else {
-                        widget.functionAll();
+                        widget.functionAll(1);
                       }
                     },
                     child: Row(
@@ -225,9 +235,9 @@ class _ListChargerFilterMapWidget extends State<ListChargerFilterMap> {
                         pressFilterProximity = false;
                       });
                       if (pressFilterPrivate) {
-                        widget.functionPrivate();
+                        widget.functionPrivate(1);
                       } else {
-                        widget.functionAll();
+                        widget.functionAll(1);
                       }
                     },
                     child: Row(

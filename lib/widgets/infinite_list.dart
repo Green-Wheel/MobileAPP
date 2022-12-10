@@ -74,6 +74,7 @@ class _InfiniteList extends State<InfiniteList>{
       _showAvisNoEsPodenCarregarLlistaCarregadors();
     }
     setState(() {
+      removeMarkers();
       _markersListAll.addAll(chargerList);
     });
   }
@@ -84,6 +85,7 @@ class _InfiniteList extends State<InfiniteList>{
       _showAvisNoEsPodenCarregarLlistaCarregadors();
     }
     setState(() {
+      removeMarkers();
       _markersListAll.addAll(chargerList);
     });
   }
@@ -94,6 +96,7 @@ class _InfiniteList extends State<InfiniteList>{
       _showAvisNoEsPodenCarregarLlistaCarregadors();
     }
     setState(() {
+      removeMarkers();
       _markersListAll.addAll(chargerList);
     });
   }
@@ -104,6 +107,7 @@ class _InfiniteList extends State<InfiniteList>{
       _showAvisNoEsPodenCarregarLlistaCarregadors();
     }
     setState(() {
+      removeMarkers();
       _markersListAll.addAll(chargerList);
     });
   }
@@ -114,8 +118,14 @@ class _InfiniteList extends State<InfiniteList>{
       _showAvisNoEsPodenCarregarLlistaCarregadors();
     }
     setState(() {
+      removeMarkers();
       _markersListAll.addAll(chargerList);
     });
+  }
+
+  void removeMarkers() {
+    List<ChargerList> markersToRemove = [];
+    _markersListAll = markersToRemove;
   }
 
   Future<void> fetchData() async {
