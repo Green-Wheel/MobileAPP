@@ -6,6 +6,31 @@ import '../../serializers/bookings.dart';
 
 class PublicationService {
   static Future<List?> getBlockedHoursByDay(data) async {
+    return [
+      {
+        "start_time": "22:0:24",
+        "end_time": "22:30:23",
+        "id": 5,
+        "occupation_range_type": 2
+      },
+      {
+        "start_time": "23:0:24",
+        "end_time": "23:30:0",
+        "id": 6,
+        "occupation_range_type": 1,
+        "booking": {
+          "id": 1,
+          "user": {
+            "id": 1,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "profile_picture": null
+          },
+          "publication": null
+        }
+      }
+    ];
     log("DENTRO DE LA LLAMADA A BACKEND");
     log('publications/${data['id']}/occupation/${data['year']}/${data['month']}/${data['day']}/');
     List result = [];
@@ -25,37 +50,7 @@ class PublicationService {
       log(e.toString());
     }
 
-    return [
-      {
-        "start_time": "11:30:24",
-        "end_time": "12:30:23",
-        "id": 4,
-        "occupation_range_type": 2
-      },
-      {
-        "start_time": "18:30:24",
-        "end_time": "19:30:23",
-        "id": 5,
-        "occupation_range_type": 2
-      },
-      {
-        "start_time": "13:30:24",
-        "end_time": "14:30:23",
-        "id": 6,
-        "occupation_range_type": 1,
-        "booking": {
-          "id": 1,
-          "user": {
-            "id": 1,
-            "username": "admin",
-            "first_name": "",
-            "last_name": "",
-            "profile_picture": null
-          },
-          "publication": null
-        }
-      }
-    ];
+
   }
 
   static Future<bool> editOcuppation(data) async {

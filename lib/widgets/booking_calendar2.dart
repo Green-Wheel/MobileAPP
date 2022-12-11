@@ -10,8 +10,8 @@ import 'dart:convert';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 //ASK: que pasa si se reservan de 23:00 a 2am por ejemplo?
-
-
+//TODO: al cambiar de fecha antes de que carguen las horas no se lanza la nueva query
+//TODO: cuidado con recibir reservas invalidas desde backend
 
 void main() => runApp(const MyApp());
 
@@ -71,7 +71,7 @@ class BookingCalendarState extends State<BookingCalendar> {
               children: [
                 const Expanded(
                   child: Text(
-                    "Horas disponibles",
+                    "Disponibilidad:",
                     style: TextStyle(
                         color: Color(0xA0052e42),
                         fontSize: 18
@@ -82,7 +82,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                   child: Center(
                     child: Text(
                       (widget.selectedDate.isToday())?
-                      "Hoy":
+                      "Hoy": widget.selectedDate.isTomorrow()?"Mañana":
                       DateFormat('dd · MM · yyyy').format(widget.selectedDate).toString(),
                       style: const TextStyle(
                         color: Colors.green,
@@ -98,7 +98,7 @@ class BookingCalendarState extends State<BookingCalendar> {
           widget.waitingBakendForHourAvailability?
             Expanded(
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                     color: Colors.white70
                 ),
                 child: Center(
@@ -118,41 +118,140 @@ class BookingCalendarState extends State<BookingCalendar> {
                   hourList(showHoursStartingAtCurrentHour: widget.selectedDate.isToday(),reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
                           blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
                           return_change_in_reservations: updateWithHourListReservation,),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 0.0),
-                    child: ElevatedButton(
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 0.0),
+                        child: ElevatedButton(
 
-                      onPressed: (){
-                        applyToBackend();
-                      },
+                          onPressed: (){
+                            if(widget.backendOperations.getNumberOfNewReservations() > 0) {
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Row(
+                                    children: const [
+                                      Icon(Icons.info, color: Colors.blue,),
+                                      Text(' Deshacer reservas'),
+                                    ],
+                                  ),
+                                  content: const Text('Se deseleccionarán todas las horas que has marcado, pero se mantendrán tus reservas anteriores'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, 'Cancelar'),
+                                      child: const Text(
+                                        'Cancelar',
+                                        style: TextStyle(color: Colors.black45),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, 'Ok');
+                                        backendInitState();
 
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: Size(MediaQuery.of(context).size.width*1, 40),
-                        maximumSize: Size(MediaQuery.of(context).size.width*1, double.infinity),
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            side: BorderSide(
-                                width: 0,
-                                color: Colors.green.shade800
-                            )
-                        ),
-                        backgroundColor:  Colors.green,
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text(
-                            "Reservar ",
-                            style: TextStyle(
-                                fontSize: 20
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
+
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(MediaQuery.of(context).size.width*0.45, 40),
+                            maximumSize: Size(MediaQuery.of(context).size.width*0.5, double.infinity),
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                side: const BorderSide(
+                                    width: 0,
+                                    color: Color(0xA0052e42)
+                                )
                             ),
-
+                            backgroundColor:  Colors.white,
                           ),
-                          Icon(Icons.event_available,size: 22,)
-                        ],
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.refresh_rounded,size: 22,color: Color(0xA0052e42),),
+                              Text(
+                                " Deshacer",
+                                style: TextStyle(
+                                    fontSize: 20,
+                                    color: Color(0xA0052e42),
+                                ),
+
+                              ),
+
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 0.0),
+                        child: ElevatedButton(
+
+                          onPressed: (){
+                            log("################################################# RESERVAR ################################  ");
+
+                            if(widget.backendOperations.resultOfApplyingIsAContiguousReservation()) {
+                              log("SON CONTIGUAS LAS HORAS ");
+                              applyChangesToBackend();
+                            }
+                            else{
+
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Row(
+                                    children: [
+                                      const Icon(Icons.warning_rounded, color: Colors.amber,),
+                                      const Text(' Reserva no válida'),
+                                    ],
+                                  ),
+                                  content: const Text('Las horas de una reserva deben ser contiguas'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context, 'Entendido'),
+                                      child: const Text('Entendido'),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
+                          },
+
+                          style: ElevatedButton.styleFrom(
+                            minimumSize: Size(MediaQuery.of(context).size.width*0.45, 40),
+                            maximumSize: Size(MediaQuery.of(context).size.width*0.5, double.infinity),
+                            padding: const EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                side: BorderSide(
+                                    width: 0,
+                                    color: Colors.green.shade800
+                                )
+                            ),
+                            backgroundColor:  Colors.green,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Icon(Icons.event_available,size: 22,),
+                              Text(
+                                "Reservar ",
+                                style: TextStyle(
+                                    fontSize: 20
+                                ),
+
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   )
                 ],
               ),
@@ -167,13 +266,12 @@ class BookingCalendarState extends State<BookingCalendar> {
   //---------------------------------[ BACKEND ]------------------------------//
 
 
-  Future<List> getAvailabilityFromBackend(DateTime date) async {
+  Future<List> updateAvailabilityWithBackend(DateTime date) async {
     //List<>BookingService.getBookingHours(widget.id);
     widget.data['id'] = widget.id;
     widget.data['year'] = date.year;
     widget.data['month'] = date.month;
     widget.data['day'] = date.day;
-    log("-------@@@@@@@@–2--------ABAJHBDKJABDJAHDBAKJHDBAKSJHDB:    LA FECHA ${date.month}");
     List? backendHours = await PublicationService.getBlockedHoursByDay(widget.data);
 
     List<DateTime> blockedHours=[];
@@ -181,8 +279,8 @@ class BookingCalendarState extends State<BookingCalendar> {
     //parseBackendHours(bloquedHours);
     for(var hour in backendHours!){
       var occupation = Occupation.fromJson(date, hour);
-      log("Occupatttttttion@@@@@@@@@@@@@@"+occupation.toString());
-      log(occupation.split(Duration(minutes: 30)).toString());
+      log("Occupation: "+occupation.toString());
+      log(occupation.split(Config.minTimeOfReservation).toString());
       List<DateTime> dateTimeChunks = occupation.split(Config.minTimeOfReservation);
 
       if(occupation.belongsToUserWithId(1)) {
@@ -191,28 +289,27 @@ class BookingCalendarState extends State<BookingCalendar> {
       else{
         blockedHours.addAll(dateTimeChunks);
       }
-
     }
 
     log(PublicationService.getBlockedHoursByDay(widget.data).toString());
     return [myReservedHours,blockedHours];
   }
 
-
   //--------------------------------[ CALLBACKS ]-----------------------------//
   //callbacks custom_calendar
   void getDateFromCalendar(DateTime date){
     setState(() {
       widget.selectedDate = date;
+      updateAvailabilityWithBackend(date);
       log("dia seleccionado: $date");
     });
   }
 
   //callbacks hour_list
-  void updateWithHourListReservation(TimeOfDay reservation, Operation operation)
+  void updateWithHourListReservation(TimeOfDay reservation, OperationType operation)
   {
     Availability availability =
-      (operation == Operation.add)?
+      (operation == OperationType.add)?
       Availability.reserved:Availability.available;
     widget.datesState.add(reservation.toDateTime(widget.selectedDate),availability);
     widget.backendOperations.add(reservation.toDateTime(widget.selectedDate),operation);
@@ -231,10 +328,8 @@ class BookingCalendarState extends State<BookingCalendar> {
     return dates;
   }
 
+  void applyChangesToBackend(){
 
-
-  void applyToBackend(){
-    widget.backendOperations.mergeBackendOperations();
     if(widget.backendOperations.applyBackendOperations()){
       log("Se han aplicado correctamente los cambios al backend");
     }
@@ -261,7 +356,7 @@ class BookingCalendarState extends State<BookingCalendar> {
   Future<void> backendInitState() async {
     widget.waitingBakendForHourAvailability = true;
     var now = DateTime.now();
-    List availability = await getAvailabilityFromBackend(now);
+    List availability = await updateAvailabilityWithBackend(now);
     List<DateTime> reservations = availability[0];
     List<DateTime> blockedDates = availability[1];
 
@@ -279,7 +374,6 @@ class BookingCalendarState extends State<BookingCalendar> {
   @override
   void initState() {
 
-    var now = DateTime.now();
     backendInitState();
     super.initState();
 
@@ -288,7 +382,7 @@ class BookingCalendarState extends State<BookingCalendar> {
 }
 ///#################################-- Enums --#################################
 
-enum Operation {
+enum OperationType {
   add,
   delete,
   nothing
@@ -345,6 +439,7 @@ class DateStates{
     else {
       int i = dateStatesIndexOf(date);
       if(dateStates[i].availability != Availability.blocked) {
+
         dateStates.removeAt(i);
       }
     }
@@ -371,7 +466,7 @@ class DateStates{
     List<DateState> dateStatesAtDate = [];
     for (var dateState in dateStates){
       log(dateState.toString());
-      log("${DateFormat('yyyy-MM-dd').format(dateState.date)} == ${DateFormat('yyyy-MM-dd').format(date)}");
+      //log("${DateFormat('yyyy-MM-dd').format(dateState.date)} == ${DateFormat('yyyy-MM-dd').format(date)}");
       if(DateFormat('yyyy-MM-dd').format(dateState.date) == DateFormat('yyyy-MM-dd').format(date)) {
         log("Se ha añadido");
         dateStatesAtDate.add(dateState);
@@ -455,11 +550,13 @@ class BackendOperations{
   List<BackendOperation> backendOperations = [];
 
   bool applyBackendOperations() {
-    for(var backendOperation in backendOperations){
-      if(backendOperation.operation==Operation.add){
+    List mergedBackendOperations = mergeBackendOperations();
+    for(var backendOperation in mergedBackendOperations){
+      if(backendOperation.operation==OperationType.add){
+
         log(backendOperation.toString());
       }
-      if(backendOperation.operation==Operation.delete){
+      if(backendOperation.operation==OperationType.delete){
         log(backendOperation.toString());
       }
     }
@@ -471,36 +568,40 @@ class BackendOperations{
     backendOperations.sort((a,b) => a.compareTo(b));
     log("BackendOperations ordenado ------> $backendOperations");
   }
-
-  void mergeBackendOperations(){
-    if(backendOperations.isEmpty) return;
+//TODO: Convertir a que devuelva la lista mergeada en vez de sobreescribir la original.
+  List mergeBackendOperations(){
     orderByDateBackendOperations();
-
+    List mergedBackendOperations = backendOperations.cloneBackendOperations();
+    //log("@@@@@@@@@@@@@@@ ${identical(mergedBackendOperations[0],backendOperations[0] )}");
+    if(backendOperations.isEmpty) return [];
+    orderByDateBackendOperations();
 
     List<BackendOperation> toRemove=[];
 
-    var resizeBackendOperation = backendOperations[0];
-    for(int i=1; i < backendOperations.length; ++i){
-      var current = backendOperations[i];
-      log("current: $current");
-      log("resizing: $resizeBackendOperation");
-      if(current.operation != Operation.nothing &&
+    var resizeBackendOperation = mergedBackendOperations[0].clone();
+    for(int i=1; i < mergedBackendOperations.length; ++i){
+      var current = mergedBackendOperations[i].clone();
+      //log("current: $current");
+      //log("resizing: $resizeBackendOperation");
+      if(current.operation != OperationType.nothing &&
           resizeBackendOperation.isContiguousWith(current) &&
           resizeBackendOperation.operation == current.operation){
 
         resizeBackendOperation.endDate = current.endDate;
-        log("[$i] resized es ahora--->$resizeBackendOperation");
+        //log("[$i] resized es ahora--->$resizeBackendOperation");
         toRemove.add(current);
       }
       else{
-        resizeBackendOperation = backendOperations[i];
+        resizeBackendOperation = mergedBackendOperations[i].clone();
       }
     }
-    log(toRemove.toString());
+    //log(toRemove.toString());
     for(var backendOperation in toRemove){
-      backendOperations.remove(backendOperation);
+      mergedBackendOperations.remove(backendOperation);
     }
-    log("[-BACKEND OPERATIONS COMPRESSED-]\n $backendOperations");
+    log("[-BACKEND OPERATIONS COMPRESSED-]\n $mergedBackendOperations");
+    log("[-BACKEND OPERATIONS-]\n $backendOperations");
+    return mergedBackendOperations;
   }
 
   bool backendOperationContains(DateTime date)
@@ -521,7 +622,7 @@ class BackendOperations{
     return index;
   }
   
-  void add(DateTime date, Operation operation){
+  void add(DateTime date, OperationType operation){
   
     if(!backendOperationContains(date))
     {
@@ -533,8 +634,11 @@ class BackendOperations{
     }
     else{
       int i = backendOperationsIndexOf(date);
-      if(backendOperations[i].operation == Operation.nothing) {
+      if(backendOperations[i].operation == OperationType.nothing) {
         backendOperations[i].operation = operation;
+      }
+      else if(backendOperations[i].operation == OperationType.delete){
+        backendOperations[i].operation = OperationType.nothing;
       }
       else{
         backendOperations.removeAt(i);
@@ -545,7 +649,68 @@ class BackendOperations{
 
   BackendOperations(List<DateTime> reservations){
     for(var reservation in reservations){
-      add(reservation, Operation.nothing);
+      add(reservation, OperationType.nothing);
+    }
+  }
+//TODO: posible refactor
+  bool resultOfApplyingIsAContiguousReservation() {
+
+     List mergedOperations =  mergeBackendOperations();
+
+     //log("Comprobando si las horas de la reserva son contiguas\n\n\n");
+    var lastOperation;
+    int i=0;
+    for (var operation in mergedOperations) {
+      if(operation.operation == OperationType.nothing ||
+          operation.operation == OperationType.add){
+        lastOperation = operation;
+        break;
+      }
+      ++i;
+    }
+     //log("Primera reserva: ${lastOperation.toString()}");
+    if(lastOperation==null) {
+      //log("pal carrer");
+      return true;
+    }
+    if(++i >= mergedOperations.length) return true;
+     //log("pasamos al algoritmo de comprobacion");
+    while ( i < mergedOperations.length ){
+      if(mergedOperations[i].operation != OperationType.delete){
+      /*  log("___________________________________");
+        log("COMPARE--> $lastOperation  / ${mergedOperations[i]}");
+        log("\nis contiguos------- ${lastOperation.isContiguousWith(mergedOperations[i])}")*/;
+        if(!lastOperation.isContiguousWith(mergedOperations[i])) {
+          //log("----no----");
+          return false;
+        }
+        else{
+          //log("----si----");
+        }
+        lastOperation = mergedOperations[i];
+      }
+      i+=1;
+    }
+    return true;
+  }
+
+  int getNumberOfNewReservations() {
+    int reservations=0;
+    for(var operation in backendOperations){
+      if(operation.operation == OperationType.add) ++reservations;
+    }
+    return reservations;
+  }
+
+  void reset() {
+    List toDelete=[];
+    for(var operation in backendOperations){
+      if(operation.operation != OperationType.nothing)
+        toDelete.add(operation);
+    }
+
+    for(var operation in toDelete){
+      backendOperations.remove(operation);
     }
   }
 }
@@ -554,7 +719,7 @@ class BackendOperation{
   late DateTime startDate;
   late DateTime endDate;
 
-  late Operation operation;
+  late OperationType operation;
 
   bool contains(DateTime date){
     return ( date >= startDate && date < endDate );
@@ -562,7 +727,7 @@ class BackendOperation{
 
   bool isContiguousWith(BackendOperation b){
     bool contiguous = endDate.difference(b.startDate).inMinutes.abs() <= Config.minTimeOfReservation.inMinutes;
-    log("iscontigousu ---->diference ${endDate.difference(b.startDate).inMinutes.abs()} <= ${Config.minTimeOfReservation.inMinutes} | ${(contiguous)?"Si":"No"}");
+    //log("iscontigousu ---->diference ${endDate.difference(b.startDate).inMinutes.abs()} <= ${Config.minTimeOfReservation.inMinutes} | ${(contiguous)?"Si":"No"}");
 
     return contiguous;
   }
@@ -580,6 +745,14 @@ class BackendOperation{
   }
 
   BackendOperation(this.startDate, this.endDate, this.operation);
+
+  BackendOperation clone(){
+
+    return BackendOperation(
+        startDate,
+        endDate,
+        operation);
+  }
 }
 
 class Config{
@@ -669,7 +842,7 @@ class Occupation {
     }
 
   bool belongsToUserWithId(int id) {
-      log("Tu atecion !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+      //log("Tu atecion !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
       return (booking!=null && booking.id == id);
   }
 }
@@ -742,6 +915,16 @@ class User {
 
 ///###########################-- Class Extensions --############################
 
+extension ListExtension on List{
+  List cloneBackendOperations(){
+    //TODO: CHECKEAR QUE LA LISTA SEA DE TIPO BACKENDOPERATIONS
+    List<BackendOperation> clone = [];
+    for (var elem in this){
+      clone.add(elem.clone());
+    }
+    return clone;
+  }
+}
 extension DatetimeExtension on DateTime {
   TimeOfDay toTimeOfDay(){
     return TimeOfDay(hour: hour, minute: minute);
@@ -752,6 +935,12 @@ extension DatetimeExtension on DateTime {
 
     return DateFormat('yyyy-MM-dd').format(now) ==
         DateFormat('yyyy-MM-dd').format(this);
+  }
+  bool isTomorrow(){
+    DateTime now = DateTime.now();
+
+    return DateFormat('yyyy-MM-dd').format(now) ==
+        DateFormat('yyyy-MM-dd').format(subtract(const Duration(days:1)));
   }
 
   bool operator >= (DateTime b)

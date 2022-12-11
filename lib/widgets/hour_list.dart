@@ -28,7 +28,7 @@ class _hourListState extends State<hourList> {
     hours = [];
     var step = 30;
     var startHour = widget.showHoursStartingAtCurrentHour? DateTime.now().hour: 0;
-    log("**************************************${widget.showHoursStartingAtCurrentHour}");
+    //log("**************************************${widget.showHoursStartingAtCurrentHour}");
     var now = TimeOfDay(hour: DateTime.now().hour, minute: DateTime.now().minute);
     //se puede mejorar importando funcionalidades de timeofday y datetime de booking_calendar2
     for(var i=startHour*60;i<24*60+startHour*60;i+=step)
@@ -80,12 +80,13 @@ class _hourListState extends State<hourList> {
             return ElevatedButton(
               onPressed: (){
                 setState(() {
+
                   if(!widget.blockedHours.contains(time)) {
-                    Operation operation = Operation.delete;
+                    OperationType operation = OperationType.delete;
                     if(!widget.reservations.remove(time) && !widget.blockedHours.contains(time)) {
                       widget.reservations.add(time);
                       widget.reservations.toString();
-                      operation = Operation.add;
+                      operation = OperationType.add;
                     }
                     widget.return_change_in_reservations(time,operation);
                   }
