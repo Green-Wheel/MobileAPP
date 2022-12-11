@@ -57,15 +57,41 @@ class _BikeFormState extends State<BikeForm> {
         });
   }
 
-  void getBikeInfo(bike_info) {
+  void getBikeInfo(bike_info) async {
     setState(() {
       _data.bike_type = bike_info['bike_type'];
       _data.power = bike_info['power'];
     });
     if (widget.data == null) {
-      BikeService.newBike(_data, _images);
+      bool bNewBike = await BikeService.newBike(_data, _images);
+      if (!bNewBike) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(const Duration(seconds: 3), () {
+              Navigator.of(context).pop(true);
+            });
+            return const AlertDialog(
+              title: Text('Bike Created Successfully'),
+            );
+          }
+        );
+      }
     } else {
-      BikeService.updateBike(_data);
+      bool bUpdateBike = await BikeService.updateBike(_data);
+      if (!bUpdateBike) {
+        showDialog(
+          context: context,
+          builder: (context) {
+            Future.delayed(const Duration(seconds: 3), () {
+              Navigator.of(context).pop(true);
+            });
+            return const AlertDialog(
+              title: Text('Bike Updated Successfully'),
+            );
+          }
+        );
+      }
     }
     GoRouter.of(context).push('/');
   }
