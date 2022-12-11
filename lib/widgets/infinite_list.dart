@@ -180,25 +180,17 @@ class _InfiniteList extends State<InfiniteList>{
         String? description2 = "description";
         double latitude = _markersListAll[index]!.localization.latitude;
         double longitude = _markersListAll[index]!.localization.longitude;
-        return Flexible(child: _cardChargerList(description!, avaliable, match, types, private, price, direction, description2, id!, latitude, longitude));
+        double? rate = _markersListAll[index]!.avg_rating;
+        return GestureDetector(
+          onTap: () {
+            GoRouter.of(context)
+                .go('/chargers/$id');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
+          },
+          child: CardInfoWidget(location: description, rating: rate, types: types, available: avaliable, match: match,
+              private: false, price: price, direction: direction, description: description2, private_list: private,
+              latitude: latitude, longitude: longitude),
+        );
       });
-  }
-
-  //funcion respectiva a la card de los cargadores
-  Widget _cardChargerList(String description, bool avaliable, bool match, List<ConnectionType> types, bool private, double  price, String direction, String description2, int id, double latitude, double longitude) {
-    //Generación rate aleatoria (harcode rate)
-    Random random = Random();
-    int min = 2, max = 6;
-    int num = (min + random.nextInt(max - min));
-    double numd = num.toDouble();
-    return GestureDetector(
-      onTap: () {
-        GoRouter.of(context)
-            .go('/chargers/$id');//Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
-      },
-      child: CardInfoWidget(location: description, rating: numd, types: types, available: avaliable, match: match, private: false, price: price, direction: direction, description: description2, private_list: private, latitude: latitude, longitude: longitude),
-    );
-
   }
 
 
