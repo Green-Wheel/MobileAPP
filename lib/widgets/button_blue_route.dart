@@ -15,38 +15,37 @@ class ButtonBlueRouteWidget extends StatefulWidget {
 class _ButtonBlueRouteWidget extends State<ButtonBlueRouteWidget>{
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 5, 150, 0),
-      child: SizedBox(
-        height: 33,
-        width: 75,
-        child: TextButton(
-          style: ButtonStyle(
-              backgroundColor:
-              MaterialStateProperty.all<Color>(Colors.lightBlue[50]!),
-              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(18.0),
-                      side: const BorderSide(color: Colors.blue)))),
-          onPressed: () {
-            GoRouter.of(context).go('/route/${widget.longitude}/${widget.latitude}');
-          },
-          child: Row(
-            children: const [
-              Text(
-                'Route ',
-                style: TextStyle(
-                    fontWeight: FontWeight.w600, color: Colors.lightBlue),
-              ),
-              Icon(
-                Icons.directions,
-                size: 18,
-                color: Colors.blue,
-              ),
-            ],
-          ),
+    return SizedBox(
+      height: 33,
+      width: 75,
+      child: TextButton(
+        style: ButtonStyle(
+            backgroundColor:
+            MaterialStateProperty.all<Color>(Colors.lightBlue[50]!),
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18.0),
+                    side: const BorderSide(color: Colors.blue)))),
+        onPressed: () {
+          GoRouter.of(context)
+              .go('/route/${widget.latitude}/${widget.longitude}');
+        },
+        child: Row(
+          children: const [
+            Icon(
+              Icons.directions,
+              size: 18,
+              color: Colors.blue,
+            ),
+            Text(
+              'Route ',
+              style: TextStyle(
+                  fontWeight: FontWeight.w600, color: Colors.lightBlue),
+            ),
+          ],
         ),
       ),
     );
   }
 }
+
