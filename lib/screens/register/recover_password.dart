@@ -24,8 +24,8 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
   void _getRequest(String username) async {
     bool? aux = await RecoverPasswordService.getRecover(username,context);
     setState(()  {
-        _show_code2 = aux;
-        if(_show_code2 == true) _show_code = true;
+      _show_code2 = true;
+      if(aux == true) _show_code = true;
     });
   }
 
@@ -38,7 +38,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
       nameController.dispose();
       super.dispose();
   }
-
+/*
   String generateRandomString(int len) {
     var r = Random();
     return String.fromCharCodes(List.generate(len, (index) => r.nextInt(33) + 89));
@@ -47,7 +47,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
     Random random = new Random();
     return random.nextInt(10);
   }
-
+*/
   @override
   Widget build(BuildContext context) =>
       Scaffold(
@@ -63,8 +63,8 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
                       child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                              if(!_show_code) ...[
-                                Text("We will send you an email to reset the password",
+                              if(_show_code2 == false) ...[
+                                const Text("We will send you an email to reset the password",
                                     textAlign: TextAlign.center,style: TextStyle(fontSize: 22)),
                                 Container(
                                     color: Colors.white,
@@ -73,7 +73,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
                                         controller: nameController,
                                         cursorColor: Colors.black ,
                                         textInputAction: TextInputAction.done,
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           labelStyle: TextStyle(color: Colors.black),
                                           labelText:'Username',
                                           enabledBorder: UnderlineInputBorder(
@@ -87,10 +87,16 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
                                 ),
                               ]
                               else ...[
-                                Text("Check your email and put the code below",
+                                const Text("Check your email and put the code below",
                                     textAlign: TextAlign.center,style: TextStyle(fontSize: 22)),
                               ],
-                              if(_show_code) ...[
+                              if(_show_code2 == true &&!_show_code) ...[
+                                Container(
+                                  color: Colors.white,
+                                  child: const CircularProgressIndicator()
+                                )
+                              ]
+                            else if (_show_code && _show_code2 == true) ... [
                                 SizedBox(height: MediaQuery.of(context).size.height/40),
                                 Container(
                                     color: Colors.white,
@@ -99,7 +105,7 @@ class _ForgotPasswordScreen extends State<ForgotPasswordScreen>{
                                       controller: codeController,
                                       cursorColor: Colors.black,
                                       textInputAction: TextInputAction.done,
-                                      decoration: InputDecoration(
+                                      decoration: const InputDecoration(
                                         labelStyle: TextStyle(
                                             color: Colors.black),
                                         labelText: 'Code from Email',
