@@ -348,7 +348,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       String? description = markedCharger!.description;
 
 
-      return CardInfoWidget(location: descrip, rating: numd, types: types, available: true, match: true, private: private, price: price, direction: direction, description: description, private_list: false);
+      return CardInfoWidget(location: descrip, rating: numd, types: types, available: true, match: true, private: private, price: price, direction: direction, description: description, private_list: false, latitude: 0.0,longitude: 0.0);
   }
 
 

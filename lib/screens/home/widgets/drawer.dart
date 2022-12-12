@@ -4,6 +4,7 @@ import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../services/backendServices/logout_service.dart';
+import '../../../services/backendServices/user_service.dart';
 import '../../../services/generalServices/LoginService.dart';
 import '../../../widgets/accountIcon.dart';
 import '../../register/signup.dart';
@@ -108,6 +109,7 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                 child: const Text('History', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
+                UserService.getPostsUser(userData['id']);
               },
             ),
           ),
