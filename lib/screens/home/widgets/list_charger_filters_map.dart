@@ -212,7 +212,7 @@ class _ListChargerFilterMapWidget extends State<ListChargerFilterMap> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 10.0, top: 7.5, bottom: 1),
+                padding: const EdgeInsets.only(left: 10.0, right: 5, top: 7.5, bottom: 1),
                 child: SizedBox(
                   height: 35,
                   child: TextButton(

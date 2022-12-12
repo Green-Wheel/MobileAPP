@@ -8,6 +8,7 @@ import 'package:greenwheel/widgets/card_info.dart';
 
 import '../../services/backendServices/chargers.dart';
 import '../../widgets/infinite_list.dart';
+import '../home/widgets/list_charger_filters_map.dart';
 
 class ChargeInfoList extends StatefulWidget {
   const ChargeInfoList({Key? key}) : super(key: key);
@@ -27,19 +28,20 @@ class _ChargeInfoListState extends State<ChargeInfoList>{
         title: const Text('Chargers'),
         centerTitle: true,
         actions: const [
-        Padding(
-          padding: EdgeInsets.only(right: 125.0, left: 5.0),
-          child: Icon(Icons.location_on_outlined),
+          Padding(
+            padding: EdgeInsets.only(right: 125.0, left: 5.0),
+            child: Icon(Icons.location_on_outlined),
           ),
-        ],backgroundColor: Colors.green,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              GoRouter.of(context).go('/');
+        ],
+        backgroundColor: Colors.green,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).go('/');
           },
         ),
       ),
-      body: InfiniteList(),
+      body: const InfiniteList(),
     );
   }
 }
