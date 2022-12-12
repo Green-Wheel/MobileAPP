@@ -37,6 +37,7 @@ class _ProfilePage extends State<ProfilePage> {
       ),
       body: Column(
         children: <Widget>[
+
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height/5,
@@ -65,7 +66,7 @@ class _ProfilePage extends State<ProfilePage> {
           ),
           Container(
             padding: const EdgeInsets.only(top:10),
-            child: MyPoints(),
+            child: MyPoints(userData['id']),
           ),
         ],
       ),

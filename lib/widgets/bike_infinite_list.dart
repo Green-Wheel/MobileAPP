@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../serializers/bikes.dart';
 import '../services/backendServices/bikes.dart';
 import 'bike_card_info.dart';
@@ -11,15 +12,6 @@ class BikeInfiniteList extends StatefulWidget {
   @override
   State<BikeInfiniteList> createState() => _BikeInfiniteList();
 
-}
-
-void main(){
-  runApp(const MaterialApp(
-    title: 'chargeInfo try',
-    home: Scaffold(
-      body: BikeInfiniteList(),
-    ),
-  ));
 }
 
 class _BikeInfiniteList extends State<BikeInfiniteList>{
@@ -78,7 +70,6 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
   void _getBikesList(int page) async {
     List<BikeList> bikeList = await BikeService.getBikeList(page);
     setState(() {
-      //_markersList = chargerList;
       _markersListAll.addAll(bikeList);
     });
   }
@@ -125,7 +116,7 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
                   fetchData();
                 });
               },
-              child: const Text("Retry", style: TextStyle(fontSize: 20, color: Colors.green),)),
+              child: const Text("Retry", style: TextStyle(fontSize: 20, color: Colors.blueAccent),)),
         ],
       ),
     );
@@ -167,26 +158,26 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
             }
           }
           //final ChargerList charger = _markersListAll[index];
+          BikeType bikeType = _markersListAll[index].bike_type as BikeType;
+          String? direction = _markersListAll[index].title;
+          double price = _markersListAll[index].price;
+          bool available = true;
+          int? id = _markersListAll[index].id;
+          double? rate = _markersListAll[index].avg_rating;
+          double latitude = _markersListAll[index].localization.latitude;
+          double longitude = _markersListAll[index].localization.longitude;
+          String? description = "Nice";
+          String? direction1 = "Calle 1";
 
-          String? description = _markersListAll[index].title; // falta description al backend de ChargerList
-          //description = title_parser(description);
-
-          bool avaliable = true;
-
-          BikeType bikeType = _markersListAll[index].bike_type;
-
-          return Flexible(child: _cardBikeList(description!, avaliable, bikeType));
+          return Flexible(child:GestureDetector(
+            onTap: () {
+              GoRouter.of(context)
+                  .go('/bikes/$id');
+            },
+            child: BikeCardInfoWidget(location: direction, rating: rate, available: available, type: bikeType,
+                price: price, direction: direction1, description: description, bike_list: true, power: 0,
+                latitude: latitude, longitude: longitude),
+          ));
         });
-  }
-
-  //funcion respectiva a la card de los cargadores
-  Widget _cardBikeList(String direction, bool available, BikeType bikeType){
-    //Generación rate aleatoria (harcode rate)
-    Random random = Random();
-    int min = 2, max = 6;
-    int num = (min + random.nextInt(max - min));
-    double numd = num.toDouble();
-
-    return BikeCardInfoWidget(location: direction, rating: numd, available: available, bikeType: bikeType);
   }
 }

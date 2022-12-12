@@ -13,7 +13,7 @@ import '../serializers/chargers.dart';
 
 class CardInfoWidget extends StatefulWidget {
   String? location;
-  double rating;
+  double? rating;
   List<ConnectionType> types;
   bool available;
   bool match;
@@ -25,7 +25,7 @@ class CardInfoWidget extends StatefulWidget {
   double latitude;
   double longitude;
 
-  CardInfoWidget({required this.location, required this.rating, required this.types, required this.available, required this.match, required this.private, required this.price, required this.description, required
+  CardInfoWidget({required this.location, this.rating, required this.types, required this.available, required this.match, required this.private, required this.price, required this.description, required
   this.direction, required this.private_list, required this.latitude, required this.longitude, super.key});
 
   @override
@@ -35,7 +35,7 @@ class CardInfoWidget extends StatefulWidget {
 class _CardInfoWidget extends State<CardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price, widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, context);
+    return _buildCard(widget.location, widget.rating!, widget.types, widget.available, widget.match, widget.private, widget.price, widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, context);
   }
 }
 
