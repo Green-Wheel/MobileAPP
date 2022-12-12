@@ -15,8 +15,38 @@ class EditCharger extends StatefulWidget {
 class _EditChargerState extends State<EditCharger> {
   Map<String, dynamic> _chargerInfo = {};
 
+  void _showAvisNoEsPodenCarregarCharger() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Charger Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load charger'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void getChargerInfo() async {
     var chargerI = await PrivateChargersService.getChargerInfo(widget.id);
+    if (chargerI == null) {
+      _showAvisNoEsPodenCarregarCharger();
+    }
     setState(() {
       _chargerInfo = chargerI;
     });

@@ -15,8 +15,38 @@ class _EditBikeState extends State<EditBike> {
   late DetailedBikeSerializer _bikeInfo;
   bool charged = false;
 
+  void _showAvisNoEsPotCarregarBike() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Bike Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load bike info'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void getBikeInfo() async {
     var bikeI = await BikeService.getBikeInfo(widget.id);
+    if (bikeI == null) {
+      _showAvisNoEsPotCarregarBike();
+    }
     setState(() {
       _bikeInfo = bikeI;
       charged = true;

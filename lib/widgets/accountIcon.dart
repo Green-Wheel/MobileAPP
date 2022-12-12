@@ -35,11 +35,6 @@ class _AccountIcon extends State<AccountIcon> {
 
   @override
   Widget build(BuildContext context) {
-    setState(() {
-      if(widget.path_image != null)  widget.image_profile = NetworkImage(widget.path_image);
-      else widget.image_profile = AssetImage('assets/images/default_user_img.jpg');
-    });
-    print("_------------------------");
       return CircularPercentIndicator(
         radius: 55 ,
         lineWidth: 7.0,
