@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/screens/home/widgets/charger_filters_map.dart';
 import 'package:greenwheel/screens/home/widgets/searchBar.dart';
 import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/drawer.dart';
@@ -38,7 +39,12 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        child: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId),
+        child: Stack(
+          children: [
+            GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId),
+            ChargerFilterMap(functionPublic: () {}, functionPrivate: () {}, functionAll: () {}),
+          ],
+        ),
       ),
     );
   }

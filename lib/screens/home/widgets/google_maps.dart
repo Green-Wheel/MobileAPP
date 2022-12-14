@@ -420,22 +420,10 @@ List<Widget> scrollDown() {
     const SizedBox(height: 200)];
 }
 
-Widget filterMap() {
-  double height = MediaQuery.of(context).size.height;
-  if (widget.index == 0) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: height * 0.49),
-      child: ChargerFilterMap(functionPublic: _getPublicChargers,
-          functionPrivate: _getPrivateChargers, functionAll: _getChargers),
-    );
-  }
-  return Container();
-}
 
 List<Widget> scrollMiddle() {
   double width = MediaQuery.of(context).size.width;
   return <Widget>[
-    filterMap(),
     Padding(
       padding: EdgeInsets.only(left: width * 0.83),
       child: listButton(),
