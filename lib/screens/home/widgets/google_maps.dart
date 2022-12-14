@@ -16,6 +16,7 @@ import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
+import 'charger_filters_map.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
@@ -122,6 +123,49 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
+      removeChargeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        String chargerType = markersList[i].charger_type;
+        _addMarker(latitude, longitude, chargerType, id);
+      }
+      loading_charger = true;
+    });
+  }
+
+  void _getPublicChargers() async {
+    List chargersList = await ChargerService.getPublicChargers();
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
+    setState(() {
+      markersList = chargersList;
+      removeChargeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        String chargerType = markersList[i].charger_type;
+        _addMarker(latitude, longitude, chargerType, id);
+      }
+      loading_charger = true;
+    });
+  }
+
+  void _getPrivateChargers() async {
+    List chargersList = await ChargerService.getPrivateChargers();
+    for (int i = 0; i < chargersList.length; i++) {
+      print(chargersList[i].charger_type);
+    }
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
+    setState(() {
+      markersList = chargersList;
+      removeChargeMarkers();
+      print(markersList.length);
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -195,6 +239,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     markerMap[MarkerId(id.toString())] = marcador;
   }
 
+  void removeChargeMarkers() {
+    Set<Marker> markersToRemove = {};
+    markers = markersToRemove;
+  }
+  
   void _addMarker(double lat, double log, String chargerType, int id) async {
     final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 3.2,),
@@ -319,57 +368,73 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _setCardBikeView();
     }
     return Scaffold(
-        body: Stack(
-          children: [
-            GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: _kInitialPosition,
-              markers: markers,
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              compassEnabled: true,
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: false,
-              trafficEnabled: true,
-              mapToolbarEnabled: false,
-              rotateGesturesEnabled: true,
-              scrollGesturesEnabled: true,
-              tiltGesturesEnabled: true,
-              liteModeEnabled: false,
-              onTap: (latLong) {
-                (SnackBar(
-                  content: Text(
-                      'Tapped location LatLong is (${latLong.latitude},${latLong
-                          .longitude})'),
-                ));
-              },
-              onCameraMove: onCameraMove,
-            ),
-            is_visible ? show_card() : Container(),
-          ],
-        ),
-        floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: scrolledup ? scrollDown() : scrollMiddel()
-        ));
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: _kInitialPosition,
+            markers: markers,
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            compassEnabled: true,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            trafficEnabled: true,
+            mapToolbarEnabled: false,
+            rotateGesturesEnabled: true,
+            scrollGesturesEnabled: true,
+            tiltGesturesEnabled: true,
+            liteModeEnabled: false,
+            onTap: (latLong) {
+              (SnackBar(
+                content: Text(
+                    'Tapped location LatLong is (${latLong.latitude},${latLong
+                        .longitude})'),
+              ));
+            },
+            onCameraMove: onCameraMove,
+          ),
+          is_visible ? show_card() : Container(),
+        ],
+      ),
+      floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: scrolledup ? scrollDown() : scrollMiddle()
+      )
+    );
   }
 
-  List<Widget> scrollDown() {
-    return <Widget>[
-      listButton(),
-      SizedBox(height: 10),
-      currentLocationActionButton(),
-      SizedBox(height: 200)];
-  }
+List<Widget> scrollDown() {
+  double width = MediaQuery.of(context).size.width;
+  return <Widget>[
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: listButton(),
+    ),
+    const SizedBox(height: 10),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: currentLocationActionButton(),
+    ),
+    const SizedBox(height: 200)];
+}
 
 
-  List<Widget> scrollMiddel() {
-    return <Widget>[
-      listButton(),
-      SizedBox(height: 10),
-      currentLocationActionButton()];
-  }
+List<Widget> scrollMiddle() {
+  double width = MediaQuery.of(context).size.width;
+  return <Widget>[
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: listButton(),
+    ),
+    const SizedBox(height: 10),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: currentLocationActionButton(),
+    ),
+  ];
+}
 
 
   Widget listButton() {
