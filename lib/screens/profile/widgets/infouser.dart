@@ -51,6 +51,7 @@ class _InfoUser extends State<InfoUser>  {
                               rating :userData['rating']!=null ? userData['rating'].toString() : "2.5",
                               edit_button: true),
                           ),
+                          Text('Username: ${userData['username']}'),
                           Text("lvl ${userData['level']} |  lvl ${userData['xp']} xp" ?? "1 + | 0 xp"),
                           Text("Trophies")
                         ],

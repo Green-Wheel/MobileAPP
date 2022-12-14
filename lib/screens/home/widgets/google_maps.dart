@@ -437,67 +437,67 @@ List<Widget> scrollMiddle() {
 }
 
 
-Widget listButton() {
-  if (widget.index == 0) {
-    return const ButtonListScreenChargersWidget();
-  } else {
-    return const ButtonListScreenBikesWidget();
+  Widget listButton() {
+    if (widget.index == 0) {
+      return const ButtonListScreenChargersWidget();
+    } else {
+      return const ButtonListScreenBikesWidget();
+    }
   }
-}
 
-Widget show_card() {
-  if (widget.index == 0) {
-    return SlidingUpPanel(
-        maxHeight: MediaQuery
-            .of(context)
-            .size
-            .height * 0.6,
-        minHeight: 210.0,
-        controller: panelController,
-        parallaxEnabled: true,
-        parallaxOffset: 0.5,
-        backdropEnabled: true,
-        onPanelSlide: (double pos) =>
-            setState(() {
-              if (pos < 0.2) {
-                scrolledup = true;
-              } else {
-                scrolledup = false;
-              }
-            }),
-        panelBuilder: (controller) =>
+  Widget show_card() {
+    if (widget.index == 0) {
+      return SlidingUpPanel(
+          maxHeight: MediaQuery
+              .of(context)
+              .size
+              .height * 0.6,
+          minHeight: 210.0,
+          controller: panelController,
+          parallaxEnabled: true,
+          parallaxOffset: 0.5,
+          backdropEnabled: true,
+          onPanelSlide: (double pos) =>
+              setState(() {
+                if (pos < 0.2) {
+                  scrolledup = true;
+                } else {
+                  scrolledup = false;
+                }
+              }),
+          panelBuilder: (controller) =>
           _publicationloaded ? buildSlidingUpPanelCharger(
             controller: controller,
             panelController: panelController,
           ) : Container(),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
-  } else {
-    return SlidingUpPanel(
-        maxHeight: MediaQuery
-            .of(context)
-            .size
-            .height * 0.8,
-        minHeight: 185.0,
-        controller: panelController,
-        parallaxEnabled: true,
-        parallaxOffset: 0.5,
-        backdropEnabled: true,
-        onPanelSlide: (double pos) =>
-            setState(() {
-              if (pos < 0.2) {
-                scrolledup = true;
-              } else {
-                scrolledup = false;
-              }
-            }),
-        panelBuilder: (controller) =>
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
+    } else {
+      return SlidingUpPanel(
+          maxHeight: MediaQuery
+              .of(context)
+              .size
+              .height * 0.8,
+          minHeight: 185.0,
+          controller: panelController,
+          parallaxEnabled: true,
+          parallaxOffset: 0.5,
+          backdropEnabled: true,
+          onPanelSlide: (double pos) =>
+              setState(() {
+                if (pos < 0.2) {
+                  scrolledup = true;
+                } else {
+                  scrolledup = false;
+                }
+              }),
+          panelBuilder: (controller) =>
           _publicationloaded ? buildSlidingUpPanelBike(
             controller: controller,
             panelController: panelController,
           ) : Container(),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
+    }
   }
-}
 
   void _showAvisNoEsPotCarregarCarregador() async {
     return showDialog<void>(
@@ -539,48 +539,40 @@ void _getCharger(int id) async {
   }
 }
 
-Widget buildSlidingUpPanelCharger(
-    {required ScrollController controller, required PanelController panelController}) {
-  String? descrip = markedCharger!.title;
-  descrip = title_parser(descrip);
+  Widget buildSlidingUpPanelCharger(
+      {required ScrollController controller, required PanelController panelController}) {
+    String? descrip = markedCharger!.title;
 
-  //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
-  Random random = Random();
-  int min = 2,
-      max = 6;
-  int num = (min + random.nextInt(max - min));
-  double numd = num.toDouble();
+    //Obtencion del numero de tipos de cargadores
+    List<ConnectionType> types = [];
+    for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
+      types.add(markedCharger!.connection_type[i]);
+    }
 
-  //Obtencion del numero de tipos de cargadores
-  List<ConnectionType> types = [];
-  for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
-    types.add(markedCharger!.connection_type[i]);
+    bool private = markedCharger!.private != null ? true : false;
+    double price = markedCharger!.private != null
+        ? markedCharger!.private!.price
+        : 0.0;
+    String? direction = markedCharger!.direction;
+    String? description = markedCharger!.description;
+    double latitude = markedCharger!.localization.latitude;
+    double longitude = markedCharger!.localization.longitude;
+    double? rate = markedCharger!.avg_rating;
+
+
+    return CardInfoWidget(location: descrip,
+        rating: rate,
+        types: types,
+        available: true,
+        match: true,
+        private: private,
+        price: price,
+        direction: direction,
+        description: description,
+        latitude: latitude,
+        longitude: longitude,
+        private_list: false);
   }
-
-  bool private = markedCharger!.private != null ? true : false;
-  double price = markedCharger!.private != null
-      ? markedCharger!.private!.price
-      : 0.0;
-  String? direction = markedCharger!.direction;
-  direction = title_parser(direction);
-  String? description = markedCharger!.description;
-  double latitude = markedCharger!.localization.latitude;
-  double longitude = markedCharger!.localization.longitude;
-
-
-  return CardInfoWidget(location: descrip,
-      rating: numd,
-      types: types,
-      available: true,
-      match: true,
-      private: private,
-      price: price,
-      direction: direction,
-      description: description,
-      latitude: latitude,
-      longitude: longitude,
-      private_list: false);
-}
 
   void _showAvisNoEsPotCarregarBici() async {
     return showDialog<void>(
@@ -609,119 +601,63 @@ Widget buildSlidingUpPanelCharger(
     );
   }
 
-void _getBike(int id) async {
-  DetailedBikeSerializer? bike = await BikeService.getBike(id);
-  if (bike != null) {
-    setState(() {
-      _publicationloaded = true;
-      widget.index = 1;
-      markedBike = bike;
-    });
-  } else {
-    _showAvisNoEsPotCarregarBici();
+  void _getBike(int id) async {
+    DetailedBikeSerializer? bike = await BikeService.getBike(id);
+    if (bike != null) {
+      setState(() {
+        _publicationloaded = true;
+        widget.index = 1;
+        markedBike = bike;
+      });
+    } else {
+      _showAvisNoEsPotCarregarBici();
+    }
   }
-}
 
-Widget buildSlidingUpPanelBike(
-    {required ScrollController controller, required PanelController panelController}) {
-  String? descrip = markedBike!.title!;
-  descrip = title_parser(descrip);
+  Widget buildSlidingUpPanelBike(
+      {required ScrollController controller, required PanelController panelController}) {
+    String? descrip = markedBike!.title!;
+    BikeType bikeType = markedBike?.bike_type as BikeType;
+    String? direction = markedBike!.direction;
+    String? description = markedBike!.description;
+    double price = markedBike!.price;
+    double? power = markedBike!.power;
+    double? rate = markedBike!.avg_rating;
+    double latitude = markedBike!.localization.latitude;
+    double longitude = markedBike!.localization.longitude;
 
-  //Generación rate aleatoria (harcode rate) --> Quan estigui el sistema de rates
-  Random random = Random();
-  int min = 2,
-      max = 6;
-  int num = (min + random.nextInt(max - min));
-  double numd = num.toDouble();
-  BikeType bikeType = markedBike?.bike_type as BikeType;
-  String? direction = markedBike!.direction;
-  direction = title_parser(direction);
-  String? description = markedBike!.description;
-  double price = markedBike!.price;
-  double? power = markedBike!.power;
-
-  print('power: $power');
-
-  return BikeCardInfoWidget(location: descrip, rating: numd, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false);
-}
-
-String? title_parser(String? description) {
-  description = description?.replaceAll("Ãa", "i");
-  description = description?.replaceAll("Ã", "à");
-  description = description?.replaceAll("àa", "ia");
-  description = description?.replaceAll("Ã³", "ó");
-  description = description?.replaceAll("à³", "ó");
-  description = description?.replaceAll("Ã²", "ò");
-  description = description?.replaceAll("à²", "ò");
-  description = description?.replaceAll("Ã§", "ç");
-  description = description?.replaceAll("à§", "ç");
-  description = description?.replaceAll("Ã©", "é");
-  description = description?.replaceAll("à¨", "è");
-  description = description?.replaceAll("à©", "è");
-  description = description?.replaceAll("2 -", "2\n");
-  description = description?.replaceAll("6 -  ", "6\n");
-  description = description?.replaceAll("³-", "\n");
-  description = description?.replaceAll("er-Al", "er\nAl");
-  description = description?.replaceAll("a-Ca", "a\nCa");
-  description = description?.replaceAll(", Ap", "\nAp");
-  description = description?.replaceAll("-Ca", "\nCa");
-  description = description?.replaceAll(", Ca", "\nCa");
-  description = description?.replaceAll(" QR", "\nQR");
-  description = description?.replaceAll("37 - S", "37\nS");
-  description = description?.replaceAll("res SO", "res\nSO");
-  description = description?.replaceAll("-Ca", "\nCa");
-  description = description?.replaceAll("ó-Pl", "ó\nPl");
-  description = description?.replaceAll("mans i ", "mans\ni ");
-  description = description?.replaceAll("T-I", "T\nI");
-  description = description?.replaceAll("A  Torr", "A\nTorr");
-  description = description?.replaceAll("Mont-Roig", "Mont\nRoig");
-  description = description?.replaceAll("a Sup", "a\nSup");
-  description = description?.replaceAll("Despà", "Despí");
-  if (description!.length >= 40) {
-    description = description.replaceAll(" - ", "\n");
-    //description = description.replaceAll("-", "\n");
-    description = description.replaceAll("- ", "\n");
-    description = description.replaceAll(")(", ")\n(");
-    description = description.replaceAll(" (", "\n(");
-    description = description.replaceAll("E L'", "E\nL'");
+    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude);
   }
-  if (description.length < 40) {
-    description = description.replaceAll(") ", ")\n");
-    description = description.replaceAll(" (", "\n(");
-    description = description.replaceAll("m-", "m\n");
+
+
+  Widget currentLocationActionButton() {
+    if (widget.index == 0) {
+      return FloatingActionButton(
+        heroTag: "btn1",
+        onPressed: _updateCurrentLocation,
+        backgroundColor: Colors.white,
+        child: permissionGranted
+            ? const Icon(Icons.my_location, color: Colors.green, size: 30.0)
+            : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
+      );
+    } else {
+      return FloatingActionButton(
+        heroTag: "btn2",
+        onPressed: _updateCurrentLocation,
+        backgroundColor: Colors.white,
+        child: permissionGranted
+            ? const Icon(Icons.my_location, color: Colors.blue, size: 30.0)
+            : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
+      );
+    }
   }
-  return description;
-}
 
-
-Widget currentLocationActionButton() {
-  if (widget.index == 0) {
-    return FloatingActionButton(
-      heroTag: "btn1",
-      onPressed: _updateCurrentLocation,
-      backgroundColor: Colors.white,
-      child: permissionGranted
-          ? const Icon(Icons.my_location, color: Colors.green, size: 30.0)
-          : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
-    );
-  } else {
-    return FloatingActionButton(
-      heroTag: "btn2",
-      onPressed: _updateCurrentLocation,
-      backgroundColor: Colors.white,
-      child: permissionGranted
-          ? const Icon(Icons.my_location, color: Colors.blue, size: 30.0)
-          : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
-    );
-  }
-}
-
-var snackBarLocation = SnackBar(
-    content: const Text('snackbar_location_denied_label').tr(),
-    action: SnackBarAction(
-      textColor: Colors.green,
-      label: 'snackbar_location_denied_action'.tr(),
-      onPressed: () {
-        openAppSettings();
-      },
-    ));}
+  var snackBarLocation = SnackBar(
+      content: const Text('snackbar_location_denied_label').tr(),
+      action: SnackBarAction(
+        textColor: Colors.green,
+        label: 'snackbar_location_denied_action'.tr(),
+        onPressed: () {
+          openAppSettings();
+        },
+      ));}
