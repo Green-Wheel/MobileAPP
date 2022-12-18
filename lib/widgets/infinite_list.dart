@@ -180,7 +180,8 @@ class _InfiniteList extends State<InfiniteList>{
         String? description2 = "description";
         double latitude = _markersListAll[index]!.localization.latitude;
         double longitude = _markersListAll[index]!.localization.longitude;
-        double? rate = _markersListAll[index]!.avg_rating;
+        double rate = 2;
+        if(_markersListAll[index]!.avg_rating != null) rate =_markersListAll[index]!.avg_rating!;
         return GestureDetector(
           onTap: () {
             GoRouter.of(context)

@@ -557,8 +557,8 @@ void _getCharger(int id) async {
     String? description = markedCharger!.description;
     double latitude = markedCharger!.localization.latitude;
     double longitude = markedCharger!.localization.longitude;
-    double? rate = markedCharger!.avg_rating;
-
+    double rate = 3;
+    if(markedCharger!.avg_rating != null) rate = markedCharger!.avg_rating!;
 
     return CardInfoWidget(location: descrip,
         rating: rate,
