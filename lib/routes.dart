@@ -34,7 +34,7 @@ GoRouter routeGenerator(LoginService loginService) {
     routes: [
       GoRoute(
           path: '/',
-          builder: (context, state) => const HomePage(key: Key("HomePage")),
+          builder: (context, state) =>  HomePage(key: Key("HomePage")),
           routes: [
             GoRoute(
                 path: 'profile',

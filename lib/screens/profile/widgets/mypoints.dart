@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../../serializers/chargers.dart';
 import '../../../services/backendServices/user_service.dart';
-import '../../bookings/bookings.dart';
+import '../../../widgets/card_info.dart';
+import 'InfiniteListUser.dart';
+
 
 class MyPoints extends StatefulWidget {
   MyPoints(value, {Key? key}) : value = value, super(key: key);
@@ -35,35 +37,8 @@ class MyPointsState extends State<MyPoints> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.only(top:0,left:20,right:20),
-      //width: MediaQuery.of(context).size.width,
-      //height: MediaQuery.of(context).size.height/20,
-      child: Row(
-        children: <Widget> [
-          Text("My Points",style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          ElevatedButton(onPressed: (){
-            print(publications[0]);
-          },
-          child: Text("")),
-
-          //buildList(publications),
-
-        ],
-      )
-    );
+    return InfiniteListUser(widget.value);
   }
-  Widget buildList(List<Publication> publication) => ListView.builder(
-    itemCount: publication.length,
-    itemBuilder: (context, index) {
-      double? rate = publication[index].charger?.avg_rating;
-      if (publication[index].type == "Charger") {
-        return Text("");
-        //return ReservationChargerCard(booking: bookings[index], rating: rate);
-      } else {
-        return Text("");
-        //  return ReservationBikeCard(booking: bookings[index], rating: rate);
-      }
-    }
-  );
+
 }
+

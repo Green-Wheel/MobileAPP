@@ -65,7 +65,21 @@ class _ProfilePage extends State<ProfilePage> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(top:10),
+              padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
+              child:
+                Column(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text("My Posts",
+                      style: TextStyle(
+                      fontSize: 24, fontWeight: FontWeight.bold)),
+                    ),
+                ]
+              )
+          ),
+          Container(
+           // height: MediaQuery.of(context).size.height/2,
             child: MyPoints(userData['id']),
           ),
         ],
