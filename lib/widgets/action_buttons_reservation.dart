@@ -200,7 +200,7 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                   ),
                 ),
               ),
-              /*Padding(
+              Padding(
                 padding: const EdgeInsets.only(left: 10.0, top: 7.5, bottom: 1),
                 child: SizedBox(
                   height: 35,
@@ -234,7 +234,7 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
                     ),
                   ),
                 ),
-              ),*/
+              ),
             ],
           ),
         ),
@@ -245,3 +245,6 @@ class _ActionButtonsReservationWidget extends State<ActionButtonsReservation> {
     );
   }
 }
+
+
+

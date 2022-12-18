@@ -16,12 +16,13 @@ import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
+import 'charger_filters_map.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
   Set<Polyline>? polylines = {};
   int? publicationId;
-  //method() => createState().moveCamera();
+
 
   GoogleMapsWidget(
       {Key? key, required this.index, this.polylines, this.publicationId})
@@ -45,7 +46,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       speedAccuracy: 1);
   Set<Marker> markers = {};
   final Map<MarkerId, Marker> markerMap = {};
-  Marker? searchLocated;
 
   //late Position _actualMarcador = _position;
   late double latitud_act;
@@ -123,6 +123,49 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
+      removeChargeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        String chargerType = markersList[i].charger_type;
+        _addMarker(latitude, longitude, chargerType, id);
+      }
+      loading_charger = true;
+    });
+  }
+
+  void _getPublicChargers() async {
+    List chargersList = await ChargerService.getPublicChargers();
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
+    setState(() {
+      markersList = chargersList;
+      removeChargeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        String chargerType = markersList[i].charger_type;
+        _addMarker(latitude, longitude, chargerType, id);
+      }
+      loading_charger = true;
+    });
+  }
+
+  void _getPrivateChargers() async {
+    List chargersList = await ChargerService.getPrivateChargers();
+    for (int i = 0; i < chargersList.length; i++) {
+      print(chargersList[i].charger_type);
+    }
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
+    setState(() {
+      markersList = chargersList;
+      removeChargeMarkers();
+      print(markersList.length);
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -196,6 +239,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     markerMap[MarkerId(id.toString())] = marcador;
   }
 
+  void removeChargeMarkers() {
+    Set<Marker> markersToRemove = {};
+    markers = markersToRemove;
+  }
+  
   void _addMarker(double lat, double log, String chargerType, int id) async {
     final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 3.2,),
@@ -225,7 +273,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
   }
-
 
   static const CameraPosition _kInitialPosition = CameraPosition(
     target: LatLng(41.7285833, 1.8130899),
@@ -267,44 +314,12 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     mapController.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: LatLng(40.4165, 3.70256),
+          target: LatLng(_position.latitude, _position.longitude),
           zoom: 15,
         ),
       ),
     );
   }
-
-
-  Future<void> _moveCameraToLocation() async{
-    const _pos = LatLng(40.7165, -74.70256);
-    mapController.animateCamera(CameraUpdate.newLatLngZoom(_pos, 15));
-    setState(() {
-      const Marker mark = Marker(
-          markerId:  MarkerId('Location999999'),
-          position: _pos,
-          infoWindow: InfoWindow(title: "New York",snippet:"The best place")
-      );
-      markers.add(mark);
-      markerMap.removeWhere((MarkerId key, Marker value)=> key=="Location999999");
-
-      markerMap[MarkerId('Location999999')] = mark;
-    });
-
-  }
-  /*
-  moveCamera() => setState(() {
-    int x = 1;
-    mapController.moveCamera(
-      CameraUpdate.newCameraPosition(
-        CameraPosition(
-          target: LatLng(40.4165, 3.70256),
-          zoom: 15,
-        ),
-      ),
-    );
-  });
-
-   */
 
   void _updateCurrentLocation() async {
     _position = await _determinePosition();
@@ -353,58 +368,73 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _setCardBikeView();
     }
     return Scaffold(
-        body: Stack(
-          children: [
-            GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: _kInitialPosition,
-              markers: markers,
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              compassEnabled: true,
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: false,
-              trafficEnabled: true,
-              mapToolbarEnabled: false,
-              rotateGesturesEnabled: true,
-              scrollGesturesEnabled: true,
-              tiltGesturesEnabled: true,
-              liteModeEnabled: false,
-              onTap: (latLong) {
-                (SnackBar(
-                  content: Text(
-                      'Tapped location LatLong is (${latLong.latitude},${latLong
-                          .longitude})'),
-                ));
-              },
-              onCameraMove: onCameraMove,
-            ),
-            is_visible ? show_card() : Container(),
-          ],
-        ),
-        floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: scrolledup ? scrollDown() : scrollMiddel()
-        ));
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: _kInitialPosition,
+            markers: markers,
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            compassEnabled: true,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            trafficEnabled: true,
+            mapToolbarEnabled: false,
+            rotateGesturesEnabled: true,
+            scrollGesturesEnabled: true,
+            tiltGesturesEnabled: true,
+            liteModeEnabled: false,
+            onTap: (latLong) {
+              (SnackBar(
+                content: Text(
+                    'Tapped location LatLong is (${latLong.latitude},${latLong
+                        .longitude})'),
+              ));
+            },
+            onCameraMove: onCameraMove,
+          ),
+          is_visible ? show_card() : Container(),
+        ],
+      ),
+      floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: scrolledup ? scrollDown() : scrollMiddle()
+      )
+    );
   }
 
+List<Widget> scrollDown() {
+  double width = MediaQuery.of(context).size.width;
+  return <Widget>[
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: listButton(),
+    ),
+    const SizedBox(height: 10),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: currentLocationActionButton(),
+    ),
+    const SizedBox(height: 200)];
+}
 
-  List<Widget> scrollDown() {
-    return <Widget>[
-      listButton(),
-      SizedBox(height: 10),
-      currentLocationActionButton(),
-      SizedBox(height: 200)];
-  }
 
-
-  List<Widget> scrollMiddel() {
-    return <Widget>[
-      listButton(),
-      SizedBox(height: 10),
-      currentLocationActionButton()];
-  }
+List<Widget> scrollMiddle() {
+  double width = MediaQuery.of(context).size.width;
+  return <Widget>[
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: listButton(),
+    ),
+    const SizedBox(height: 10),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: currentLocationActionButton(),
+    ),
+  ];
+}
 
 
   Widget listButton() {
@@ -496,18 +526,18 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     );
   }
 
-  void _getCharger(int id) async {
-    DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
-    if (charger != null) {
-      setState(() {
-        //loading_charger = true;
-        _publicationloaded = true;
-        markedCharger = charger;
-      });
-    } else {
-      _showAvisNoEsPotCarregarCarregador();
-    }
+void _getCharger(int id) async {
+  DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
+  if (charger != null) {
+    setState(() {
+      //loading_charger = true;
+      _publicationloaded = true;
+      markedCharger = charger;
+    });
+  } else {
+    _showAvisNoEsPotCarregarCarregador();
   }
+}
 
   Widget buildSlidingUpPanelCharger(
       {required ScrollController controller, required PanelController panelController}) {

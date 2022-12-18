@@ -18,7 +18,7 @@ class _LocationChargerWidget extends State<LocationChargerWidget>{
 //funcion para mostrar la direccion del cargador en la card
 Widget _locationCharger(String? location){
   return Padding(
-    padding: const EdgeInsets.only(left:0.0, bottom: 3.0, top: 20.0) ,
+    padding: const EdgeInsets.only(bottom: 3.0) ,
     child: Row(
       children: [
         Flexible(child:

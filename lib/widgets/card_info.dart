@@ -13,7 +13,7 @@ import '../serializers/chargers.dart';
 
 class CardInfoWidget extends StatefulWidget {
   String? location;
-  double? rating;
+  double rating;
   List<ConnectionType> types;
   bool available;
   bool match;
@@ -25,7 +25,8 @@ class CardInfoWidget extends StatefulWidget {
   double latitude;
   double longitude;
 
-  CardInfoWidget({required this.location, this.rating, required this.types, required this.available, required this.match, required this.private, required this.price, required this.description, required
+  CardInfoWidget({required this.location, required this.rating, required this.types, required this.available,
+    required this.match, required this.private, required this.price, required this.description, required
   this.direction, required this.private_list, required this.latitude, required this.longitude, super.key});
 
   @override
@@ -35,11 +36,12 @@ class CardInfoWidget extends StatefulWidget {
 class _CardInfoWidget extends State<CardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating!, widget.types, widget.available, widget.match, widget.private, widget.price, widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, context);
+    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private,
+        widget.price, widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, context);
   }
 }
 
-Widget _buildCard(String? location, double rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price, String? description, String? direction, bool private_list, double latitude, double longitude, BuildContext context){
+Widget _buildCard(String? location, double? rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price, String? description, String? direction, bool private_list, double latitude, double longitude, BuildContext context){
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -55,13 +57,16 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
             width: MediaQuery.of(context).size.width * 0.725,
             child:Column(
               children: [
+                SizedBox(height: 20),
                 Padding(
                   padding: EdgeInsets.only(right: 5, left: 25),
                   child: LocationChargerWidget(location: location),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 20),
-                  child: StarsStaticRateWidget(rate: rating),//StarsStaticRateWidget(rate: 4.0),
+                  child: rating != null ?
+                  StarsStaticRateWidget(rate: rating) :
+                  StarsStaticRateWidget(rate: 0.0),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
@@ -72,13 +77,13 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
                   width: MediaQuery.of(context).size.width * 0.725,
                   child: private ?
                       Padding(
-                          padding: EdgeInsets.only(left: 25),
+                          padding: EdgeInsets.only(left: 27),
                           child: const Text('Private',
                           style: TextStyle(fontWeight: FontWeight.w600, color: Colors.amberAccent))
                           ,
                         )
                       : Padding(
-                            padding: EdgeInsets.only(left: 25),
+                            padding: EdgeInsets.only(left: 27),
                             child: const Text('Public',
                                 style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green)),
                         )
@@ -141,14 +146,18 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
                         children: [
                           Padding(
                               padding: EdgeInsets.only(right: 35),
-                              child:Text("Address:  $direction",
+                              child: direction != null ? Text("Address:  $direction",
                                   style: const TextStyle(fontWeight: FontWeight.w600)
+                              ):  const Text("Address:  No address available",
+                                  style: TextStyle(fontWeight: FontWeight.w600)
                               )
                           ),
                           Padding(
                               padding: EdgeInsets.only(right: 115),
-                              child:Text("Description:  $description",
+                              child: description != null ? Text("Description:  $description",
                                   style: const TextStyle(fontWeight: FontWeight.w600)
+                              ):  const Text("Description:  No description",
+                                  style: TextStyle(fontWeight: FontWeight.w600)
                               ),
                           ),
                         ]): SizedBox(height: 0),
@@ -176,6 +185,7 @@ Widget _buildCard(String? location, double rating, List<ConnectionType> types, b
               ],
             ),
           ),
+
         ],
     ),
   );

@@ -4,7 +4,6 @@ import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../services/backendServices/logout_service.dart';
-import '../../../services/backendServices/user_service.dart';
 import '../../../services/generalServices/LoginService.dart';
 import '../../../widgets/accountIcon.dart';
 import '../../register/signup.dart';
@@ -55,7 +54,7 @@ class _SimpleDrawer extends State<SimpleDrawer>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                AccountIcon(percent: 0.5,path_image: userData['profile_picture']),
+                AccountIcon(percent: 0.5,path_image: userData != null ? userData['profile_picture']: null),
                 Text(
                   userData != null
                       ? userData['first_name'] + " " + userData['last_name']
@@ -65,7 +64,7 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
-                Text("Level ${userData['level']} ",
+                Text("Level ${userData != null ?userData['level']: ''} ",
                   style: TextStyle(fontSize: 12, color: Colors.white70),
                 ),
               ],
@@ -109,7 +108,6 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                 child: const Text('History', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
-                UserService.getPostsUser(userData['id']);
               },
             ),
           ),
