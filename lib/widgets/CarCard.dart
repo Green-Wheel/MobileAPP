@@ -61,36 +61,80 @@ class MyStatelessWidget extends StatelessWidget {
                       child: const Icon(Icons.directions_car, color: Colors.green),
                     ),
                     title: const Text('Car'),
-                    subtitle: const Text('Autonomia - 200 km\nTipo de conector - Type C'),
+                    subtitle: const Text('Autonomia - 200 km\nTipo de conector - Type C\n'),
                   ),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: <Widget>[
-                    TextButton(
-                      style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all<
-                              Color>(Colors.red[50]!),
-                          shape: MaterialStateProperty.all<
-                              RoundedRectangleBorder>(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      18.0),
-                                  side: const BorderSide(
-                                      color: Colors.red)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: SizedBox(
+                        height: 30,
+                        child: TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<
+                                  Color>(Colors.blue[50]!),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          18.0),
+                                      side: const BorderSide(
+                                          color: Colors.blue)
+                                  )
                               )
-                          )
+                          ),
+                          onPressed: () {
+                            // isVisible = false;
+                            // route to edit screen
+                          },
+                          child: Row(
+                            children: const [
+                              Icon(Icons.edit, color: Colors.blue, size: 15),
+                              Text('Edit',
+                                style: TextStyle(fontWeight: FontWeight.w600,
+                                    color: Colors.blue),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                      onPressed: () {
-                        isVisible = false;
-                      },
-                      child: Row(
-                        children: const [
-                          Text('Eliminar',
-                            style: TextStyle(fontWeight: FontWeight.w600,
-                                color: Colors.red),
-                          )
-                        ],
+                    ),
+                    const SizedBox(width: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child:
+                      SizedBox(
+                        height: 30,
+                        child:
+                        TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<
+                                  Color>(Colors.red[50]!),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          18.0),
+                                      side: const BorderSide(
+                                          color: Colors.red)
+                                  )
+                              )
+                          ),
+                          onPressed: () {
+                            isVisible = false;
+                          },
+                          child: Row(
+                            children: const [
+                              Icon(Icons.delete, color: Colors.red, size: 15),
+                              Text('Delete',
+                                style: TextStyle(fontWeight: FontWeight.w600,
+                                    color: Colors.red),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 8),
