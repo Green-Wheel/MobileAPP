@@ -14,29 +14,7 @@ main(){
       body: Column(
         children: [
           SizedBox(height: 400),
-            SizedBox(
-            width: 400,
-              child: Card(
-                margin: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                child: TextFormField(
-                  textAlignVertical: TextAlignVertical.center,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 3,
-                  minLines: 1,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Type a message',
-                    prefix: const SizedBox(
-                      width: 10,
-                    ),
-                    suffixIcon: ButtonSendMessageWidget(),
-                  ),
-                ),
-              ),
-            )
+          InputTextMessageWidget(),
         ],
       ),
     ),
