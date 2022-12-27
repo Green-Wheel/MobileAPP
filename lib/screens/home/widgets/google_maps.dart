@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -16,14 +15,11 @@ import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
-import 'bike_filters_map.dart';
-import 'charger_filters_map.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
   Set<Polyline>? polylines = {};
   int? publicationId;
-
 
   GoogleMapsWidget(
       {Key? key, required this.index, this.polylines, this.publicationId})
@@ -31,6 +27,30 @@ class GoogleMapsWidget extends StatefulWidget {
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
+
+  void callGetChargers() {
+    _GoogleMapsWidgetState()._getChargers();
+  }
+
+  void callGetBikes() {
+    _GoogleMapsWidgetState()._getBikes();
+  }
+
+  void callGetPublicChargers() {
+    _GoogleMapsWidgetState()._getPublicChargers();
+  }
+
+  void callGetPrivateChargers() {
+    _GoogleMapsWidgetState()._getPrivateChargers();
+  }
+
+  void callGetNormalBikes() {
+    _GoogleMapsWidgetState()._getNormalBikes();
+  }
+
+  void callGetElectricBikes() {
+    _GoogleMapsWidgetState()._getElectricBikes();
+  }
 }
 
 class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
@@ -458,27 +478,9 @@ List<Widget> scrollDown() {
     const SizedBox(height: 200)];
 }
 
-Widget filterMap() {
-  double height = MediaQuery.of(context).size.height;
-  if (widget.index == 0) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: height * 0.49),
-      child: ChargerFilterMap(functionPublic: _getPublicChargers,
-          functionPrivate: _getPrivateChargers, functionAll: _getChargers),
-    );
-  } else {
-    return Padding(
-      padding: EdgeInsets.only(bottom: height * 0.49),
-      child: BikeFilterMap(functionNormal: _getNormalBikes,
-          functionElectric: _getElectricBikes, functionAll: _getBikes),
-    );
-  }
-}
-
 List<Widget> scrollMiddle() {
   double width = MediaQuery.of(context).size.width;
   return <Widget>[
-    filterMap(),
     Padding(
       padding: EdgeInsets.only(left: width * 0.83),
       child: listButton(),
