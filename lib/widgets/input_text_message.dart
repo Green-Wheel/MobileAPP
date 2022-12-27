@@ -32,7 +32,6 @@ main(){
                     prefix: const SizedBox(
                       width: 10,
                     ),
-                    //TODO: poner icono de enviar widget creado
                     suffixIcon: ButtonSendMessageWidget(),
                   ),
                 ),
