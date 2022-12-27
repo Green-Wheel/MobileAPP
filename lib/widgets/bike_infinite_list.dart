@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../serializers/bikes.dart';
 import '../services/backendServices/bikes.dart';
 import 'bike_card_info.dart';
+import 'list_bike_filters_map.dart';
 
 class BikeInfiniteList extends StatefulWidget {
   const BikeInfiniteList({Key? key}) : super(key: key);
@@ -74,6 +75,50 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
     });
   }
 
+  void _getBikesListReset(int page) async {
+    List<BikeList> bikeList = await BikeService.getBikeList(page);
+    setState(() {
+      removeMarkers();
+      _markersListAll.addAll(bikeList);
+    });
+  }
+
+  void _getBikesListByDate(int page) async {
+    List<BikeList> bikeList = await BikeService.getBikesListByDate(page);
+    setState(() {
+      removeMarkers();
+      _markersListAll.addAll(bikeList);
+    });
+  }
+
+  void _getBikesListByProximity(int page) async {
+    List<BikeList> chargerList = await BikeService.getBikesListByProximity(page);
+    setState(() {
+      removeMarkers();
+      _markersListAll.addAll(chargerList);
+    });
+  }
+
+  void _getNormalBikesList(int page) async {
+    List<BikeList> chargerList = await BikeService.getNormalBikeList(page);
+    setState(() {
+      removeMarkers();
+      _markersListAll.addAll(chargerList);
+    });
+  }
+
+  void _getElectricBikesList(int page) async {
+    List<BikeList> chargerList = await BikeService.getElectricBikeList(page);
+    setState(() {
+      removeMarkers();
+      _markersListAll.addAll(chargerList);
+    });
+  }
+
+  void removeMarkers() {
+    List<BikeList> markersToRemove = [];
+    _markersListAll = markersToRemove;
+  }
 
   Future<void> fetchData() async {
     try {
@@ -122,6 +167,16 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
     );
   }
 
+  Widget filtersList() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5),
+      child: ListBikeFilterMap(functionNormal: _getNormalBikesList,
+          functionElectric: _getElectricBikesList,
+          functionAll: _getBikesListReset,
+          functionProximity: _getBikesListByProximity,
+          functionDate: _getBikesListByDate)
+    );
+  }
 
   Widget buildPostsView() {
     if (_markersListAll.isEmpty) {
@@ -137,52 +192,55 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
         );
       }
     }
-    return ListView.builder(
-        itemCount: _markersListAll.length + (_isLastPage ? 0 : 1),
-        itemBuilder: (context, index) {
-          if (index == _markersListAll.length - _nextPageTrigger) {
-            fetchData();
-          }
-          if (index == _markersListAll.length) {
-            if (_error) {
-              return Center(
-                  child: errorDialog(size: 15)
-              );
-            } else {
-              return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: CircularProgressIndicator(),
-                  )
-              );
+    return Column(
+        children: [
+        filtersList(),
+        Expanded(
+          child: ListView.builder(
+            itemCount: _markersListAll.length + (_isLastPage ? 0 : 1),
+            itemBuilder: (context, index) {
+              if (index == _markersListAll.length - _nextPageTrigger) {
+                fetchData();
+              }
+              if (index == _markersListAll.length) {
+                if (_error) {
+                  return Center(
+                      child: errorDialog(size: 15)
+                  );
+                } else {
+                  return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: CircularProgressIndicator(),
+                      )
+                  );
+                }
+              }
+              //final ChargerList charger = _markersListAll[index];
+              BikeType bikeType = _markersListAll[index].bike_type as BikeType;
+              String? direction = _markersListAll[index].title;
+              double price = _markersListAll[index].price;
+              bool available = true;
+              int? id = _markersListAll[index].id;
+              double? rate = _markersListAll[index].avg_rating;
+              double latitude = _markersListAll[index].localization.latitude;
+              double longitude = _markersListAll[index].localization.longitude;
+              String? description = "Nice";
+              String? direction1 = "Calle 1";
+
+              return Flexible(child:GestureDetector(
+                onTap: () {
+                  GoRouter.of(context)
+                      .go('/bikes/$id');
+                },
+                child: BikeCardInfoWidget(location: direction, rating: rate, available: available, type: bikeType,
+                    price: price, direction: direction1, description: description, bike_list: true, power: 0,
+                    latitude: latitude, longitude: longitude),
+              ));
             }
-          }
-          //final ChargerList charger = _markersListAll[index];
-          BikeType bikeType = _markersListAll[index].bike_type as BikeType;
-          String? description = _markersListAll[index].title;
-          double price = _markersListAll[index].price;
-          bool avaliable = true;
-          int? id = _markersListAll[index].id;
-          return Flexible(child: _cardBikeList(description!, avaliable, bikeType, price, id!));
-        });
-  }
-
-  //funcion respectiva a la card de los cargadores
-  Widget _cardBikeList(String direction, bool available, BikeType bikeType, double price, int id) {
-    //Generación rate aleatoria (harcode rate)
-    Random random = Random();
-    int min = 2, max = 6;
-    int num = (min + random.nextInt(max - min));
-    double numd = num.toDouble();
-    String? description = "Nice";
-    String? direction1 = "Calle 1";
-    return GestureDetector(
-      onTap: () {
-        GoRouter.of(context)
-            .go('/bikes/$id');
-      },
-      child: BikeCardInfoWidget(location: direction, rating: numd, available: available, type: bikeType, price: price, direction: direction1, description: description, bike_list: true, power: 0),
+          )
+        )
+      ]
     );
-
   }
 }

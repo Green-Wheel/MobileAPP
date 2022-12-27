@@ -54,7 +54,7 @@ class _SimpleDrawer extends State<SimpleDrawer>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                AccountIcon(percent: 0.5,path_image: userData['profile_picture']),
+                AccountIcon(percent: 0.5,path_image: userData != null ? userData['profile_picture']: null),
                 Text(
                   userData != null
                       ? userData['first_name'] + " " + userData['last_name']
@@ -64,7 +64,7 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                       color: Colors.white,
                       fontWeight: FontWeight.bold),
                 ),
-                Text("Level ${userData['level']} ",
+                Text("Level ${userData != null ?userData['level']: ''} ",
                   style: TextStyle(fontSize: 12, color: Colors.white70),
                 ),
               ],

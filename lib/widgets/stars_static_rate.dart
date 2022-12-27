@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class StarsStaticRateWidget extends StatefulWidget {
-  double rate;
+  double? rate;
   StarsStaticRateWidget({required this.rate, super.key});
 
   @override
@@ -17,13 +17,13 @@ class _StarsStaticRateWidget extends State<StarsStaticRateWidget>{
 }
 
 //funcion para mostrar las estrellas
-Widget _starsStaticCard(double rate){
+Widget _starsStaticCard(double? rate){
   return Padding(
-    padding: const EdgeInsets.only(left: 0.0, bottom: 5.0),
+    padding: const EdgeInsets.only(bottom: 5.0),
     child: Row(
       children: [
         RatingBar(
-          initialRating: rate,
+          initialRating: rate??0,
           direction: Axis.horizontal,
           allowHalfRating: true,
           itemCount: 5,
