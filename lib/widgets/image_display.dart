@@ -6,7 +6,7 @@ class ImageDisplay extends StatefulWidget {
   final double height;
   final double width;
 
-  final List<String> images;
+  final List<dynamic> images;
 
   const ImageDisplay(
       {Key? key, required this.images, this.height = 150, this.width = 150})
@@ -23,6 +23,7 @@ class _ImageDisplayState extends State<ImageDisplay> {
       height: widget.height,
       width: widget.width,
       child: InkWell(
+
         onTap: () {
           showDialog(
               context: context,
@@ -129,7 +130,7 @@ class _ImageDisplayState extends State<ImageDisplay> {
 }
 
 class ImagesDisplay extends StatefulWidget {
-  final List<String> images;
+  final List<dynamic> images;
 
   const ImagesDisplay({Key? key, required this.images}) : super(key: key);
 
@@ -150,7 +151,7 @@ class _ImagesDisplayState extends State<ImagesDisplay> {
   Widget build(BuildContext context) {
     return Container(
       height: 3 * MediaQuery.of(context).size.height / 5,
-      child: Column(
+      child: widget.images.isNotEmpty ? Column(
         children: [
           Expanded(
             child: Image.asset(
@@ -175,7 +176,7 @@ class _ImagesDisplayState extends State<ImagesDisplay> {
                     .toList()),
           )
         ],
-      ),
+      ): const Center(child: Text('No images'),),
     );
   }
 }
