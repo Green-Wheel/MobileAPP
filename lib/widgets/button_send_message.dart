@@ -8,16 +8,6 @@ class ButtonSendMessageWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _ButtonSendMessageWidget();
 }
 
-main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(150.0),
-        child: ButtonSendMessageWidget(),
-      ),
-    ),
-  ));
-}
 
 class _ButtonSendMessageWidget extends State<ButtonSendMessageWidget>{
   @override
@@ -27,6 +17,7 @@ class _ButtonSendMessageWidget extends State<ButtonSendMessageWidget>{
         // TODO: implement send message
         print("hola");
       },
+      elevation: 0,
       child: const Icon(
         Icons.send,
         color: Colors.green,
@@ -36,7 +27,7 @@ class _ButtonSendMessageWidget extends State<ButtonSendMessageWidget>{
       shape: const CircleBorder(
         side: BorderSide(
           color: Colors.green,
-          width: 2,
+          width: 1,
         ),
       ),
     );

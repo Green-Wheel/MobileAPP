@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/widgets/button_send_message.dart';
 
 class InputTextMessageWidget extends StatefulWidget {
   const InputTextMessageWidget({super.key});
@@ -12,7 +13,31 @@ main(){
     home: Scaffold(
       body: Column(
         children: [
-          //_InputTextMessageWidget(),
+          SizedBox(height: 400),
+            SizedBox(
+            width: 400,
+              child: Card(
+                margin: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                child: TextFormField(
+                  textAlignVertical: TextAlignVertical.center,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 3,
+                  minLines: 1,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Type a message',
+                    prefix: const SizedBox(
+                      width: 10,
+                    ),
+                    //TODO: poner icono de enviar widget creado
+                    suffixIcon: ButtonSendMessageWidget(),
+                  ),
+                ),
+              ),
+            )
         ],
       ),
     ),
@@ -41,15 +66,10 @@ class _InputTextMessageWidget extends State<InputTextMessageWidget> {
               width: 10,
             ),
             //TODO: poner icono de enviar widget creado
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.send),
-              onPressed: () {
-
-              },
+            suffixIcon: ButtonSendMessageWidget(),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
