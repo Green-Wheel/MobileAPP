@@ -3,10 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/bike-info-list/bikeInfoList.dart';
 import 'package:greenwheel/screens/bike/add_bike.dart';
 import 'package:greenwheel/screens/bike/edit_bike.dart';
+import 'package:greenwheel/screens/bike/report_bike.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
 import 'package:greenwheel/screens/chargers/add_charger.dart';
 import 'package:greenwheel/screens/chargers/edit_charger.dart';
+import 'package:greenwheel/screens/chargers/report_charger.dart';
 import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/login/login_screen.dart';
 import 'package:greenwheel/screens/profile/editprofile.dart';
@@ -45,7 +47,7 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'chargers/add',
               builder: (context, state) =>
-              const AddCharger(key: Key("AddCharger")),
+              const ReportBike(key: Key("AddCharger"), bike_id: 423),
             ),
             GoRoute(
               path: 'charger/edit/:id',
