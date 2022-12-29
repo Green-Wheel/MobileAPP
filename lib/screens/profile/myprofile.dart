@@ -39,7 +39,7 @@ class _ProfilePage extends State<ProfilePage> {
         children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height/5,
+            height: MediaQuery.of(context).size.height/4,
             padding: const EdgeInsets.only(top:20),
             child: InfoUser(),
           ),

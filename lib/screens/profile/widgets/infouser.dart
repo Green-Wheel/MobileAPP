@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../services/generalServices/LoginService.dart';
 import '../../../widgets/accountIcon.dart';
 import '../../../widgets/username_rating_stars.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 class InfoUser extends StatefulWidget {
   const InfoUser({Key? key}) : super(key: key);
@@ -44,16 +46,25 @@ class _InfoUser extends State<InfoUser>  {
                       AccountIcon(percent: 0.5, path_image: userData["profile_picture"]),
                       Column(
                         children: <Widget>[
-                          Center(
-                          child: Username_Rating(username: userData != null
+                          Username_Rating(username: userData != null
                               ? userData['first_name'] + " " + userData['last_name']
                                   : "User Name",
                               rating :userData['rating']!=null ? userData['rating'].toString() : "2.5",
                               edit_button: true),
-                          ),
                           Text('Username: ${userData['username']}'),
                           Text("lvl ${userData['level']} |  lvl ${userData['xp']} xp" ?? "1 + | 0 xp"),
-                          Text("Trophies")
+                          Row(
+                            children:[
+                              Text("Trophies"),
+                              IconButton(
+                                iconSize: 20,
+                                icon: const Icon(MdiIcons.trophy),
+                                onPressed: () {
+                                  GoRouter.of(context).go('/profile/trophies');
+                                },
+                              ),
+                            ]
+                          )
                         ],
                       ),
                     ],

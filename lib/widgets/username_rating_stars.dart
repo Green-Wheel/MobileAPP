@@ -18,12 +18,13 @@ class Username_Rating extends StatelessWidget {
           Stack(
             children:<Widget> [
               Container(
-                      child: Row(
-                          children: <Widget>[
-                            Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                            if(edit_button) edit(context),
-                      ],
-                    ),
+                padding: EdgeInsets.only(left: 20.0),
+                  child: Row(
+                      children: <Widget>[
+                        Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                        if(edit_button) edit(context),
+                  ],
+                ),
             ),
             ]
           ),

@@ -15,6 +15,7 @@ import 'package:greenwheel/screens/register/change_password.dart';
 import 'package:greenwheel/screens/register/recover_password.dart';
 import 'package:greenwheel/screens/register/signup.dart';
 import 'package:greenwheel/screens/route/route.dart';
+import 'package:greenwheel/screens/trophies/trophiesScreen.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/language_selector_widget.dart';
 
@@ -36,6 +37,11 @@ GoRouter routeGenerator(LoginService loginService) {
                     path: 'edit',
                     builder: (context, state) =>
                     const EditProfile(key: Key("EditProfile")),
+                  ),
+                  GoRoute(
+                    path: 'trophies',
+                    builder: (context, state) =>
+                    const TrophiesScreen(key: Key("Trophies")),
                   ),
                 ]),
             GoRoute(
