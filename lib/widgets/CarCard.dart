@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(const CarCard());
+import '../serializers/vehicles.dart';
 
-class CarCard extends StatelessWidget {
-  const CarCard({super.key});
+class CarCard extends StatefulWidget {
+  Car car;
 
-  static const String _title = 'Flutter Code Sample';
+  CarCard({required this.car, super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: _title,
-      home: Scaffold(
-        body: MyStatelessWidget(),
-      ),
-    );
-  }
+  State<StatefulWidget> createState() => _CarCardWidget();
 }
 
-class MyStatelessWidget extends StatelessWidget {
-  const MyStatelessWidget({super.key});
+class _CarCardWidget extends State<CarCard> {
 
   @override
   Widget build(BuildContext context) {

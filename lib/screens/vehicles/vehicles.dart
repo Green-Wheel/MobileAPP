@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/serializers/bookings.dart';
 
+import '../../serializers/vehicles.dart';
 import '../../services/backendServices/vehicles.dart';
-import '../../widgets/BikeCard.dart';
 import '../../widgets/CarCard.dart';
-import '../../widgets/FiltresLlistaVehicles.dart';
 
 void main() {
   runApp(const MyVehicles());
@@ -34,9 +32,7 @@ class MyVehiclesPage extends StatefulWidget {
 }
 
 class _MyVehiclesPageState extends State<MyVehiclesPage> {
-  List<Vehicles> vehicles = [];
-  bool pressFilterByCars = false;
-  bool pressFilterByBikes = false;
+  List<Car> vehicles = [];
 
   @override
   void initState() {
@@ -72,7 +68,7 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
   }
 
   void _getVehicles() async {
-    List<Vehicle> vehicleList = await VehicleService.getVehicles();
+    List<Car> vehicleList = await VehicleService.getVehicles();
     if (vehicleList.isEmpty) {
       _showAvisNoEsPodenCarregarVehicles();
     }
@@ -101,18 +97,17 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
             onPressed: () => context.go('/'),
           ),
         ),
-        body: FiltresLlistaVehicles(vehicles: vehicles));
+        body: buildList(vehicles)
+    );
   }
 }
 
-Widget buildList(List<Vehicle> vehicles) => ListView.builder(
+Widget buildList(List<Car> vehicles) => ListView.builder(
   itemCount: vehicles.length,
   itemBuilder: (context, index) {
-    if (vehicles[index].type == "Car") {
-      return CarCard(vehicle: vehicles[index]);
-    } else {
-      return BikeCard(vehicle: vehicles[index]);
-    }
+    return CarCard(
+      car: vehicles[index],
+    );
   },
 );
 

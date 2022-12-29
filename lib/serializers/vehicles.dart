@@ -25,14 +25,18 @@ class CarModel {
     required this.name,
     required this.year,
     required this.autonomy,
-    required this.brand,
+    required this.car_brand,
+    required this.current_type,
+    required this.consumption
   });
 
   int? id;
   String name;
   int year;
   double autonomy;
-  CarBrand brand;
+  CarBrand car_brand;
+  String current_type;
+  double consumption;
 
   factory CarModel.fromJson(Map<String, dynamic> json) =>
       _$CarModelFromJson(json);
@@ -44,19 +48,17 @@ class CarModel {
 class Car {
   Car({
     this.id,
-    required this.name,
-    required this.capacity,
-    required this.license,
+    required this.charge_capacity,
+    required this.car_license,
     required this.model,
-    required this.owner,
+    required this.car_owner,
   });
 
   int? id;
-  String name;
-  double capacity;
-  String license;
+  double charge_capacity;
+  String car_license;
   CarModel model;
-  int owner;
+  int car_owner;
 
   factory Car.fromJson(Map<String, dynamic> json) => _$CarFromJson(json);
 
