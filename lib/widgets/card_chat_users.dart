@@ -69,19 +69,15 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
                 title: Row(
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(widget.context).size.width * 0.52,
+                      width: MediaQuery.of(widget.context).size.width * 0.6,
                       child: Column(
                         children: [
                           Text(
                             widget.username,
                             style: const TextStyle(fontSize: 18, color: Colors.black,),
                           ),
-                          Padding(
-                            padding: EdgeInsets.only(left: 28),
-                            child: StarsStaticRateWidget(rate: widget.rate_user),
-                          ),
                           SizedBox(height: 4),
-                          Text(widget.last_message_received, style: TextStyle(fontSize: 12, color: Colors.grey)),
+                          Text(widget.last_message_received, style: TextStyle(fontSize: 14, color: Colors.grey)),
                         ],
                       ),
                     )
