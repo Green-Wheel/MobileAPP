@@ -162,7 +162,6 @@ Widget _cardUsers(String username, double rate_user, String last_message_receive
               ),
               Row(
                 children: [
-                  //TODO: falta padding
                   Text(last_message_received, style: TextStyle(fontSize: 10, color: Colors.grey)),
                 ],
               ),
