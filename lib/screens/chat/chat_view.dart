@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:greenwheel/widgets/username_rating_stars.dart';
+import 'package:intl/intl.dart';
+
+import '../../widgets/message_widget.dart';
 
 class ChatView extends StatefulWidget {
   //TODO: pasar el id del chat + username del otro usuario + mensajes
@@ -51,10 +54,14 @@ class _ChatView extends State<ChatView> {
         ),
       ),
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
             //TODO: poner el chat (nuevo fichero) i fondo imagen
-            SizedBox(height: 400),
+            SizedBox(height: 10),
+            MessageWidget(message: "Hola", itsmine: true, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread:DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+            MessageWidget(message: "Hola", itsmine: false, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+            MessageWidget(message: "Adeu", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+
           ],
         ),
       ),

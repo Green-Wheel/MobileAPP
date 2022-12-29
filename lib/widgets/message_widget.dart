@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import '../screens/home/widgets/bottom_bar.dart';
 import '../screens/home/widgets/drawer.dart';
+import 'package:intl/intl.dart';
 
 class MessageWidget extends StatefulWidget {
   bool read;
   bool itsmine;
   String message;
-  DateTime datesend;
-  DateTime dateread;
+  String datesend;
+  String dateread;
   MessageWidget({required this.message, required this.itsmine, required this.read, required this.datesend, required this.dateread, super.key});
 
   @override
@@ -47,8 +48,8 @@ main() {
           ],
         ),*/
         children:[
-          _messageWidget("Hola shbcdhsadhslabchsdlbchsdlchbdslcvhdslchdslchdslvchdslcbhdslcbhdslcbhslcbhsl", true, false, DateTime.now(), DateTime.now()),
-          _messageWidget("shdkshldhsalssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", false, true, DateTime.now(), DateTime.now()),
+          _messageWidget("Hola shbcdhsadhslabchsdlbchsdlchbdslcvhdslchdslchdslvchdslcbhdslcbhdslcbhslcbhsl", true, false, DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+          _messageWidget("shdkshldhsalssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", false, true, DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
         ]
       ),
    //   drawer: SimpleDrawer(),
@@ -110,7 +111,7 @@ Widget greyCheck(bool direction){
 
 
 //funcion para mostrar las estrellas
-Widget _messageWidget(String message, bool itsmine, bool read, DateTime datesend, DateTime dateread){
+Widget _messageWidget(String message, bool itsmine, bool read, String datesend, String dateread){
   if (!itsmine){
     return Column(
       children:<Widget>[
