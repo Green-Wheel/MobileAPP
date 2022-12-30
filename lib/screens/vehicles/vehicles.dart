@@ -72,9 +72,9 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
     if (vehicleList.isEmpty) {
       _showAvisNoEsPodenCarregarVehicles();
     }
-    print("vehicles: $vehicleList");
     setState(() {
       vehicles = vehicleList;
+      print(vehicles[0].id);
     });
   }
 

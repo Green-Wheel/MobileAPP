@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../serializers/vehicles.dart';
+import '../services/generalServices/LoginService.dart';
 
 class CarCard extends StatefulWidget {
   Car car;
@@ -12,12 +13,21 @@ class CarCard extends StatefulWidget {
 }
 
 class _CarCardWidget extends State<CarCard> {
+  final _loggedInStateInfo = LoginService();
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     bool isVisible = true;
-    bool nothing = true;
+    var data = _loggedInStateInfo.user_info;
+    print(widget.car.id);
+    bool selected;
+    if (data!['selected_car'] == null) {
+      selected = false;
+    } else {
+      selected = data['selected_car'] == widget.car.id;
+    }
 
     return Visibility(
         visible: isVisible,
@@ -31,13 +41,9 @@ class _CarCardWidget extends State<CarCard> {
                 borderRadius: BorderRadius.circular(15.0),
                 side: const BorderSide(
                   color: Colors.green,
-                  width: 2.0,
+                  width: 3.0,
                 )) : RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15.0),
-              side: const BorderSide(
-                color: Colors.green,
-                width: 4.0,
-              ),
+              borderRadius: BorderRadius.circular(15.0)
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -105,6 +111,15 @@ class _CarCardWidget extends State<CarCard> {
                     ),
                     const SizedBox(width: 8),
                     selected ? Padding(
+                      padding: EdgeInsets.only(right: width*0.06, left: width*0.06),
+                      child: const Text('Selected',
+                        style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w900
+                        ),
+                      ),
+                    ) :
+                    Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child:
                       SizedBox(
@@ -133,17 +148,8 @@ class _CarCardWidget extends State<CarCard> {
                               child: Text('Select',
                                 style: TextStyle(fontWeight: FontWeight.w900,
                                     color: Colors.green),
-                            )
+                              )
                           ),
-                          ),
-                        ),
-                      ) :
-                    Padding(
-                        padding: EdgeInsets.only(right: width*0.05, left: width*0.05),
-                        child: const Text('Selected',
-                          style: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.w900
                         ),
                       ),
                     ),
@@ -190,6 +196,6 @@ class _CarCardWidget extends State<CarCard> {
             ),
           ),
         )
-    );
+      );
+    }
   }
-}

@@ -33,7 +33,7 @@ class User {
   int level;
   int xp;
   double rating;
-  Car selected_car;
+  int selected_car;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

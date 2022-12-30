@@ -18,7 +18,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       level: json['level'] as int,
       xp: json['xp'] as int,
       rating: (json['rating'] as num).toDouble(),
-      selected_car: Car.fromJson(json['selected_car'] as Map<String, dynamic>),
+      selected_car: json['selected_car'] as int,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
