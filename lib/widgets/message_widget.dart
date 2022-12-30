@@ -65,9 +65,9 @@ Widget greenCheck(bool direction){
     return const Padding(
       padding: EdgeInsets.only(left: 10),
       child:  Icon(
-        Icons.check_circle_outline_rounded,
+        Icons.done_all,
         size: 20,
-        color: Colors.green,
+        color: Colors.blue,
       ),
     );
   }
@@ -75,9 +75,9 @@ Widget greenCheck(bool direction){
     return const Padding(
       padding: EdgeInsets.only(right: 10),
       child: Icon(
-        Icons.check_circle_outline_rounded,
+        Icons.done_all,
         size: 20,
-        color: Colors.green,
+        color: Colors.blue,
       ),
     );
   }
@@ -91,7 +91,7 @@ Widget greyCheck(bool direction){
     return const Padding(
       padding: EdgeInsets.only(left: 10),
       child: Icon(
-        Icons.check_circle_outline_rounded,
+        Icons.done_all,
         size: 20,
         color: Colors.grey,
       ),
@@ -101,7 +101,7 @@ Widget greyCheck(bool direction){
     return const Padding(
       padding: EdgeInsets.only(right: 10),
       child:  Icon(
-        Icons.check_circle_outline_rounded,
+        Icons.done_all,
         size: 20,
         color: Colors.grey,
       ),

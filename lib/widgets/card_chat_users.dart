@@ -12,6 +12,7 @@ class CardChatUsersWidget extends StatefulWidget {
   bool new_message;
   String last_message_time;
   BuildContext context;
+  //opcion leido del usuario en el doublecheck
   CardChatUsersWidget({Key? key, required this.username, required this.rate_user, required this.last_message_received, required this.new_message, required this.last_message_time, required this.context}) : super(key: key);
 
   @override
@@ -80,7 +81,16 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
                             style: const TextStyle(fontSize: 18, color: Colors.black,),
                           ),
                           SizedBox(height: 4),
-                          Text(widget.last_message_received, style: TextStyle(fontSize: 14, color: Colors.grey)),
+                          Row(
+                            children:[
+                              Icon(
+                                  Icons.done_all,
+                                size: 15,
+                              ),
+                              SizedBox(width: 5),
+                              Text(widget.last_message_received, style: TextStyle(fontSize: 14, color: Colors.grey)),
+                            ]
+                          )
                         ],
                       ),
                     )
