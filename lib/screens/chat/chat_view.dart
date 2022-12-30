@@ -27,45 +27,56 @@ main(){
 class _ChatView extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.green,
-        title: Row(
-          children: [
-             IconButton(
-              icon: const Icon(Icons.arrow_back),
-              onPressed: () {
-                //TODO: implementar ruta de chat
-                GoRouter.of(context).go('/');
-              }
-            ),
-            const SizedBox(width: 20),
-            const CircleAvatar(
-              radius: 20,
-              backgroundColor: Colors.white,
-              child: Icon(
-                  color: Colors.green,
-                  Icons.person
+    return Stack(
+      children: [
+        Image.asset(
+          "assets/images/no_image.png",
+           height: MediaQuery.of(context).size.height,
+           width: MediaQuery.of(context).size.width,
+           fit: BoxFit.cover,
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+            appBar: AppBar(
+            backgroundColor: Colors.green,
+              title: Row(
+                children: [
+                  IconButton(
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        //TODO: implementar ruta de chat
+                        GoRouter.of(context).go('/');
+                      }
+                  ),
+                  const SizedBox(width: 20),
+                  const CircleAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                        color: Colors.green,
+                        Icons.person
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Username_Rating(username: "username", rating: "4.0", edit_button: false)
+                ],
               ),
             ),
-            const SizedBox(width: 15),
-            Username_Rating(username: "username", rating: "4.0", edit_button: false)
-          ],
-        ),
-      ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            //TODO: poner el chat (nuevo fichero) i fondo imagen
-            SizedBox(height: 10),
-            MessageWidget(message: "Hola", itsmine: true, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread:DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-            MessageWidget(message: "Hola", itsmine: false, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-            MessageWidget(message: "Adeu", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+            body: SafeArea(
+              child: Column(
+                children: [
+                //TODO: poner el chat (nuevo fichero)
+                  SizedBox(height: 10),
+                  MessageWidget(message: "Hola", itsmine: true, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread:DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+                  MessageWidget(message: "Hola", itsmine: false, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+                  MessageWidget(message: "Adeu", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
 
-          ],
-        ),
-      ),
-      bottomNavigationBar: InputTextMessageWidget(),
+                ],
+              ),
+            ),
+            bottomNavigationBar: InputTextMessageWidget(),
+        )
+      ],
     );
   }
 }

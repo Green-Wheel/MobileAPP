@@ -25,6 +25,7 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
     return InkWell(
       onTap: () {
         //TODO: implementar ruta de chat
+        print("tapped");
         widget.new_message = false;
       },
       child: SizedBox(
