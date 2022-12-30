@@ -133,17 +133,17 @@ class _ChatListUsers extends State<ChatListUsers> {
                   GoRouter.of(context).go('/');
                 }
             ),
-            const SizedBox(width: 65),
+            const SizedBox(width: 70),
             const CircleAvatar(
               radius: 20,
               backgroundColor: Colors.white,
               child: Icon(
                   color: Colors.green,
-                  Icons.person
+                  Icons.chat
               ),
             ),
             const SizedBox(width: 15),
-            const Text("Clients", style: TextStyle(fontSize: 20, color: Colors.white),)
+            const Text("Chat", style: TextStyle(fontSize: 20, color: Colors.white),)
           ],
         ),
       ),
