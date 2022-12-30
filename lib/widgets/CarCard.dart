@@ -12,9 +12,10 @@ class CarCard extends StatefulWidget {
 }
 
 class _CarCardWidget extends State<CarCard> {
-
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     bool isVisible = true;
     bool nothing = true;
 
@@ -26,8 +27,17 @@ class _CarCardWidget extends State<CarCard> {
             color: Colors.white,
             shadowColor: Colors.black,
             margin: const EdgeInsets.all(10),
-            shape: RoundedRectangleBorder(
+            shape: selected ? RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                side: const BorderSide(
+                  color: Colors.green,
+                  width: 2.0,
+                )) : RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
+              side: const BorderSide(
+                color: Colors.green,
+                width: 4.0,
+              ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -52,8 +62,8 @@ class _CarCardWidget extends State<CarCard> {
                       ),
                       child: const Icon(Icons.directions_car, color: Colors.green),
                     ),
-                    title: const Text('Car'),
-                    subtitle: const Text('Autonomia - 200 km\nTipo de conector - Type C\n'),
+                    title: Text(widget.car.alias),
+                    subtitle: Text('Brand: ${widget.car.car_brand.name}'),
                   ),
                 ),
                 Row(
@@ -90,6 +100,50 @@ class _CarCardWidget extends State<CarCard> {
                               )
                             ],
                           ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    selected ? Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child:
+                      SizedBox(
+                        height: 30,
+                        width: 100,
+                        child:
+                        TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<
+                                  Color>(Colors.green[50]!),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          18.0),
+                                      side: const BorderSide(
+                                          color: Colors.green)
+                                  )
+                              )
+                          ),
+                          onPressed: () {
+                            isVisible = false;
+                          },
+                          child: const Align(
+                              alignment: Alignment.center,
+                              child: Text('Select',
+                                style: TextStyle(fontWeight: FontWeight.w900,
+                                    color: Colors.green),
+                            )
+                          ),
+                          ),
+                        ),
+                      ) :
+                    Padding(
+                        padding: EdgeInsets.only(right: width*0.05, left: width*0.05),
+                        child: const Text('Selected',
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontWeight: FontWeight.w900
                         ),
                       ),
                     ),

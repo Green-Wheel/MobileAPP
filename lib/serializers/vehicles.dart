@@ -1,3 +1,4 @@
+import 'package:greenwheel/serializers/chargers.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'vehicles.g.dart';
@@ -27,6 +28,7 @@ class CarModel {
     required this.autonomy,
     required this.car_brand,
     required this.current_type,
+    required this.connection_type,
     required this.consumption
   });
 
@@ -35,7 +37,8 @@ class CarModel {
   int year;
   double autonomy;
   CarBrand car_brand;
-  String current_type;
+  CurrentType current_type;
+  ConnectionType connection_type;
   double consumption;
 
   factory CarModel.fromJson(Map<String, dynamic> json) =>
@@ -48,19 +51,55 @@ class CarModel {
 class Car {
   Car({
     this.id,
-    required this.charge_capacity,
-    required this.car_license,
-    required this.model,
-    required this.car_owner,
+    required this.alias,
+    required this.car_brand
   });
 
   int? id;
-  double charge_capacity;
-  String car_license;
-  CarModel model;
-  int car_owner;
+  String alias;
+  CarBrand car_brand;
 
   factory Car.fromJson(Map<String, dynamic> json) => _$CarFromJson(json);
 
   Map<String, dynamic> toJson() => _$CarToJson(this);
+}
+
+@JsonSerializable()
+class CarsDetailed {
+  CarsDetailed({
+    this.id,
+    required this.alias,
+    required this.car_license,
+    required this.charge_capacity,
+    required this.model
+  });
+
+  int? id;
+  String alias;
+  String car_license;
+  double charge_capacity;
+  CarModel model;
+
+  factory CarsDetailed.fromJson(Map<String, dynamic> json) =>
+      _$CarsDetailedFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CarsDetailedToJson(this);
+}
+
+@JsonSerializable()
+class CarBrandYear {
+  CarBrandYear({
+    this.id,
+    required this.name,
+    required this.year,
+  });
+
+  int? id;
+  String name;
+  int year;
+
+  factory CarBrandYear.fromJson(Map<String, dynamic> json) =>
+      _$CarBrandYearFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CarBrandYearToJson(this);
 }

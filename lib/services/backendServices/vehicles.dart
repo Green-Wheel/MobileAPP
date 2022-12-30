@@ -14,25 +14,98 @@ class VehicleService {
         result = jsonResponse.map((e) => Car.fromJson(e)).toList();
         print(result);
       } else {
+        print(response.body);
         print('Error getting vehicles!');
       }
     });
     return result;
   }
 
-  static Future<List<Car>> getVehicleModels() async {
-    List<Car> result = [];
-    await BackendService.get('vehicles/models').then((response) {
+  static Future<CarsDetailed?> getVehicle(int id) async {
+    CarsDetailed? result;
+    var response = await BackendService.get('vehicles/$id/');
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      result = CarsDetailed.fromJson(jsonResponse);
+    } else {
+      throw Exception('Error getting vehice with id $id');
+    }
+    return result;
+  }
+
+  static Future<List<CarBrand>> getVehicleBrands() async {
+    List<CarBrand> result = [];
+    await BackendService.get('vehicles/brands/').then((response) {
       // bikes/
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         print(jsonResponse);
-        result = jsonResponse.map((e) => Car.fromJson(e)).toList();
+        result = jsonResponse.map((e) => CarBrand.fromJson(e)).toList();
         print(result);
       } else {
-        print('Error getting vehicles!');
+        print('Error getting vehicle brands!');
       }
     });
     return result;
+  }
+
+  static Future<List<CarModel>> getVehicleBrand(int brand_id) async {
+    List<CarModel> result = [];
+    await BackendService.get('vehicles/brands/$brand_id/models/').then((response) {
+      // bikes/
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        print(jsonResponse);
+        result = jsonResponse.map((e) => CarModel.fromJson(e)).toList();
+        print(result);
+      } else {
+        print('Error getting vehicle brands!');
+      }
+    });
+    return result;
+  }
+
+  static Future<List<CarBrandYear>> getVehicleBrandYear(int brand_id, String model_name) async {
+    List<CarBrandYear> result = [];
+    await BackendService.get('vehicles/brands/$brand_id/models/$model_name/years/').then((response) {
+      // bikes/
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        print(jsonResponse);
+        result = jsonResponse.map((e) => CarBrandYear.fromJson(e)).toList();
+        print(result);
+      } else {
+        print('Error getting vehicle brands!');
+      }
+    });
+    return result;
+  }
+
+  static bool deleteVehicle(id) {
+    BackendService.delete('vehicles/$id/').then((response) {
+      if (response.statusCode == 204) {
+        print('Vehicle deleted!');
+        return true;
+      } else {
+        print('Error deleting vehicle!');
+        print(response.statusCode);
+        return false;
+      }
+    });
+    return false;
+  }
+
+  static Future<bool> selectVehicle(int user_id, int selected_car) async {
+    try {
+      Map<String,dynamic> body = {
+        'selected_car': selected_car
+      };
+      var response = await BackendService.put('vehicles/$user_id/select/', body);
+      if (response.statusCode != 200) return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
   }
 }
