@@ -2,28 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:greenwheel/widgets/button_send_message.dart';
 
 class InputTextMessageWidget extends StatefulWidget {
-  const InputTextMessageWidget({super.key});
+  TextEditingController controller;
+  InputTextMessageWidget({Key? key, required this.controller}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _InputTextMessageWidget();
 }
 
-main(){
-  runApp(MaterialApp(
-    home: Scaffold(
-      body: Column(
-        children: [
-          SizedBox(height: 400),
-          InputTextMessageWidget(),
-        ],
-      ),
-    ),
-  ));
-}
 
 class _InputTextMessageWidget extends State<InputTextMessageWidget> {
   @override
   Widget build(BuildContext context) {
+    //TODO: mirar tema controlador
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.80,
       child: Card(
@@ -32,6 +22,7 @@ class _InputTextMessageWidget extends State<InputTextMessageWidget> {
           borderRadius: BorderRadius.circular(25.0),
         ),
         child: TextFormField(
+          controller: widget.controller,
           textAlignVertical: TextAlignVertical.center,
           keyboardType: TextInputType.multiline,
           maxLines: null,
@@ -42,8 +33,7 @@ class _InputTextMessageWidget extends State<InputTextMessageWidget> {
             prefix: const SizedBox(
               width: 10,
             ),
-            //TODO: poner icono de enviar widget creado
-            suffixIcon: ButtonSendMessageWidget(),
+            suffixIcon: ButtonSendMessageWidget(controller: widget.controller),
             ),
           ),
         ),

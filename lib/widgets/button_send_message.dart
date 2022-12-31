@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ButtonSendMessageWidget extends StatefulWidget {
-  const ButtonSendMessageWidget(
-      {super.key});
+  TextEditingController controller;
+  ButtonSendMessageWidget({Key? key, required this.controller}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ButtonSendMessageWidget();
@@ -15,7 +15,7 @@ class _ButtonSendMessageWidget extends State<ButtonSendMessageWidget>{
     return FloatingActionButton.small(
       onPressed: () {
         // TODO: implement send message
-        print("hola");
+        print(widget.controller.text);
       },
       elevation: 0,
       child: const Icon(
