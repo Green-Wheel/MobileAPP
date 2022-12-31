@@ -16,6 +16,7 @@ class _ButtonSendMessageWidget extends State<ButtonSendMessageWidget>{
       onPressed: () {
         // TODO: implement send message
         print(widget.controller.text);
+        widget.controller.clear();
       },
       elevation: 0,
       child: const Icon(

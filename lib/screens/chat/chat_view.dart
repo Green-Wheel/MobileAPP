@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:greenwheel/widgets/username_rating_stars.dart';
 import 'package:intl/intl.dart';
-import 'package:socket_io_client/socket_io_client.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../widgets/message_widget.dart';
 
@@ -27,6 +27,27 @@ main(){
 
 class _ChatView extends State<ChatView> {
   TextEditingController _controller = TextEditingController();
+  //TODO: servidor de socket
+  IO.Socket socket = IO.io('http://localhost:3000', <String, dynamic>{
+    'transports': ['websocket'],
+    'autoConnect': false,
+  });
+
+  void connect() {
+    socket.connect();
+    socket.onConnect((data) => print("Connected"));
+    print(socket.connected);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    connect();
+  }
+
+  void SendMessage(String message, int sourceId, int destinationId) {
+    socket.emit('message', [message, sourceId, destinationId]);
+  }
 
   @override
   Widget build(BuildContext context) {
