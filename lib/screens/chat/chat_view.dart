@@ -27,6 +27,7 @@ main(){
 
 class _ChatView extends State<ChatView> {
   TextEditingController _controller = TextEditingController();
+  ScrollController _scrollController = ScrollController();
   //TODO: servidor de socket
   IO.Socket socket = IO.io('http://localhost:3000', <String, dynamic>{
     'transports': ['websocket'],
@@ -39,14 +40,14 @@ class _ChatView extends State<ChatView> {
     print(socket.connected);
   }
 
+  void SendMessage(String message, int sourceId, int destinationId) {
+    socket.emit('message', [message, sourceId, destinationId]);
+  }
+
   @override
   void initState() {
     super.initState();
     connect();
-  }
-
-  void SendMessage(String message, int sourceId, int destinationId) {
-    socket.emit('message', [message, sourceId, destinationId]);
   }
 
   @override
@@ -86,19 +87,25 @@ class _ChatView extends State<ChatView> {
                 ],
               ),
             ),
-            body: ListView(
-              children:[
-                //TODO: poner el chat (nuevo fichero)
-                SizedBox(height: 10),
-                MessageWidget(message: "Hola", itsmine: true, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread:DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                MessageWidget(message: "Hola", itsmine: false, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                MessageWidget(message: "Adeu", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                MessageWidget(message: "HUguvhkgkkcgckgkctgcjcfgcfcfxfcjfjcgcghhhhhhhhhhcghcghcghcghcghtytyt", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                MessageWidget(message: "HUguvhkgkkcgckgkctgcjcfgcfcfxfcjfjcgcghhhhhhhhhhcghcghcghcghcghtytyt", itsmine: false, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-
-              ]
+            body:Column(
+              children: [
+                Expanded(
+                    child: ListView(
+                      controller: _scrollController,
+                      children:[
+                          //TODO: poner el chat (nuevo fichero)
+                          SizedBox(height: 10),
+                          MessageWidget(message: "Hola", itsmine: true, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread:DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+                          MessageWidget(message: "Hola", itsmine: false, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+                          MessageWidget(message: "Adeu", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+                          MessageWidget(message: "HUguvhkgkkcgckgkctgcjcfgcfcfxfcjfjcgcghhhhhhhhhhcghcghcghcghcghtytyt", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+                          MessageWidget(message: "HUguvhkgkkcgckgkctgcjcfgcfcfxfcjfjcgcghhhhhhhhhhcghcghcghcghcghtytyt", itsmine: false, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+                      ]
+                    ),
+                ),
+              ],
             ),
-            bottomNavigationBar: InputTextMessageWidget(controller: _controller),
+            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController),
         )
       ],
     );
