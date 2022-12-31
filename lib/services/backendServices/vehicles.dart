@@ -95,12 +95,18 @@ class VehicleService {
     return false;
   }
 
-  static Future<bool> selectVehicle(int user_id, int selected_car) async {
+  static Future<bool> selectVehicle(int? selected_car, bool toNull) async {
     try {
       Map<String,dynamic> body = {
-        'selected_car': selected_car
+        'selected_car': selected_car,
       };
-      var response = await BackendService.put('vehicles/$user_id/select/', body);
+
+      if (toNull) {
+        body = {
+          'selected_car': null
+        };
+      }
+      var response = await BackendService.put('vehicles/$selected_car/select/', body);
       if (response.statusCode != 200) return false;
       return response.statusCode == 200;
     } catch (e) {

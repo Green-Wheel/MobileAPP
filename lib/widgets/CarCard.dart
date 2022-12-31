@@ -1,32 +1,86 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:greenwheel/screens/vehicles/vehicles.dart';
+import 'package:greenwheel/services/backendServices/vehicles.dart';
 
+import '../serializers/users.dart';
 import '../serializers/vehicles.dart';
+import '../services/backendServices/user_service.dart';
 import '../services/generalServices/LoginService.dart';
 
 class CarCard extends StatefulWidget {
   Car car;
+  User? logUser;
+  Function callSetState;
 
-  CarCard({required this.car, super.key});
+  CarCard({required this.car, required this.logUser, required this.callSetState, super.key});
 
   @override
   State<StatefulWidget> createState() => _CarCardWidget();
 }
 
+bool isVisible = true;
+
 class _CarCardWidget extends State<CarCard> {
   final _loggedInStateInfo = LoginService();
+  bool visible = true;
+  late bool selected;
+
+  void _showAvisEliminarVehicle() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Delete vehicle'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Are you sure want to delete vehicle?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  isVisible = true;
+                });
+              },
+            ),
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () {
+                if (selected) {
+                  seleccionarVehicle(widget.car.id, true);
+                }
+                VehicleService.deleteVehicle(widget.car.id);
+                Navigator.of(context).pop();
+                setState(() {
+                  isVisible = false;
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> seleccionarVehicle(int? selected_car, bool toNull) async {
+    await VehicleService.selectVehicle(selected_car, toNull);
+  }
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    bool isVisible = true;
-    var data = _loggedInStateInfo.user_info;
-    print(widget.car.id);
-    bool selected;
-    if (data!['selected_car'] == null) {
+    print('data: ${widget.logUser?.selected_car}');
+    if (widget.logUser?.selected_car == null) {
       selected = false;
     } else {
-      selected = data['selected_car'] == widget.car.id;
+      selected = widget.logUser?.selected_car == widget.car.id;
     }
 
     return Visibility(
@@ -94,7 +148,6 @@ class _CarCardWidget extends State<CarCard> {
                               )
                           ),
                           onPressed: () {
-                            // isVisible = false;
                             // route to edit screen
                           },
                           child: Row(
@@ -141,7 +194,8 @@ class _CarCardWidget extends State<CarCard> {
                               )
                           ),
                           onPressed: () {
-                            isVisible = false;
+                            seleccionarVehicle(widget.car.id, false);
+                            widget.callSetState();
                           },
                           child: const Align(
                               alignment: Alignment.center,
@@ -175,7 +229,11 @@ class _CarCardWidget extends State<CarCard> {
                               )
                           ),
                           onPressed: () {
-                            isVisible = false;
+                            _showAvisEliminarVehicle();
+                            if (!visible) {
+                               isVisible = false;
+                            }
+
                           },
                           child: Row(
                             children: const [

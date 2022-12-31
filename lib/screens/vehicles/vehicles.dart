@@ -1,8 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../serializers/users.dart';
 import '../../serializers/vehicles.dart';
+import '../../services/backendServices/user_service.dart';
 import '../../services/backendServices/vehicles.dart';
+import '../../services/backend_service.dart';
+import '../../services/generalServices/LoginService.dart';
 import '../../widgets/CarCard.dart';
 
 void main() {
@@ -31,8 +37,11 @@ class MyVehiclesPage extends StatefulWidget {
   _MyVehiclesPageState createState() => _MyVehiclesPageState();
 }
 
+User? logUser;
+
 class _MyVehiclesPageState extends State<MyVehiclesPage> {
   List<Car> vehicles = [];
+  final _loggedInStateInfo = LoginService();
 
   @override
   void initState() {
@@ -74,7 +83,6 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
     }
     setState(() {
       vehicles = vehicleList;
-      print(vehicles[0].id);
     });
   }
 
@@ -94,20 +102,47 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
           backgroundColor: Colors.green,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () => context.go('/'),
+            onPressed: () {
+              GoRouter.of(context).go('/home');
+            }
           ),
         ),
         body: buildList(vehicles)
     );
   }
-}
 
-Widget buildList(List<Car> vehicles) => ListView.builder(
-  itemCount: vehicles.length,
-  itemBuilder: (context, index) {
-    return CarCard(
-      car: vehicles[index],
+  void getLoggedUserById(int id) async {
+    logUser = await UserService.getUser(id);
+  }
+
+  void callSetState() {
+    setState(() {});
+  }
+
+  Widget buildList(List<Car> vehicles) {
+    final Future<String> calculation = Future<String>.delayed(
+      const Duration(seconds: 1),
+          () => 'Data Loaded',
     );
-  },
-);
+    var data = _loggedInStateInfo.user_info;
+    return FutureBuilder(
+      future: calculation,
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        return ListView.builder(
+          itemCount: vehicles.length,
+          itemBuilder: (context, index) {
+            print("vehicles: ${vehicles[index].id}");
+            print('dataFora: ${data!['selected_car']}');
+            getLoggedUserById(data['id']);
+            return CarCard(
+              car: vehicles[index],
+              logUser: logUser,
+              callSetState: callSetState,
+            );
+          },
+        );
+      }
+    );
+  }
+}
 

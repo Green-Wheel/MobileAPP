@@ -44,6 +44,10 @@ GoRouter routeGenerator(LoginService loginService) {
               builder: (context, state) => const LanguageSelectorWidget(key: Key("Language")),
             ),
             GoRoute(
+              path: 'home',
+              builder: (context, state) => HomePage(key: const Key("HomePage")),
+            ),
+            GoRoute(
               path: 'chargers/add',
               builder: (context, state) =>
               const AddCharger(key: Key("AddCharger")),
@@ -98,7 +102,7 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'vehicle',
               builder: (context, state) =>
-              const MyVehicles(key: Key("Vehicles")),
+              const MyVehicles(key: Key("Vehicle")),
             ),
             GoRoute(
               path: 'route/:lat/:long',
