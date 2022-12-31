@@ -37,6 +37,7 @@ dependencies:
   searchfield: ^0.7.2
   email_validator: ^2.1.17
   flutter_secure_storage: ^6.0.0
+  socket_io_client: ^2.0.0
 
 
 dev_dependencies:

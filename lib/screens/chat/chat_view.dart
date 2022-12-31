@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:greenwheel/widgets/username_rating_stars.dart';
 import 'package:intl/intl.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 
 import '../../widgets/message_widget.dart';
 
