@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:greenwheel/services/backend_service.dart';
 
 import '../../serializers/bikes.dart';
-import '../../serializers/chargers.dart';
 
 class BikeService {
   static Future<List<Bike>> getBikes() async {
@@ -22,6 +21,38 @@ class BikeService {
     return result;
   }
 
+  static Future<List<Bike>> getNormalBikes() async {
+    List<Bike> result = [];
+    await BackendService.get('bikes/?type=normal').then((response) { // bikes/?type=normal
+      // bikes/
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        print(jsonResponse);
+        result = jsonResponse.map((e) => Bike.fromJson(e)).toList();
+        print(result);
+      } else {
+        print('Error getting normal bikes!');
+      }
+    });
+    return result;
+  }
+
+  static Future<List<Bike>> getElectricBikes() async {
+    List<Bike> result = [];
+    await BackendService.get('bikes/?type=electric').then((response) { // bikes/?type=electric
+      // bikes/
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        print(jsonResponse);
+        result = jsonResponse.map((e) => Bike.fromJson(e)).toList();
+        print(result);
+      } else {
+        print('Error getting electric bikes!');
+      }
+    });
+    return result;
+  }
+
   static Future<List<BikeList>> getBikeList(int pag) async {
     List<BikeList> result = [];
     await BackendService.get('bikes/list/?page=$pag').then((response) {
@@ -34,11 +65,68 @@ class BikeService {
         result = bikes.map((e) => BikeList.fromJson(e)).toList();
         print('result $result');
       } else {
-        print('Error getting charger list!');
+        print('Error getting bike list!');
       }
     });
     return result;
   }
+
+  static Future<List<BikeList>> getBikesListByDate(int pag) async {
+    List<BikeList> result = [];
+    await BackendService.get('bikes/list/?orderby=date&page=$pag').then((response) { // per pàgines
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> bikes = jsonResponse['results'] as List<dynamic>;
+        result = bikes.map((e) => BikeList.fromJson(e)).toList();
+      } else {
+        print('Error getting ordered bike list!');
+      }
+    });
+    return result;
+  }
+
+  static Future<List<BikeList>> getBikesListByProximity(int pag) async {
+    List<BikeList> result = [];
+    await BackendService.get('bikes/list/?orderby=date&page=$pag').then((response) { // ordery by proximity
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> bikes = jsonResponse['results'] as List<dynamic>;
+        result = bikes.map((e) => BikeList.fromJson(e)).toList();
+      } else {
+        print('Error getting ordered bike list!');
+      }
+    });
+    return result;
+  }
+
+  static Future<List<BikeList>> getNormalBikeList(int pag) async {
+    List<BikeList> result = [];
+    await BackendService.get('bikes/list/?bike_type=1&page=$pag').then((response) { // per pàgines
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> bikes = jsonResponse['results'] as List<dynamic>;
+        result = bikes.map((e) => BikeList.fromJson(e)).toList();
+      } else {
+        print('Error getting ordered bike list!');
+      }
+    });
+    return result;
+  }
+
+  static Future<List<BikeList>> getElectricBikeList(int pag) async {
+    List<BikeList> result = [];
+    await BackendService.get('bikes/list/?bike_type=2&page=$pag').then((response) { // per pàgines
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> bikes = jsonResponse['results'] as List<dynamic>;
+        result = bikes.map((e) => BikeList.fromJson(e)).toList();
+      } else {
+        print('Error getting ordered bike list!');
+      }
+    });
+    return result;
+  }
+
 
   static Future<DetailedBikeSerializer?> getBike(int id) async {
     DetailedBikeSerializer? result;

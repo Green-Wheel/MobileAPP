@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
+import '../../serializers/chargers.dart';
 import '../../serializers/users.dart';
 import '../../widgets/alert_dialog.dart';
 
 const String registerUrl = "users/register/";
 const String editUrl = 'users/';
 const String uploadImageUrl = 'users/upload/';
-
 
 class UserService extends ChangeNotifier {
   static Future<User?> getUser(int id) async {
@@ -23,6 +23,22 @@ class UserService extends ChangeNotifier {
     } else {
       throw Exception('Error getting user!');
     }
+    return result;
+  }
+
+  static Future<List<Publication>> getPostsUser(int id) async {
+    List<Publication> result = [];
+    await BackendService.get('users/$id/posts').then((response) {
+      print(response.statusCode);
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> publication = jsonResponse['results'] as List<dynamic>;
+        result = publication.map((e) => Publication.fromJson(e)).toList();
+      } else {
+        print(response.body);
+        print('Error getting bookings!');
+      }
+    });
     return result;
   }
 
@@ -41,7 +57,6 @@ class UserService extends ChangeNotifier {
           LoginService ls =  LoginService();
           ls.loginUser(jsonResponse['apikey']);
           GoRouter.of(context).push('/');
-
         }
         else {
           String x = "Error: duplicate key value violates unique constraint";
@@ -73,7 +88,7 @@ class UserService extends ChangeNotifier {
     });
   }
 
-  static void putImage(BuildContext context, File file) {
+  static void postImage(BuildContext context, File file) {
     List<File> image =[];
     image.add(file);
     BackendService.postFiles(uploadImageUrl, image).then((response) {
