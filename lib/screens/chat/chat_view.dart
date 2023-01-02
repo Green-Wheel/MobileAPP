@@ -57,7 +57,7 @@ class _ChatView extends State<ChatView> {
               children: const [
                 Text("Delete chat"),
                 SizedBox(width: 10),
-                Icon(Icons.delete),
+                Icon(Icons.delete_forever_outlined),
               ],
             ),
             content: Text("Are you sure you want to delete this chat?"),
@@ -128,7 +128,7 @@ class _ChatView extends State<ChatView> {
                   Username_Rating(username: widget.username, rating: widget.rate_user, edit_button: false),
                   const SizedBox(width: 15),
                   IconButton(
-                      icon: const Icon(Icons.delete_forever),
+                      icon: const Icon(Icons.delete),
                       iconSize: 30,
                       onPressed: () {
                         //TODO: implementar ruta de chat
