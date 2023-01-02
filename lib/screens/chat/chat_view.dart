@@ -10,7 +10,6 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../widgets/message_widget.dart';
 
 class ChatView extends StatefulWidget {
-  //TODO: pasar el id del chat + mensajes
   String username;
   String rate_user;
   int? id_chat;
@@ -143,6 +142,7 @@ class _ChatView extends State<ChatView> {
             body:Column(
               children: [
                 Expanded(
+                  //TODO: change a listview.builder
                     child: ListView(
                       controller: _scrollController,
                       children:[
