@@ -168,20 +168,6 @@ class _ChatListUsers extends State<ChatListUsers> {
           )
         ],
       ),
-      //TODO: comentar si podem crear un chat
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: FloatingActionButton(
-          onPressed: () {
-            print("newchat");
-          },
-          backgroundColor: Colors.green,
-          child: const Icon(
-            Icons.chat,
-            color: Colors.white,
-          ),
-        ),
-      ),
     );
   }
 }
