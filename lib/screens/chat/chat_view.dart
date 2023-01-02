@@ -85,7 +85,7 @@ class _ChatView extends State<ChatView> {
                     ),
                   ),
                   const SizedBox(width: 15),
-                  Username_Rating(username: widget.username, rating: "4.0", edit_button: false),
+                  Username_Rating(username: widget.username, rating: widget.rate_user, edit_button: false),
                   const SizedBox(width: 15),
                   IconButton(
                       icon: const Icon(Icons.delete_forever),
