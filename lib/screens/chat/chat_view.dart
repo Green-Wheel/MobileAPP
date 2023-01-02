@@ -8,9 +8,11 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../widgets/message_widget.dart';
 
 class ChatView extends StatefulWidget {
-  //TODO: pasar el id del chat + username del otro usuario + mensajes
+  //TODO: pasar el id del chat + mensajes
+  String username;
+  String rate_user;
   List<String> messages = [];
-  ChatView({Key? key}) : super(key: key);
+  ChatView({Key? key, required this.username, required this.rate_user}) : super(key: key);
 
   @override
   State<ChatView> createState() => _ChatView();
@@ -19,7 +21,7 @@ class ChatView extends StatefulWidget {
 main(){
   runApp(MaterialApp(
     home: Scaffold(
-      body: ChatView(),
+      body: ChatView(username: "Michael Jordan", rate_user: "3.5",),
       ),
     ),
   );
@@ -73,7 +75,7 @@ class _ChatView extends State<ChatView> {
                         GoRouter.of(context).go('/');
                       }
                   ),
-                  const SizedBox(width: 20),
+                  const SizedBox(width: 10),
                   const CircleAvatar(
                     radius: 20,
                     backgroundColor: Colors.white,
@@ -83,7 +85,16 @@ class _ChatView extends State<ChatView> {
                     ),
                   ),
                   const SizedBox(width: 15),
-                  Username_Rating(username: "username", rating: "4.0", edit_button: false)
+                  Username_Rating(username: widget.username, rating: "4.0", edit_button: false),
+                  const SizedBox(width: 15),
+                  IconButton(
+                      icon: const Icon(Icons.delete_forever),
+                      iconSize: 30,
+                      onPressed: () {
+                        //TODO: implementar ruta de chat
+                        GoRouter.of(context).go('/');
+                      }
+                  ),
                 ],
               ),
             ),
