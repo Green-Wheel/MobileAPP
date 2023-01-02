@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -16,13 +15,11 @@ import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
-import 'charger_filters_map.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
   Set<Polyline>? polylines = {};
   int? publicationId;
-
 
   GoogleMapsWidget(
       {Key? key, required this.index, this.polylines, this.publicationId})
@@ -30,6 +27,30 @@ class GoogleMapsWidget extends StatefulWidget {
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
+
+  void callGetChargers() {
+    _GoogleMapsWidgetState()._getChargers();
+  }
+
+  void callGetBikes() {
+    _GoogleMapsWidgetState()._getBikes();
+  }
+
+  void callGetPublicChargers() {
+    _GoogleMapsWidgetState()._getPublicChargers();
+  }
+
+  void callGetPrivateChargers() {
+    _GoogleMapsWidgetState()._getPrivateChargers();
+  }
+
+  void callGetNormalBikes() {
+    _GoogleMapsWidgetState()._getNormalBikes();
+  }
+
+  void callGetElectricBikes() {
+    _GoogleMapsWidgetState()._getElectricBikes();
+  }
 }
 
 class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
@@ -123,7 +144,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
-      removeChargeMarkers();
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -142,7 +163,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
-      removeChargeMarkers();
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -164,7 +185,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
-      removeChargeMarkers();
+      removeMarkers();
       print(markersList.length);
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
@@ -184,6 +205,43 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = bikeList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        _addBikeMarker(latitude, longitude, id);
+      }
+      loading_bike = true;
+    });
+  }
+
+  void _getNormalBikes() async {
+    List bikeList = await BikeService.getNormalBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
+    setState(() {
+      markersList = bikeList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        _addBikeMarker(latitude, longitude, id);
+      }
+      loading_bike = true;
+    });
+  }
+
+  void _getElectricBikes() async {
+    List bikeList = await BikeService.getElectricBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
+    setState(() {
+      markersList = bikeList;
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -239,7 +297,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     markerMap[MarkerId(id.toString())] = marcador;
   }
 
-  void removeChargeMarkers() {
+  void removeMarkers() {
     Set<Marker> markersToRemove = {};
     markers = markersToRemove;
   }
@@ -419,7 +477,6 @@ List<Widget> scrollDown() {
     ),
     const SizedBox(height: 200)];
 }
-
 
 List<Widget> scrollMiddle() {
   double width = MediaQuery.of(context).size.width;
