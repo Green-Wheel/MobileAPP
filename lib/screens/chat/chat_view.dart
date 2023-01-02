@@ -11,10 +11,9 @@ import '../../widgets/message_widget.dart';
 
 class ChatView extends StatefulWidget {
   String username;
-  String rate_user;
   int? id_chat;
   List<String> messages = [];
-  ChatView({Key? key, required this.username, required this.rate_user, required this.id_chat}) : super(key: key);
+  ChatView({Key? key, required this.username, required this.id_chat}) : super(key: key);
 
   @override
   State<ChatView> createState() => _ChatView();
@@ -23,7 +22,7 @@ class ChatView extends StatefulWidget {
 main(){
   runApp(MaterialApp(
     home: Scaffold(
-      body: ChatView(username: "Michael Jordan", rate_user: "3.5", id_chat: 1),
+      body: ChatView(username: "Michael Jordan", id_chat: 1),
       ),
     ),
   );
@@ -115,7 +114,7 @@ class _ChatView extends State<ChatView> {
                         GoRouter.of(context).go('/');
                       }
                   ),
-                  const SizedBox(width: 10),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.04),
                   const CircleAvatar(
                     radius: 20,
                     backgroundColor: Colors.white,
@@ -124,9 +123,9 @@ class _ChatView extends State<ChatView> {
                         Icons.person
                     ),
                   ),
-                  const SizedBox(width: 15),
-                  Username_Rating(username: widget.username, rating: widget.rate_user, edit_button: false),
-                  const SizedBox(width: 15),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+                  Text(widget.username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                   IconButton(
                       icon: const Icon(Icons.delete),
                       iconSize: 30,
