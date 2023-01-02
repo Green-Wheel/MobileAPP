@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
@@ -11,8 +13,9 @@ class ChatView extends StatefulWidget {
   //TODO: pasar el id del chat + mensajes
   String username;
   String rate_user;
+  int? id_chat;
   List<String> messages = [];
-  ChatView({Key? key, required this.username, required this.rate_user}) : super(key: key);
+  ChatView({Key? key, required this.username, required this.rate_user, required this.id_chat}) : super(key: key);
 
   @override
   State<ChatView> createState() => _ChatView();
@@ -21,7 +24,7 @@ class ChatView extends StatefulWidget {
 main(){
   runApp(MaterialApp(
     home: Scaffold(
-      body: ChatView(username: "Michael Jordan", rate_user: "3.5",),
+      body: ChatView(username: "Michael Jordan", rate_user: "3.5", id_chat: 1),
       ),
     ),
   );
@@ -44,6 +47,44 @@ class _ChatView extends State<ChatView> {
 
   void SendMessage(String message, int sourceId, int destinationId) {
     socket.emit('message', [message, sourceId, destinationId]);
+  }
+
+  Future<void> DeleteChat(int? id_chat) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: const [
+                Text("Delete chat"),
+                SizedBox(width: 10),
+                Icon(Icons.delete),
+              ],
+            ),
+            content: Text("Are you sure you want to delete this chat?"),
+            actions: [
+              Row(
+                children:[
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
+                  TextButton(
+                      onPressed: () {
+                        //TODO: ruta pagina anterior
+                      },
+                      child: Text("Cancel")
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.4),
+                  TextButton(
+                    onPressed: () {
+                      //TODO: borrar chat ruta
+                    },
+                    child: Text("Delete", style: TextStyle(color: Colors.red),),
+                  ),
+                ]
+              )
+            ],
+          );
+        }
+    );
   }
 
   @override
@@ -92,7 +133,8 @@ class _ChatView extends State<ChatView> {
                       iconSize: 30,
                       onPressed: () {
                         //TODO: implementar ruta de chat
-                        GoRouter.of(context).go('/');
+                        //ButtonDeleteChatWidget(id_chat: 1,);
+                        DeleteChat(widget!.id_chat);
                       }
                   ),
                 ],
@@ -122,3 +164,4 @@ class _ChatView extends State<ChatView> {
     );
   }
 }
+
