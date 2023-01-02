@@ -3,7 +3,6 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
-import 'package:greenwheel/widgets/username_rating_stars.dart';
 import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
@@ -130,8 +129,6 @@ class _ChatView extends State<ChatView> {
                       icon: const Icon(Icons.delete),
                       iconSize: 30,
                       onPressed: () {
-                        //TODO: implementar ruta de chat
-                        //ButtonDeleteChatWidget(id_chat: 1,);
                         DeleteChat(widget!.id_chat);
                       }
                   ),
