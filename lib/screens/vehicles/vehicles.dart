@@ -104,6 +104,7 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               GoRouter.of(context).go('/home');
+              print('hey go back');
             }
           ),
         ),
@@ -131,9 +132,7 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
         return ListView.builder(
           itemCount: vehicles.length,
           itemBuilder: (context, index) {
-            print("vehicles: ${vehicles[index].id}");
-            print('dataFora: ${data!['selected_car']}');
-            getLoggedUserById(data['id']);
+            getLoggedUserById(data!['id']);
             return CarCard(
               car: vehicles[index],
               logUser: logUser,

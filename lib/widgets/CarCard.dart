@@ -22,7 +22,6 @@ class CarCard extends StatefulWidget {
 bool isVisible = true;
 
 class _CarCardWidget extends State<CarCard> {
-  final _loggedInStateInfo = LoginService();
   bool visible = true;
   late bool selected;
 
@@ -208,6 +207,7 @@ class _CarCardWidget extends State<CarCard> {
                       ),
                     ),
                     const SizedBox(width: 8),
+                    selected ? const Padding(padding: EdgeInsets.only(bottom: 10, left: 30, right: 30)) :
                     Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child:
