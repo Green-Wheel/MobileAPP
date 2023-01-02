@@ -148,20 +148,51 @@ class _ChatListUsers extends State<ChatListUsers> {
         ),
       ),
       //TODO: Poner listado de usuarios
-      body: Padding(
-        padding: EdgeInsets.only(top: 5),
-        child: ListView.builder(
-                itemCount: users.length,
-                itemBuilder: (context, index) => CardChatUsersWidget(
-                username: users[index].username,
-                rate_user: users[index].rate_user,
-                last_message_received: users[index].last_message_received,
-                new_message: users[index].new_message,
-                last_message_time: users[index].last_message_time,
-                context: context,
-                ),
-              )
-      )
+      body: Column(
+        children: [
+          Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: ListView.builder(
+                    itemCount: users.length,
+                    itemBuilder: (context, index) => CardChatUsersWidget(
+                      username: users[index].username,
+                      rate_user: users[index].rate_user,
+                      last_message_received: users[index].last_message_received,
+                      new_message: users[index].new_message,
+                      last_message_time: users[index].last_message_time,
+                      context: context,
+                    ),
+                  )
+            )
+          )
+        ],
+      ),
+      //TODO: comentar si podem crear un chat
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: FloatingActionButton(
+          onPressed: () {
+            print("newchat");
+          },
+          backgroundColor: Colors.green,
+          child: const Icon(
+            Icons.chat,
+            color: Colors.white,
+          ),
+        ),
+      ),
     );
   }
 }
+
+/*
+                    FloatingActionButton(
+                        onPressed: () {},
+                        backgroundColor: Colors.green,
+                        child: Icon(
+                            Icons.chat,
+                            color: Colors.white,
+                        ),
+                    )
+ */
