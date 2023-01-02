@@ -14,6 +14,17 @@ const String editUrl = 'users/';
 const String uploadImageUrl = 'users/upload/';
 
 class UserService extends ChangeNotifier {
+  static Future<User?> getUser(int id) async {
+    User? result;
+    var response = await BackendService.get('users/$id/');
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      result = User.fromJson(jsonResponse);
+    } else {
+      throw Exception('Error getting user!');
+    }
+    return result;
+  }
 
   static Future<List<Publication>> getPostsUser(int id) async {
     List<Publication> result = [];

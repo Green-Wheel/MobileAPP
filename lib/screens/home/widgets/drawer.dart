@@ -91,10 +91,10 @@ class _SimpleDrawer extends State<SimpleDrawer>{
               leading: const Icon(Icons.car_rental, size: 30.0),
               title: Hero(
                 tag: "2",
-                child: const Text('My Cars', style: TextStyle(fontSize: 18)),
+                child: const Text('My Vehicles', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
-                Navigator.pop(context);
+                GoRouter.of(context).push('/vehicle');
               },
             ),
           ),
