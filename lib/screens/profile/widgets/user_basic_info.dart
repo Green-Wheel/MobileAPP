@@ -8,8 +8,7 @@ import '../../../widgets/image_display.dart';
 class UserBasicInfo extends StatefulWidget {
   final user_id;
 
-  const UserBasicInfo({Key? key, required this.user_id})
-      : super(key: key);
+  const UserBasicInfo({Key? key, required this.user_id}) : super(key: key);
 
   @override
   State<UserBasicInfo> createState() => _UserBasicInfoState();
@@ -19,8 +18,7 @@ class _UserBasicInfoState extends State<UserBasicInfo> {
   late User _user;
 
   void _getBike() async {
-    User? aux =
-    await UserService.getUserInfo(widget.user_id);
+    User? aux = await UserService.getUserInfo(widget.user_id);
     setState(() {
       _user = aux;
     });
@@ -46,18 +44,29 @@ class _UserBasicInfoState extends State<UserBasicInfo> {
             child: Row(children: [
               Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Text(
-                        _user.username ?? "",
-                        textAlign: TextAlign.left,
-                        style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold),
-                      ),
-                      Text(_user.first_name ?? ""),
-                      Text(_user.about ?? ""),
-                    ],
-                  )),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    _user.username ?? "",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                        fontSize: 15, fontWeight: FontWeight.bold),
+                  ),
+                  Text(_user.first_name ?? ""),
+                  Text(_user.about ?? ""),
+                ],
+              )),
+              _user.profile_picture != null
+                  ? Image.network(
+                      _user.profile_picture ?? '',
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.asset(
+                      'assets/images/no_image.png',
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      fit: BoxFit.cover,
+                    ),
             ]),
           )),
     );

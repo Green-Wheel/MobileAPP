@@ -13,6 +13,7 @@ import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/login/login_screen.dart';
 import 'package:greenwheel/screens/profile/editprofile.dart';
 import 'package:greenwheel/screens/profile/myprofile.dart';
+import 'package:greenwheel/screens/profile/report_user.dart';
 import 'package:greenwheel/screens/register/change_password.dart';
 import 'package:greenwheel/screens/register/recover_password.dart';
 import 'package:greenwheel/screens/register/signup.dart';
@@ -47,7 +48,7 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'chargers/add',
               builder: (context, state) =>
-              const ReportCharger(key: Key("AddCharger"), charger_id: 423),
+              const ReportUser(key: Key("AddCharger"), user_id: 1),
             ),
             GoRoute(
               path: 'charger/edit/:id',

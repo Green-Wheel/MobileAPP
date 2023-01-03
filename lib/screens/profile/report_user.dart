@@ -6,16 +6,16 @@ import 'package:greenwheel/widgets/report_type_selector.dart';
 
 import '../../widgets/report_description_input.dart';
 
-class ReportBike extends StatefulWidget {
+class ReportUser extends StatefulWidget {
   final user_id;
 
-  const ReportBike({Key? key, required this.user_id}) : super(key: key);
+  const ReportUser({Key? key, required this.user_id}) : super(key: key);
 
   @override
-  State<ReportBike> createState() => _ReportBikeState();
+  State<ReportUser> createState() => _ReportUserState();
 }
 
-class _ReportBikeState extends State<ReportBike> {
+class _ReportUserState extends State<ReportUser> {
   var description = TextEditingController();
   var reason = '';
 
