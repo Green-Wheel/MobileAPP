@@ -10,7 +10,7 @@ class ButtonDeleteBikeWidget extends StatefulWidget {
   State<StatefulWidget> createState() => _ButtonDeleteBikeWidget();
 }
 
-/*
+
 main() {
   runApp(MaterialApp(
     home: Scaffold(
@@ -22,9 +22,48 @@ main() {
       ),
     ),
   ));
-}*/
+}
 
 class _ButtonDeleteBikeWidget extends State<ButtonDeleteBikeWidget>{
+
+  Future<void> DeleteBike(int? id_bike) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: const [
+                Text("Delete Marker of Bike"),
+                SizedBox(width: 10),
+                Icon(Icons.delete_forever_outlined),
+              ],
+            ),
+            content: Text("Are you sure you want to delete this marker?"),
+            actions: [
+              Row(
+                  children:[
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
+                    TextButton(
+                        onPressed: () {
+                          //TODO: ruta pagina anterior
+                        },
+                        child: Text("Cancel")
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.4),
+                    TextButton(
+                      onPressed: () {
+                        //TODO: borrar chat ruta
+                      },
+                      child: Text("Delete", style: TextStyle(color: Colors.red),),
+                    ),
+                  ]
+              )
+            ],
+          );
+        }
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return  SizedBox(
@@ -45,7 +84,7 @@ class _ButtonDeleteBikeWidget extends State<ButtonDeleteBikeWidget>{
             )
         ),
         onPressed: () {
-
+          DeleteBike(widget.id_bike);
         },
         child: Row(
           children: const [
