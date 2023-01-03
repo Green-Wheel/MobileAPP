@@ -126,7 +126,7 @@ GoRouter routeGenerator(LoginService loginService) {
               builder: (context, state) {
                 final id = int.parse(state.params['id']!);
                 final username = state.params['username']!;
-                return ChatView(key: Key("ChatListUsers"), username: username, id_chat: id, widget.missatge: true);
+                return ChatView(key: Key("ChatListUsers"), username: username, id_chat: id);
               },
             ),
           ]),
