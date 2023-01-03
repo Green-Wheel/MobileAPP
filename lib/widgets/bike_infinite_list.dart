@@ -235,7 +235,7 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
                 },
                 child: BikeCardInfoWidget(location: direction, rating: rate, available: available, type: bikeType,
                     price: price, direction: direction1, description: description, bike_list: true, power: 0,
-                    latitude: latitude, longitude: longitude),
+                    latitude: latitude, longitude: longitude, id: id),
               ));
             }
           )

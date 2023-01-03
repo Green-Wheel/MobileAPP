@@ -1,49 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class ChatButtonWidget extends StatefulWidget {
+import '../screens/chat/chat_view.dart';
 
-  const ChatButtonWidget({super.key});
+class ButtonDeleteBikeWidget extends StatefulWidget {
+  int? id_bike;
+  ButtonDeleteBikeWidget({Key? key, required this.id_bike}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ChatButtonWidget();
+  State<StatefulWidget> createState() => _ButtonDeleteBikeWidget();
 }
 
-class _ChatButtonWidget extends State<ChatButtonWidget>{
+/*
+main() {
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: Column(
+        children: [
+          SizedBox(height: 400),
+          ButtonDeleteBikeWidget(id_bike: 1),
+        ],
+      ),
+    ),
+  ));
+}*/
+
+class _ButtonDeleteBikeWidget extends State<ButtonDeleteBikeWidget>{
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return  SizedBox(
       height: 33,
       width: MediaQuery.of(context).size.width * 0.20,
       child: TextButton(
         style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<
-                Color>(Colors.lightBlue[50]!),
+                Color>(Colors.red[100]!),
             shape: MaterialStateProperty.all<
                 RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(
                         18.0),
                     side: const BorderSide(
-                        color: Colors.blueAccent)
+                        color: Colors.redAccent)
                 )
             )
         ),
         onPressed: () {
-          //TODO: Ruta a chat
+
         },
         child: Row(
           children: const [
             Icon(
-              Icons.chat,
+              Icons.delete,
               size: 18,
-              color: Colors.blueAccent,
+              color: Colors.redAccent,
             ),
-            SizedBox(width: 5),
-            Text('Chat ',
+            Text('Delete',
               style: TextStyle(
+                fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Colors.blueAccent),
+                  color: Colors.redAccent),
             ),
           ],
         ),

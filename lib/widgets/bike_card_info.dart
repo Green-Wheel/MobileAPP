@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/button_blue_route.dart';
+import 'package:greenwheel/widgets/button_delete_bike.dart';
 import 'package:greenwheel/widgets/button_reserva_list.dart';
 import 'package:greenwheel/widgets/button_route.dart';
+import 'package:greenwheel/widgets/chat_button.dart';
 import 'package:greenwheel/widgets/image_bike.dart';
 import 'package:greenwheel/widgets/location_bike.dart';
 import 'package:greenwheel/widgets/point_of_charge_dist.dart';
@@ -23,23 +26,65 @@ class BikeCardInfoWidget extends StatefulWidget {
   bool bike_list;
   double latitude;
   double longitude;
+  int? id;
 
 
   BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,
-    required this.power,  required this.bike_list, required this.latitude, required this.longitude, super.key});
+    required this.power,  required this.bike_list, required this.latitude, required this.longitude, required this.id, super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
 }
 
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
+  final _loggedInStateInfo = LoginService();
+  var userData;
+  bool mybike = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+  void _getData() async {
+    var data = _loggedInStateInfo.user_info;
+    print(data);
+    setState(() {
+      userData = data;
+      //TODO: obtener user id que falta
+      //mybike = userData['id'] == ;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.latitude, widget.latitude, context);
+    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.latitude, widget.longitude, widget.id, context, mybike);
   }
 }
 
-Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, double latitude, double longitude, BuildContext context) {
+main() {
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: BikeCardInfoWidget(
+        location: 'A Coruña',
+        rating: 4.5,
+        available: true,
+        type: BikeType(id: 1, name: 'ELECTRIC'),
+        price: 10.0,
+        description: 'Bicicleta eléctrica de montaña',
+        direction: 'Calle de la Paz, 1',
+        power: 100.0,
+        bike_list: true,
+        latitude: 43.371,
+        longitude: -8.395,
+        id: 1,
+      ),
+    ),
+  ));
+}
+
+
+Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, double latitude, double longitude, int? id, BuildContext context, bool mybike) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -111,6 +156,17 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                       ),
                     ],
                   )
+              ),
+              SizedBox(height: 15),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 20),
+                    child:ChatButtonWidget(),
+                  ),
+                  mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
+                  mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
+                ],
               ),
               !bike_list ? SizedBox(height: 65): SizedBox(height: 0),
               !bike_list ? SizedBox(
