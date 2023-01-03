@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/screens/chargers/widgets/charger_basic_info.dart';
+import 'package:greenwheel/screens/profile/widgets/user_basic_info.dart';
 import 'package:greenwheel/services/backendServices/report_service.dart';
 import 'package:greenwheel/widgets/report_type_selector.dart';
 
 import '../../widgets/report_description_input.dart';
 
-class ReportCharger extends StatefulWidget {
-  final charger_id;
+class ReportBike extends StatefulWidget {
+  final user_id;
 
-  const ReportCharger({Key? key, required this.charger_id}) : super(key: key);
+  const ReportBike({Key? key, required this.user_id}) : super(key: key);
 
   @override
-  State<ReportCharger> createState() => _ReportChargerState();
+  State<ReportBike> createState() => _ReportBikeState();
 }
 
-class _ReportChargerState extends State<ReportCharger> {
+class _ReportBikeState extends State<ReportBike> {
   var description = TextEditingController();
   var reason = '';
 
@@ -24,21 +24,21 @@ class _ReportChargerState extends State<ReportCharger> {
   }
 
   void report() {
-    ReportService.reportPublication(widget.charger_id, reason, description.text).then((value) => GoRouter.of(context).pop());
+    ReportService.reportUser(widget.user_id, reason, description.text).then((value) => GoRouter.of(context).pop());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Report charger"),
+        title: const Text("Report user"),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(children: [
-            ChargerBasicInfo(
-              charger_id: widget.charger_id,
+            UserBasicInfo(
+              user_id: widget.user_id,
             ),
             ReportTypeSelector(
               submitSearch: setReason,

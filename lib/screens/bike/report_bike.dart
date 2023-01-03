@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/screens/bike/widgets/bike_info.dart';
-import 'package:greenwheel/screens/chargers/widgets/report_description_input.dart';
-import 'package:greenwheel/screens/chargers/widgets/report_type_selector.dart';
+import 'package:greenwheel/screens/bike/widgets/bike_basic_info.dart';
+import 'package:greenwheel/services/backendServices/report_service.dart';
+import 'package:greenwheel/widgets/report_type_selector.dart';
 
-import '../../serializers/bikes.dart';
+import '../../widgets/report_description_input.dart';
 
 class ReportBike extends StatefulWidget {
   final bike_id;
@@ -16,26 +16,15 @@ class ReportBike extends StatefulWidget {
 }
 
 class _ReportBikeState extends State<ReportBike> {
-  late DetailedBikeSerializer _bike;
-  late List _reportTypes;
   var description = TextEditingController();
+  var reason = '';
 
-  List<String> _dummyTypes() {
-    return ["Broken", "Not working", "Not charging", "Not available", "Other"];
-  }
-
-  void dummy(text) {
-    print(text);
+  void setReason(text) {
+    reason = text;
   }
 
   void report() {
-    print(description.text);
-  }
-
-  @override
-  initState() {
-    super.initState();
-    _reportTypes = _dummyTypes();
+    ReportService.reportPublication(widget.bike_id, reason, description.text).then((value) => GoRouter.of(context).pop());
   }
 
   @override
@@ -52,7 +41,7 @@ class _ReportBikeState extends State<ReportBike> {
               bike_id: widget.bike_id,
             ),
             ReportTypeSelector(
-              submitSearch: dummy,
+              submitSearch: setReason,
             ),
             const SizedBox(height: 10),
             ReportDescriptionInput(

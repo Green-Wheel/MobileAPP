@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:greenwheel/services/backendServices/reports.dart';
+
+import '../services/backendServices/report_service.dart';
 
 class ReportTypeSelector extends StatefulWidget {
   final Function submitSearch;

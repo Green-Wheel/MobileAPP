@@ -53,8 +53,8 @@ class _ImageDisplayState extends State<ImageDisplay> {
                       border: Border.all(width: 1, color: Colors.black),
                     ),
                     child: widget.images.length >= 1
-                        ? Image.asset(
-                            'assets/images/img1.jpg',
+                        ? Image.network(
+                            widget.images[0],
                             height: widget.height,
                             width: widget.width / 2,
                             fit: BoxFit.cover,
@@ -80,8 +80,8 @@ class _ImageDisplayState extends State<ImageDisplay> {
                                       width: 1, color: Colors.black)),
                             ),
                             child: widget.images.length >= 2
-                                ? Image.asset(
-                                    'assets/images/img2.png',
+                                ? Image.network(
+                                    widget.images[1],
                                     height: widget.height / 2,
                                     width: widget.width / 2,
                                     fit: BoxFit.cover,
@@ -103,8 +103,8 @@ class _ImageDisplayState extends State<ImageDisplay> {
                             ),
                           ),
                           child: widget.images.length >= 3
-                              ? Image.asset(
-                                  'assets/images/img3.jpg',
+                              ? Image.network(
+                                  widget.images[2],
                                   height: widget.height / 2,
                                   width: widget.width / 2,
                                   fit: BoxFit.cover,
@@ -154,10 +154,10 @@ class _ImagesDisplayState extends State<ImagesDisplay> {
       child: widget.images.isNotEmpty ? Column(
         children: [
           Expanded(
-            child: Image.asset(
+            child: Image.network(
               widget.images[_selected_image],
               //TODO select contain, fill or cover,
-              fit: BoxFit.contain ,
+              fit: BoxFit.contain,
             ),
           ),
           const SizedBox(height: 20),
@@ -170,7 +170,7 @@ class _ImagesDisplayState extends State<ImagesDisplay> {
                   onTap: () => selectImg(widget.images.indexOf(image)),
                       child: Padding(
                             padding: const EdgeInsets.only(right: 10.0),
-                            child: Image.asset(image, fit: BoxFit.contain),
+                            child: Image.network(image, fit: BoxFit.contain),
                           ),
                     ))
                     .toList()),

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:greenwheel/services/backend_service.dart';
 
 import '../../serializers/bikes.dart';
-import '../../serializers/chargers.dart';
 
 class BikeService {
   static Future<List<Bike>> getBikes() async {
