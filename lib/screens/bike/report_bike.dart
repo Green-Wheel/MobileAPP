@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/bike/widgets/bike_info.dart';
-import 'package:greenwheel/screens/chargers/widgets/charger_basic_info.dart';
 import 'package:greenwheel/screens/chargers/widgets/report_description_input.dart';
 import 'package:greenwheel/screens/chargers/widgets/report_type_selector.dart';
-import 'package:greenwheel/serializers/chargers.dart';
-import 'package:go_router/go_router.dart';
+
 import '../../serializers/bikes.dart';
-import '../../services/backendServices/chargers.dart';
 
 class ReportBike extends StatefulWidget {
   final bike_id;
@@ -24,6 +22,10 @@ class _ReportBikeState extends State<ReportBike> {
 
   List<String> _dummyTypes() {
     return ["Broken", "Not working", "Not charging", "Not available", "Other"];
+  }
+
+  void dummy(text) {
+    print(text);
   }
 
   void report() {
@@ -49,7 +51,9 @@ class _ReportBikeState extends State<ReportBike> {
             BikeBasicInfo(
               bike_id: widget.bike_id,
             ),
-            ReportTypeSelector(),
+            ReportTypeSelector(
+              submitSearch: dummy,
+            ),
             const SizedBox(height: 10),
             ReportDescriptionInput(
               controller: description,
