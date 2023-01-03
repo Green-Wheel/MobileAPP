@@ -7,6 +7,8 @@ import 'package:greenwheel/screens/bookings/bookings.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
 import 'package:greenwheel/screens/chargers/add_charger.dart';
 import 'package:greenwheel/screens/chargers/edit_charger.dart';
+import 'package:greenwheel/screens/chat/chat_list_users.dart';
+import 'package:greenwheel/screens/chat/chat_view.dart';
 import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/login/login_screen.dart';
 import 'package:greenwheel/screens/profile/editprofile.dart';
@@ -104,6 +106,27 @@ GoRouter routeGenerator(LoginService loginService) {
                   lat: lat,
                   long: long,
                 );
+              },
+            ),
+            GoRoute(
+              //TODO: passar id user loguejat?
+              path: 'chats',
+              builder: (context, state) => ChatListUsers(key: Key("ChatListUsers")),
+            ),
+            GoRoute(
+              path: 'chats/:id',
+              builder: (context, state) {
+                final id = int.parse(state.params['id']!);
+                final username = state.params['username']!;
+                return ChatView(key: Key("ChatListUsers"), username: username, id_chat: id);
+              },
+            ),
+            GoRoute(
+              path: 'chats/:id/messages',
+              builder: (context, state) {
+                final id = int.parse(state.params['id']!);
+                final username = state.params['username']!;
+                return ChatView(key: Key("ChatListUsers"), username: username, id_chat: id, widget.missatge: true);
               },
             ),
           ]),
