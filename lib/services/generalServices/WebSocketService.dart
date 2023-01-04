@@ -39,11 +39,11 @@ class NotificationController{
     initWebSocketConnection();
   }
 
-  void SendMessage (String message, int sourceId, int destinationId) {
+  void SendMessage (String message, int destinationId) {
    try{
       channel?.sink.add(jsonEncode({
         "message": message,
-        "sourceId": sourceId,
+        //"sourceId": sourceId,
         "destinationId": destinationId,
       }));
     } on Exception catch(e){
