@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 import '../../widgets/message_widget.dart';
 
@@ -30,7 +32,7 @@ class _ChatView extends State<ChatView> {
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
 
-  //TODO: servidor de socket
+  /*//TODO: servidor de socket
   IO.Socket socket = IO.io('http://localhost:3000', <String, dynamic>{
     'transports': ['websocket'],
     'autoConnect': false,
@@ -44,7 +46,7 @@ class _ChatView extends State<ChatView> {
 
   void SendMessage(String message, int sourceId, int destinationId) {
     socket.emit('message', [message, sourceId, destinationId]);
-  }
+  }*/
 
   Future<void> DeleteChat(int? id_chat) {
     return showDialog(
@@ -98,7 +100,7 @@ class _ChatView extends State<ChatView> {
     _error = false;
     _loading = true;
     _pageNumber = _messages.length - 1;
-    connect();
+    //connect();
     fetchData();
   }
 
