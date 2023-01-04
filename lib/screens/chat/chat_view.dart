@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:intl/intl.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
@@ -31,22 +30,6 @@ main(){
 class _ChatView extends State<ChatView> {
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
-
-  /*//TODO: servidor de socket
-  IO.Socket socket = IO.io('http://localhost:3000', <String, dynamic>{
-    'transports': ['websocket'],
-    'autoConnect': false,
-  });
-
-  void connect() {
-    socket.connect();
-    socket.onConnect((data) => print("Connected"));
-    print(socket.connected);
-  }
-
-  void SendMessage(String message, int sourceId, int destinationId) {
-    socket.emit('message', [message, sourceId, destinationId]);
-  }*/
 
   Future<void> DeleteChat(int? id_chat) {
     return showDialog(
@@ -99,8 +82,7 @@ class _ChatView extends State<ChatView> {
     _messages = [];
     _error = false;
     _loading = true;
-    _pageNumber = _messages.length - 1;
-    //connect();
+    _pageNumber = 1;
     fetchData();
   }
 
@@ -108,9 +90,9 @@ class _ChatView extends State<ChatView> {
     try {
       setState(() {
        // _getBikesList(_pageNumber);
-        //_isFirstPage = _markersListAll.length < _numberOfPostsPerRequest;
+        //_isLastPage = _markersListAll.length > _numberOfPostsPerRequest;
         _loading = false;
-        //_pageNumber = _pageNumber - 1;
+        //_pageNumber = _pageNumber + 1;
         //_markersListAll.addAll(_markersList);
       });
     } catch (e) {
@@ -165,21 +147,16 @@ class _ChatView extends State<ChatView> {
     }
     return Column(
       children: [
-        Expanded(
+        /*Expanded(
           //TODO: change a listview.builder
-          child: ListView(
-              controller: _scrollController,
-              children:[
-                //TODO: poner el chat (nuevo fichero)
-                SizedBox(height: 10),
-                MessageWidget(message: "Hola", itsmine: true, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread:DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                MessageWidget(message: "Hola", itsmine: false, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                MessageWidget(message: "Adeu", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                MessageWidget(message: "HUguvhkgkkcgckgkctgcjcfgcfcfxfcjfjcgcghhhhhhhhhhcghcghcghcghcghtytyt", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                MessageWidget(message: "HUguvhkgkkcgckgkctgcjcfgcfcfxfcjfjcgcghhhhhhhhhhcghcghcghcghcghtytyt", itsmine: false, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-              ]
+          child:ListView.builder(
+            controller: _scrollController,
+            itemCount: _messages.length,
+            itemBuilder: (context, index) {
+              return MessageWidget( message: _messages[index], username: widget.username, dateread: , datesend: , read: , itsmine: ,);
+            },
           ),
-        ),
+        ),*/
       ],
     );
   }
@@ -229,7 +206,14 @@ class _ChatView extends State<ChatView> {
                 ],
               ),
             ),
-            body:Column(
+            body: buildMessagesView(),
+            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController),
+        )
+      ],
+    );
+  }
+  /*
+              Column(
               children: [
                 Expanded(
                   //TODO: change a listview.builder
@@ -248,11 +232,7 @@ class _ChatView extends State<ChatView> {
                 ),
               ],
             ),
-            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController),
-        )
-      ],
-    );
-  }
+   */
 }
 
 
