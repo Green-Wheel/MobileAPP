@@ -64,8 +64,10 @@ class BookingService {
 
   static Future<bool> newBooking(Map<String, dynamic> data) async {
     try {
+      log("lo que se envia al booking $data");
       var response = await BackendService.post('bookings/', data);
-      return response.statusCode == 200;
+      log("la evaluacion que se hace ${response.statusCode}");
+      return response.statusCode == 201;
     } catch (e) {
       log(e.toString());
       return false;

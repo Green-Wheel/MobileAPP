@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:greenwheel/services/backendServices/bookings.dart';
 import 'package:greenwheel/services/backendServices/publications.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Booking calendar',
-      home: BookingCalendar(id: 417),
+      home: BookingCalendar(id: 432),
     );
   }
 }
@@ -58,10 +59,10 @@ class BookingCalendarState extends State<BookingCalendar> {
             decoration: BoxDecoration(
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.blue.shade200,
+                    color: Colors.blue.shade100,
                     blurRadius:10 ,
                     spreadRadius: 1,
-                    offset: Offset(0, 10),
+                    offset: Offset(0, 7),
                   ),
                 ],
                 color: Colors.white
@@ -103,10 +104,10 @@ class BookingCalendarState extends State<BookingCalendar> {
                 ),
                 child: Center(
                   child:  LoadingAnimationWidget.discreteCircle(
-                      color: Colors.green.shade50,
-                      size: 70,
-                      secondRingColor: Colors.green.shade200,
-                      thirdRingColor: Color(0x10052e42)),
+                  color: Colors.green.shade50,
+                  size: 70,
+                  secondRingColor: Colors.green.shade200,
+                  thirdRingColor: Color(0x10052e42)),
                 ),
               )
             ):
@@ -115,9 +116,25 @@ class BookingCalendarState extends State<BookingCalendar> {
             child:
               Column(
                 children: [
-                  hourList(showHoursStartingAtCurrentHour: widget.selectedDate.isToday(),reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
-                          blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
-                          return_change_in_reservations: updateWithHourListReservation,),
+                  (widget.selectedDate.hasPast())?
+                  const Expanded(
+                    child: Center(
+                        child: Text(
+                        'No se puede reservar en una fecha pasada',
+                        style: TextStyle(
+                        color: Colors.black45,
+                        fontSize: 15
+                        ),
+                      ),
+                    ),
+                  ):
+                  hourList(
+                    showHoursStartingAtCurrentHour: widget.selectedDate.isToday(),
+                    reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
+                    blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
+                    return_change_in_reservations: updateWithHourListReservation,
+
+                  ),
                   Row(
                     children: [
                       Padding(
@@ -131,8 +148,8 @@ class BookingCalendarState extends State<BookingCalendar> {
                                 builder: (BuildContext context) => AlertDialog(
                                   title: Row(
                                     children: const [
-                                      Icon(Icons.info, color: Colors.blue,),
-                                      Text(' Deshacer reservas'),
+                                      Icon(Icons.warning_rounded, color: Colors.amber,),
+                                      Text(' Deshacer cambios'),
                                     ],
                                   ),
                                   content: const Text('Se deseleccionarán todas las horas que has marcado, pero se mantendrán tus reservas anteriores'),
@@ -147,12 +164,10 @@ class BookingCalendarState extends State<BookingCalendar> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pop(context, 'Ok');
-                                        backendInitState();
-
+                                        updateAvailabilityWithBackend(widget.selectedDate);
                                       },
                                       child: const Text('Ok'),
                                     ),
-
                                   ],
                                 ),
                               );
@@ -182,9 +197,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                                     fontSize: 20,
                                     color: Color(0xA0052e42),
                                 ),
-
                               ),
-
                             ],
                           ),
                         ),
@@ -193,12 +206,56 @@ class BookingCalendarState extends State<BookingCalendar> {
                         padding: const EdgeInsets.symmetric(vertical: 0.0),
                         child: ElevatedButton(
 
-                          onPressed: (){
+                          onPressed: () async {
                             log("################################################# RESERVAR ################################  ");
 
                             if(widget.backendOperations.resultOfApplyingIsAContiguousReservation()) {
                               log("SON CONTIGUAS LAS HORAS ");
-                              applyChangesToBackend();
+                              if(!await widget.backendOperations.applyBackendOperations()){
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: Row(
+                                      children: const [
+                                        Icon(Icons.error, color: Colors.redAccent,),
+                                        Text(' Error al guardar'),
+                                      ],
+                                    ),
+                                    content: const Text('Ha habido un error al guardar los cambios. Por favor, ponte en contacto con los GreenWheelers para que lo solucionen'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context, 'Entendido'),
+                                        child: const Text('Entendido'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                              else if(widget.backendOperations.getNumberOfOperations() > 0){
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) => AlertDialog(
+                                    title: Row(
+                                      children: const [
+                                        Icon(Icons.check_circle, color: Colors.green,),
+                                        Text(' Cambios guardados'),
+                                      ],
+                                    ),
+                                    content: const Text('¡Se han guardado tus cambios exitosamente!'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, 'Ok');
+                                          updateAvailabilityWithBackend(widget.selectedDate);
+
+                                        },
+                                        child: const Text('Ok'),
+                                      ),
+
+                                    ],
+                                  ),
+                                );
+                              }
                             }
                             else{
 
@@ -207,7 +264,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                                 builder: (BuildContext context) => AlertDialog(
                                   title: Row(
                                     children: [
-                                      const Icon(Icons.warning_rounded, color: Colors.amber,),
+                                      const Icon(Icons.error, color: Colors.redAccent,),
                                       const Text(' Reserva no válida'),
                                     ],
                                   ),
@@ -266,7 +323,7 @@ class BookingCalendarState extends State<BookingCalendar> {
   //---------------------------------[ BACKEND ]------------------------------//
 
 
-  Future<List> updateAvailabilityWithBackend(DateTime date) async {
+  Future<List> getAvailabilityFromBackend(DateTime date) async {
     //List<>BookingService.getBookingHours(widget.id);
     widget.data['id'] = widget.id;
     widget.data['year'] = date.year;
@@ -283,12 +340,9 @@ class BookingCalendarState extends State<BookingCalendar> {
       log(occupation.split(Config.minTimeOfReservation).toString());
       List<DateTime> dateTimeChunks = occupation.split(Config.minTimeOfReservation);
 
-      if(occupation.belongsToUserWithId(1)) {
-        myReservedHours.addAll(dateTimeChunks);
-      }
-      else{
-        blockedHours.addAll(dateTimeChunks);
-      }
+
+      blockedHours.addAll(dateTimeChunks);
+
     }
 
     log(PublicationService.getBlockedHoursByDay(widget.data).toString());
@@ -311,13 +365,19 @@ class BookingCalendarState extends State<BookingCalendar> {
     Availability availability =
       (operation == OperationType.add)?
       Availability.reserved:Availability.available;
+
+    DateTime date = DateTime(
+        widget.selectedDate.year,
+        widget.selectedDate.month,
+        widget.selectedDate.day,
+        reservation.hour,
+        reservation.minute);
+    log("################################################## EL FALLOTRON ${date}");
     widget.datesState.add(reservation.toDateTime(widget.selectedDate),availability);
-    widget.backendOperations.add(reservation.toDateTime(widget.selectedDate),operation);
+    widget.backendOperations.add(date,operation,widget.id);
   }
 
   //----------------------------------[ UTILS ]-------------------------------//
-
-
 
   List<DateTime> convertToDateTime(List<TimeOfDay> hours,DateTime date){
     List<DateTime> dates = [];
@@ -326,16 +386,6 @@ class BookingCalendarState extends State<BookingCalendar> {
       dates.add(hour.toDateTime(date));
     }
     return dates;
-  }
-
-  void applyChangesToBackend(){
-
-    if(widget.backendOperations.applyBackendOperations()){
-      log("Se han aplicado correctamente los cambios al backend");
-    }
-    else{
-      log("Ha habido un error al aplicar los cambios al backend");
-    }
   }
 
   void initDateState(List<DateTime> blockedDates, List<DateTime> reservations){
@@ -347,21 +397,20 @@ class BookingCalendarState extends State<BookingCalendar> {
 
   void initBackendOperations(List<DateTime> reservations){
 
-    widget.backendOperations = BackendOperations(reservations);
+    widget.backendOperations = BackendOperations(reservations,widget.id);
 
   }
 
   //--------------------------------[ OVERRIDES ]-----------------------------//
 
-  Future<void> backendInitState() async {
+  Future<void> updateAvailabilityWithBackend(DateTime date) async {
     widget.waitingBakendForHourAvailability = true;
-    var now = DateTime.now();
-    List availability = await updateAvailabilityWithBackend(now);
+
+    List availability = await getAvailabilityFromBackend(date);
     List<DateTime> reservations = availability[0];
     List<DateTime> blockedDates = availability[1];
 
     log("ESTAS DEBERIAN BLOQUEARSE $blockedDates");
-    widget.selectedDate = DateTime(now.year,now.month,now.day);
 
     initDateState(blockedDates,reservations);
     initBackendOperations(reservations);
@@ -374,7 +423,7 @@ class BookingCalendarState extends State<BookingCalendar> {
   @override
   void initState() {
 
-    backendInitState();
+    updateAvailabilityWithBackend(DateTime.now());
     super.initState();
 
   }
@@ -549,15 +598,14 @@ class BackendOperations{
   
   List<BackendOperation> backendOperations = [];
 
-  bool applyBackendOperations() {
-    List mergedBackendOperations = mergeBackendOperations();
-    for(var backendOperation in mergedBackendOperations){
-      if(backendOperation.operation==OperationType.add){
+  Future<bool> applyBackendOperations() async {
 
-        log(backendOperation.toString());
-      }
-      if(backendOperation.operation==OperationType.delete){
-        log(backendOperation.toString());
+    List mergedBackendOperations = mergeBackendOperations();
+    for(BackendOperation backendOperation in mergedBackendOperations){
+      if(backendOperation.operation==OperationType.add){
+        if(!await backendOperation.execute()) {
+          return false;
+        }
       }
     }
 
@@ -574,25 +622,32 @@ class BackendOperations{
     List mergedBackendOperations = backendOperations.cloneBackendOperations();
     //log("@@@@@@@@@@@@@@@ ${identical(mergedBackendOperations[0],backendOperations[0] )}");
     if(backendOperations.isEmpty) return [];
-    orderByDateBackendOperations();
 
     List<BackendOperation> toRemove=[];
 
-    var resizeBackendOperation = mergedBackendOperations[0].clone();
+    var resizeBackendOperation = mergedBackendOperations[0];
     for(int i=1; i < mergedBackendOperations.length; ++i){
-      var current = mergedBackendOperations[i].clone();
-      //log("current: $current");
-      //log("resizing: $resizeBackendOperation");
-      if(current.operation != OperationType.nothing &&
-          resizeBackendOperation.isContiguousWith(current) &&
-          resizeBackendOperation.operation == current.operation){
-
+      var current = mergedBackendOperations[i];
+      log("current: $current");
+      log("resizing: $resizeBackendOperation");
+      if(
+          resizeBackendOperation.isContiguousWith(current) && (
+          resizeBackendOperation.operation == current.operation ||
+            (
+              resizeBackendOperation.operation == OperationType.add &&
+              current.operation == OperationType.nothing
+            )
+          )
+      ){
         resizeBackendOperation.endDate = current.endDate;
+        log("Se mezcla: $resizeBackendOperation");
         //log("[$i] resized es ahora--->$resizeBackendOperation");
         toRemove.add(current);
       }
       else{
-        resizeBackendOperation = mergedBackendOperations[i].clone();
+        log("NO Se mezcla: $resizeBackendOperation");
+
+        resizeBackendOperation = mergedBackendOperations[i];
       }
     }
     //log(toRemove.toString());
@@ -622,14 +677,14 @@ class BackendOperations{
     return index;
   }
   
-  void add(DateTime date, OperationType operation){
+  void add(DateTime date, OperationType operation, int publication){
   
     if(!backendOperationContains(date))
     {
       log("Añadiendo a backend operations ---------$date");
       var backendOperation  = BackendOperation(date,
           date.add(Config.minTimeOfReservation - const Duration(minutes: 1)),
-          operation);
+          operation,publication);
       backendOperations.add(backendOperation);
     }
     else{
@@ -647,9 +702,9 @@ class BackendOperations{
     log("[-Backend Operations-]\n $backendOperations");
   }
 
-  BackendOperations(List<DateTime> reservations){
+  BackendOperations(List<DateTime> reservations,int publication){
     for(var reservation in reservations){
-      add(reservation, OperationType.nothing);
+      add(reservation, OperationType.nothing, publication);
     }
   }
 //TODO: posible refactor
@@ -702,11 +757,21 @@ class BackendOperations{
     return reservations;
   }
 
+  int getNumberOfOperations() {
+    int reservations=0;
+    for(var operation in backendOperations){
+      if(operation.operation != OperationType.nothing)
+        ++reservations;
+    }
+    return reservations;
+  }
+
   void reset() {
     List toDelete=[];
     for(var operation in backendOperations){
-      if(operation.operation != OperationType.nothing)
+      if(operation.operation != OperationType.nothing) {
         toDelete.add(operation);
+      }
     }
 
     for(var operation in toDelete){
@@ -718,6 +783,7 @@ class BackendOperations{
 class BackendOperation{
   late DateTime startDate;
   late DateTime endDate;
+  late int publication;
 
   late OperationType operation;
 
@@ -732,6 +798,15 @@ class BackendOperation{
     return contiguous;
   }
 
+  Future<bool> execute() async {
+    Map<String, dynamic> data = {};
+    data['publication'] = publication.toString();
+    data['start_date'] = startDate.toString();
+    data['end_date'] = endDate.toString();
+
+    return await BookingService.newBooking(data);
+  }
+
   @override
   String toString(){
     return "BackendOperation: $startDate ->$endDate | [$operation]\n";
@@ -744,14 +819,15 @@ class BackendOperation{
         startDate.toTimeOfDay().compareTo(b.startDate.toTimeOfDay());
   }
 
-  BackendOperation(this.startDate, this.endDate, this.operation);
+  BackendOperation(this.startDate, this.endDate, this.operation, this.publication);
 
   BackendOperation clone(){
 
     return BackendOperation(
         startDate,
         endDate,
-        operation);
+        operation,
+        publication);
   }
 }
 
@@ -936,6 +1012,15 @@ extension DatetimeExtension on DateTime {
     return DateFormat('yyyy-MM-dd').format(now) ==
         DateFormat('yyyy-MM-dd').format(this);
   }
+
+  bool hasPast(){
+    DateTime now = DateTime.now();
+
+    return now.year > this.year ||
+    now.month > this.month ||
+    now.day > this.day;
+  }
+
   bool isTomorrow(){
     DateTime now = DateTime.now();
 
@@ -969,18 +1054,18 @@ extension TimeOfDayExtension on TimeOfDay {
     return DateTime( date.year, date.month, date.day, hour, minute);
   }
 
-  TimeOfDay operator + (TimeOfDay b)
+/*  TimeOfDay operator + (TimeOfDay b)
   {
     int hoursSum = hour + b.hour;
     int minutesSum = minute + b.minute;
     return TimeOfDay(hour: hoursSum%24 + ((minutesSum)/60).floor(),
                      minute: (minutesSum)%60);
-  }
+  }*/
 
-  TimeOfDay operator - (TimeOfDay b)
+ /* TimeOfDay operator - (TimeOfDay b)
   {
     return TimeOfDay(hour: hour - b.hour, minute: minute - b.minute);
-  }
+  }*/
 
   int compareTo(TimeOfDay b) {
     if (hour < b.hour) return -1;
