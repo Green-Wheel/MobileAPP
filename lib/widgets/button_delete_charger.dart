@@ -3,12 +3,12 @@ import 'package:go_router/go_router.dart';
 
 import '../screens/chat/chat_view.dart';
 
-class ButtonDeleteBikeWidget extends StatefulWidget {
-  int? id_bike;
-  ButtonDeleteBikeWidget({Key? key, required this.id_bike}) : super(key: key);
+class ButtonDeleteChargerWidget extends StatefulWidget {
+  int? id_charger;
+  ButtonDeleteChargerWidget({Key? key, required this.id_charger}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ButtonDeleteBikeWidget();
+  State<StatefulWidget> createState() => _ButtonDeleteChargerWidget();
 }
 
 
@@ -18,23 +18,23 @@ main() {
       body: Column(
         children: [
           SizedBox(height: 400),
-          ButtonDeleteBikeWidget(id_bike: 1),
+          ButtonDeleteChargerWidget(id_charger: 1),
         ],
       ),
     ),
   ));
 }
 
-class _ButtonDeleteBikeWidget extends State<ButtonDeleteBikeWidget>{
+class _ButtonDeleteChargerWidget extends State<ButtonDeleteChargerWidget>{
 
-  Future<void> DeleteBike(int? id_bike) {
+  Future<void> DeleteCharger(int? id_charger) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Row(
               children: const [
-                Text("Delete Marker of Bike"),
+                Text("Delete Marker of Charger"),
                 SizedBox(width: 10),
                 Icon(Icons.delete_forever_outlined),
               ],
@@ -46,7 +46,6 @@ class _ButtonDeleteBikeWidget extends State<ButtonDeleteBikeWidget>{
                     SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
                     TextButton(
                         onPressed: () {
-                          //TODO: ruta pagina anterior
                           GoRouter.of(context).go('/');
                         },
                         child: Text("Cancel")
@@ -54,8 +53,7 @@ class _ButtonDeleteBikeWidget extends State<ButtonDeleteBikeWidget>{
                     SizedBox(width: MediaQuery.of(context).size.width * 0.4),
                     TextButton(
                       onPressed: () {
-                        //TODO: borrar chat ruta
-                        GoRouter.of(context).go('/bikes/${widget.id_bike}');
+                        GoRouter.of(context).go('/charger/${widget.id_charger}');
                       },
                       child: Text("Delete", style: TextStyle(color: Colors.red),),
                     ),
@@ -87,7 +85,7 @@ class _ButtonDeleteBikeWidget extends State<ButtonDeleteBikeWidget>{
             )
         ),
         onPressed: () {
-          DeleteBike(widget.id_bike);
+          DeleteCharger(widget.id_charger);
         },
         child: Row(
           children: const [
@@ -98,7 +96,7 @@ class _ButtonDeleteBikeWidget extends State<ButtonDeleteBikeWidget>{
             ),
             Text('Delete',
               style: TextStyle(
-                fontSize: 15,
+                  fontSize: 15,
                   fontWeight: FontWeight.w600,
                   color: Colors.redAccent),
             ),

@@ -558,6 +558,8 @@ void _getCharger(int id) async {
     double latitude = markedCharger!.localization.latitude;
     double longitude = markedCharger!.localization.longitude;
     double? rate = markedCharger!.avg_rating;
+    int? id = markedCharger!.id;
+    int? owner_id = markedCharger!.private!.owner.id;
 
 
     return CardInfoWidget(location: descrip,
@@ -571,7 +573,9 @@ void _getCharger(int id) async {
         description: description,
         latitude: latitude,
         longitude: longitude,
-        private_list: false);
+        private_list: false,
+        id: id,
+        owner_id: owner_id,);
   }
 
   void _showAvisNoEsPotCarregarBici() async {

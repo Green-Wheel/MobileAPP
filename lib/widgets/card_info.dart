@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenwheel/widgets/avaliable_public_charger.dart';
+import 'package:greenwheel/widgets/button_delete_charger.dart';
 import 'package:greenwheel/widgets/button_reserva_list.dart';
 import 'package:greenwheel/widgets/button_route.dart';
 import 'package:greenwheel/widgets/chat_button.dart';
@@ -10,6 +11,7 @@ import 'package:greenwheel/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/widgets/stars_static_rate.dart';
 
 import '../serializers/chargers.dart';
+import '../services/generalServices/LoginService.dart';
 
 class CardInfoWidget extends StatefulWidget {
   String? location;
@@ -24,24 +26,71 @@ class CardInfoWidget extends StatefulWidget {
   bool private_list;
   double latitude;
   double longitude;
+  int? id;
+  int? owner_id;
 
   CardInfoWidget({required this.location, required this.rating, required this.types, required this.available,
     required this.match, required this.private, required this.price, required this.description, required
-  this.direction, required this.private_list, required this.latitude, required this.longitude, super.key});
+  this.direction, required this.private_list, required this.latitude, required this.longitude, required this.id, required this.owner_id
+    , super.key});
 
   @override
   State<StatefulWidget> createState() => _CardInfoWidget();
 }
 
+main(){
+  runApp(MaterialApp(
+    home: Scaffold(
+      body: CardInfoWidget(
+        location: 'Calle 1',
+        rating: 4.5,
+        types: [ConnectionType(id: 2, name: "hola"), ConnectionType(id: 3, name: "hola2")],
+        available: true,
+        match: true,
+        private: true,
+        price: 0.5,
+        description: 'Cargador de prueba',
+        direction: 'Calle 1',
+        private_list: true,
+        latitude: 0.0,
+        longitude: 0.0,
+        id: 1,
+        owner_id: 1,
+      ),
+    ),
+    )
+  );
+}
+
 class _CardInfoWidget extends State<CardInfoWidget>{
+  final _loggedInStateInfo = LoginService();
+  var userData;
+  bool isOwner = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+  void _getData() async {
+    var data = _loggedInStateInfo.user_info;
+    print(data);
+    setState(() {
+      userData = data;
+      isOwner = userData['id'] == widget.owner_id;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private,
-        widget.price, widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, context);
+    return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price,
+        widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, widget.id, isOwner, context);
   }
 }
 
-Widget _buildCard(String? location, double? rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price, String? description, String? direction, bool private_list, double latitude, double longitude, BuildContext context){
+Widget _buildCard(String? location, double? rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price,
+    String? description, String? direction, bool private_list, double latitude, double longitude, int? id, bool isOwner, BuildContext context){
+
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -144,24 +193,34 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                       private? SizedBox(height: 10): SizedBox(height: 0),
                       private? Column(
                         children: [
-                          Padding(
-                              padding: EdgeInsets.only(right: 35),
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.925,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 30),
                               child: direction != null ? Text("Address:  $direction",
                                   style: const TextStyle(fontWeight: FontWeight.w600)
                               ):  const Text("Address:  No address available",
                                   style: TextStyle(fontWeight: FontWeight.w600)
                               )
+                            ),
                           ),
-                          Padding(
-                              padding: EdgeInsets.only(right: 115),
-                              child: description != null ? Text("Description:  $description",
-                                  style: const TextStyle(fontWeight: FontWeight.w600)
-                              ):  const Text("Description:  No description",
-                                  style: TextStyle(fontWeight: FontWeight.w600)
+                          SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.925,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 30),
+                                child: description != null ? Text("Description:  $description",
+                                    style: const TextStyle(fontWeight: FontWeight.w600)
+                                ):  const Text("Description:  No description",
+                                    style: TextStyle(fontWeight: FontWeight.w600)
+                                ),
                               ),
-                          ),
+                          )
                         ]): SizedBox(height: 0),
-                      SizedBox(height: 10),
+                      isOwner? SizedBox(height: 26):SizedBox(height: 0),
+                      isOwner?  Padding(
+                          padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.4),
+                          child: ChatButtonWidget(),
+                      ): SizedBox(height: 0),
                     ],
                   ),
                 )
@@ -177,10 +236,10 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                   ImageChargerWidget(),
                   SizedBox(height: 10),
                   ButtonRouteWidget(latitude: latitude, longitude: longitude),
-                  private? SizedBox(height: 155): SizedBox(height: 35),
+                  private? SizedBox(height: 243): SizedBox(height: 35),
                   private?  Padding(
                   padding: EdgeInsets.only(right: 0),
-                  child: ChatButtonWidget(),
+                  child: ButtonDeleteChargerWidget(id_charger: id),
                   ): SizedBox(height: 25)
               ],
             ),
