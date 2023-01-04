@@ -143,5 +143,18 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
       }
     );
   }
+
+  void goToAddVehicle() {
+    GoRouter.of(context).push('/vehicles/add');
+  }
+
+  Widget currentLocationActionButton() {
+    return FloatingActionButton(
+      heroTag: "btn1",
+      onPressed: goToAddVehicle,
+      backgroundColor: Colors.white,
+      child: const Icon(Icons.add, color: Colors.green, size: 30.0)
+    );
+  }
 }
 

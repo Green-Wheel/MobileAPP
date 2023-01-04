@@ -114,4 +114,26 @@ class VehicleService {
       return false;
     }
   }
+
+  static Future<bool> putVehicle(Map<String, dynamic> data) async {
+    try {
+      var response = await BackendService.put('vehicles/${data['id']}/', data);
+      if (response.statusCode != 200) return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> postVehicle(Map<String, dynamic> data) async {
+    try {
+      var response = await BackendService.post('vehicles/', data);
+      if (response.statusCode != 200) return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 }
