@@ -32,6 +32,8 @@ class ChatModel {
 
 class _ChatListUsers extends State<ChatListUsers> {
 
+  int _number_new_messages = 0;
+
   List<ChatModel> markers = [
     ChatModel(
       username: "Michael Jackson",
@@ -220,9 +222,12 @@ class _ChatListUsers extends State<ChatListUsers> {
                                    color: Colors.redAccent,
                                  ),
                                  //TODO: if num < 10 padding 6.0 els padding left 3.0
-                                 Padding(
-                                   padding: EdgeInsets.only(top: 3, left: 6.0),
-                                     child: Text("1", style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),))
+                                 _number_new_messages < 10 ? Padding(
+                                     padding: EdgeInsets.only(top: 3, left: 6.0),
+                                     child: Text(_number_new_messages.toString(), style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),))
+                                      : Padding(
+                                     padding: EdgeInsets.only(top: 3, left: 3.0),
+                                     child: Text(_number_new_messages.toString(), style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),))
                                ],
                              )
                              
