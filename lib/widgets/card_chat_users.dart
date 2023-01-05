@@ -78,7 +78,7 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
                         children: [
                           Text(
                             widget.username,
-                            style: const TextStyle(fontSize: 18, color: Colors.black,),
+                            style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
                           ),
                           SizedBox(height: 4),
                           Row(
