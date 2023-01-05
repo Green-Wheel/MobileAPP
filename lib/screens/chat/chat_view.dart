@@ -207,7 +207,8 @@ class _ChatView extends State<ChatView> {
               ),
             ),
             body: buildMessagesView(),
-            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController),
+            //TODO: poner id to_user correspondiente
+            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController, to_user: 1),
         )
       ],
     );

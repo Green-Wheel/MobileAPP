@@ -4,7 +4,8 @@ import 'package:greenwheel/widgets/button_send_message.dart';
 class InputTextMessageWidget extends StatefulWidget {
   TextEditingController controller;
   ScrollController scrollController;
-  InputTextMessageWidget({Key? key, required this.controller, required this.scrollController}) : super(key: key);
+  int to_user;
+  InputTextMessageWidget({Key? key, required this.controller, required this.scrollController, required this.to_user}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _InputTextMessageWidget();
@@ -34,7 +35,8 @@ class _InputTextMessageWidget extends State<InputTextMessageWidget> {
             prefix: const SizedBox(
               width: 10,
             ),
-            suffixIcon: ButtonSendMessageWidget(controller: widget.controller, scrollController: widget.scrollController),
+            suffixIcon: ButtonSendMessageWidget(controller: widget.controller,
+                scrollController: widget.scrollController, to_user: widget.to_user),
             ),
           ),
         ),
