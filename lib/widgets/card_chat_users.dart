@@ -76,9 +76,12 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
+                          widget.new_message ? Text(
                             widget.username,
                             style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                          ): Text(
+                            widget.username,
+                            style: const TextStyle(fontSize: 18, color: Colors.black),
                           ),
                           SizedBox(height: 4),
                           Row(
