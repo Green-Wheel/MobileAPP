@@ -23,11 +23,6 @@ class _ButtonSendMessageWidget extends State<ButtonSendMessageWidget>{
     return FloatingActionButton.small(
       onPressed: () {
         // TODO: implement send message
-        var messageObject = {
-          'message': widget.controller.text,
-          'to_user': widget.to_user,
-        };
-
         print(widget.controller.text);
 
         widget.scrollController.animateTo(
@@ -36,9 +31,8 @@ class _ButtonSendMessageWidget extends State<ButtonSendMessageWidget>{
           curve: Curves.easeOut,
         );
 
+        notificationController.SendMessage(widget.controller.text, widget.to_user);
         widget.controller.clear();
-        //TODO: añadir el mensaje a la lista de mensajes
-        //notificationController.sendMessage(messageObject, );
       },
       elevation: 0,
       child: const Icon(
