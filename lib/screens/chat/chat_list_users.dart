@@ -200,7 +200,38 @@ class _ChatListUsers extends State<ChatListUsers> {
                   ),
                 ),
                 const SizedBox(width: 15),
-                const Text("Chat", style: TextStyle(fontSize: 20, color: Colors.white),)
+                const Text("Chat", style: TextStyle(fontSize: 20, color: Colors.white),),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                 Column(
+                   children:[
+                     Stack(
+                         children: <Widget>[
+                           Icon(
+                               Icons.notifications,
+                             size: 32,
+                           ),
+                           Positioned(  // draw a red marble
+                             top: 0.0,
+                             right: 0.0,
+                             child: Stack (
+                               children: [
+                                 Icon(
+                                   Icons.brightness_1, size: 17.0,
+                                   color: Colors.redAccent,
+                                 ),
+                                 //TODO: if num < 10 padding 6.0 els padding left 3.0
+                                 Padding(
+                                   padding: EdgeInsets.only(top: 3, left: 6.0),
+                                     child: Text("1", style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),))
+                               ],
+                             )
+                             
+                           ),
+                         ]
+                     ),
+                     Text("New messages", style: TextStyle(fontSize: 10),),
+                   ]
+                 )
               ],
             ),
             bottom: const TabBar(
