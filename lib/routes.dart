@@ -111,8 +111,7 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'chats',
               builder: (context, state) {
-                final unread = int.parse(state.params['unread']!);
-                return ChatListUsers(key: Key("ChatListUsers"), unread: unread);
+                return ChatListUsers(key: Key("ChatListUsers"));
               },
             ),
             GoRoute(
@@ -135,7 +134,7 @@ GoRouter routeGenerator(LoginService loginService) {
               path: 'chats/unread',
               builder: (context, state) {
                 final unread = int.parse(state.params['unread']!);
-                return ChatListUsers(key: Key("ChatListUsers"), unread: unread);
+                return ChatListUsers(key: Key("ChatListUsers"));
               },
             ),
             GoRoute(
@@ -143,7 +142,7 @@ GoRouter routeGenerator(LoginService loginService) {
               path: 'chats/unread/:id',
               builder: (context, state) {
                 final unread = int.parse(state.params['unread']!);
-                return ChatListUsers(key: Key("ChatListUsers"), unread: unread);
+                return ChatListUsers(key: Key("ChatListUsers"));
               },
             ),
           ]),

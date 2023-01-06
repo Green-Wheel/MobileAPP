@@ -67,6 +67,7 @@ class _CardInfoWidget extends State<CardInfoWidget>{
   var userData;
   bool isOwner = true;
 
+
   @override
   void initState() {
     super.initState();
@@ -83,13 +84,15 @@ class _CardInfoWidget extends State<CardInfoWidget>{
 
   @override
   Widget build(BuildContext context) {
+    int? owner_id = widget.owner_id!;
     return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price,
-        widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, widget.id, isOwner, context);
+        widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, widget.id, isOwner, owner_id, context);
   }
 }
 
 Widget _buildCard(String? location, double? rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price,
-    String? description, String? direction, bool private_list, double latitude, double longitude, int? id, bool isOwner, BuildContext context){
+    String? description, String? direction, bool private_list, double latitude, double longitude, int? id,
+    bool isOwner, int? owner_id, BuildContext context){
 
   return Card(
     elevation: 10,
@@ -219,7 +222,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                       isOwner? SizedBox(height: 26):SizedBox(height: 0),
                       isOwner?  Padding(
                           padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.4),
-                          child: ChatButtonWidget(),
+                          child: ChatButtonWidget( to_user: owner_id),
                       ): SizedBox(height: 0),
                     ],
                   ),

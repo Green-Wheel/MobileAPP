@@ -166,7 +166,7 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 20),
-                    child:ChatButtonWidget(),
+                    child:ChatButtonWidget(to_user: owner_id),
                   ),
                   mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
                   mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
