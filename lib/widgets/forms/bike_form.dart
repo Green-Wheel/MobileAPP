@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/serializers/users.dart';
 import 'package:greenwheel/widgets/forms/basic_info.dart';
 import 'package:greenwheel/widgets/forms/bike_info.dart';
 import 'package:greenwheel/widgets/forms/localization_info.dart';
@@ -105,7 +106,7 @@ class _BikeFormState extends State<BikeForm> {
             localization: Localization(latitude: 0.0, longitude: 0.0),
             town: Town(name: '', province: Province(name: '')),
             bike_type: BikeType(name: ''),
-            price: 0.0);
+            price: 0.0, owner: BasicUser(id: 0, username: '', first_name: '', last_name: ''));
   }
 
   @override
