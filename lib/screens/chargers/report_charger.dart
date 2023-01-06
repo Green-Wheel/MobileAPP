@@ -17,14 +17,14 @@ class ReportCharger extends StatefulWidget {
 
 class _ReportChargerState extends State<ReportCharger> {
   var description = TextEditingController();
-  var reason = '';
+  var reason = 1;
 
-  void setReason(text) {
-    reason = text;
+  void setReason(id) {
+    reason = id;
   }
 
   void report() {
-    ReportService.reportPublication(widget.charger_id, reason, description.text).then((value) => GoRouter.of(context).pop());
+    ReportService.reportPublication(widget.charger_id, description.text, reason).then((value) => GoRouter.of(context).pop());
   }
 
   @override

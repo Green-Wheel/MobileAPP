@@ -14,10 +14,10 @@ class User {
     this.email,
     this.about,
     this.profile_picture,
-    required this.language_id,
+    this.language_id,
     required this.level,
     required this.xp,
-    required this.rating,
+    this.rating,
   });
 
   int? id;
@@ -27,10 +27,10 @@ class User {
   String? email;
   String? about;
   String? profile_picture;
-  int language_id;
+  int? language_id;
   int level;
   int xp;
-  double rating;
+  double? rating;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

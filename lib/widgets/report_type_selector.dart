@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/serializers/reports.dart';
 
 import '../services/backendServices/report_service.dart';
 
@@ -13,17 +14,17 @@ class ReportTypeSelector extends StatefulWidget {
 }
 
 class _ReportTypeSelectorState extends State<ReportTypeSelector> {
-  List<String> _reportType = [];
-  String _selectedReportType = "Broken";
+  List<ReportReasonSerializer> _reportType = [];
+  int _selectedReportType = 1;
 
   void _fetchReportTypes() async {
     var result = await ReportService.getReportTypes();
+    if(result.isEmpty) result = [ReportReasonSerializer(name: 'Broken', id: 1), ReportReasonSerializer(name: 'Fake', id: 2), ReportReasonSerializer(name: 'Other', id: 3)];
     setState(() {
-      _reportType = result.isEmpty
-          ? ["Broken", "Not working", "Not charging", "Not available", "Other"]
-          : result;
+      _reportType = result;
+      _selectedReportType = _reportType[0].id != null ? _reportType[0].id! : 1;
     });
-  }
+    }
 
   @override
   void initState() {
@@ -49,14 +50,14 @@ class _ReportTypeSelectorState extends State<ReportTypeSelector> {
           dropdownColor: Colors.white,
           items: _reportType.map((item) {
             return DropdownMenuItem(
-              value: item,
-              child: Text(item),
+              value: item.id,
+              child: Text(item.name),
             );
           }).toList(),
           onChanged: (text) {
             widget.submitSearch(text);
             setState(() {
-              _selectedReportType = text as String;
+              _selectedReportType = text as int;
             });
           },
         ),

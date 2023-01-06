@@ -3,6 +3,7 @@ import 'package:greenwheel/services/backendServices/bikes.dart';
 
 import '../../../serializers/users.dart';
 import '../../../services/backendServices/user_service.dart';
+import '../../../services/generalServices/LoginService.dart';
 import '../../../widgets/image_display.dart';
 
 class UserBasicInfo extends StatefulWidget {
@@ -15,9 +16,10 @@ class UserBasicInfo extends StatefulWidget {
 }
 
 class _UserBasicInfoState extends State<UserBasicInfo> {
-  late User _user;
+  User _user = User(username: '', email: '', about: '', first_name: '', last_name: '', language_id: 0, level: 0, xp: 0, rating: 0);
+  final _loginService = LoginService();
 
-  void _getBike() async {
+  void _getUser() async {
     User? aux = await UserService.getUserInfo(widget.user_id);
     setState(() {
       _user = aux;
@@ -27,7 +29,8 @@ class _UserBasicInfoState extends State<UserBasicInfo> {
   @override
   initState() {
     super.initState();
-    _getBike();
+    _getUser();
+    print('ApiKey:   ------- \n${_loginService.apiKey}');
   }
 
   @override
@@ -47,13 +50,13 @@ class _UserBasicInfoState extends State<UserBasicInfo> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    _user.username ?? "",
+                    'username: ${_user.username}' ?? "",
                     textAlign: TextAlign.left,
                     style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.bold),
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                  Text(_user.first_name ?? ""),
-                  Text(_user.about ?? ""),
+                  Text('about: ${_user.about}' ?? "", style: const TextStyle(fontSize: 20),),
+                  Text('rating: ${_user.rating}' ?? "", style: const TextStyle(fontSize: 20),),
                 ],
               )),
               _user.profile_picture != null

@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/screens/profile/widgets/user_basic_info.dart';
+import 'package:greenwheel/screens/profile/widgets/comment_basic_info.dart';
 import 'package:greenwheel/services/backendServices/report_service.dart';
 import 'package:greenwheel/widgets/report_type_selector.dart';
 
 import '../../widgets/report_description_input.dart';
 
-class ReportUser extends StatefulWidget {
-  final user_id;
+class ReportComment extends StatefulWidget {
+  final comment_id;
 
-  const ReportUser({Key? key, required this.user_id}) : super(key: key);
+  const ReportComment({Key? key, required this.comment_id}) : super(key: key);
 
   @override
-  State<ReportUser> createState() => _ReportUserState();
+  State<ReportComment> createState() => _ReportCommentState();
 }
 
-class _ReportUserState extends State<ReportUser> {
+class _ReportCommentState extends State<ReportComment> {
   var description = TextEditingController();
   var reason = 1;
 
@@ -24,21 +24,21 @@ class _ReportUserState extends State<ReportUser> {
   }
 
   void report() {
-    ReportService.reportUser(widget.user_id, description.text, reason).then((value) => GoRouter.of(context).pop());
+    ReportService.reportRating(widget.comment_id, description.text, reason).then((value) => GoRouter.of(context).pop());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Report user"),
+        title: const Text("Report rating"),
       ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(children: [
-            UserBasicInfo(
-              user_id: widget.user_id,
+            CommentBasicInfo(
+              comment_id: widget.comment_id,
             ),
             ReportTypeSelector(
               submitSearch: setReason,
