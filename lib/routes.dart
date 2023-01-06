@@ -54,7 +54,7 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'chargers/add',
               builder: (context, state) =>
-              const ReportComment(key: Key("AddCharger"), comment_id: 3,),
+              const AddCharger(key: Key("AddCharger")),
             ),
             GoRoute(
               path: 'charger/edit/:id',
