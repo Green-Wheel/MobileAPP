@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class BottomBarWidget extends StatefulWidget {
   final int index;
@@ -77,7 +78,7 @@ class _BottomBarActionButtonState extends State<BottomBarActionButton> {
   }
 
   void _onPressed() {
-    debugPrint("Show chat");
+    GoRouter.of(context).go('/chats');
   }
 
   Widget notificationBadge() {

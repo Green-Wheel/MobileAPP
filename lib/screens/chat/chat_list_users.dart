@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/services/backendServices/chat.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:greenwheel/widgets/username_rating_stars.dart';
 
@@ -33,6 +34,14 @@ class ChatModel {
 class _ChatListUsers extends State<ChatListUsers> {
 
   int _number_new_messages = 0;
+  List chats = [];
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _getChats();
+  }
 
   List<ChatModel> markers = [
     ChatModel(
@@ -152,6 +161,52 @@ class _ChatListUsers extends State<ChatListUsers> {
     ),
   ];
 
+  void _showAvisNoEsPotCarregarChat() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Chat Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load chat info'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _getChats() async {
+    List chatsrequest = await ChatService.getChats();
+    if (chatsrequest.isEmpty && !loading){
+      print("No chats");
+      _showAvisNoEsPotCarregarChat();
+    }
+    else if (loading){
+      print("Loading chats");
+    }
+    print("Chats loaded");
+    print(chats);
+    setState(() {
+      loading = false;
+      chats = chatsrequest;
+    });
+
+  }
+
+
   Widget ListPoints(BuildContext context, List<ChatModel> list) {
     return Column(
       children: [
@@ -221,7 +276,6 @@ class _ChatListUsers extends State<ChatListUsers> {
                                    Icons.brightness_1, size: 17.0,
                                    color: Colors.redAccent,
                                  ),
-                                 //TODO: if num < 10 padding 6.0 els padding left 3.0
                                  _number_new_messages < 10 ? Padding(
                                      padding: EdgeInsets.only(top: 3, left: 6.0),
                                      child: Text(_number_new_messages.toString(), style: TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),))

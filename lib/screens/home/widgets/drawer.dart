@@ -135,7 +135,7 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                 child: const Text('Chat', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
-                Navigator.pop(context);
+                GoRouter.of(context).go('/chats');
               },
             ),
           ),
