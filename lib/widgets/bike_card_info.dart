@@ -27,10 +27,11 @@ class BikeCardInfoWidget extends StatefulWidget {
   double latitude;
   double longitude;
   int? id;
+  int? owner_id;
 
 
   BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,
-    required this.power,  required this.bike_list, required this.latitude, required this.longitude, required this.id, super.key});
+    required this.power,  required this.bike_list, required this.latitude, required this.longitude, required this.id, required this.owner_id, super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
@@ -52,13 +53,14 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
     setState(() {
       userData = data;
       //TODO: obtener user id que falta
-      //mybike = userData['id'] == ;
+      mybike = userData['id'] == widget.owner_id;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.latitude, widget.longitude, widget.id, context, mybike);
+    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description,
+        widget.direction, widget.power, widget.bike_list, widget.latitude, widget.longitude, widget.id, context, mybike, widget.owner_id);
   }
 }
 
@@ -78,13 +80,15 @@ main() {
         latitude: 43.371,
         longitude: -8.395,
         id: 1,
+        owner_id: 1,
       ),
     ),
   ));
 }
 
 
-Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, double latitude, double longitude, int? id, BuildContext context, bool mybike) {
+Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction,
+    double power, bool bike_list, double latitude, double longitude, int? id, BuildContext context, bool mybike, int? owner_id) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(

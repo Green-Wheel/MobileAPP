@@ -227,6 +227,7 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
               double longitude = _markersListAll[index].localization.longitude;
               String? description = "Nice";
               String? direction1 = "Calle 1";
+              int? owner_id = _markersListAll[index].owner.id;
 
               return Flexible(child:GestureDetector(
                 onTap: () {
@@ -235,7 +236,7 @@ class _BikeInfiniteList extends State<BikeInfiniteList>{
                 },
                 child: BikeCardInfoWidget(location: direction, rating: rate, available: available, type: bikeType,
                     price: price, direction: direction1, description: description, bike_list: true, power: 0,
-                    latitude: latitude, longitude: longitude, id: id),
+                    latitude: latitude, longitude: longitude, id: id, owner_id: owner_id),
               ));
             }
           )
