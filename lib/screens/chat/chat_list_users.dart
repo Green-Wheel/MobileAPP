@@ -44,37 +44,6 @@ class _ChatListUsers extends State<ChatListUsers> {
     _getChats();
   }
 
-  List<ChatModel> markers = [
-    ChatModel(
-      username: "Michael Jackson",
-      rate_user: 5.0,
-      last_message_received: "WOW",
-      new_message: true,
-      last_message_time: "12:00",
-    ),
-    ChatModel(
-      username: "Snoop Dogg",
-      rate_user: 3.0,
-      last_message_received: "After diner... dubadoo",
-      new_message: false,
-      last_message_time: "11:00",
-    ),
-    ChatModel(
-      username: "Bob Marley",
-      rate_user: 4.5,
-      last_message_received: "Happy world weed day",
-      new_message: false,
-      last_message_time: "10:00",
-    ),
-    ChatModel(
-      username: "Steve Colins",
-      rate_user: 2.5,
-      last_message_received: "Sultans of Swing",
-      new_message: true,
-      last_message_time: "9:00",
-    ),
-  ];
-
   List<ChatModel> users = [
     ChatModel(
         username: "Michael Jordan",
@@ -297,7 +266,7 @@ class _ChatListUsers extends State<ChatListUsers> {
             bottom: const TabBar(
               indicatorColor: Colors.white,
               tabs: [
-                Tab(icon: Icon(Icons.location_on_outlined), text: "My Markers", ),
+                //Tab(icon: Icon(Icons.location_on_outlined), text: "My Markers", ),
                 Tab(icon: Icon(Icons.supervised_user_circle), text: "Users"),
               ],
             ),
@@ -305,7 +274,7 @@ class _ChatListUsers extends State<ChatListUsers> {
           //TODO: Poner listado de usuarios
           body: TabBarView(
             children: [
-              ListPoints(context, markers),
+              //ListPoints(context, markers),
               ListPoints(context, users),
             ],
           ),
