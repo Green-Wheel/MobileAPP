@@ -17,6 +17,31 @@ class ChatService {
     return result;
   }
 
+  static Future<int> getUnreadMessages() async {
+    int result = 0;
+    await BackendService.get('chats/unread/').then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        result = jsonResponse['unread_messages'];
+      } else {
+        print('Error getting unread messages!');
+      }
+    });
+    return result;
+  }
+
+  /*static int? putUnreadMessage(int chat_id) {
+    int? result;
+    BackendService.put('chargers/unread/$chat_id/', jsonMap).then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        result = int.fromJson(jsonResponse);
+      } else {
+        print('Error updating charger!');
+      }
+    });
+    return result;
+  }*/
   /*
   static Future<List<ChatRoom>> getChatsByChatId(int chatId) async {
     List<ChatRoom> result = [];

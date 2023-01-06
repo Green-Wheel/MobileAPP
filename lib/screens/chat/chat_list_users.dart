@@ -7,7 +7,8 @@ import 'package:greenwheel/widgets/username_rating_stars.dart';
 import '../../widgets/card_chat_users.dart';
 
 class ChatListUsers extends StatefulWidget {
-  ChatListUsers({Key? key}) : super(key: key);
+  int unread = 0;
+  ChatListUsers({Key? key, required this.unread}) : super(key: key);
 
   @override
   State<ChatListUsers> createState() => _ChatListUsers();
@@ -16,7 +17,7 @@ class ChatListUsers extends StatefulWidget {
 main(){
   runApp(MaterialApp(
     home: Scaffold(
-      body: ChatListUsers(),
+      body: ChatListUsers(unread: 0),
     ),
   ),
   );
