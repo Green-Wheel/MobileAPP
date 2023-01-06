@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:greenwheel/services/backendServices/user_service.dart';
+import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:web_socket_channel/io.dart';
 
 class NotificationController{
@@ -15,10 +17,10 @@ class NotificationController{
 
   initWebSocketConnection() async {
     print("Connectant..");
-    //TODO: connectar amb el servidor de socket
+    int userId = LoginService().user_info!['id'];
     try{
       channel = IOWebSocketChannel.connect(
-        Uri.parse('ws://localhost:3000/chat/'), //ws://localhost:3000/chat/$user_id
+        Uri.parse('ws://3.250.219.80/ws/$userId/chats/messages/'), //ws://localhost:3000/chat/$user_id
         pingInterval: Duration(seconds: 10),
       );
       channelStream?.listen((message) {
@@ -39,12 +41,12 @@ class NotificationController{
     initWebSocketConnection();
   }
 
-  void SendMessage (String message, int destinationId) {
+  void SendMessage (String message, int id_user){
+  //TODO: canviar user_id
    try{
       channel?.sink.add(jsonEncode({
         "message": message,
-        //"sourceId": sourceId,
-        "destinationId": destinationId,
+        "to_user": 2,
       }));
     } on Exception catch(e){
       print(e);
