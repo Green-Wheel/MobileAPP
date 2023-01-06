@@ -31,7 +31,7 @@ class _ChargerFilterMapWidget extends State<ChargerFilterMap> {
             scrollDirection: Axis.horizontal,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsets.only(left: 20.0, top: 7.5, bottom: 1),
+                padding: const EdgeInsets.only(left: 25.0, top: 7.5, bottom: 1),
                 child: SizedBox(
                   height: 35,
                   child: TextButton(

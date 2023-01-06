@@ -46,6 +46,7 @@ class LoginService extends ChangeNotifier {
           "level": jsonResponse["level"],
           "xp": jsonResponse["xp"],
           "rating": jsonResponse["rating"],
+          "selected_car": jsonResponse["selected_car"],
         };
       }
     });

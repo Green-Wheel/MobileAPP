@@ -1,4 +1,5 @@
 import 'package:greenwheel/serializers/chargers.dart';
+import 'package:greenwheel/serializers/vehicles.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:ffi';
 
@@ -18,6 +19,7 @@ class User {
     required this.level,
     required this.xp,
     this.rating,
+    required this.selected_car
   });
 
   int? id;
@@ -31,6 +33,7 @@ class User {
   int level;
   int xp;
   double? rating;
+  int selected_car;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

@@ -13,7 +13,7 @@ import '../serializers/chargers.dart';
 
 class CardInfoWidget extends StatefulWidget {
   String? location;
-  double? rating;
+  double rating;
   List<ConnectionType> types;
   bool available;
   bool match;
@@ -185,6 +185,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
               ],
             ),
           ),
+
         ],
     ),
   );
