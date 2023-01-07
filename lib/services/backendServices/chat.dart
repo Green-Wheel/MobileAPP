@@ -17,38 +17,37 @@ class ChatService {
     return result;
   }
 
-  static Future<int> getUnreadMessages() async {
-    int result = 0;
-    await BackendService.get('chats/unread/').then((response) {
+  static Future<ChatRoom?> getChatsId(int chat_id) async {
+    ChatRoom? result;
+    await BackendService.get('chats/$chat_id').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        result = jsonResponse['unread_messages'];
+        result = ChatRoom.fromJson(jsonResponse);
       } else {
-        print('Error getting unread messages!');
+        print('Error getting chats!');
       }
     });
+    print(result);
     return result;
   }
 
-  /*static int? putUnreadMessage(int chat_id) {
-    int? result;
-    BackendService.put('chargers/unread/$chat_id/', jsonMap).then((response) {
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        result = int.fromJson(jsonResponse);
-      } else {
-        print('Error updating charger!');
-      }
-    });
-    return result;
-  }*/
-  /*
-  static Future<List<ChatRoom>> getChatsByChatId(int chatId) async {
-    List<ChatRoom> result = [];
-    await BackendService.get('chats/?id_chat=$chatId').then((response) {
+  static Future<bool> postChat(Map<String, dynamic> data) async{
+    try {
+      var response = await BackendService.post('chats/${data['id']}/', data);
+      if (response.statusCode != 200) return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<List<ChatRoomMessage>> getChatMessages(int chat_id) async {
+    List<ChatRoomMessage> result = [];
+    await BackendService.get('chats/$chat_id/messages').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        result = jsonResponse.map((e) => ChatRoom.fromJson(e)).toList();
+        result = jsonResponse.map((e) => ChatRoomMessage.fromJson(e)).toList();
       } else {
         print('Error getting chats!');
       }
@@ -56,34 +55,41 @@ class ChatService {
     return result;
   }
 
+  static Future<bool> postMessages(Map<String, dynamic> data) async{
+    try {
+      var response = await BackendService.post('chats/${data['id']}/messages', data);
+      if (response.statusCode != 200) return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
 
-  static Future<ChatRoom> getChatById(int chatId) async {
-    ChatRoom result = ChatRoom();
-    await BackendService.get('chat/$chatId/').then((response) {
+  static Future<int> getUnreadMessages() async {
+    int result = 0;
+    await BackendService.get('chats/unread/').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        result = ChatRoom.fromJson(jsonResponse);
+        print(jsonResponse);
+        result = jsonResponse['unreads'];
       } else {
-        print('Error getting chat!');
+        print('Error getting unread messages!');
       }
     });
     return result;
   }
 
-  static Future<ChatRoom> createChat(int userId, int chargerId) async {
-    ChatRoom result = Chat();
-    await BackendService.post('chat/', {
-      'user': userId,
-      'charger': chargerId,
-    }).then((response) {
-      if (response.statusCode == 201) {
-        var jsonResponse = jsonDecode(response.body);
-        result = Chat.fromJson(jsonResponse);
-      } else {
-        print('Error creating chat!');
-      }
-    });
-    return result;
-  }*/
+  static Future<bool> putUnreadMessage(Map<String, dynamic> data) async {
+    try {
+      var response = await BackendService.put('chargers/unread/${data['id']}/', data);
+      if (response.statusCode != 200) return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
 
 }
