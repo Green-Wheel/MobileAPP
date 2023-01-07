@@ -59,7 +59,7 @@ main() {
 }
 
 //direction = true (other user), false = (its me)
-Widget greenCheck(bool direction){
+Widget blueCheck(bool direction){
   if (direction) {
     return const Padding(
       padding: EdgeInsets.only(left: 10),
@@ -87,22 +87,22 @@ Widget greenCheck(bool direction){
 //direction = true (other user), false = (its me)
 Widget greyCheck(bool direction){
   if (direction) {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.only(left: 10),
       child: Icon(
         Icons.done_all,
         size: 20,
-        color: Colors.grey,
+        color: Colors.grey[800],
       ),
     );
   }
   else{
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.only(right: 10),
       child:  Icon(
         Icons.done_all,
         size: 20,
-        color: Colors.grey,
+        color: Colors.grey[800],
       ),
     );
   }
@@ -154,7 +154,7 @@ Widget _messageWidget(String message, bool itsmine, String created_at){
               child: Text(
                 created_at.toString(),
                 style: const TextStyle(
-                  color: Colors.grey,
+                  color: Colors.black,
                   fontSize: 12,
                 ),
               ),
@@ -207,7 +207,7 @@ Widget _messageWidget(String message, bool itsmine, String created_at){
               child: Text(
                 created_at.toString(),
                 style: const TextStyle(
-                  color: Colors.grey,
+                  color: Colors.black,
                   fontSize: 12,
                 ),
               ),

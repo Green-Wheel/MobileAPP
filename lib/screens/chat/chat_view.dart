@@ -160,6 +160,7 @@ class _ChatView extends State<ChatView> {
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
+              if (index == 0) return Container();
               bool isMe = _messages[index].sender.id == LoginService().user_info!['id'];
               return MessageWidget( message: _messages[index].content, itsmine: isMe, created_at: _messages[index].created_at.toString(),);
             },
@@ -174,7 +175,7 @@ class _ChatView extends State<ChatView> {
     return Stack(
       children: [
         Image.asset(
-          "assets/images/no_image.png",
+          "assets/images/background_chat.jpg",
            height: MediaQuery.of(context).size.height,
            width: MediaQuery.of(context).size.width,
            fit: BoxFit.cover,
@@ -222,25 +223,22 @@ class _ChatView extends State<ChatView> {
     );
   }
   /*
-              Column(
+               Column(
               children: [
                 Expanded(
                   //TODO: change a listview.builder
-                    child: ListView(
+                  child: ListView(
                       controller: _scrollController,
                       children:[
-                          //TODO: poner el chat (nuevo fichero)
-                          SizedBox(height: 10),
-                          MessageWidget(message: "Hola", itsmine: true, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread:DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                          MessageWidget(message: "Hola", itsmine: false, read: true, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                          MessageWidget(message: "Adeu", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                          MessageWidget(message: "HUguvhkgkkcgckgkctgcjcfgcfcfxfcjfjcgcghhhhhhhhhhcghcghcghcghcghtytyt", itsmine: true, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-                          MessageWidget(message: "HUguvhkgkkcgckgkctgcjcfgcfcfxfcjfjcgcghhhhhhhhhhcghcghcghcghcghtytyt", itsmine: false, read: false, datesend: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), dateread: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+                        //TODO: poner el chat (nuevo fichero)
+                        SizedBox(height: 10),
+                        MessageWidget(message: "Hola", itsmine: true, created_at: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),),
+                        MessageWidget(message: "Hola", itsmine: false, created_at: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),),
                       ]
-                    ),
+                  ),
                 ),
               ],
-            ),
+              ),
    */
 }
 
