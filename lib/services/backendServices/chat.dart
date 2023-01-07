@@ -66,6 +66,19 @@ class ChatService {
     }
   }
 
+  static ChatRoom? deleteChat(int chat_id) {
+    ChatRoom? result;
+    BackendService.delete('chats/$chat_id/').then((response) {
+      if (response.statusCode == 204) {
+        var jsonResponse = jsonDecode(response.body);
+        result = ChatRoom.fromJson(jsonResponse);
+      } else {
+        print('Error deleting chat!');
+      }
+    });
+    return result;
+  }
+
   static Future<int> getUnreadMessages() async {
     int result = 0;
     await BackendService.get('chats/unread/').then((response) {
