@@ -61,7 +61,7 @@ class _InfoUser extends State<InfoUser>  {
                               ? userData['first_name'] + " " + userData['last_name']
                                   : "User Name",
                               rating :userData['rating']!=null ? userData['rating'].toString() : "2.5",
-                              edit_button: widget.edit_button),
+                              edit_button: widget.edit_button, id: widget.id),
                           ),
                           Text('Username: ${userData['username']}'),
                           Text("lvl ${userData['level']} |  lvl ${userData['xp']} xp" ?? "1 + | 0 xp"),
