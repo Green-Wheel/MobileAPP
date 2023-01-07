@@ -4,12 +4,11 @@ import '../screens/home/widgets/drawer.dart';
 import 'package:intl/intl.dart';
 
 class MessageWidget extends StatefulWidget {
-  bool read;
+  //bool read;
   bool itsmine;
   String message;
-  String datesend;
-  String dateread;
-  MessageWidget({required this.message, required this.itsmine, required this.read, required this.datesend, required this.dateread, super.key});
+  String created_at;
+  MessageWidget({required this.message, required this.itsmine, required this.created_at, super.key});
 
   @override
   State<StatefulWidget> createState() => _MessageWidget();
@@ -18,7 +17,7 @@ class MessageWidget extends StatefulWidget {
 class _MessageWidget extends State<MessageWidget>{
   @override
   Widget build(BuildContext context) {
-    return _messageWidget(widget.message, widget.itsmine, widget.read, widget.datesend, widget.dateread);
+    return _messageWidget(widget.message, widget.itsmine, widget.created_at);
   }
 }
 
@@ -48,8 +47,8 @@ main() {
           ],
         ),*/
         children:[
-          _messageWidget("Hola shbcdhsadhslabchsdlbchsdlchbdslcvhdslchdslchdslvchdslcbhdslcbhdslcbhslcbhsl", true, false, DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-          _messageWidget("shdkshldhsalssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", false, true, DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()), DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
+          _messageWidget("Hola shbcdhsadhslabchsdlbchsdlchbdslcvhdslchdslchdslvchdslcbhdslcbhdslcbhslcbhsl", true, DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),),
+          _messageWidget("shdkshldhsalssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", false, DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
         ]
       ),
    //   drawer: SimpleDrawer(),
@@ -111,7 +110,7 @@ Widget greyCheck(bool direction){
 
 
 //funcion para mostrar las estrellas
-Widget _messageWidget(String message, bool itsmine, bool read, String datesend, String dateread){
+Widget _messageWidget(String message, bool itsmine, String created_at){
   if (!itsmine){
     return Column(
       children:<Widget>[
@@ -149,11 +148,11 @@ Widget _messageWidget(String message, bool itsmine, bool read, String datesend, 
         ),
         Row(
           children: <Widget>[
-            read ? greenCheck(true) : greyCheck(true),
+            greyCheck(true),
             Container(
               margin: const EdgeInsets.only(left: 5),
               child: Text(
-                datesend.toString(),
+                created_at.toString(),
                 style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 12,
@@ -206,14 +205,14 @@ Widget _messageWidget(String message, bool itsmine, bool read, String datesend, 
             Container(
               margin: const EdgeInsets.only(right: 2),
               child: Text(
-                datesend.toString(),
+                created_at.toString(),
                 style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 12,
                 ),
               ),
             ),
-            read ? greenCheck(false) : greyCheck(false),
+            greyCheck(false),
           ],
         )
       ],

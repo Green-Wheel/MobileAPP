@@ -213,7 +213,6 @@ class _ChatListUsers extends State<ChatListUsers> {
                 IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      //TODO: implementar ruta de chat
                       GoRouter.of(context).go('/');
                     }
                 ),

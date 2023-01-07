@@ -2,11 +2,14 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/serializers/chat.dart';
+import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:intl/intl.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
+import '../../services/backendServices/chat.dart';
 import '../../widgets/message_widget.dart';
 
 class ChatView extends StatefulWidget {
@@ -50,7 +53,7 @@ class _ChatView extends State<ChatView> {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
                   TextButton(
                       onPressed: () {
-                        //TODO: ruta pagina anterior
+                        GoRouter.of(context).go('/');
                       },
                       child: Text("Cancel")
                   ),
@@ -68,13 +71,13 @@ class _ChatView extends State<ChatView> {
         }
     );
   }
-
+  late bool _isLastPage;
   late bool _error;
   late bool _loading;
   late int _pageNumber;
   final int _numberOfPostsPerRequest = 30;
   final int _nextPageTrigger = 3;
-  List<String> _messages = [];
+  List<ChatRoomMessage> _messages = [];
 
   @override
   void initState() {
@@ -83,16 +86,18 @@ class _ChatView extends State<ChatView> {
     _error = false;
     _loading = true;
     _pageNumber = 1;
+    _isLastPage = false;
     fetchData();
   }
 
   Future<void> fetchData() async {
     try {
+      final messages = await ChatService.getChatMessages(widget.id_chat!);
       setState(() {
-       // _getBikesList(_pageNumber);
-        //_isLastPage = _markersListAll.length > _numberOfPostsPerRequest;
+        _messages = messages;
+        _isLastPage = _messages.length > _numberOfPostsPerRequest;
         _loading = false;
-        //_pageNumber = _pageNumber + 1;
+        _pageNumber = _pageNumber + 1;
         //_markersListAll.addAll(_markersList);
       });
     } catch (e) {
@@ -104,7 +109,7 @@ class _ChatView extends State<ChatView> {
     }
   }
 
-  Widget errorDialog({required double size}){
+  /*Widget errorDialog({required double size}){
     return SizedBox(
       height: 180,
       width: 200,
@@ -131,7 +136,7 @@ class _ChatView extends State<ChatView> {
         ],
       ),
     );
-  }
+  }*/
 
   Widget buildMessagesView() {
     if (_messages.isEmpty){
@@ -141,22 +146,25 @@ class _ChatView extends State<ChatView> {
               padding: EdgeInsets.all(25),
               child: CircularProgressIndicator(),
             ));
-      } else if(_error) {
+      }/* else if(_error) {
         return errorDialog(size: 20);
-      }
+      }*/
     }
     return Column(
       children: [
-        /*Expanded(
+        Expanded(
           //TODO: change a listview.builder
           child:ListView.builder(
             controller: _scrollController,
-            itemCount: _messages.length,
+            itemCount: _messages.length + (_isLastPage ? 0 : 1),
+            shrinkWrap: true,
+            scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
-              return MessageWidget( message: _messages[index], username: widget.username, dateread: , datesend: , read: , itsmine: ,);
+              bool isMe = _messages[index].sender.id == LoginService().user_info!['id'];
+              return MessageWidget( message: _messages[index].content, itsmine: isMe, created_at: _messages[index].created_at.toString(),);
             },
           ),
-        ),*/
+        ),
       ],
     );
   }
