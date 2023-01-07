@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/screens/profile/widgets/aboutMe.dart';
 import 'package:greenwheel/screens/profile/widgets/infouser.dart';
 import 'package:greenwheel/screens/profile/widgets/mypoints.dart';
-import '../../serializers/users.dart';
 import '../../services/generalServices/LoginService.dart';
 
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
-
+  ProfilePage({Key? key, required id}) : id=id,super(key: key);
+  int id;
   @override
   State<ProfilePage> createState() => _ProfilePage();
 
@@ -23,7 +23,6 @@ class _ProfilePage extends State<ProfilePage> {
   }
   void _getData() async {
     var data = _loggedInStateInfo.user_info;
-    print(data);
     setState(() {
       userData = data;
     });
@@ -37,12 +36,11 @@ class _ProfilePage extends State<ProfilePage> {
       ),
       body: Column(
         children: <Widget>[
-
           Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height/5,
             padding: const EdgeInsets.only(top:20),
-            child: InfoUser(),
+            child: InfoUser(widget.id),
           ),
           Container(
             padding : const EdgeInsets.only(top:0),
@@ -54,7 +52,7 @@ class _ProfilePage extends State<ProfilePage> {
           ),
           Container(
             padding: const EdgeInsets.only(top:5),
-            child: aboutMe( userData['about'] != null ? userData['about'] : "No content aboutMe"),//ficar user
+            child:  (userData['id'] == widget.id) ? AboutMe(userData['id']) : AboutMe(widget.id),//ficar user
           ),
           Container(
             padding : const EdgeInsets.only(top:5),
@@ -80,7 +78,7 @@ class _ProfilePage extends State<ProfilePage> {
           ),
           Container(
            // height: MediaQuery.of(context).size.height/2,
-            child: MyPoints(userData['id']),
+            child: (userData['id'] == widget.id) ? MyPoints(userData['id']) : MyPoints(widget.id),
           ),
         ],
       ),
