@@ -98,7 +98,7 @@ class _ChatView extends State<ChatView> {
   @override
   void initState() {
     super.initState();
-    //_messages = [];
+    _messages = [];
     _error = false;
     _loading = true;
     _pageNumber = 1;
@@ -110,8 +110,8 @@ class _ChatView extends State<ChatView> {
     try {
       final messages = await ChatService.getChatMessages(widget.to_user!);
       setState(() {
-        //_messages = messages;
-        _isLastPage = _messages.length > _numberOfPostsPerRequest;
+        _messages = messages;
+        _isLastPage = _messages.length < _numberOfPostsPerRequest;
         _loading = false;
         _pageNumber = _pageNumber + 1;
         //_markersListAll.addAll(_markersList);
@@ -143,7 +143,7 @@ class _ChatView extends State<ChatView> {
           //TODO: change a listview.builder
           child:ListView.builder(
             controller: _scrollController,
-            itemCount: _messages.length,
+            itemCount: _messages.length + (_isLastPage ? 0 : 1),
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
@@ -159,6 +159,7 @@ class _ChatView extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
+    print(_messages);
     return Stack(
       children: [
         Image.asset(
@@ -202,7 +203,7 @@ class _ChatView extends State<ChatView> {
               ),
             ),
             body: buildMessagesView(),
-            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController, to_user: widget.to_user),
+            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController, to_user: widget.to_user, messages: _messages,),
         )
       ],
     );

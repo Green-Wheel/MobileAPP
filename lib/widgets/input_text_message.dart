@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:greenwheel/widgets/button_send_message.dart';
 
+import '../serializers/chat.dart';
+
 class InputTextMessageWidget extends StatefulWidget {
   TextEditingController controller;
   ScrollController scrollController;
   int? to_user;
-  InputTextMessageWidget({Key? key, required this.controller, required this.scrollController, required this.to_user}) : super(key: key);
+  List<ChatRoomMessage> messages;
+  InputTextMessageWidget({Key? key, required this.controller, required this.scrollController, required this.to_user, required this.messages}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _InputTextMessageWidget();
@@ -36,7 +39,7 @@ class _InputTextMessageWidget extends State<InputTextMessageWidget> {
               width: 10,
             ),
             suffixIcon: ButtonSendMessageWidget(controller: widget.controller,
-                scrollController: widget.scrollController, to_user: widget.to_user),
+                scrollController: widget.scrollController, to_user: widget.to_user, messages: widget.messages),
             ),
           ),
         ),

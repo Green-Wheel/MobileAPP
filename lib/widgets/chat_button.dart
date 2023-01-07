@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/chat/chat_list_users.dart';
 
+import '../serializers/chat.dart';
 import '../services/backendServices/chat.dart';
 
 class ChatButtonWidget extends StatefulWidget {
@@ -16,6 +17,7 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
 
   bool loading = true;
   List chats = [];
+  List<ChatRoom> userschats = [];
   //get de chats y buscar uno que tenga el to_user = widget.to_user, sino
   void _showAvisNoEsPotCarregarChat() async {
     return showDialog<void>(
@@ -45,8 +47,8 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
   }
 
   void _getChats() async {
-    List chatsrequest = await ChatService.getChats();
-    if (chatsrequest.isEmpty && !loading){
+    ChatRoom? chatsrequest = await ChatService.getChatsId(widget.to_user);
+    if (chatsrequest?.id == null && !loading){
       print("No chats");
       _showAvisNoEsPotCarregarChat();
     }
@@ -57,7 +59,7 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
     print(chats);
     setState(() {
       loading = false;
-      chats = chatsrequest;
+      userschats.add(chatsrequest!);
     });
   }
 
@@ -97,13 +99,13 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
         ),
         onPressed: () {
           //TODO: Ruta a chat
-          int chat_id = _getChatId();
-          if (chat_id == -1){
-            _showAvisNoEsPotCarregarChat();
+          if (userschats.isEmpty){
+            GoRouter.of(context).go('/chats');
             //Crear chat
           }
-          else{
-            GoRouter.of(context).go('/chats/$chat_id');
+          else{ //Si no existeix el chat, crear-lo
+            GoRouter.of(context).go('/chats/${userschats[0].id}');
+
           }
         },
         child: Row(
