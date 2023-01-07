@@ -16,4 +16,17 @@ class RatingService {
     });
     return result;
   }
+
+  static Future<Rating> getRating(int id) async {
+    var result = null;
+    await BackendService.get('ratings/$id/').then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        result = Rating.fromJson(jsonResponse);
+      } else {
+        print('Error getting rating!');
+      }
+    });
+    return result;
+  }
 }
