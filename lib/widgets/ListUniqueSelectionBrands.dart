@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../serializers/vehicles.dart';
 
 class ListUniqueSelectionBrands extends StatefulWidget {
@@ -20,11 +19,11 @@ class ListUniqueSelectionBrands extends StatefulWidget {
 }
 
 class _ListUniqueSelectionBrandsState extends State<ListUniqueSelectionBrands> {
-  late int _selectedItemId;
+  int _selectedItemId = 1;
 
   @override
   void initState() {
-    _selectedItemId = widget.selectedItemId;
+    //_selectedItemId = widget.selectedItemId;
     super.initState();
   }
 
@@ -34,6 +33,7 @@ class _ListUniqueSelectionBrandsState extends State<ListUniqueSelectionBrands> {
       title: Text(widget.title),
       trailing: DropdownButton<int>(
         value: _selectedItemId,
+        dropdownColor: Colors.white,
         onChanged: (value) {
           setState(() {
             _selectedItemId = value!;
@@ -43,7 +43,7 @@ class _ListUniqueSelectionBrandsState extends State<ListUniqueSelectionBrands> {
         items: widget.items.map((item) {
           return DropdownMenuItem(
             value: item.id,
-            child: Text(item.name),
+            child: Text(item.name, style: const TextStyle(color: Colors.black)),
           );
         }).toList(),
       ),

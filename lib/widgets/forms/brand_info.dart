@@ -54,18 +54,20 @@ class _BrandInfoState extends State<BrandInfo> {
                 });
               },
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Center(
               child: Row(
                 children: [
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () {
                       widget.prevPage();
                     },
                     child: const Text('Previous'),
                   ),
-                  SizedBox(width: 20),
+                  const SizedBox(width: 20),
                   ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () {
                       widget.callback(widget.brandId);
                       widget.nextPage();

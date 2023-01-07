@@ -19,8 +19,8 @@ class _VehicleFormState extends State<VehicleForm> {
   //variables
   int _page = 0;
   late final Map<String, dynamic> _data;
-  late final int _brandId;
-  late final String _modelName;
+  int _brandId = 0;
+  int _modelId = 0;
 
   //functions
   void nextPage() {
@@ -62,16 +62,18 @@ class _VehicleFormState extends State<VehicleForm> {
     });
   }
 
-  void getModelName(String modelName) {
+  void getModelId(int modelId) {
     setState(() => {
-      _modelName = modelName,
+      _modelId = modelId,
     });
   }
 
-  Future<void> getYearModel(models) async {
+  Future<void> getYearModel(int model) async {
+    print('model $model');
     setState(() => {
-      _data['model'] = models['model'],
+      _data['model'] = model,
     });
+    print('Dades a fer post $_data');
     if (widget.data != null) {
       bool bUpdateVehicle = await VehicleService.putVehicle(_data);
       if (!bUpdateVehicle) {
@@ -130,8 +132,8 @@ class _VehicleFormState extends State<VehicleForm> {
         {
           return ModelInfo(
               brandId: _brandId,
-              modelName: _modelName,
-              callback: getModelName,
+              modelId: _modelId,
+              callback: getModelId,
               nextPage: nextPage,
               prevPage: previousPage);
         }
@@ -142,7 +144,7 @@ class _VehicleFormState extends State<VehicleForm> {
                 'model': _data['model']
               },
               brandId: _brandId,
-              modelName: _modelName,
+              modelId: _modelId,
               callback: getYearModel,
               prevPage: previousPage);
         }

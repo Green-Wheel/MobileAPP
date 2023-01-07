@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/serializers/vehicles.dart';
 import '../../services/backendServices/vehicles.dart';
 import '../ListUniqueSelectionYearModels.dart';
@@ -8,7 +9,7 @@ import '../ListUniqueSelectionYearModels.dart';
 class YearModelInfo extends StatefulWidget {
   var data;
   int brandId;
-  String modelName;
+  int modelId;
   final Function callback;
   final Function prevPage;
 
@@ -16,7 +17,7 @@ class YearModelInfo extends StatefulWidget {
       {Key? key,
         required this.data,
         required this.brandId,
-        required this.modelName,
+        required this.modelId,
         required this.callback,
         required this.prevPage})
       : super(key: key);
@@ -27,56 +28,83 @@ class YearModelInfo extends StatefulWidget {
 
 class _YearModelInfoState extends State<YearModelInfo> {
   List<CarBrandYear> _yearModels = [];
+  late int selectedYearModel;
+  late Future<List<CarBrandYear>> _yearModelFuture;
 
-  void _getBrands() async {
-    List<CarBrandYear> yearModelList = await VehicleService.getVehicleBrandYear(widget.brandId, widget.modelName);
-    setState(() {
-      _yearModels = yearModelList;
-    });
+  Future<List<CarBrandYear>> _getYearModels() async {
+    List<CarBrandYear> yearModelList = await VehicleService.getVehicleBrandYear(widget.brandId, widget.modelId);
+    if (yearModelList.isNotEmpty) {
+      setState(() {
+        _yearModels = yearModelList;
+        print('YearModels crida $_yearModels');
+        widget.data['model'] = _yearModels[0].id;
+        selectedYearModel = widget.data['model'];
+      });
+      return yearModelList;
+    } else {
+      throw Exception('No year models found for this year model');
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    _getBrands();
+    _yearModelFuture = _getYearModels();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SingleChildScrollView(
-          child: Column(children: [
-            ListUniqueSelectionYearModels(
-              title: 'Choose a car year model for ${widget.modelName}',
-              items: _yearModels,
-              selectedItem: widget.data['model'],
-              onChanged: (value) {
-                setState(() {
-                  widget.data['model'] = value;
-                });
-              },
-            ),
-            const SizedBox(height: 10),
-            Center(
-              child: Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.prevPage();
-                    },
-                    child: const Text('Previous'),
+    print('hey ${widget.data['model']}');
+    print(_yearModels);
+    return FutureBuilder<List<CarBrandYear>>(
+        future: _yearModelFuture,
+        builder: (BuildContext context, AsyncSnapshot<List<CarBrandYear>> snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (snapshot.hasError) {
+        return Text('Error: ${snapshot.error}');
+      } else { // snapshot.connectionState == ConnectionState.done
+        _yearModels = snapshot.data!;
+        return Scaffold(
+            body: SingleChildScrollView(
+              child: Column(children: [
+                ListUniqueSelectionYearModels(
+                  title: 'Choose a car year model',
+                  items: _yearModels,
+                  selectedItem: widget.data['model'],
+                  onChanged: (value) {
+                    setState(() {
+                      widget.data['model'] = value;
+                      print('Model year updated: ${widget.data['model']}');
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+                Center(
+                  child: Row(
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                        onPressed: () {
+                          widget.prevPage();
+                        },
+                        child: const Text('Previous'),
+                      ),
+                      const SizedBox(width: 20),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                        onPressed: () {
+                          widget.callback(widget.data['model']);
+                          GoRouter.of(context).go('/');
+                        },
+                        child: const Text('Submit'),
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.callback(widget.brandId);
-                    },
-                    child: const Text('Submit'),
-                  ),
-                ],
-              ),
-            ),
-          ]),
-        ));
+                ),
+              ]),
+            ));
+      }
+    });
   }
 }

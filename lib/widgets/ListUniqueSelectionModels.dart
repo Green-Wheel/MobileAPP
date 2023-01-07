@@ -5,8 +5,8 @@ import '../serializers/vehicles.dart';
 class ListUniqueSelectionModels extends StatefulWidget {
   final String title;
   final List<CarModel> items;
-  final String selectedItem;
-  final Function(String) onChanged;
+  final int selectedItem;
+  final Function(int) onChanged;
 
   ListUniqueSelectionModels({
     required this.title,
@@ -20,20 +20,24 @@ class ListUniqueSelectionModels extends StatefulWidget {
 }
 
 class _ListUniqueSelectionModelsState extends State<ListUniqueSelectionModels> {
-  late String _selectedItem;
+  late int _selectedItem;
 
   @override
   void initState() {
-    _selectedItem = widget.selectedItem;
     super.initState();
+    setState(() {
+      _selectedItem = widget.selectedItem;
+    });
+    print('Selected item: $_selectedItem');
   }
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(widget.title),
-      trailing: DropdownButton<String>(
+      trailing: DropdownButton<int>(
         value: _selectedItem,
+        dropdownColor: Colors.white,
         onChanged: (value) {
           setState(() {
             _selectedItem = value!;
@@ -42,8 +46,8 @@ class _ListUniqueSelectionModelsState extends State<ListUniqueSelectionModels> {
         },
         items: widget.items.map((item) {
           return DropdownMenuItem(
-            value: item.name,
-            child: Text(item.name),
+            value: item.id,
+            child: Text(item.name, style: const TextStyle(color: Colors.black)),
           );
         }).toList(),
       ),

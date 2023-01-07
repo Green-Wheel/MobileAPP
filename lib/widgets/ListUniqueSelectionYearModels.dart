@@ -20,12 +20,15 @@ class ListUniqueSelectionYearModels extends StatefulWidget {
 }
 
 class _ListUniqueSelectionYearModelsState extends State<ListUniqueSelectionYearModels> {
-  late int _selectedItem;
+  int _selectedItem = 1;
 
   @override
   void initState() {
-    _selectedItem = widget.selectedItem;
     super.initState();
+    setState(() {
+      _selectedItem = widget.selectedItem;
+    });
+    print('Selected item: $_selectedItem');
   }
 
   @override
@@ -34,6 +37,7 @@ class _ListUniqueSelectionYearModelsState extends State<ListUniqueSelectionYearM
       title: Text(widget.title),
       trailing: DropdownButton<int>(
         value: _selectedItem,
+        dropdownColor: Colors.white,
         onChanged: (value) {
           setState(() {
             _selectedItem = value!;
@@ -42,8 +46,8 @@ class _ListUniqueSelectionYearModelsState extends State<ListUniqueSelectionYearM
         },
         items: widget.items.map((item) {
           return DropdownMenuItem(
-            value: item.year,
-            child: Text(item.year.toString()),
+            value: item.id,
+            child: item.year == null ? const Text('No year', style: TextStyle(color: Colors.black)) : Text(item.year.toString(), style: const TextStyle(color: Colors.black)),
           );
         }).toList(),
       ),
