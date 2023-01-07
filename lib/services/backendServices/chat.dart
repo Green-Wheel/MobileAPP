@@ -17,9 +17,9 @@ class ChatService {
     return result;
   }
 
-  static Future<ChatRoom?> getChatsId(int chat_id) async {
+  static Future<ChatRoom?> getChatsId(int? to_user) async {
     ChatRoom? result;
-    await BackendService.get('chats/$chat_id').then((response) {
+    await BackendService.get('chats/$to_user').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         result = ChatRoom.fromJson(jsonResponse);
@@ -42,9 +42,9 @@ class ChatService {
     }
   }
 
-  static Future<List<ChatRoomMessage>> getChatMessages(int chat_id) async {
+  static Future<List<ChatRoomMessage>> getChatMessages(int to_user) async {
     List<ChatRoomMessage> result = [];
-    await BackendService.get('chats/$chat_id/messages').then((response) {
+    await BackendService.get('chats/$to_user/messages').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         result = jsonResponse.map((e) => ChatRoomMessage.fromJson(e)).toList();
@@ -66,9 +66,9 @@ class ChatService {
     }
   }
 
-  static ChatRoom? deleteChat(int chat_id) {
+  static ChatRoom? deleteChat(int to_user) {
     ChatRoom? result;
-    BackendService.delete('chats/$chat_id/').then((response) {
+    BackendService.delete('chats/$to_user/').then((response) {
       if (response.statusCode == 204) {
         var jsonResponse = jsonDecode(response.body);
         result = ChatRoom.fromJson(jsonResponse);

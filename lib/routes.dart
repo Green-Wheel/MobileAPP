@@ -119,7 +119,7 @@ GoRouter routeGenerator(LoginService loginService) {
               builder: (context, state) {
                 final id = int.parse(state.params['id']!);
                 final username = state.params['username']!;
-                return ChatView(key: Key("ChatListUsers"), username: username, id_chat: id);
+                return ChatView(key: Key("ChatListUsers"), username: username, to_user: id);
               },
             ),
             GoRoute(
@@ -127,7 +127,7 @@ GoRouter routeGenerator(LoginService loginService) {
               builder: (context, state) {
                 final id = int.parse(state.params['id']!);
                 final username = state.params['username']!;
-                return ChatView(key: Key("ChatListUsers"), username: username, id_chat: id);
+                return ChatView(key: Key("ChatListUsers"), username: username, to_user: id);
               },
             ),
             GoRoute(

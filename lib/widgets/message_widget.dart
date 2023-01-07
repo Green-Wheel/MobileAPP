@@ -21,45 +21,9 @@ class _MessageWidget extends State<MessageWidget>{
   }
 }
 
-//TODO: en la screen implementar scroll con mensajes agrupados por dias + acabar de poner formato hora del mensaje bien
-main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(title: Text("Chat"), actions: [
-        IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-            })
-      ]),
-      body: Column(
-        /*child: Column(
-          children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                reverse: true,
-                padding: EdgeInsets.all(20),
-                itemCount: messages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _chatBubble(message, isMe, isSameUser);
-                },
-              ),
-            ),
-          ],
-        ),*/
-        children:[
-          _messageWidget("Hola shbcdhsadhslabchsdlbchsdlchbdslcvhdslchdslchdslvchdslcbhdslcbhdslcbhslcbhsl", true, DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),),
-          _messageWidget("shdkshldhsalssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", false, DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now())),
-        ]
-      ),
-   //   drawer: SimpleDrawer(),
-      floatingActionButton: const BottomBarActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    ),
-  ));
-}
 
 //direction = true (other user), false = (its me)
-Widget blueCheck(bool direction){
+/*Widget blueCheck(bool direction){
   if (direction) {
     return const Padding(
       padding: EdgeInsets.only(left: 10),
@@ -80,7 +44,7 @@ Widget blueCheck(bool direction){
       ),
     );
   }
-}
+}*/
 
 
 

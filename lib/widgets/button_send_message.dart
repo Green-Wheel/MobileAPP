@@ -6,7 +6,7 @@ import '../services/generalServices/WebSocketService.dart';
 class ButtonSendMessageWidget extends StatefulWidget {
   TextEditingController controller;
   ScrollController scrollController;
-  int to_user;
+  int? to_user;
   ButtonSendMessageWidget({Key? key, required this.controller, required this.scrollController, required this.to_user}) : super(key: key);
 
   @override
@@ -31,7 +31,7 @@ class _ButtonSendMessageWidget extends State<ButtonSendMessageWidget>{
           curve: Curves.easeOut,
         );
 
-        notificationController.SendMessage(widget.controller.text, widget.to_user);
+        notificationController.SendMessage(widget.controller.text, widget.to_user!);
         widget.controller.clear();
       },
       elevation: 0,

@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/serializers/chat.dart';
+import 'package:greenwheel/serializers/users.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:intl/intl.dart';
@@ -14,8 +15,8 @@ import '../../widgets/message_widget.dart';
 
 class ChatView extends StatefulWidget {
   String username;
-  int? id_chat;
-  ChatView({Key? key, required this.username, required this.id_chat}) : super(key: key);
+  int? to_user;
+  ChatView({Key? key, required this.username, required this.to_user}) : super(key: key);
 
   @override
   State<ChatView> createState() => _ChatView();
@@ -24,7 +25,7 @@ class ChatView extends StatefulWidget {
 main(){
   runApp(MaterialApp(
     home: Scaffold(
-      body: ChatView(username: "Michael Jordan", id_chat: 1),
+      body: ChatView(username: "Michael Jordan", to_user: 1),
       ),
     ),
   );
@@ -61,6 +62,8 @@ class _ChatView extends State<ChatView> {
                   TextButton(
                     onPressed: () {
                       //TODO: borrar chat ruta
+                      ChatService.deleteChat(widget.to_user!);
+                      GoRouter.of(context).go('/chat');
                     },
                     child: Text("Delete", style: TextStyle(color: Colors.red),),
                   ),
@@ -77,12 +80,25 @@ class _ChatView extends State<ChatView> {
   late int _pageNumber;
   final int _numberOfPostsPerRequest = 30;
   final int _nextPageTrigger = 3;
-  List<ChatRoomMessage> _messages = [];
+  List<ChatRoomMessage> _messages = [
+    /*ChatRoomMessage(
+      content: "Hola",
+      created_at: DateTime.now(),
+      id: 1,
+      sender: BasicUser(first_name: "Michael", last_name: "Jordan", username: "Michael Jordan"),
+    ),
+    ChatRoomMessage(
+      content: "Hoa",
+      created_at: DateTime.now(),
+      id: 1,
+      sender: BasicUser(first_name: "Kobe", last_name: "Bryant", username: "Kobe Bryant"),
+    ),*/
+  ];
 
   @override
   void initState() {
     super.initState();
-    _messages = [];
+    //_messages = [];
     _error = false;
     _loading = true;
     _pageNumber = 1;
@@ -92,9 +108,9 @@ class _ChatView extends State<ChatView> {
 
   Future<void> fetchData() async {
     try {
-      final messages = await ChatService.getChatMessages(widget.id_chat!);
+      final messages = await ChatService.getChatMessages(widget.to_user!);
       setState(() {
-        _messages = messages;
+        //_messages = messages;
         _isLastPage = _messages.length > _numberOfPostsPerRequest;
         _loading = false;
         _pageNumber = _pageNumber + 1;
@@ -108,35 +124,6 @@ class _ChatView extends State<ChatView> {
       });
     }
   }
-
-  /*Widget errorDialog({required double size}){
-    return SizedBox(
-      height: 180,
-      width: 200,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text('An error occurred when fetching the posts.',
-            style: TextStyle(
-                fontSize: size,
-                fontWeight: FontWeight.w500,
-                color: Colors.black
-            ),
-          ),
-          const SizedBox(height: 10),
-          TextButton(
-              onPressed:  ()  {
-                setState(() {
-                  _loading = true;
-                  _error = false;
-                  fetchData();
-                });
-              },
-              child: const Text("Retry", style: TextStyle(fontSize: 20, color: Colors.blueAccent),)),
-        ],
-      ),
-    );
-  }*/
 
   Widget buildMessagesView() {
     if (_messages.isEmpty){
@@ -156,13 +143,13 @@ class _ChatView extends State<ChatView> {
           //TODO: change a listview.builder
           child:ListView.builder(
             controller: _scrollController,
-            itemCount: _messages.length + (_isLastPage ? 0 : 1),
+            itemCount: _messages.length,
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
-              if (index == 0) return Container();
-              bool isMe = _messages[index].sender.id == LoginService().user_info!['id'];
-              return MessageWidget( message: _messages[index].content, itsmine: isMe, created_at: _messages[index].created_at.toString(),);
+              if (index < 0) return Container();
+              bool isMe = _messages[index].sender.id == LoginService().user_info?['id'];
+              return MessageWidget( message: _messages[index].content, itsmine: isMe, created_at: DateFormat('dd-MM-yyyy hh:mm').format(_messages[index].created_at),);
             },
           ),
         ),
@@ -189,7 +176,6 @@ class _ChatView extends State<ChatView> {
                   IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        //TODO: implementar ruta de chat
                         GoRouter.of(context).go('/');
                       }
                   ),
@@ -209,15 +195,14 @@ class _ChatView extends State<ChatView> {
                       icon: const Icon(Icons.delete),
                       iconSize: 30,
                       onPressed: () {
-                        DeleteChat(widget!.id_chat);
+                        DeleteChat(widget!.to_user);
                       }
                   ),
                 ],
               ),
             ),
             body: buildMessagesView(),
-            //TODO: poner id to_user correspondiente
-            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController, to_user: 1),
+            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController, to_user: widget.to_user),
         )
       ],
     );
