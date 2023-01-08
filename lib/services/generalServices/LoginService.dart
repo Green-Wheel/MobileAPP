@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:greenwheel/helpers/constants.dart';
 import 'package:greenwheel/services/backendServices/user_service.dart';
 
-ers.dart';
+import '../../serializers/users.dart';
 import '../backend_service.dart';
 
 class LoginService extends ChangeNotifier {
