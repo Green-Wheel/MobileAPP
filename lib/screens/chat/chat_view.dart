@@ -107,12 +107,6 @@ class _ChatView extends State<ChatView> {
     fetchData();
   }
 
-  /*_updateMessages(List<ChatRoomMessage> messages) {
-    setState(() {
-      _messages.addAll(messages);
-    });
-  }*/
-
   Future<void> fetchData() async {
     try {
       final messages = await ChatService.getChatMessages(widget.to_user!);
@@ -121,7 +115,6 @@ class _ChatView extends State<ChatView> {
         _isLastPage = _messages.length < _numberOfPostsPerRequest;
         _loading = false;
         _pageNumber = _pageNumber + 1;
-        //_markersListAll.addAll(_markersList);
       });
     } catch (e) {
       print("error --> $e");
@@ -147,10 +140,9 @@ class _ChatView extends State<ChatView> {
     return Column(
       children: [
         Expanded(
-          //TODO: change a listview.builder
           child:ListView.builder(
             controller: _scrollController,
-            itemCount: _messages.length + (_isLastPage ? 0 : 1),
+            itemCount: _messages.length, //+ (_isLastPage ? 0 : 1),
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemBuilder: (context, index) {
@@ -248,15 +240,13 @@ class _ChatView extends State<ChatView> {
     NotificationController();
       return FloatingActionButton.small(
         onPressed: () {
-          // TODO: implement send message
-          print(_controller.text);
-
+          //TODO: canviar a variables login
           var new_msg = ChatRoomMessage(
             id: widget.to_user!,
             sender: BasicUser(
-                username: LoginService().user_info?['username'],
-                first_name: LoginService().user_info?['first_name'],
-                last_name: LoginService().user_info?['last_name'],
+                username: "user", //LoginService().user_info?['username'],
+                first_name: "A" ,//LoginService().user_info?['first_name'],
+                last_name: "B",//LoginService().user_info?['last_name'],
             ),
             content: _controller.text,
             created_at: DateTime.now(),
