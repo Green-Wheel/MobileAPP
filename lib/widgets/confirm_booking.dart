@@ -108,7 +108,7 @@ class _confirm_bookingState extends State<confirm_booking> {
           ),
           child:
           const Text(
-            "No hay reservas pendientes de confirmar",
+            "No hay reservas pendientes por confirmar",
             style: TextStyle(
                 fontSize: 18,
                 color: Colors.black45
@@ -244,9 +244,33 @@ class _confirm_bookingState extends State<confirm_booking> {
                                         ),
                                         TextButton(
                                           onPressed: ()
-                                          {
+                                          async {
                                             Navigator.pop(context, 'ok');
-                                            declineBooking(index);
+                                            if(await declineBooking(index)){
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    Future.delayed(Duration(milliseconds: 350), () {
+                                                      Navigator.of(context).pop(true);
+                                                    });
+                                                    return AlertDialog(
+                                                      title:
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                                        children: const [
+                                                          Icon(Icons.close,color: Colors.redAccent,),
+                                                          Text('Rechazando reserva...',
+                                                            style: TextStyle(
+                                                                fontSize: 18,
+                                                                color: Colors.redAccent
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  });
+                                            }
                                           },
                                           child: const Text('ok'),
                                         ),
@@ -292,20 +316,21 @@ class _confirm_bookingState extends State<confirm_booking> {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
-                                          Future.delayed(Duration(seconds: 2), () {
+                                          Future.delayed(Duration(milliseconds: 350), () {
                                             Navigator.of(context).pop(true);
                                           });
                                           return AlertDialog(
                                             title:
                                               Row(
-                                                children: [
-                                                  Icon(Icons.check),
+                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: const [
+                                                  Icon(Icons.check,color: Colors.green,),
                                                   Text('Aceptando reserva...',
                                                     style: TextStyle(
                                                       fontSize: 18,
                                                       color: Colors.green
                                                     ),
-
                                             ),
                                                 ],
                                               ),
@@ -316,6 +341,8 @@ class _confirm_bookingState extends State<confirm_booking> {
                                   // Acción para rechazar la reserva
                                 },
                                 child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       '   Aceptar  ',
