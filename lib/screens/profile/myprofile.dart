@@ -18,6 +18,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePage extends State<ProfilePage> {
   final _loggedInStateInfo = LoginService();
   var userData;
+
   @override
   void initState() {
     super.initState();
@@ -108,7 +109,7 @@ class _ProfilePage extends State<ProfilePage> {
                               ),
                               Container(
                                 padding: const EdgeInsets.only(top:5),
-                                child: UserRatings(),//ficar user
+                                child: UserRatings()//RateUser(user_id: 2,booking_id: 2),
                               ),
                             ])
                         )

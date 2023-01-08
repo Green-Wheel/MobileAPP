@@ -1,7 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import '../../serializers/ratings.dart';
+import '../../widgets/alert_dialog.dart';
 
 class RatingService {
   static Future<List?> getRatings() async {
@@ -19,7 +22,7 @@ class RatingService {
 
   static Future<List?> getRatingsUsers(int id) async {
     List result = [];
-    await BackendService.get('client/$id').then((response) {
+    await BackendService.get('ratings/client/$id').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         result = jsonResponse;
@@ -30,33 +33,27 @@ class RatingService {
     return result;
   }
 
-  static void addRating(int id_booking, String message, double rating){
-    /*
-    Map<String,dynamic> registerMap = {
-      'email': email,
-      'username': username,
-      'password': password,
-      'first_name': firstName,
-      'last_name': lastName
+  static void addRating(int id, int booking_id, String message, double rating, BuildContext context){
+
+    Map<String,dynamic> ratingMap = {
+      'booking': booking_id,
+      'rate': rating,
+      'comment': message
     };
 
-    BackendService.post(registerUrl,registerMap).then((response)  {
+    BackendService.post('ratings/client/$id',ratingMap).then((response)  {
+      print(response.statusCode);
       if (response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
-        LoginService ls =  LoginService();
-        ls.loginUser(jsonResponse['apikey']);
+        print("asasas  " +  jsonResponse);
         GoRouter.of(context).push('/');
       }
       else {
-        String x = "Error: duplicate key value violates unique constraint";
         var jsonResponse = jsonDecode(response.body);
         String value = jsonResponse["res"];
-        if(response.body.contains(x)) Future.delayed(Duration.zero, () => showAlert(context,"Error Message","Username already exists"));
-        else Future.delayed(Duration.zero, () => showAlert(context,"Error Message",value));
+        Future.delayed(Duration.zero, () => showAlert(context,"Error Message",value));
       }
     });
-
-     */
   }
 
 

@@ -15,10 +15,6 @@ class _InteractiveStarsWidget extends State<InteractiveStarsWidget>{
     return _interactiveStarsWidget(widget.rate);
   }
 
-  double getRate(){
-    return widget.rate;
-  }
-
 //funcion para mostrar las estrellas
   Widget _interactiveStarsWidget(double rate){
     return Row(

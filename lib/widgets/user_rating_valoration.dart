@@ -1,28 +1,25 @@
 import 'package:flutter/material.dart';
-
-import '../serializers/ratings.dart';
-import '../serializers/users.dart';
+import 'package:greenwheel/services/backendServices/ratings.dart';
+import '../screens/register/widgets/greenButton.dart';
+import '../services/generalServices/LoginService.dart';
 import 'interactive_stars_widget.dart';
-import 'package:comment_box/comment/comment.dart';
-import 'package:comment_box/comment/test.dart';
-import 'package:comment_box/main.dart';
 
 
-class ValorateUser extends StatefulWidget {
+class RateUser extends StatefulWidget {
 
-  ValorateUser({Key? key}) : super(key: key);
-
+  RateUser({Key? key, required int booking_id, required int user_id}) : user_id = user_id, booking_id = booking_id,super(key: key);
+  int booking_id;
+  int user_id;
   @override
-  State<ValorateUser> createState() => _ValorateUser();
+  State<RateUser> createState() => _RateUser();
 }
 
-class _ValorateUser extends State<ValorateUser> {
+class _RateUser extends State<RateUser> {
+  final _loggedInStateInfo = LoginService();
+  var userData;
 
-  final List<MaterialColor> _colors = [Colors.blue, Colors.indigo, Colors.red];
-  Rating dummy = Rating(user: BasicUser(
-      id: 2, username: "Miau", first_name: "Guau", last_name: "Crack"),
-      rate: 3, comment: "FIUM", created_at: DateTime.now());
-  List _ratings = [];
+  InteractiveStarsWidget stars = InteractiveStarsWidget(rate: 2.5);
+  final myController = TextEditingController();
 
   @override
   void initState() {
@@ -31,43 +28,100 @@ class _ValorateUser extends State<ValorateUser> {
   }
 
   void _getData() {
+    var data = _loggedInStateInfo.user_info;
     setState(() {
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
+      userData = data;
     });
   }
 
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        padding: const EdgeInsets.only(top: 0, left: 20),
-        child: Column(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Rate the User",
-                    style: TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              TextFormField(
-                decoration: InputDecoration(labelText: 'Enter Message'),
-                keyboardType: TextInputType.multiline,
-                minLines: 1,
-                maxLines: 2,
-              ),
-              Row(
-                  children: <Widget>[
-                    Text("Tap the stars to rate   "),
-                    InteractiveStarsWidget(rate: 2.5),
-                  ]
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Rate the User'),
+        centerTitle: true,
+      ),
+      body: Container(
+          padding: const EdgeInsets.only(top: 0, left: 20),
+          child: Column(
+              children: <Widget>[
+                ListTile(
+                  leading: _getLeadingWidget("", Colors.blue),
+                  title: _getTitleWidget(userData["username"]),
+                  subtitle: _getCommentWidget(),
+                  isThreeLine: true,
+                )
+              ]
+          )
+      )
+    );
+  }
+  CircleAvatar _getLeadingWidget(String userName, MaterialColor color) {
+    return CircleAvatar(
+      backgroundImage: const AssetImage('assets/images/default_user_img.jpg'),
+      backgroundColor: color,
+      child: Text(userName),
+    );
+  }
 
+  Text _getTitleWidget(String username) {
+    return Text(
+      username,
+      style: const TextStyle(fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _getCommentWidget() {
+    return Column(
+      children: [
+        Align(
+            alignment: Alignment.topLeft,
+            child :Row(
+                children:const [
+                  Text("Tap the stars and put a comment below"),
+                ]
+            )
+        ),
+        const SizedBox(height:20),
+        Row(
+            children: <Widget>[
+               stars
             ]
-        )
+        ),
+        const SizedBox(height:20),
+        TextFormField(
+          controller : myController,
+          decoration: InputDecoration(
+            enabled: true,
+            contentPadding: const EdgeInsets.all(12.0),
+            floatingLabelBehavior: FloatingLabelBehavior.always,
+            // Border Label TextBox 1
+            labelText: "Enter a message",
+            labelStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+            ),
+            hintText: "",
+            hintMaxLines: 2,
+            hintStyle: const TextStyle(
+              color: Colors.black,
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10.0),
+            ),
+            ),
+          keyboardType: TextInputType.multiline,
+          minLines: 2,
+          maxLines: 4,
+        ),
+        const SizedBox(height:20),
+        GreenButton("Rate it",
+            onPressed: (){
+              RatingService.addRating(widget.user_id, widget.booking_id, myController.text, stars.rate, context);
+            }
+        ),
+      ],
     );
   }
 }
