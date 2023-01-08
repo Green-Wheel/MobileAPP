@@ -57,6 +57,7 @@ class DetailedBikeSerializer {
     this.power,
     required this.price,
     required this.owner,
+    required this.contamination,
   });
 
   int? id;
@@ -71,6 +72,7 @@ class DetailedBikeSerializer {
   double? power;
   double price;
   BasicUser owner;
+  String contamination;
 
   factory DetailedBikeSerializer.fromJson(Map<String, dynamic> json) =>
       _$DetailedBikeSerializerFromJson(json);
@@ -90,6 +92,7 @@ class BikeList {
     required this.bike_type,
     required this.price,
     required this.owner,
+    required this.contamination,
   });
 
   int? id;
@@ -100,6 +103,7 @@ class BikeList {
   BikeType bike_type;
   double price;
   BasicUser owner;
+  String contamination;
 
   factory BikeList.fromJson(Map<String, dynamic> json) =>
       _$BikeListFromJson(json);

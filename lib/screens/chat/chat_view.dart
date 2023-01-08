@@ -63,7 +63,7 @@ class _ChatView extends State<ChatView> {
                   TextButton(
                     onPressed: () {
                       ChatService.deleteChat(widget.to_user!);
-                      GoRouter.of(context).go('/chat');
+                      GoRouter.of(context).go('/chats');
                     },
                     child: Text("Delete", style: TextStyle(color: Colors.red),),
                   ),
@@ -81,7 +81,7 @@ class _ChatView extends State<ChatView> {
   final int _numberOfPostsPerRequest = 30;
   final int _nextPageTrigger = 3;
   List<ChatRoomMessage> _messages = [
-    /*ChatRoomMessage(
+    ChatRoomMessage(
       content: "Hola",
       created_at: DateTime.now(),
       id: 1,
@@ -92,7 +92,7 @@ class _ChatView extends State<ChatView> {
       created_at: DateTime.now(),
       id: 1,
       sender: BasicUser(first_name: "Kobe", last_name: "Bryant", username: "Kobe Bryant"),
-    ),*/
+    ),
   ];
 
   @override

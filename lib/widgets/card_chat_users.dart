@@ -7,13 +7,13 @@ import 'package:greenwheel/widgets/username_rating_stars.dart';
 
 class CardChatUsersWidget extends StatefulWidget {
   String username;
-  double rate_user;
   String last_message_received;
   bool new_message;
   String last_message_time;
   BuildContext context;
+  int? user_id;
   //opcion leido del usuario en el doublecheck
-  CardChatUsersWidget({Key? key, required this.username, required this.rate_user, required this.last_message_received, required this.new_message, required this.last_message_time, required this.context}) : super(key: key);
+  CardChatUsersWidget({Key? key, required this.username, required this.last_message_received, required this.new_message, required this.last_message_time, required this.user_id, required this.context}) : super(key: key);
 
   @override
   State<CardChatUsersWidget> createState() => _CardChatUsersWidget();
@@ -26,7 +26,8 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
     return InkWell(
       onTap: () {
         //TODO: implementar ruta de chat
-        print("tapped");
+        print(widget.user_id);
+        GoRouter.of(context).go('/chats/${widget.user_id}');
         widget.new_message = false;
       },
       child: SizedBox(
@@ -35,7 +36,7 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
           child: Column (
             children: [
               ListTile(
-                leading: widget.new_message ?  CircleAvatar(
+                leading: !widget.new_message ?  CircleAvatar(
                     radius: 27,
                     backgroundColor: Colors.green[100],
                     child: Row(
@@ -76,7 +77,7 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          widget.new_message ? Text(
+                          !widget.new_message ? Text(
                             widget.username,
                             style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
                           ): Text(

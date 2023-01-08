@@ -31,36 +31,13 @@ class CardInfoWidget extends StatefulWidget {
 
   CardInfoWidget({required this.location, required this.rating, required this.types, required this.available,
     required this.match, required this.private, required this.price, required this.description, required
-  this.direction, required this.private_list, required this.latitude, required this.longitude, required this.id, required this.owner_id
-    , super.key});
+  this.direction, required this.private_list, required this.latitude, required this.longitude, required this.id,
+    required this.owner_id, super.key});
 
   @override
   State<StatefulWidget> createState() => _CardInfoWidget();
 }
 
-main(){
-  runApp(MaterialApp(
-    home: Scaffold(
-      body: CardInfoWidget(
-        location: 'Calle 1',
-        rating: 4.5,
-        types: [ConnectionType(id: 2, name: "hola"), ConnectionType(id: 3, name: "hola2")],
-        available: true,
-        match: true,
-        private: true,
-        price: 0.5,
-        description: 'Cargador de prueba',
-        direction: 'Calle 1',
-        private_list: true,
-        latitude: 0.0,
-        longitude: 0.0,
-        id: 1,
-        owner_id: 1,
-      ),
-    ),
-    )
-  );
-}
 
 class _CardInfoWidget extends State<CardInfoWidget>{
   final _loggedInStateInfo = LoginService();
@@ -80,6 +57,7 @@ class _CardInfoWidget extends State<CardInfoWidget>{
       userData = data;
       isOwner = userData['id'] == widget.owner_id;
     });
+    print(isOwner);
   }
 
   @override
@@ -222,7 +200,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                       isOwner? SizedBox(height: 26):SizedBox(height: 0),
                       isOwner?  Padding(
                           padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.4),
-                          child: ChatButtonWidget( to_user: owner_id),
+                          child: ChatButtonWidget( to_user: owner_id!),
                       ): SizedBox(height: 0),
                     ],
                   ),
@@ -242,7 +220,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                   private? SizedBox(height: 243): SizedBox(height: 35),
                   private?  Padding(
                   padding: EdgeInsets.only(right: 0),
-                  child: ButtonDeleteChargerWidget(id_charger: id),
+                  child: ButtonDeleteChargerWidget(id_charger: id!),
                   ): SizedBox(height: 25)
               ],
             ),

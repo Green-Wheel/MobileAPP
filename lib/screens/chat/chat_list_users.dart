@@ -1,9 +1,12 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/serializers/users.dart';
 import 'package:greenwheel/services/backendServices/chat.dart';
 import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:greenwheel/widgets/username_rating_stars.dart';
 
+import '../../serializers/chat.dart';
 import '../../widgets/card_chat_users.dart';
 
 class ChatListUsers extends StatefulWidget {
@@ -23,113 +26,28 @@ main(){
   );
 }
 
-class ChatModel {
-  String username;
-  double rate_user;
-  String last_message_received;
-  bool new_message;
-  String last_message_time;
-  ChatModel({required this.username, required this.rate_user, required this.last_message_received, required this.new_message, required this.last_message_time});
-}
-
 class _ChatListUsers extends State<ChatListUsers> {
 
   int _number_new_messages = 0;
-  List chats = [];
+  List<ChatRoom> chats = [
+    ChatRoom(
+        id: 3,
+        to_users: BasicUser(username: "Michael Jordan", first_name: "Michael", last_name: "Jordan"),
+        last_message: "Hello world",
+        last_sent_time: DateTime.now(),
+        last_sent_user: "Michael Jordan",
+        open: false,
+        read: true
+    )
+  ];
   bool loading = true;
 
   @override
   void initState() {
     super.initState();
-    _getChats();
+    //_getChats();
   }
 
-  List<ChatModel> users = [
-    ChatModel(
-        username: "Michael Jordan",
-        rate_user: 5.0,
-        last_message_received: "see you on the court",
-        new_message: true,
-        last_message_time: "12:00",
-    ),
-    ChatModel(
-        username: "Shaq O'Neil",
-        rate_user: 3.0,
-        last_message_received: "Chicken wings?",
-        new_message: false,
-        last_message_time: "11:00",
-    ),
-    ChatModel(
-        username: "Kobe Bryant",
-        rate_user: 4.5,
-        last_message_received: "Can't stop me fella",
-        new_message: false,
-        last_message_time: "10:00",
-    ),
-    ChatModel(
-        username: "Lebon James",
-        rate_user: 2.5,
-        last_message_received: "I can fly to high in the sky to dunk",
-        new_message: true,
-        last_message_time: "9:00",
-    ),
-    ChatModel(
-      username: "Michael Jordan",
-      rate_user: 5.0,
-      last_message_received: "see you on the court",
-      new_message: true,
-      last_message_time: "12:00",
-    ),
-    ChatModel(
-      username: "Shaq O'Neil",
-      rate_user: 3.0,
-      last_message_received: "Chicken wings?",
-      new_message: false,
-      last_message_time: "11:00",
-    ),
-    ChatModel(
-      username: "Kobe Bryant",
-      rate_user: 4.5,
-      last_message_received: "Can't stop me fella",
-      new_message: false,
-      last_message_time: "10:00",
-    ),
-    ChatModel(
-      username: "Lebon James",
-      rate_user: 2.5,
-      last_message_received: "I can fly to high in the sky to dunk",
-      new_message: true,
-      last_message_time: "9:00",
-    ),
-    ChatModel(
-      username: "Michael Jordan",
-      rate_user: 5.0,
-      last_message_received: "see you on the court",
-      new_message: true,
-      last_message_time: "12:00",
-    ),
-    ChatModel(
-      username: "Shaq O'Neil",
-      rate_user: 3.0,
-      last_message_received: "Chicken wings?",
-      new_message: false,
-      last_message_time: "11:00",
-    ),
-    ChatModel(
-      username: "Kobe Bryant",
-      rate_user: 4.5,
-      last_message_received: "Can't stop me fella",
-      new_message: false,
-      last_message_time: "10:00",
-    ),
-    ChatModel(
-      username: "Lebon James",
-      rate_user: 2.5,
-      last_message_received: "I can fly to high in the sky to dunk",
-      new_message: true,
-      last_message_time: "9:00",
-    ),
-  ];
 
   void _showAvisNoEsPotCarregarChat() async {
     return showDialog<void>(
@@ -159,7 +77,8 @@ class _ChatListUsers extends State<ChatListUsers> {
   }
 
   void _getChats() async {
-    List chatsrequest = await ChatService.getChats();
+    List<ChatRoom> chatsrequest = await ChatService.getChats();
+    int unreadrequest = await ChatService.getUnreadMessages();
     if (chatsrequest.isEmpty && !loading){
       print("No chats");
       _showAvisNoEsPotCarregarChat();
@@ -172,12 +91,13 @@ class _ChatListUsers extends State<ChatListUsers> {
     setState(() {
       loading = false;
       chats = chatsrequest;
+      _number_new_messages = unreadrequest;
     });
 
   }
 
 
-  Widget ListPoints(BuildContext context, List<ChatModel> list) {
+  Widget ListPoints(BuildContext context, List<ChatRoom> list) {
     return Column(
       children: [
         Expanded(
@@ -185,17 +105,20 @@ class _ChatListUsers extends State<ChatListUsers> {
                 padding: const EdgeInsets.only(top: 10),
                 child: ListView.builder(
                   itemCount: list.length,
-                  itemBuilder: (context, index) => CardChatUsersWidget(
-                    username: list[index].username,
-                    rate_user: list[index].rate_user,
-                    last_message_received: list[index].last_message_received,
-                    new_message: list[index].new_message,
-                    last_message_time: list[index].last_message_time,
-                    context: context,
+                  itemBuilder: (context, index) {
+                    print(list[index].read);
+                    return CardChatUsersWidget(
+                      username: list[index].to_users.username,
+                      last_message_received: list[index].last_message,
+                      new_message: list[index].read,
+                      last_message_time:  DateFormat('hh:mm').format(list[index].last_sent_time),
+                      context: context,
+                      user_id: list[index].to_users.id,
+                    );
+                  }
                   ),
                 )
             )
-        )
       ],
     );
   }
@@ -204,7 +127,7 @@ class _ChatListUsers extends State<ChatListUsers> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: DefaultTabController(
-        length: 2,
+        length: 1,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.green,
@@ -265,7 +188,6 @@ class _ChatListUsers extends State<ChatListUsers> {
             bottom: const TabBar(
               indicatorColor: Colors.white,
               tabs: [
-                //Tab(icon: Icon(Icons.location_on_outlined), text: "My Markers", ),
                 Tab(icon: Icon(Icons.supervised_user_circle), text: "Users"),
               ],
             ),
@@ -273,8 +195,7 @@ class _ChatListUsers extends State<ChatListUsers> {
           //TODO: Poner listado de usuarios
           body: TabBarView(
             children: [
-              //ListPoints(context, markers),
-              ListPoints(context, users),
+              ListPoints(context, chats),
             ],
           ),
         ),

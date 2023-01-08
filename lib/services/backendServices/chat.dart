@@ -93,9 +93,9 @@ class ChatService {
     return result;
   }
 
-  static Future<bool> putUnreadMessage(Map<String, dynamic> data) async {
+  static Future<bool> putUnreadMessage(int chat_id) async {
     try {
-      var response = await BackendService.put('chargers/unread/${data['id']}/', data);
+      var response = await BackendService.put('chargers/unread/$chat_id/', {});
       if (response.statusCode != 200) return false;
       return response.statusCode == 200;
     } catch (e) {

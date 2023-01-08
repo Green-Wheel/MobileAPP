@@ -106,7 +106,7 @@ class _BikeFormState extends State<BikeForm> {
             localization: Localization(latitude: 0.0, longitude: 0.0),
             town: Town(name: '', province: Province(name: '')),
             bike_type: BikeType(name: ''),
-            price: 0.0, owner: BasicUser(id: 0, username: '', first_name: '', last_name: ''));
+            price: 0.0, owner: BasicUser(id: 0, username: '', first_name: '', last_name: ''), contamination: "0.0");
   }
 
   @override

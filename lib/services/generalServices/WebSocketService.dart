@@ -24,6 +24,7 @@ class NotificationController{
         pingInterval: Duration(seconds: 10),
       );
       channelStream?.listen((message) {
+        //TODO: rebo el missatge, falta fer la crida corresponent i transformació serializer
         print(message);
       });
     } on Exception catch(e){

@@ -560,7 +560,11 @@ void _getCharger(int id) async {
     double? rate = markedCharger!.avg_rating;
     int? id = markedCharger!.id;
     int? owner_id = markedCharger!.private?.owner.id;
-
+    if (owner_id == null) {
+      owner_id = 3;
+    }
+    print("ID: $id");
+    print("Owner ID: $owner_id");
 
     return CardInfoWidget(location: descrip,
         rating: rate,
