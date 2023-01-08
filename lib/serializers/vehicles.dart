@@ -1,3 +1,4 @@
+import 'package:greenwheel/serializers/chargers.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'vehicles.g.dart';
@@ -25,14 +26,20 @@ class CarModel {
     required this.name,
     required this.year,
     required this.autonomy,
-    required this.brand,
+    required this.car_brand,
+    required this.current_type,
+    required this.connection_type,
+    required this.consumption
   });
 
   int? id;
   String name;
   int year;
   double autonomy;
-  CarBrand brand;
+  CarBrand car_brand;
+  CurrentType current_type;
+  ConnectionType connection_type;
+  double consumption;
 
   factory CarModel.fromJson(Map<String, dynamic> json) =>
       _$CarModelFromJson(json);
@@ -44,21 +51,55 @@ class CarModel {
 class Car {
   Car({
     this.id,
-    required this.name,
-    required this.capacity,
-    required this.license,
-    required this.model,
-    required this.owner,
+    required this.alias,
+    required this.car_brand
   });
 
   int? id;
-  String name;
-  double capacity;
-  String license;
-  CarModel model;
-  int owner;
+  String alias;
+  CarBrand car_brand;
 
   factory Car.fromJson(Map<String, dynamic> json) => _$CarFromJson(json);
 
   Map<String, dynamic> toJson() => _$CarToJson(this);
+}
+
+@JsonSerializable()
+class CarsDetailed {
+  CarsDetailed({
+    this.id,
+    required this.alias,
+    required this.car_license,
+    required this.charge_capacity,
+    required this.model
+  });
+
+  int? id;
+  String alias;
+  String car_license;
+  double charge_capacity;
+  CarModel model;
+
+  factory CarsDetailed.fromJson(Map<String, dynamic> json) =>
+      _$CarsDetailedFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CarsDetailedToJson(this);
+}
+
+@JsonSerializable()
+class CarBrandYear {
+  CarBrandYear({
+    this.id,
+    required this.name,
+    required this.year,
+  });
+
+  int? id;
+  String name;
+  int year;
+
+  factory CarBrandYear.fromJson(Map<String, dynamic> json) =>
+      _$CarBrandYearFromJson(json);
+
+  Map<String, dynamic> toJson() => _$CarBrandYearToJson(this);
 }

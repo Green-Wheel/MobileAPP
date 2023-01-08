@@ -21,6 +21,38 @@ class BikeService {
     return result;
   }
 
+  static Future<List<Bike>> getNormalBikes() async {
+    List<Bike> result = [];
+    await BackendService.get('bikes/?type=normal').then((response) { // bikes/?type=normal
+      // bikes/
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        print(jsonResponse);
+        result = jsonResponse.map((e) => Bike.fromJson(e)).toList();
+        print(result);
+      } else {
+        print('Error getting normal bikes!');
+      }
+    });
+    return result;
+  }
+
+  static Future<List<Bike>> getElectricBikes() async {
+    List<Bike> result = [];
+    await BackendService.get('bikes/?type=electric').then((response) { // bikes/?type=electric
+      // bikes/
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        print(jsonResponse);
+        result = jsonResponse.map((e) => Bike.fromJson(e)).toList();
+        print(result);
+      } else {
+        print('Error getting electric bikes!');
+      }
+    });
+    return result;
+  }
+
   static Future<List<BikeList>> getBikeList(int pag) async {
     List<BikeList> result = [];
     await BackendService.get('bikes/list/?page=$pag').then((response) {
