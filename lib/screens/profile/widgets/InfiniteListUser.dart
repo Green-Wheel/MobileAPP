@@ -33,7 +33,7 @@ class _InfiniteList extends State<InfiniteListUser> {
             ]
           ),
           Container(
-            height: MediaQuery.of(context).size.height/2.25,
+            height: MediaQuery.of(context).size.height/2.75,
             child: disableCharger&&disableBike? buildPostsView(_markersListAll): !disableCharger ? buildPostsView(bikesPublications): buildPostsView(chargerPublications) ,
           ),
         ]
