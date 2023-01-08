@@ -51,13 +51,13 @@ class VehicleService {
 
   static Future<List<CarModel>> getVehicleBrand(int brand_id) async {
     List<CarModel> result = [];
-    await BackendService.get('vehicles/brands/$brand_id/models/').then((response) {
+    await BackendService.get('vehicles/brands/$brand_id/models').then((response) {
       // bikes/
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         print(jsonResponse);
         result = jsonResponse.map((e) => CarModel.fromJson(e)).toList();
-        print(result);
+        //print(result);
       } else {
         print('Error getting vehicle brands!');
       }
@@ -65,15 +65,15 @@ class VehicleService {
     return result;
   }
 
-  static Future<List<CarBrandYear>> getVehicleBrandYear(int brand_id, String model_name) async {
+  static Future<List<CarBrandYear>> getVehicleBrandYear(int brand_id, int model_id) async {
     List<CarBrandYear> result = [];
-    await BackendService.get('vehicles/brands/$brand_id/models/$model_name/years/').then((response) {
+    await BackendService.get('vehicles/brands/$brand_id/models/$model_id/years').then((response) {
       // bikes/
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         print(jsonResponse);
         result = jsonResponse.map((e) => CarBrandYear.fromJson(e)).toList();
-        print(result);
+        //print(result);
       } else {
         print('Error getting vehicle brands!');
       }
@@ -107,6 +107,28 @@ class VehicleService {
         };
       }
       var response = await BackendService.put('vehicles/$selected_car/select/', body);
+      if (response.statusCode != 200) return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> putVehicle(Map<String, dynamic> data) async {
+    try {
+      var response = await BackendService.put('vehicles/${data['id']}/', data);
+      if (response.statusCode != 200) return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print(e);
+      return false;
+    }
+  }
+
+  static Future<bool> postVehicle(Map<String, dynamic> data) async {
+    try {
+      var response = await BackendService.post('vehicles/', data);
       if (response.statusCode != 200) return false;
       return response.statusCode == 200;
     } catch (e) {

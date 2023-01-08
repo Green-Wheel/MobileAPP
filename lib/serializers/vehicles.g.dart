@@ -17,15 +17,17 @@ Map<String, dynamic> _$CarBrandToJson(CarBrand instance) => <String, dynamic>{
     };
 
 CarModel _$CarModelFromJson(Map<String, dynamic> json) => CarModel(
-      id: json['id'] as int?,
+      id: json['id'] as int,
       name: json['name'] as String,
-      year: json['year'] as int,
+      year: json['year'] as int?,
       autonomy: (json['autonomy'] as num).toDouble(),
       car_brand: CarBrand.fromJson(json['car_brand'] as Map<String, dynamic>),
-      current_type:
-          CurrentType.fromJson(json['current_type'] as Map<String, dynamic>),
-      connection_type: ConnectionType.fromJson(
-          json['connection_type'] as Map<String, dynamic>),
+      current_type: (json['current_type'] as List<dynamic>)
+          .map((e) => CurrentType.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      connection_type: (json['connection_type'] as List<dynamic>)
+          .map((e) => ConnectionType.fromJson(e as Map<String, dynamic>))
+          .toList(),
       consumption: (json['consumption'] as num).toDouble(),
     );
 
@@ -72,7 +74,7 @@ Map<String, dynamic> _$CarsDetailedToJson(CarsDetailed instance) =>
 CarBrandYear _$CarBrandYearFromJson(Map<String, dynamic> json) => CarBrandYear(
       id: json['id'] as int?,
       name: json['name'] as String,
-      year: json['year'] as int,
+      year: json['year'] as int?,
     );
 
 Map<String, dynamic> _$CarBrandYearToJson(CarBrandYear instance) =>

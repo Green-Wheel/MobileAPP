@@ -22,9 +22,9 @@ class CarBrand {
 @JsonSerializable()
 class CarModel {
   CarModel({
-    this.id,
+    required this.id,
     required this.name,
-    required this.year,
+    this.year,
     required this.autonomy,
     required this.car_brand,
     required this.current_type,
@@ -32,13 +32,13 @@ class CarModel {
     required this.consumption
   });
 
-  int? id;
+  int id;
   String name;
-  int year;
+  int? year;
   double autonomy;
   CarBrand car_brand;
-  CurrentType current_type;
-  ConnectionType connection_type;
+  List<CurrentType> current_type;
+  List<ConnectionType> connection_type;
   double consumption;
 
   factory CarModel.fromJson(Map<String, dynamic> json) =>
@@ -91,12 +91,12 @@ class CarBrandYear {
   CarBrandYear({
     this.id,
     required this.name,
-    required this.year,
+    this.year,
   });
 
   int? id;
   String name;
-  int year;
+  int? year;
 
   factory CarBrandYear.fromJson(Map<String, dynamic> json) =>
       _$CarBrandYearFromJson(json);
