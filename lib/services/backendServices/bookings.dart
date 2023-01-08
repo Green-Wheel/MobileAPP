@@ -68,9 +68,9 @@ class BookingService {
     await BackendService.get('bookings/owner/?type=pending').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        log('bookings json $jsonResponse');
+        //log('bookings json $jsonResponse');
         List<dynamic> bookings = jsonResponse['results'] as List<dynamic>;
-        log('bookings json $jsonResponse');
+        //log('bookings json $jsonResponse');
         result = bookings.map((e) => Booking.fromJson(e)).toList();
         //log(result);
       } else {
@@ -88,8 +88,8 @@ class BookingService {
       },
       "publication": 1
     };*/
-    log("chekcpoint");
-    log("Aqui esta el resultado del parseo ${result.toString()}");
+    //log("chekcpoint");
+    //log("Aqui esta el resultado del parseo ${result}");
 
     return result;
   }
@@ -99,6 +99,16 @@ class BookingService {
       log("lo que se envia al booking $data");
       var response = await BackendService.post('bookings/', data);
       log("la evaluacion que se hace ${response.statusCode}");
+      return response.statusCode == 201;
+    } catch (e) {
+      log(e.toString());
+      return false;
+    }
+  }
+
+  static Future<bool> answerBookingPetition(int id, int decision) async {
+    try {
+      var response = await BackendService.put('bookings/$id/', {"confirmed":decision});
       return response.statusCode == 201;
     } catch (e) {
       log(e.toString());
