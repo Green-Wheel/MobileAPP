@@ -154,4 +154,17 @@ class UserService extends ChangeNotifier {
       }
     });
   }
+
+  static Future<User> getUserInfo(int user_id) async {
+    User user;
+    var response = await BackendService.get('users/$user_id/');
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        user = User.fromJson(jsonResponse);
+      }
+      else {
+        throw Exception("Error getting user info");
+      }
+      return user;
+  }
 }
