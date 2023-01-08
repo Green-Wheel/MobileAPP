@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/screens/bike/widgets/bike_basic_info.dart';
+//import 'package:greenwheel/screens/bike/widgets/bike_basic_info.dart';
 import 'package:greenwheel/services/backendServices/report_service.dart';
 import 'package:greenwheel/widgets/report_type_selector.dart';
 
@@ -37,9 +37,9 @@ class _ReportBikeState extends State<ReportBike> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Column(children: [
-            BikeBasicInfo(
+            /*BikeBasicInfo(
               bike_id: widget.bike_id,
-            ),
+            ),*/
             ReportTypeSelector(
               submitSearch: setReason,
             ),

@@ -147,7 +147,7 @@ class _CarCardWidget extends State<CarCard> {
                               )
                           ),
                           onPressed: () {
-                            // route to edit screen
+                            GoRouter.of(context).go('/vehicle/edit/${widget.car.id}');
                           },
                           child: Row(
                             children: const [
