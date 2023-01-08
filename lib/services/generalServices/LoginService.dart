@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:greenwheel/helpers/constants.dart';
@@ -28,6 +29,7 @@ class LoginService extends ChangeNotifier {
   String? get apiKey => _apiKey;
 
   Map<String, dynamic>? get user_info => _user_info;
+  final FlutterAppAuth _appAuth = const FlutterAppAuth();
 
   static final _googleSignIn = GoogleSignIn();
 
@@ -77,10 +79,15 @@ class LoginService extends ChangeNotifier {
   Future google_login() async {
     print("google login");
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    print(googleUser);
     if (googleUser != null) {
-      final String? apiKey_key = await UserService.loginGoogleUser(googleUser);
-      if (apiKey_key != null) {
+      final data = {
+        "id": googleUser.id,
+        "email": googleUser.email,
+        "displayName": googleUser.displayName,
+        "photoUrl": googleUser.photoUrl,
+      };
+      final String apiKey_key = await UserService.loginGoogleUser(data);
+      if (apiKey_key != '') {
         _apiKey = apiKey_key;
         _loggedIn = true;
         storage.write(key: "apiKey", value: apiKey_key);
@@ -97,7 +104,7 @@ class LoginService extends ChangeNotifier {
     final code = await UserService.getRacoAuthorizationCode();
     if (code != null) {
       final String? apiKey_key = await UserService.loginRacoUser(code);
-      if (apiKey_key != null) {
+      if (apiKey_key != null && apiKey_key != '') {
         _apiKey = apiKey_key;
         _loggedIn = true;
         storage.write(key: "apiKey", value: apiKey_key);

@@ -46,17 +46,18 @@ class UserService extends ChangeNotifier {
     return result;
   }
 
-  static Future<String?> loginGoogleUser(GoogleSignInAccount userinfo) async {
-    await BackendService.post('users/login/google/', {'userinfo': userinfo})
-        .then((response) {
-      if (response.statusCode == 200) {
+  static Future<String> loginGoogleUser(Map<String, dynamic> userinfo) async {
+    String result = '';
+    await BackendService.post('users/login/google/', userinfo).then((response) {
+      if (response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
-        return jsonResponse["api_key"];
+        result = jsonResponse["apikey"];
       } else {
         print("Login error");
+        print(response.body);
       }
     });
-    return null;
+    return result;
   }
 
   static Future<String?> getRacoAuthorizationCode() async {
@@ -73,16 +74,18 @@ class UserService extends ChangeNotifier {
   }
 
   static Future<String?> loginRacoUser(String code) async {
-    await BackendService.post('users/login/raco/', {'code': code})
+    String result = '';
+    await BackendService.post('users/login/raco/', {"code": code})
         .then((response) {
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
-        return jsonResponse["api_key"];
+        result = jsonResponse["apikey"];
       } else {
         print("Login error");
+        print(response.body);
       }
     });
-    return null;
+    return result;
   }
 
   static void registerUser(BuildContext context, String username, String email,

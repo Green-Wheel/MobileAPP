@@ -9,20 +9,18 @@ import '../../serializers/users.dart';
 const String log_out_url = "users/logout/";
 
 class LogoutService extends ChangeNotifier {
-
-  static void logOutUser(BuildContext context){
-    Map<String,dynamic> body = {};
-    BackendService.post(log_out_url,body).then((response) async {
+  static Future<bool> logOutUser(BuildContext context) async {
+    bool result = false;
+    await BackendService.post(log_out_url, {}).then((response) async {
       if (response.statusCode == 200) {
-        LoginService ls = await LoginService();
-        ls.logout();
-        GoRouter.of(context).push('/login');
-      }
-      else {
+        await LoginService.instance.logout();
+        result = true;
+      } else {
         var jsonResponse = jsonDecode(response.body);
         print('Error with the logout!');
       }
     });
+    return result;
   }
 }
 
