@@ -52,6 +52,19 @@ android {
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        manifestPlaceholders += [
+                'appAuthRedirectScheme': 'com.googleusercontent.apps.772897518489-295p9rn2i4p5onidui8g79gdbtub50ct.apps.googleusercontent.com'
+        ]
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+            keyPassword '123456'
+            storeFile file('greenwheelkey.jks')
+            storePassword '123456'
+        }
     }
 
     buildTypes {

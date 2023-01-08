@@ -214,17 +214,23 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                 alignment: Alignment.center,
                 child: ListTile(
                   tileColor: Colors.redAccent,
-                  visualDensity: VisualDensity(vertical: -2),
-                  title: Hero(
-                    tag: "9",
-                    child: Center(
-                      child: const Text('Log Out', style: TextStyle(fontSize: 20)),
-                    ),
-                  ),
-                  onTap: () {
-                    LogoutService.logOutUser(context);
-                  },
-                ),
+                        visualDensity: VisualDensity(vertical: -2),
+                        title: Hero(
+                          tag: "9",
+                          child: Center(
+                            child: const Text('Log Out',
+                                style: TextStyle(fontSize: 20)),
+                          ),
+                        ),
+                        onTap: () async {
+                          final logged_out =
+                              await LogoutService.logOutUser(context);
+                          print(logged_out);
+                          if (logged_out) {
+                            GoRouter.of(context).push('/login');
+                          }
+                        },
+                      ),
               ): Text("")
           ),
         ],
