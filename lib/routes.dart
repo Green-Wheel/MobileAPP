@@ -117,9 +117,8 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'chats/:id',
               builder: (context, state) {
-                final id = int.parse(state.params['id']!);
-                final username = state.params['username']!;
-                return ChatView(key: Key("ChatListUsers"), username: username, to_user: id);
+                //TODO: mirar tema ruta parametres no donguin null value
+                return ChatView(key: Key("ChatListUsers"), username: "username", to_user: 2);
               },
             ),
             GoRoute(

@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/serializers/chat.dart';
 import 'package:greenwheel/serializers/users.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
-import 'package:greenwheel/widgets/input_text_message.dart';
 import 'package:intl/intl.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
@@ -55,7 +54,7 @@ class _ChatView extends State<ChatView> {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
                   TextButton(
                       onPressed: () {
-                        GoRouter.of(context).go('/');
+                        Navigator.of(context).pop();
                       },
                       child: Text("Cancel")
                   ),
@@ -140,6 +139,7 @@ class _ChatView extends State<ChatView> {
       children: [
         Expanded(
           child:ListView.builder(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             controller: _scrollController,
             itemCount: _messages.length, //+ (_isLastPage ? 0 : 1),
             shrinkWrap: true,
@@ -169,16 +169,17 @@ class _ChatView extends State<ChatView> {
         Scaffold(
           backgroundColor: Colors.transparent,
             appBar: AppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: Colors.green,
               title: Row(
                 children: [
                   IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        GoRouter.of(context).go('/');
+                        GoRouter.of(context).go('/chats');
                       }
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.09),
                   const CircleAvatar(
                     radius: 20,
                     backgroundColor: Colors.white,
@@ -187,7 +188,7 @@ class _ChatView extends State<ChatView> {
                         Icons.person
                     ),
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.07),
                   Text(widget.username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                   IconButton(
@@ -200,8 +201,15 @@ class _ChatView extends State<ChatView> {
                 ],
               ),
             ),
-            body: buildMessagesView(),
-            bottomNavigationBar: inputTextMessage()//InputTextMessageWidget(controller: _controller, scrollController: _scrollController, to_user: widget.to_user, messages: _messages),
+            body: Column(
+              children: [
+                SafeArea(child: SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.54,
+                  child: buildMessagesView(),
+                )),
+                inputTextMessage(),
+              ],
+            )
         )
       ],
     );
@@ -209,7 +217,7 @@ class _ChatView extends State<ChatView> {
 
   Widget inputTextMessage() {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.80,
+      width: MediaQuery.of(context).size.width ,
       child: Card(
         margin: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
         shape: RoundedRectangleBorder(
@@ -223,6 +231,7 @@ class _ChatView extends State<ChatView> {
           minLines: 1,
           decoration: InputDecoration(
             border: InputBorder.none,
+            hintStyle: TextStyle(color: Colors.grey),
             hintText: 'Type a message',
             prefix: const SizedBox(
               width: 10,
@@ -232,6 +241,18 @@ class _ChatView extends State<ChatView> {
         ),
       ),
     );
+  }
+
+  void listenMessage(Map msg){
+    print(msg);
+    setState(() {
+      _messages.add(ChatRoomMessage(
+        content: msg['content'],
+        created_at: DateTime.now(),
+        id: msg['to_user'],
+        sender: BasicUser(first_name: msg['sender']['first_name'], last_name: msg['sender']['last_name'], username: msg['sender']['username']),
+      ));
+    });
   }
 
   Widget buttonSendMessage() {
@@ -261,7 +282,7 @@ class _ChatView extends State<ChatView> {
             curve: Curves.easeOut,
           );
 
-          notificationController.SendMessage(_controller.text, widget.to_user!);
+          notificationController.SendMessage(_controller.text, widget.to_user!, listenMessage);
           _controller.clear();
         },
         elevation: 0,
@@ -271,12 +292,12 @@ class _ChatView extends State<ChatView> {
           size: 25,
         ),
         backgroundColor: Colors.white,
-        shape: const CircleBorder(
+        /*shape: const CircleBorder(
           side: BorderSide(
             color: Colors.green,
             width: 1,
           ),
-        ),
+        ),*/
       );
   }
 

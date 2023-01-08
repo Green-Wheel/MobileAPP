@@ -56,7 +56,7 @@ Widget greyCheck(bool direction){
       child: Icon(
         Icons.done_all,
         size: 20,
-        color: Colors.grey[800],
+        color: Colors.grey[200],
       ),
     );
   }
@@ -66,7 +66,7 @@ Widget greyCheck(bool direction){
       child:  Icon(
         Icons.done_all,
         size: 20,
-        color: Colors.grey[800],
+        color: Colors.grey[200],
       ),
     );
   }
@@ -118,7 +118,7 @@ Widget _messageWidget(String message, bool itsmine, String created_at){
               child: Text(
                 created_at.toString(),
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 12,
                 ),
               ),

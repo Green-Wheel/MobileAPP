@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:greenwheel/widgets/input_text_message.dart';
-import 'package:greenwheel/widgets/rating_stars.dart';
-import 'package:greenwheel/widgets/stars_static_rate.dart';
-import 'package:greenwheel/widgets/username_rating_stars.dart';
+
 
 class CardChatUsersWidget extends StatefulWidget {
   String username;
@@ -27,7 +24,7 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
       onTap: () {
         //TODO: implementar ruta de chat
         print(widget.user_id);
-        GoRouter.of(context).go('/chats/${widget.user_id}');
+        GoRouter.of(context).go('/chats/${widget.user_id!}');
         widget.new_message = false;
       },
       child: SizedBox(

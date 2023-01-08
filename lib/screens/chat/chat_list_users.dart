@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/serializers/users.dart';
 import 'package:greenwheel/services/backendServices/chat.dart';
-import 'package:greenwheel/widgets/input_text_message.dart';
-import 'package:greenwheel/widgets/username_rating_stars.dart';
+
 
 import '../../serializers/chat.dart';
 import '../../widgets/card_chat_users.dart';
@@ -31,7 +30,7 @@ class _ChatListUsers extends State<ChatListUsers> {
   int _number_new_messages = 0;
   List<ChatRoom> chats = [
     ChatRoom(
-        id: 3,
+        id: 1,
         to_users: BasicUser(username: "Michael Jordan", first_name: "Michael", last_name: "Jordan"),
         last_message: "Hello world",
         last_sent_time: DateTime.now(),
@@ -106,14 +105,13 @@ class _ChatListUsers extends State<ChatListUsers> {
                 child: ListView.builder(
                   itemCount: list.length,
                   itemBuilder: (context, index) {
-                    print(list[index].read);
                     return CardChatUsersWidget(
                       username: list[index].to_users.username,
                       last_message_received: list[index].last_message,
                       new_message: list[index].read,
                       last_message_time:  DateFormat('hh:mm').format(list[index].last_sent_time),
                       context: context,
-                      user_id: list[index].to_users.id,
+                      user_id: list[index].id,
                     );
                   }
                   ),
