@@ -62,7 +62,6 @@ class _ChatView extends State<ChatView> {
                   SizedBox(width: MediaQuery.of(context).size.width * 0.4),
                   TextButton(
                     onPressed: () {
-                      //TODO: borrar chat ruta
                       ChatService.deleteChat(widget.to_user!);
                       GoRouter.of(context).go('/chat');
                     },
