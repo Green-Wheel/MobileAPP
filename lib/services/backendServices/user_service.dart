@@ -1,13 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:greenwheel/services/backend_service.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
+
+import '../../helpers/constants.dart';
 import '../../serializers/chargers.dart';
 import '../../serializers/users.dart';
-import '../../widgets/alert_dialog.dart';
+import '../../widgets/alert_dialog.dart'
+
+dart' as http;
 
 const String registerUrl = "users/register/";
 const String editUrl = 'users/';
@@ -42,26 +49,68 @@ class UserService extends ChangeNotifier {
     return result;
   }
 
-  static void registerUser(BuildContext context,String username, String email, String password,String firstName,String lastName){
-      Map<String,dynamic> registerMap = {
-          'email': email,
-          'username': username,
-          'password': password,
-          'first_name': firstName,
-          'last_name': lastName
-        };
+  static Future<String?> loginGoogleUser(GoogleSignInAccount userinfo) async {
+    await BackendService.post('users/login/google/', {'userinfo': userinfo})
+        .then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        return jsonResponse["api_key"];
+      } else {
+        print("Login error");
+      }
+    });
+    return null;
+  }
 
-      BackendService.post(registerUrl,registerMap).then((response)  {
-        if (response.statusCode == 201) {
-          var jsonResponse = jsonDecode(response.body);
-          LoginService ls =  LoginService();
-          ls.loginUser(jsonResponse['apikey']);
-          GoRouter.of(context).push('/');
-        }
-        else {
-          String x = "Error: duplicate key value violates unique constraint";
-          var jsonResponse = jsonDecode(response.body);
-          String value = jsonResponse["res"];
+  static Future<String?> getRacoAuthorizationCode() async {
+    final url = Uri.parse(
+        "https://api.fib.upc.edu/v2/o/authorize/?client_id=$RACO_CLIENT_ID&redirect_uri=$RACO_REDIRECT_URI&response_type=code&scope=read&state=greenwheel&approval_prompt=auto");
+    // Present the dialog to the user
+    final result = await FlutterWebAuth2.authenticate(
+        url: url.toString(), callbackUrlScheme: "apifib");
+    print(result);
+// Extract code from resulting url
+    final code = Uri
+        .parse(result)
+        .queryParameters['code'];
+    print(code);
+    return code;
+  }
+
+  static Future<String?> loginRacoUser(String code) async {
+    await BackendService.post('users/login/raco/', {'code': code})
+        .then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        return jsonResponse["api_key"];
+      } else {
+        print("Login error");
+      }
+    });
+    return null;
+  }
+
+  static void registerUser(BuildContext context, String username, String email,
+      String password, String firstName, String lastName) {
+    Map<String, dynamic> registerMap = {
+      'email': email,
+      'username': username,
+      'password': password,
+      'first_name': firstName,
+      'last_name': lastName
+    };
+
+    BackendService.post(registerUrl, registerMap).then((response) {
+      if (response.statusCode == 201) {
+        var jsonResponse = jsonDecode(response.body);
+        LoginService ls = LoginService();
+        ls.loginUser(jsonResponse['apikey']);
+        GoRouter.of(context).push('/');
+      }
+      else {
+        String x = "Error: duplicate key value violates unique constraint";
+        var jsonResponse = jsonDecode(response.body);
+        String value = jsonResponse["res"];
           if(response.body.contains(x)) Future.delayed(Duration.zero, () => showAlert(context,"Error Message","Username already exists"));
           else Future.delayed(Duration.zero, () => showAlert(context,"Error Message",value));
       }
