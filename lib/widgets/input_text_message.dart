@@ -7,7 +7,9 @@ class InputTextMessageWidget extends StatefulWidget {
   TextEditingController controller;
   ScrollController scrollController;
   int? to_user;
+  //ValueChanged<List<ChatRoomMessage>> messages;
   List<ChatRoomMessage> messages;
+
   InputTextMessageWidget({Key? key, required this.controller, required this.scrollController, required this.to_user, required this.messages}) : super(key: key);
 
   @override

@@ -11,6 +11,7 @@ import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/status.dart' as status;
 
 import '../../services/backendServices/chat.dart';
+import '../../services/generalServices/WebSocketService.dart';
 import '../../widgets/message_widget.dart';
 
 class ChatView extends StatefulWidget {
@@ -105,6 +106,12 @@ class _ChatView extends State<ChatView> {
     _isLastPage = false;
     fetchData();
   }
+
+  /*_updateMessages(List<ChatRoomMessage> messages) {
+    setState(() {
+      _messages.addAll(messages);
+    });
+  }*/
 
   Future<void> fetchData() async {
     try {
@@ -203,29 +210,87 @@ class _ChatView extends State<ChatView> {
               ),
             ),
             body: buildMessagesView(),
-            bottomNavigationBar: InputTextMessageWidget(controller: _controller, scrollController: _scrollController, to_user: widget.to_user, messages: _messages,),
+            bottomNavigationBar: inputTextMessage()//InputTextMessageWidget(controller: _controller, scrollController: _scrollController, to_user: widget.to_user, messages: _messages),
         )
       ],
     );
   }
-  /*
-               Column(
-              children: [
-                Expanded(
-                  //TODO: change a listview.builder
-                  child: ListView(
-                      controller: _scrollController,
-                      children:[
-                        //TODO: poner el chat (nuevo fichero)
-                        SizedBox(height: 10),
-                        MessageWidget(message: "Hola", itsmine: true, created_at: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),),
-                        MessageWidget(message: "Hola", itsmine: false, created_at: DateFormat('yyyy-MM-dd – kk:mm').format(DateTime.now()),),
-                      ]
-                  ),
-                ),
-              ],
-              ),
-   */
+
+  Widget inputTextMessage() {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.80,
+      child: Card(
+        margin: const EdgeInsets.only(bottom: 8, left: 8, right: 8),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.0),
+        ),
+        child: TextFormField(
+          controller: _controller,
+          textAlignVertical: TextAlignVertical.center,
+          keyboardType: TextInputType.multiline,
+          maxLines: null,
+          minLines: 1,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            hintText: 'Type a message',
+            prefix: const SizedBox(
+              width: 10,
+            ),
+            suffixIcon: buttonSendMessage(),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buttonSendMessage() {
+    final NotificationController notificationController =
+    NotificationController();
+      return FloatingActionButton.small(
+        onPressed: () {
+          // TODO: implement send message
+          print(_controller.text);
+
+          var new_msg = ChatRoomMessage(
+            id: widget.to_user!,
+            sender: BasicUser(
+                username: LoginService().user_info?['username'],
+                first_name: LoginService().user_info?['first_name'],
+                last_name: LoginService().user_info?['last_name'],
+            ),
+            content: _controller.text,
+            created_at: DateTime.now(),
+          );
+
+          setState(() {
+            _messages.add(new_msg);
+          });
+
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+          );
+
+          notificationController.SendMessage(_controller.text, widget.to_user!);
+          _controller.clear();
+        },
+        elevation: 0,
+        child: const Icon(
+          Icons.send,
+          color: Colors.green,
+          size: 25,
+        ),
+        backgroundColor: Colors.white,
+        shape: const CircleBorder(
+          side: BorderSide(
+            color: Colors.green,
+            width: 1,
+          ),
+        ),
+      );
+  }
+
 }
 
 
