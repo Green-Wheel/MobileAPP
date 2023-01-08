@@ -80,6 +80,7 @@ class _VehicleFormState extends State<VehicleForm> {
         _data['id'] = widget.id,
       });
       print('data to put $_data');
+
       bool bUpdateVehicle = await VehicleService.putVehicle(_data);
       if (!bUpdateVehicle) {
         showDialog(
