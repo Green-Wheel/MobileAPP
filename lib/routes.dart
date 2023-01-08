@@ -19,6 +19,7 @@ import 'package:greenwheel/screens/register/change_password.dart';
 import 'package:greenwheel/screens/register/recover_password.dart';
 import 'package:greenwheel/screens/register/signup.dart';
 import 'package:greenwheel/screens/route/route.dart';
+import 'package:greenwheel/screens/vehicles/AddVehicleScreen.dart';
 import 'package:greenwheel/screens/vehicles/vehicles.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/language_selector_widget.dart';
@@ -50,6 +51,11 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'home',
               builder: (context, state) => HomePage(key: const Key("HomePage")),
+            ),
+            GoRoute(
+              path: 'vehicles/add',
+              builder: (context, state) =>
+              const AddVehicle(key: Key("AddVehicle")),
             ),
             GoRoute(
               path: 'chargers/add',

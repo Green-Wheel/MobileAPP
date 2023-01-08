@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -7,7 +5,6 @@ import '../../serializers/users.dart';
 import '../../serializers/vehicles.dart';
 import '../../services/backendServices/user_service.dart';
 import '../../services/backendServices/vehicles.dart';
-import '../../services/backend_service.dart';
 import '../../services/generalServices/LoginService.dart';
 import '../../widgets/CarCard.dart';
 
@@ -108,7 +105,19 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
             }
           ),
         ),
-        body: buildList(vehicles)
+        body: buildList(vehicles),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              onPressed: () {
+                GoRouter.of(context).push('/vehicles/add');
+              },
+              backgroundColor: Colors.green,
+              child: const Icon(Icons.add, color: Colors.white, size: 30.0),
+            ),
+          ],
+        ),
     );
   }
 
@@ -141,6 +150,19 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
           },
         );
       }
+    );
+  }
+
+  void goToAddVehicle() {
+    GoRouter.of(context).push('/vehicles/add');
+  }
+
+  Widget currentLocationActionButton() {
+    return FloatingActionButton(
+      heroTag: "btn1",
+      onPressed: goToAddVehicle,
+      backgroundColor: Colors.white,
+      child: const Icon(Icons.add, color: Colors.green, size: 30.0)
     );
   }
 }
