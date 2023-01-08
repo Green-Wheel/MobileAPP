@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/screens/home/widgets/bike_filters_map.dart';
 import 'package:greenwheel/screens/home/widgets/charger_filters_map.dart';
 import 'package:greenwheel/screens/home/widgets/searchBar.dart';
 import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/drawer.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
-import 'package:easy_search_bar/easy_search_bar.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       extendBodyBehindAppBar : false,
       appBar: SearchBar(index: widget.index == 1),
@@ -39,14 +40,19 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        child: Stack(
-          children: [
+        child:Stack(
+            children: [
             GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId),
-            ChargerFilterMap(functionPublic: () {}, functionPrivate: () {}, functionAll: () {}),
-          ],
-        ),
+            widget.index == 0 ?
+            ChargerFilterMap(functionPublic: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetPublicChargers,
+                functionPrivate: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetPrivateChargers,
+                functionAll: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetChargers) :
+            BikeFilterMap(functionNormal: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetNormalBikes,
+                functionElectric: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetElectricBikes,
+                functionAll: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetBikes),
+        ]
       ),
-    );
+    ));
   }
 
   void _changeLanguage() {

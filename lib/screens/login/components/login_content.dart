@@ -54,6 +54,26 @@ class _LoginContentState extends State<LoginContent>
     });
   }
 
+  Future<void> login_raco() async {
+    final authSuccess = await LoginService.instance.raco_login();
+    if (authSuccess) {
+      GoRouter.of(context).push('/');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: const Text('Login with raco failed')));
+    }
+  }
+
+  Future<void> login_google() async {
+    final authSuccess = await LoginService.instance.google_login();
+    if (authSuccess) {
+      GoRouter.of(context).push('/');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: const Text('Login with google failed')));
+    }
+  }
+
   Widget inputField(String hint, IconData iconData, controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
@@ -178,9 +198,17 @@ class _LoginContentState extends State<LoginContent>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/images/raco.png'),
+          IconButton(
+              onPressed: () {
+                login_raco();
+              },
+              icon: Image.asset('assets/images/raco.png')),
           const SizedBox(width: 24),
-          Image.asset('assets/images/google.png'),
+          IconButton(
+              onPressed: () {
+                login_google();
+              },
+              icon: Image.asset('assets/images/google.png')),
         ],
       ),
     );
@@ -221,7 +249,7 @@ class _LoginContentState extends State<LoginContent>
       inputPasswordField('Password', Icons.lock, passwordController),
       loginButton('Log In'),
       //orDivider(),
-      //logos(),
+      logos(),
       forgotPassword(),
     ];
 

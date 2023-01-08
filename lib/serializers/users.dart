@@ -1,4 +1,5 @@
 import 'package:greenwheel/serializers/chargers.dart';
+import 'package:greenwheel/serializers/vehicles.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:ffi';
 
@@ -14,10 +15,11 @@ class User {
     this.email,
     this.about,
     this.profile_picture,
-    required this.language_id,
+    this.language_id,
     required this.level,
     required this.xp,
-    required this.rating,
+    this.rating,
+    required this.selected_car
   });
 
   int? id;
@@ -27,10 +29,11 @@ class User {
   String? email;
   String? about;
   String? profile_picture;
-  int language_id;
+  int? language_id;
   int level;
   int xp;
-  double rating;
+  double? rating;
+  int selected_car;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
