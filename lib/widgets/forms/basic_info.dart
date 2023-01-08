@@ -94,7 +94,6 @@ class _BasicInfoState extends State<BasicInfo> {
                 const SizedBox(height: 10),
                 Center(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();

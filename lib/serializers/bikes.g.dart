@@ -46,6 +46,7 @@ DetailedBikeSerializer _$DetailedBikeSerializerFromJson(
       bike_type: BikeType.fromJson(json['bike_type'] as Map<String, dynamic>),
       power: (json['power'] as num?)?.toDouble(),
       price: (json['price'] as num).toDouble(),
+      contamination: json['contamination'] as String,
     );
 
 Map<String, dynamic> _$DetailedBikeSerializerToJson(
@@ -62,6 +63,7 @@ Map<String, dynamic> _$DetailedBikeSerializerToJson(
       'bike_type': instance.bike_type,
       'power': instance.power,
       'price': instance.price,
+      'contamination': instance.contamination,
     };
 
 BikeList _$BikeListFromJson(Map<String, dynamic> json) => BikeList(
@@ -75,6 +77,7 @@ BikeList _$BikeListFromJson(Map<String, dynamic> json) => BikeList(
       avg_rating: (json['avg_rating'] as num?)?.toDouble(),
       bike_type: BikeType.fromJson(json['bike_type'] as Map<String, dynamic>),
       price: (json['price'] as num).toDouble(),
+      contamination: json['contamination'] as String,
     );
 
 Map<String, dynamic> _$BikeListToJson(BikeList instance) => <String, dynamic>{
@@ -85,4 +88,5 @@ Map<String, dynamic> _$BikeListToJson(BikeList instance) => <String, dynamic>{
       'avg_rating': instance.avg_rating,
       'bike_type': instance.bike_type,
       'price': instance.price,
+      'contamination': instance.contamination,
     };
