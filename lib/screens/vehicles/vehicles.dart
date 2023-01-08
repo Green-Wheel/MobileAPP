@@ -153,7 +153,7 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
     );
   }
 
-  void goToAddVehicle() {
+  /*void goToAddVehicle() {
     GoRouter.of(context).push('/vehicles/add');
   }
 
@@ -164,6 +164,6 @@ class _MyVehiclesPageState extends State<MyVehiclesPage> {
       backgroundColor: Colors.white,
       child: const Icon(Icons.add, color: Colors.green, size: 30.0)
     );
-  }
+  }*/
 }
 

@@ -8,8 +8,9 @@ import 'package:greenwheel/widgets/forms/vehicle_basic_info.dart';
 
 class VehicleForm extends StatefulWidget {
   final data;
+  final int? id;
 
-  const VehicleForm({Key? key, this.data}) : super(key: key);
+  const VehicleForm({Key? key, this.data, this.id}) : super(key: key);
 
   @override
   State<VehicleForm> createState() => _VehicleFormState();
@@ -75,6 +76,11 @@ class _VehicleFormState extends State<VehicleForm> {
     });
     print('Dades a fer post $_data');
     if (widget.data != null) {
+      setState(() => {
+        _data['id'] = widget.id,
+      });
+      print('data to put $_data');
+
       bool bUpdateVehicle = await VehicleService.putVehicle(_data);
       if (!bUpdateVehicle) {
         showDialog(

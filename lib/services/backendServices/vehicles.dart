@@ -21,16 +21,47 @@ class VehicleService {
     return result;
   }
 
-  static Future<CarsDetailed?> getVehicle(int id) async {
+  static Future<CarsDetailed?> getVehicleSerialized(int id) async {
     CarsDetailed? result;
     var response = await BackendService.get('vehicles/$id/');
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
       result = CarsDetailed.fromJson(jsonResponse);
     } else {
-      throw Exception('Error getting vehice with id $id');
+      throw Exception('Error getting vehicle with id $id');
     }
     return result;
+  }
+
+  static Future<Map<String, dynamic>> getVehicle(int id) async {
+    try {
+      var response = await BackendService.get('vehicles/$id/');
+      if (response.statusCode != 200) return {};
+      var json = jsonDecode(response.body);
+      var data = {
+        'id': json['id'],
+        'alias': json['alias'] ?? '',
+        'charge_capacity': json['charge_capacity'] ?? 0.0,
+        'car_license': json['car_license'] ?? '',
+        'model': {
+          'id': json['model']['id'] ?? 0,
+          'name': json['model']['name'] ?? '',
+          'year': json['model']['year'],
+          'autonomy': json['model']['autonomy'] ?? 0.0,
+          'car_brand': {
+            'id': json['model']['car_brand']['id'],
+            'name': json['model']['car_brand']['name'] ?? '',
+          },
+          'current_type': json['current_type'].map((item) => item['id']).toList() ?? [],
+          'connection_type': json['connection_type'].map((item) => item['id']).toList() ?? [],
+          'consumption': json['consumption'] ?? 0.0,
+        },
+      };
+      return data;
+    } catch (e) {
+      print(e);
+      return {};
+    }
   }
 
   static Future<List<CarBrand>> getVehicleBrands() async {
