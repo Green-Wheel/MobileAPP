@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/screens/profile/widgets/aboutMe.dart';
 import 'package:greenwheel/screens/profile/widgets/infouser.dart';
 import 'package:greenwheel/screens/profile/widgets/mypoints.dart';
-import '../../serializers/users.dart';
 import '../../services/generalServices/LoginService.dart';
 import '../../widgets/list_user_ratings.dart';
 import '../../widgets/user_rating_valoration.dart';
 
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
-
+  ProfilePage({Key? key, required id}) : id=id,super(key: key);
+  int id;
   @override
   State<ProfilePage> createState() => _ProfilePage();
 
@@ -50,7 +50,7 @@ class _ProfilePage extends State<ProfilePage> {
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height/5,
                       padding: const EdgeInsets.only(top:20),
-                      child: const InfoUser(),
+                    child: InfoUser(widget.id),
                   ),
                   Container(
                       padding : const EdgeInsets.only(top:0),
@@ -64,7 +64,7 @@ class _ProfilePage extends State<ProfilePage> {
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height/8,
                     padding: const EdgeInsets.only(top:5),
-                    child: aboutMe( userData['about'] != null ? userData['about'] : "No content aboutMe"),//ficar user
+                    child:  (userData['id'] == widget.id) ? AboutMe(userData['id']) : AboutMe(widget.id),//ficar user
                   ),
                   Container(
                     padding : const EdgeInsets.only(top:5),
@@ -103,7 +103,7 @@ class _ProfilePage extends State<ProfilePage> {
                                               style: TextStyle(
                                                   fontSize: 20, fontWeight: FontWeight.bold)),
                                         ),
-                                        MyPoints(userData['id']),
+                                        (userData['id'] == widget.id) ? MyPoints(userData['id']) : MyPoints(widget.id),
                                       ]
                                   )
                               ),

@@ -4,9 +4,9 @@ import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import '../../../services/backendServices/logout_service.dart';
+import '../../../services/backendServices/user_service.dart';
 import '../../../services/generalServices/LoginService.dart';
 import '../../../widgets/accountIcon.dart';
-import '../../register/signup.dart';
 
 class SimpleDrawer extends StatefulWidget {
   SimpleDrawer({Key? key}) : super(key: key);
@@ -80,7 +80,8 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                         child: const Text('My Profile', style: TextStyle(fontSize: 18)),
                       ),
               onTap: () {
-                GoRouter.of(context).push('/profile');
+                int id = userData['id'];
+                GoRouter.of(context).push('/profile/$id');
               },
             ),
           ),
@@ -108,6 +109,7 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                 child: const Text('History', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
+                GoRouter.of(context).push('/trophies');
               },
             ),
           ),
@@ -121,7 +123,6 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                 child: const Text('My Bookings', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
-                GoRouter.of(context).go('/booking');
               },
             ),
           ),

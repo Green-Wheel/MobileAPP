@@ -9,7 +9,8 @@ class Username_Rating extends StatelessWidget {
   String username;
   String rating;
   bool edit_button;
-  Username_Rating({required this.username,required this.rating,required this.edit_button, super.key});
+  int id;
+  Username_Rating({required this.username,required this.rating,required this.edit_button, super.key, required  this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class Username_Rating extends StatelessWidget {
                       child: Row(
                           children: <Widget>[
                             Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                            if(edit_button) edit(context),
+                            (edit_button) ? edit(context) : chat(context),
                       ],
                     ),
             ),
@@ -37,6 +38,15 @@ class Username_Rating extends StatelessWidget {
       icon: Icon(Icons.edit),
       onPressed: () {
         GoRouter.of(context).push('/profile/edit');
+      },
+    );
+  }
+
+  Widget chat(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.chat),
+      onPressed: () {
+        //GoRouter.of(context).push('/chat/$id');
       },
     );
   }
