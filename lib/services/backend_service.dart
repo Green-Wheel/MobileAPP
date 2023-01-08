@@ -7,7 +7,7 @@ import 'generalServices/LoginService.dart';
 
 class BackendService {
   // Variable en el .env con la dirección del backend. Ejemplo: BACKEND_API_URL=http://192.168.56.1:8000/api/
-  static final String _baseUrl = 'http://192.168.0.19:8000/api/';
+  static final String _baseUrl = 'http://192.168.0.27:8000/api/';
   static final _loggedInStateInfo = LoginService();
 
   /// Permite hacer un get genérico a cualquier endpoint de la api

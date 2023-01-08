@@ -62,7 +62,13 @@ class _hourListState extends State<hourList> {
   Widget build(BuildContext context) {
     initHours();
 
-    return Expanded(
+    return (hours.isEmpty)?
+        Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text("No hay horas disponibles"),
+            ))
+        :Expanded(
       child: Container(
         color: Colors.white,
         child: GridView.builder(

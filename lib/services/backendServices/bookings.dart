@@ -45,6 +45,7 @@ class BookingService {
     return [];
   }
 
+
   static Future<List<Booking>> getBookingsOrderedBy(String orderBy) async {
     List<Booking> result = [];
     await BackendService.get('bookings/?orderby=$orderBy').then((response) {
@@ -59,6 +60,37 @@ class BookingService {
         print('Error getting bookings!');
       }
     });
+    return result;
+  }
+
+  static Future<List<Booking>> getPendingToConfirmBookings() async {
+    List<Booking> result = [];
+    await BackendService.get('bookings/owner/?type=pending').then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        log('bookings json $jsonResponse');
+        List<dynamic> bookings = jsonResponse['results'] as List<dynamic>;
+        log('bookings json $jsonResponse');
+        result = bookings.map((e) => Booking.fromJson(e)).toList();
+        //log(result);
+      } else {
+        log('Error getting bookings!');
+      }
+    });
+/*    Map<String, dynamic> json = {
+      "id": 1,
+      "user": {
+        "id": 1,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "profile_picture": null
+      },
+      "publication": 1
+    };*/
+    log("chekcpoint");
+    log("Aqui esta el resultado del parseo ${result.toString()}");
+
     return result;
   }
 

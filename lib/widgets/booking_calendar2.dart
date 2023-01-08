@@ -143,6 +143,7 @@ class BookingCalendarState extends State<BookingCalendar> {
 
                           onPressed: (){
                             if(widget.backendOperations.getNumberOfNewReservations() > 0) {
+
                               showDialog<String>(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
@@ -164,6 +165,8 @@ class BookingCalendarState extends State<BookingCalendar> {
                                     TextButton(
                                       onPressed: () {
                                         Navigator.pop(context, 'Ok');
+                                        widget.datesState.reset();
+                                        widget.backendOperations.reset();
                                         updateAvailabilityWithBackend(widget.selectedDate);
                                       },
                                       child: const Text('Ok'),
@@ -278,6 +281,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                                 ),
                               );
                             }
+                            widget.backendOperations.reset();
                           },
 
                           style: ElevatedButton.styleFrom(
@@ -298,11 +302,10 @@ class BookingCalendarState extends State<BookingCalendar> {
                             children: const [
                               Icon(Icons.event_available,size: 22,),
                               Text(
-                                "Reservar ",
+                                " Reservar ",
                                 style: TextStyle(
                                     fontSize: 20
                                 ),
-
                               ),
                             ],
                           ),
@@ -388,17 +391,21 @@ class BookingCalendarState extends State<BookingCalendar> {
     return dates;
   }
 
-  void initDateState(List<DateTime> blockedDates, List<DateTime> reservations){
+
+  void updateDateState(List<DateTime> blockedDates, List<DateTime> reservations){
 
     log("ejecutando init--------------");
 
-    widget.datesState = DateStates(reservations, blockedDates);
+    widget.datesState.update(reservations,blockedDates);
   }
 
-  void initBackendOperations(List<DateTime> reservations){
 
-    widget.backendOperations = BackendOperations(reservations,widget.id);
 
+  void updateBackendOperations(List<DateTime> blockedDates, List<DateTime> reservations){
+
+    log("ejecutando init--------------");
+
+    widget.datesState.update(reservations,blockedDates);
   }
 
   //--------------------------------[ OVERRIDES ]-----------------------------//
@@ -412,8 +419,8 @@ class BookingCalendarState extends State<BookingCalendar> {
 
     log("ESTAS DEBERIAN BLOQUEARSE $blockedDates");
 
-    initDateState(blockedDates,reservations);
-    initBackendOperations(reservations);
+    widget.datesState.update(reservations, blockedDates);
+    //widget.backendOperations.update();
     widget.waitingBakendForHourAvailability = false;
     setState(() {
 
@@ -422,7 +429,8 @@ class BookingCalendarState extends State<BookingCalendar> {
 
   @override
   void initState() {
-
+    widget.datesState = DateStates([], []);
+    widget.backendOperations = BackendOperations([], widget.id);
     updateAvailabilityWithBackend(DateTime.now());
     super.initState();
 
@@ -460,13 +468,22 @@ class DateState{
 
 class DateStates{
   late List<DateState> dateStates;
-  
+
   bool dateStatesContains(DateTime date)
   {
     for(var dateState in dateStates){
       if(dateState.date == date) return true;
     }
     return false;
+  }
+
+  void update(List<DateTime> reservations, List<DateTime> blockeds){
+    for (var reservation in reservations){
+      add(reservation, Availability.reserved);
+    }
+    for (var blocked in blockeds){
+      add(blocked, Availability.blocked);
+    }
   }
 
   int dateStatesIndexOf(DateTime date){
@@ -487,8 +504,10 @@ class DateStates{
     }
     else {
       int i = dateStatesIndexOf(date);
-      if(dateStates[i].availability != Availability.blocked) {
-
+      if(availability == Availability.blocked){
+        dateStates[i].availability = availability;
+      }
+      if(dateStates[i].availability != Availability.blocked ) {
         dateStates.removeAt(i);
       }
     }
@@ -561,6 +580,7 @@ class DateStates{
     List<DateState> dateStates=[];
 
     for( var date in reservations ) {
+      if(!blocked.contains(date))
       dateStates.add(DateState(date,Availability.reserved));
     }
     for( var date in blocked ) {
@@ -592,11 +612,20 @@ class DateStates{
     }
     return s;
   }
+
+  void reset() {
+    dateStates = [];
+  }
 }
 
-class BackendOperations{  
-  
+class BackendOperations{
+
   List<BackendOperation> backendOperations = [];
+
+  update(List<DateTime> reservations,int publication){
+    //for (var reservation in reservations) add(reservation);
+
+  }
 
   Future<bool> applyBackendOperations() async {
 
@@ -608,6 +637,8 @@ class BackendOperations{
         }
       }
     }
+
+
 
     return true;
   }
@@ -676,9 +707,9 @@ class BackendOperations{
     }
     return index;
   }
-  
+
   void add(DateTime date, OperationType operation, int publication){
-  
+
     if(!backendOperationContains(date))
     {
       log("Añadiendo a backend operations ---------$date");
@@ -767,16 +798,7 @@ class BackendOperations{
   }
 
   void reset() {
-    List toDelete=[];
-    for(var operation in backendOperations){
-      if(operation.operation != OperationType.nothing) {
-        toDelete.add(operation);
-      }
-    }
-
-    for(var operation in toDelete){
-      backendOperations.remove(operation);
-    }
+    backendOperations = [];
   }
 }
 
