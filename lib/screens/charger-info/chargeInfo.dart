@@ -245,7 +245,7 @@ class _ChargeInfoState extends State<ChargeInfo>{
         },
       ),
      // drawer: SimpleDrawer(),
-      floatingActionButton: const BottomBarActionButton(),
+      floatingActionButton:  BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }

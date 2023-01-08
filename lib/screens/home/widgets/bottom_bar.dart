@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/services/backendServices/chat.dart';
 
 class BottomBarWidget extends StatefulWidget {
   final int index;
@@ -59,15 +60,23 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
 }
 
 class BottomBarActionButton extends StatefulWidget {
-  const BottomBarActionButton({super.key});
+   BottomBarActionButton({super.key});
   //TODO: canviar valor crida corresponent
-  final int msgCount = 0; //Caldrà implementar-ho quan es faci el chat.
+  late int msgCount = 0; //Caldrà implementar-ho quan es faci el chat.
 
   @override
   State<BottomBarActionButton> createState() => _BottomBarActionButtonState();
 }
 
 class _BottomBarActionButtonState extends State<BottomBarActionButton> {
+
+  getUnreadMessages() async {
+    final unreadMessages = await ChatService.getUnreadMessages();
+    setState(() {
+      widget.msgCount = unreadMessages;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
