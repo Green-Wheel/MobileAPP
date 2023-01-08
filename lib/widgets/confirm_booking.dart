@@ -68,7 +68,7 @@ class _confirm_bookingState extends State<confirm_booking> {
 
   Future<void> getPendingBookingsFromBackend() async {
     widget.waitingBackend = true;
-    widget.bookings = (await BookingService.getPendingToConfirmBookings()).cast<bkn.Booking>();
+    widget.bookings = (await BookingService.getBookingsByType("pending")).cast<bkn.Booking>();
     log("##########################################");
     log(widget.bookings.toString());
     widget.waitingBackend = false;
@@ -134,7 +134,7 @@ class _confirm_bookingState extends State<confirm_booking> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
+                        children: const [
                           Text(
                             "INICIO",
                             style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: Color(0xA0052e42)),
@@ -143,7 +143,6 @@ class _confirm_bookingState extends State<confirm_booking> {
                             "FIN",
                             style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16,color: Color(0xA0052e42)),
                           ),
-
                         ],
                       ),
                     ),
@@ -159,43 +158,39 @@ class _confirm_bookingState extends State<confirm_booking> {
                             mainAxisAlignment: MainAxisAlignment.center,
 
                             children: [
-
                               Row(
                                 children: [
-                                  Icon(Icons.calendar_month, color: Color(0xF0052e42),),
+                                  const Icon(Icons.calendar_month, color: Color(0xF0052e42),),
                                   Text(' ${DateFormat('yyyy·MM·dd').format(booking.start_date)}'),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Icon(Icons.access_time, color: Color(0xF0052e42)),
+                                  const Icon(Icons.access_time, color: Color(0xF0052e42)),
                                   Text(' ${DateFormat('hh:mm').format(booking.start_date)} h'),
                                 ],
                               ),
-
                             ],
                           ),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
+                            children: const [
                               Icon(Icons.arrow_circle_right,color: Colors.blue,size: 35,),
                             ],
                           ),
-
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-
                               Row(
                                 children: [
-                                  Icon(Icons.calendar_month,color: Color(0xF0052e42)),
+                                  const Icon(Icons.calendar_month,color: Color(0xF0052e42)),
                                   Text(' ${DateFormat('yyyy·MM·dd').format(booking.end_date)}'),
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Icon(Icons.access_time,color: Color(0xF0052e42),                                                                ),
+                                  const Icon(Icons.access_time,color: Color(0xF0052e42),                                                                ),
                                   Text(' ${DateFormat('hh:mm').format(booking.end_date)} h',),
                                 ],
                               ),
@@ -206,9 +201,8 @@ class _confirm_bookingState extends State<confirm_booking> {
                     ),
                     Column(
                       children: [
-
                         Container(
-                          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
+                          padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
                           decoration: BoxDecoration(
                               color: Colors.blue.shade50
                           ),
@@ -221,7 +215,7 @@ class _confirm_bookingState extends State<confirm_booking> {
                                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                         RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(18.0),
-                                            side: BorderSide(color: Colors.red)
+                                            side: const BorderSide(color: Colors.red)
                                         )
                                     )
                                 ),
@@ -231,9 +225,9 @@ class _confirm_bookingState extends State<confirm_booking> {
                                     context: context,
                                     builder: (BuildContext context) => AlertDialog(
                                       title: Row(
-                                        children: [
-                                          const Icon(Icons.error, color: Colors.redAccent,),
-                                          const Text(' Rechazar reserva'),
+                                        children: const [
+                                          Icon(Icons.error, color: Colors.redAccent,),
+                                          Text(' Rechazar reserva'),
                                         ],
                                       ),
                                       content: const Text('Se eliminará la reserva que ha realizado el usuario'),
@@ -274,13 +268,12 @@ class _confirm_bookingState extends State<confirm_booking> {
                                           },
                                           child: const Text('ok'),
                                         ),
-
                                       ],
                                     ),
                                   );
                                 },
                                 child: Row(
-                                  children: [
+                                  children: const [
                                     Icon(Icons.close,color: Colors.red,),
                                     Text(
                                       ' Rechazar  ',
@@ -343,7 +336,7 @@ class _confirm_bookingState extends State<confirm_booking> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
+                                  children: const [
                                     Text(
                                       '   Aceptar  ',
                                       style: TextStyle(color: Colors.green),

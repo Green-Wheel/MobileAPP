@@ -63,16 +63,13 @@ class BookingService {
     return result;
   }
 
-  static Future<List<Booking>> getPendingToConfirmBookings() async {
+  static Future<List<Booking>> getBookingsByType(String type) async {
     List<Booking> result = [];
-    await BackendService.get('bookings/owner/?type=pending').then((response) {
+    await BackendService.get('bookings/owner/?type=$type').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        //log('bookings json $jsonResponse');
         List<dynamic> bookings = jsonResponse['results'] as List<dynamic>;
-        //log('bookings json $jsonResponse');
         result = bookings.map((e) => Booking.fromJson(e)).toList();
-        //log(result);
       } else {
         log('Error getting bookings!');
       }

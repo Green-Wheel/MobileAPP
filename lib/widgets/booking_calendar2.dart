@@ -622,13 +622,7 @@ class BackendOperations{
 
   List<BackendOperation> backendOperations = [];
 
-  update(List<DateTime> reservations,int publication){
-    //for (var reservation in reservations) add(reservation);
-
-  }
-
   Future<bool> applyBackendOperations() async {
-
     List mergedBackendOperations = mergeBackendOperations();
     for(BackendOperation backendOperation in mergedBackendOperations){
       if(backendOperation.operation==OperationType.add){
@@ -637,8 +631,6 @@ class BackendOperations{
         }
       }
     }
-
-
 
     return true;
   }
