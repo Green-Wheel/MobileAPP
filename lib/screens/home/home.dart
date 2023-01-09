@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/screens/home/widgets/bike_filters_map.dart';
 import 'package:greenwheel/screens/home/widgets/charger_filters_map.dart';
 import 'package:greenwheel/screens/home/widgets/searchBar.dart';
 import 'package:greenwheel/screens/home/widgets/bottom_bar.dart';
 import 'package:greenwheel/screens/home/widgets/drawer.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
+import '../../serializers/maps.dart';
 import '../../widgets/language_selector_widget.dart';
 
 class HomePage extends StatefulWidget {
   int index;
   int publicationId;
+  var point_search = null;
   HomePage({Key? key, this.index = 0, this.publicationId = -1}) : super(key: key);
 
   @override
@@ -26,12 +29,17 @@ class _HomePageState extends State<HomePage> {
 
   final nameController = TextEditingController();
 
+  void callBack (LatLang value) {
+    setState(() {
+      widget.point_search = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       extendBodyBehindAppBar : false,
-      appBar: SearchBar(index: widget.index == 1),
+      appBar: SearchBar(index: widget.index, callBack: callBack),
       bottomNavigationBar: BottomBarWidget(
         index: widget.index,
         onChangedTab: _onChangeTab,
@@ -42,7 +50,7 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child:Stack(
             children: [
-            GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId),
+            GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId, point_search_bar: widget.point_search),
             widget.index == 0 ?
             ChargerFilterMap(functionPublic: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetPublicChargers,
                 functionPrivate: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetPrivateChargers,

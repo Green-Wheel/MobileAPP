@@ -109,7 +109,7 @@ class _ProfilePage extends State<ProfilePage> {
                               ),
                               Container(
                                 padding: const EdgeInsets.only(top:5),
-                                child: UserRatings()//RateUser(user_id: 2,booking_id: 2),
+                                child: UserRatings(widget.id)//RateUser(user_id: 2,booking_id: 2),
                               ),
                             ])
                         )
@@ -126,27 +126,4 @@ class _ProfilePage extends State<ProfilePage> {
     );
   }
 
-  Widget aboutMe(String aboutMe) {
-    return Container(
-        padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
-        child: Column(
-            children: <Widget>[
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text("About Me",
-                    style: TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.bold)),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    aboutMe,
-                    style: const TextStyle(fontSize: 16)
-                ),
-              ),
-
-            ]
-        )
-    );
-  }
 }

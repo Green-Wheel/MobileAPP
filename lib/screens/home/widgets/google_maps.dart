@@ -11,8 +11,10 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../serializers/bikes.dart';
 import '../../../serializers/chargers.dart';
+import '../../../serializers/maps.dart';
 import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
+import '../../../utils/geocoding.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
 
@@ -20,9 +22,9 @@ class GoogleMapsWidget extends StatefulWidget {
   int index;
   Set<Polyline>? polylines = {};
   int? publicationId;
-
+  LatLang? point_search_bar;
   GoogleMapsWidget(
-      {Key? key, required this.index, this.polylines, this.publicationId})
+      {Key? key, required this.index, this.polylines, this.publicationId,this.point_search_bar})
       : super(key: key);
 
   @override
@@ -56,7 +58,7 @@ class GoogleMapsWidget extends StatefulWidget {
 class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   late GoogleMapController mapController;
   bool permissionGranted = false;
-  Position _position = const Position(
+  Position _position = Position(
       latitude: 41.7285833,
       longitude: 1.8130899,
       timestamp: null,
@@ -66,6 +68,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       speed: 1,
       speedAccuracy: 1);
   Set<Marker> markers = {};
+  Set<Marker> markerList_search = {};
   final Map<MarkerId, Marker> markerMap = {};
 
   //late Position _actualMarcador = _position;
@@ -368,11 +371,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void _getCurrentLocation() async {
-    _position = await _determinePosition();
+    //_position = await _determinePosition();
     mapController.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: LatLng(_position.latitude, _position.longitude),
+          target: LatLng(40.0, 11.0),
           zoom: 15,
         ),
       ),
@@ -380,11 +383,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void _updateCurrentLocation() async {
-    _position = await _determinePosition();
+    //_position = await _determinePosition();
     mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: LatLng(_position.latitude, _position.longitude),
+          target: LatLng(40.0, 11.0),
           zoom: 15,
         ),
       ),
@@ -392,7 +395,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void onCameraMove(CameraPosition cameraPosition) {
-    //print('$cameraPosition');
+    print('$cameraPosition');
+    print('DDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
   }
 
   void _setCardView()  {
@@ -415,6 +419,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       scrolledup = true;
       loading_bike = true;
     });
+  }
+
+  void callBackAddress() async{
+    setPointAddress(widget.point_search_bar!);
+    widget.point_search_bar = null;
   }
 
   @override
@@ -461,6 +470,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           children: scrolledup ? scrollDown() : scrollMiddle()
       )
     );
+
   }
 
 List<Widget> scrollDown() {
@@ -717,4 +727,38 @@ void _getCharger(int id) async {
         onPressed: () {
           openAppSettings();
         },
-      ));}
+      ));
+
+  void setPointAddress(LatLang point) {
+
+
+      /*
+
+      _updateCurrentLocation();
+      */
+    setState(() {
+
+      markerList_search.clear();
+      markerList_search.add(Marker(
+        markerId: MarkerId(point.toString()),
+        position: LatLng(point.lat, point.lng),
+      ));
+
+      _position = Position(
+          latitude: point.lat,
+          longitude: point.lng,
+          timestamp: null,
+          accuracy: 1,
+          altitude: 1,
+          heading: 1,
+          speed: 1,
+          speedAccuracy: 1);
+      //_updateCurrentLocation();
+    });
+
+
+
+      //mapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(40.0, 40.0), 14.0));
+  }
+
+}

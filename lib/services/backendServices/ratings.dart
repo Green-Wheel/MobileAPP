@@ -20,13 +20,17 @@ class RatingService {
     return result;
   }
 
-  static Future<List?> getRatingsUsers(int id) async {
-    List result = [];
+  static Future<List<Rating>> getRatingsUsers(int id) async {
+    List<Rating> result = [];
     await BackendService.get('ratings/client/$id').then((response) {
       if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
-        result = jsonResponse;
+        print(200);
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> ratings = jsonResponse['results'] as List<dynamic>;
+        result = ratings.map((e) => Rating.fromJson(e)).toList();
+        //result = jsonResponse;
       } else {
+        print(response.statusCode);
         print('Error getting ratings!');
       }
     });

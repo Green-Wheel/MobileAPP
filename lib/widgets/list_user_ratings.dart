@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/services/backendServices/ratings.dart';
 import 'package:greenwheel/widgets/rating_stars.dart';
 
 import '../serializers/ratings.dart';
@@ -8,8 +9,8 @@ import 'interactive_stars_widget.dart';
 
 class UserRatings extends StatefulWidget {
 
-  UserRatings({Key? key}) : super(key: key);
-
+  UserRatings(int id, {Key? key}) : id = id,super(key: key);
+  int id;
   @override
   State<UserRatings> createState() => _UserRatings();
 }
@@ -29,27 +30,11 @@ class _UserRatings extends State<UserRatings> {
   }
 
   void _getData() {
+    Future<List<dynamic>?> aux = RatingService.getRatingsUsers(widget.id);
+    print("zzzzzzzzzzz");
+    print(aux);
     setState(() {
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
-      _ratings.add(dummy);
+      _ratings = [];
     });
   }
 
