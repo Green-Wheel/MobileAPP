@@ -272,30 +272,32 @@ class _ChatView extends State<ChatView> {
     NotificationController();
       return FloatingActionButton.small(
         onPressed: () {
-          //TODO: canviar a variables login
-          var new_msg = ChatRoomMessage(
-            id: widget.to_user!,
-            sender: BasicUser(
-                username: "user", //LoginService().user_info?['username'],
-                first_name: "A" ,//LoginService().user_info?['first_name'],
-                last_name: "B",//LoginService().user_info?['last_name'],
-            ),
-            content: _controller.text,
-            created_at: DateTime.now(),
-          );
+          if (_controller.text.isNotEmpty) {
+            var new_msg = ChatRoomMessage(
+              id: widget.to_user!,
+              sender: BasicUser(
+                username: LoginService().user_info?['username'] ?? '',
+                first_name: LoginService().user_info?['first_name'] ?? '',
+                last_name: LoginService().user_info?['last_name'] ?? '',
+              ),
+              content: _controller.text,
+              created_at: DateTime.now(),
+            );
 
-          setState(() {
-            _messages.add(new_msg);
-          });
+            setState(() {
+              _messages.add(new_msg);
+            });
 
-          _scrollController.animateTo(
-            _scrollController.position.minScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-          );
+            _scrollController.animateTo(
+              _scrollController.position.minScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
 
-          notificationController.SendMessage(_controller.text, widget.to_user!, listenMessage);
-          _controller.clear();
+            notificationController.SendMessage(
+                _controller.text, widget.to_user!, listenMessage);
+            _controller.clear();
+          }
         },
         elevation: 0,
         child: const Icon(
