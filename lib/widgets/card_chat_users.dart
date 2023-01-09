@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:greenwheel/services/backendServices/chat.dart';
 
 
 class CardChatUsersWidget extends StatefulWidget {
@@ -8,9 +9,12 @@ class CardChatUsersWidget extends StatefulWidget {
   bool new_message;
   String last_message_time;
   BuildContext context;
-  int? user_id;
+  int? room_id;
+  Function? decrementar;
+
   //opcion leido del usuario en el doublecheck
-  CardChatUsersWidget({Key? key, required this.username, required this.last_message_received, required this.new_message, required this.last_message_time, required this.user_id, required this.context}) : super(key: key);
+  CardChatUsersWidget({Key? key, required this.username, required this.last_message_received, required this.new_message,
+    required this.last_message_time, required this.room_id, required this.context, required this.decrementar}) : super(key: key);
 
   @override
   State<CardChatUsersWidget> createState() => _CardChatUsersWidget();
@@ -22,9 +26,13 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        //TODO: implementar ruta de chat
-        print(widget.user_id);
-        GoRouter.of(context).go('/chats/${widget.user_id!}');
+        //print(widget.room_id);
+
+        //decrementar unread + cridar a la api
+        widget.decrementar!();
+        ChatService.putUnreadMessage(widget.room_id!);
+
+        GoRouter.of(context).go('/chats/${widget.room_id!}');
         widget.new_message = false;
       },
       child: SizedBox(
