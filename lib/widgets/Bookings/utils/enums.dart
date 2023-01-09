@@ -2,6 +2,7 @@
 
 enum OperationType {
   add,
+  block,
   delete,
   nothing
 }
