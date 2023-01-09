@@ -141,15 +141,18 @@ class _ChatView extends State<ChatView> {
           Container(
             height: MediaQuery.of(context).size.height * 0.84,
               child:ListView.builder(
+              reverse: true,
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               controller: _scrollController,
-              itemCount: _messages.length, //+ (_isLastPage ? 0 : 1),
+              itemCount: _messages.length,
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
+                int itemCount = _messages.length ?? 0;
+                int reversedIndex = itemCount - 1 - index;
                 if (index < 0) return Container();
-                bool isMe = _messages[index].sender.id == LoginService().user_info?['id'];
-                return MessageWidget( message: _messages[index].content, itsmine: isMe, created_at: DateFormat('dd-MM-yyyy hh:mm').format(_messages[index].created_at),);
+                bool isMe = _messages[reversedIndex].sender.id == LoginService().user_info?['id'];
+                return MessageWidget( message: _messages[reversedIndex].content, itsmine: isMe, created_at: DateFormat('dd-MM-yyyy hh:mm').format(_messages[reversedIndex].created_at),);
               },
             ),
           ),
@@ -204,9 +207,9 @@ class _ChatView extends State<ChatView> {
                 ],
               ),
             ),
-            body: Container(
-              height: MediaQuery.of(context).size.height,
-              child: Stack(
+            body: SingleChildScrollView(
+              //height: MediaQuery.of(context).size.height,
+              child: Column(
                 children: [
                   buildMessagesView(),
                   Positioned(
@@ -286,7 +289,7 @@ class _ChatView extends State<ChatView> {
           });
 
           _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
+            _scrollController.position.minScrollExtent,
             duration: const Duration(milliseconds: 300),
             curve: Curves.easeOut,
           );
