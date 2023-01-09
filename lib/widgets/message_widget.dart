@@ -171,7 +171,7 @@ Widget _messageWidget(String message, bool itsmine, String created_at){
               child: Text(
                 created_at.toString(),
                 style: const TextStyle(
-                  color: Colors.black,
+                  color: Colors.white,
                   fontSize: 12,
                 ),
               ),

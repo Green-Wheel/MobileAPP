@@ -16,15 +16,6 @@ class ChatListUsers extends StatefulWidget {
   State<ChatListUsers> createState() => _ChatListUsers();
 }
 
-main(){
-  runApp(MaterialApp(
-    home: Scaffold(
-      body: ChatListUsers(),
-    ),
-  ),
-  );
-}
-
 class _ChatListUsers extends State<ChatListUsers> {
 
   int _number_new_messages = 0;
@@ -190,7 +181,6 @@ class _ChatListUsers extends State<ChatListUsers> {
               ],
             ),
           ),
-          //TODO: Poner listado de usuarios
           body: TabBarView(
             children: [
               ListPoints(context, chats),

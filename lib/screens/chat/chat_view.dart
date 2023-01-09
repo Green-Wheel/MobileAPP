@@ -135,24 +135,26 @@ class _ChatView extends State<ChatView> {
         return errorDialog(size: 20);
       }*/
     }
-    return Column(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.84,
-          child:ListView.builder(
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            controller: _scrollController,
-            itemCount: _messages.length, //+ (_isLastPage ? 0 : 1),
-            shrinkWrap: true,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (context, index) {
-              if (index < 0) return Container();
-              bool isMe = _messages[index].sender.id == LoginService().user_info?['id'];
-              return MessageWidget( message: _messages[index].content, itsmine: isMe, created_at: DateFormat('dd-MM-yyyy hh:mm').format(_messages[index].created_at),);
-            },
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Container(
+            height: MediaQuery.of(context).size.height * 0.84,
+              child:ListView.builder(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+              controller: _scrollController,
+              itemCount: _messages.length, //+ (_isLastPage ? 0 : 1),
+              shrinkWrap: true,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                if (index < 0) return Container();
+                bool isMe = _messages[index].sender.id == LoginService().user_info?['id'];
+                return MessageWidget( message: _messages[index].content, itsmine: isMe, created_at: DateFormat('dd-MM-yyyy hh:mm').format(_messages[index].created_at),);
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
