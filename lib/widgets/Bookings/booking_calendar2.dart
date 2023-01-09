@@ -5,7 +5,7 @@ import 'package:greenwheel/services/backendServices/bookings.dart';
 import 'package:greenwheel/services/backendServices/publications.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'custom_calendar.dart';
+import '../custom_calendar.dart';
 import 'hour_list.dart';
 import 'dart:convert';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -97,181 +97,134 @@ class BookingCalendarState extends State<BookingCalendar> {
             ),
           ),
           widget.waitingBakendForHourAvailability?
-            Expanded(
+          Expanded(
               child: Container(
                 decoration: const BoxDecoration(
                     color: Colors.white70
                 ),
                 child: Center(
                   child:  LoadingAnimationWidget.discreteCircle(
-                  color: Colors.green.shade50,
-                  size: 70,
-                  secondRingColor: Colors.green.shade200,
-                  thirdRingColor: Color(0x10052e42)),
+                      color: Colors.green.shade50,
+                      size: 70,
+                      secondRingColor: Colors.green.shade200,
+                      thirdRingColor: Color(0x10052e42)),
                 ),
               )
-            ):
+          ):
 
           Expanded(
             child:
-              Column(
-                children: [
-                  (widget.selectedDate.hasPast())?
-                  const Expanded(
-                    child: Center(
-                        child: Text(
-                        'No se puede reservar en una fecha pasada',
-                        style: TextStyle(
-                        color: Colors.black45,
-                        fontSize: 15
+            Column(
+              children: [
+                (widget.selectedDate.hasPast())?
+                const Expanded(
+                  child: Center(
+                    child: Text(
+                      'No se puede reservar en una fecha pasada',
+                      style: TextStyle(
+                          color: Colors.black45,
+                          fontSize: 15
+                      ),
+                    ),
+                  ),
+                ):
+                hourList(
+                  showHoursStartingAtCurrentHour: widget.selectedDate.isToday(),
+                  reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
+                  blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
+                  return_change_in_reservations: updateWithHourListReservation,
+
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 0.0),
+                      child: ElevatedButton(
+
+                        onPressed: (){
+                          if(widget.backendOperations.getNumberOfNewReservations() > 0) {
+
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: Row(
+                                  children: const [
+                                    Icon(Icons.warning_rounded, color: Colors.amber,),
+                                    Text(' Deshacer cambios'),
+                                  ],
+                                ),
+                                content: const Text('Se deseleccionarán todas las horas que has marcado, pero se mantendrán tus reservas anteriores'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, 'Cancelar'),
+                                    child: const Text(
+                                      'Cancelar',
+                                      style: TextStyle(color: Colors.black45),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context, 'Ok');
+                                      widget.datesState.reset();
+                                      widget.backendOperations.reset();
+                                      updateAvailabilityWithBackend(widget.selectedDate);
+                                    },
+                                    child: const Text('Ok'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+                        },
+
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(MediaQuery.of(context).size.width*0.45, 40),
+                          maximumSize: Size(MediaQuery.of(context).size.width*0.5, double.infinity),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0.0),
+                              side: const BorderSide(
+                                  width: 0,
+                                  color: Color(0xA0052e42)
+                              )
+                          ),
+                          backgroundColor:  Colors.white,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.refresh_rounded,size: 22,color: Color(0xA0052e42),),
+                            Text(
+                              " Deshacer",
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Color(0xA0052e42),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  ):
-                  hourList(
-                    showHoursStartingAtCurrentHour: widget.selectedDate.isToday(),
-                    reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
-                    blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
-                    return_change_in_reservations: updateWithHourListReservation,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 0.0),
+                      child: ElevatedButton(
 
-                  ),
-                  Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0),
-                        child: ElevatedButton(
+                        onPressed: () async {
+                          log("################################################# RESERVAR ################################  ");
 
-                          onPressed: (){
-                            if(widget.backendOperations.getNumberOfNewReservations() > 0) {
-
+                          if(widget.backendOperations.resultOfApplyingIsAContiguousReservation()) {
+                            log("SON CONTIGUAS LAS HORAS ");
+                            if(!await widget.backendOperations.applyBackendOperations()){
                               showDialog<String>(
                                 context: context,
                                 builder: (BuildContext context) => AlertDialog(
                                   title: Row(
                                     children: const [
-                                      Icon(Icons.warning_rounded, color: Colors.amber,),
-                                      Text(' Deshacer cambios'),
+                                      Icon(Icons.error, color: Colors.redAccent,),
+                                      Text(' Error al guardar'),
                                     ],
                                   ),
-                                  content: const Text('Se deseleccionarán todas las horas que has marcado, pero se mantendrán tus reservas anteriores'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context, 'Cancelar'),
-                                      child: const Text(
-                                        'Cancelar',
-                                        style: TextStyle(color: Colors.black45),
-                                      ),
-                                    ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'Ok');
-                                        widget.datesState.reset();
-                                        widget.backendOperations.reset();
-                                        updateAvailabilityWithBackend(widget.selectedDate);
-                                      },
-                                      child: const Text('Ok'),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }
-                          },
-
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(MediaQuery.of(context).size.width*0.45, 40),
-                            maximumSize: Size(MediaQuery.of(context).size.width*0.5, double.infinity),
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0.0),
-                                side: const BorderSide(
-                                    width: 0,
-                                    color: Color(0xA0052e42)
-                                )
-                            ),
-                            backgroundColor:  Colors.white,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.refresh_rounded,size: 22,color: Color(0xA0052e42),),
-                              Text(
-                                " Deshacer",
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    color: Color(0xA0052e42),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 0.0),
-                        child: ElevatedButton(
-
-                          onPressed: () async {
-                            log("################################################# RESERVAR ################################  ");
-
-                            if(widget.backendOperations.resultOfApplyingIsAContiguousReservation()) {
-                              log("SON CONTIGUAS LAS HORAS ");
-                              if(!await widget.backendOperations.applyBackendOperations()){
-                                showDialog<String>(
-                                  context: context,
-                                  builder: (BuildContext context) => AlertDialog(
-                                    title: Row(
-                                      children: const [
-                                        Icon(Icons.error, color: Colors.redAccent,),
-                                        Text(' Error al guardar'),
-                                      ],
-                                    ),
-                                    content: const Text('Ha habido un error al guardar los cambios. Por favor, ponte en contacto con los GreenWheelers para que lo solucionen'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context, 'Entendido'),
-                                        child: const Text('Entendido'),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }
-                              else if(widget.backendOperations.getNumberOfOperations() > 0){
-                                showDialog<String>(
-                                  context: context,
-                                  builder: (BuildContext context) => AlertDialog(
-                                    title: Row(
-                                      children: const [
-                                        Icon(Icons.check_circle, color: Colors.green,),
-                                        Text(' Cambios guardados'),
-                                      ],
-                                    ),
-                                    content: const Text('¡Se han guardado tus cambios exitosamente!'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, 'Ok');
-                                          updateAvailabilityWithBackend(widget.selectedDate);
-
-                                        },
-                                        child: const Text('Ok'),
-                                      ),
-
-                                    ],
-                                  ),
-                                );
-                              }
-                            }
-                            else{
-
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: Row(
-                                    children: [
-                                      const Icon(Icons.error, color: Colors.redAccent,),
-                                      const Text(' Reserva no válida'),
-                                    ],
-                                  ),
-                                  content: const Text('Las horas de una reserva deben ser contiguas'),
+                                  content: const Text('Ha habido un error al guardar los cambios. Por favor, ponte en contacto con los GreenWheelers para que lo solucionen'),
                                   actions: <Widget>[
                                     TextButton(
                                       onPressed: () => Navigator.pop(context, 'Entendido'),
@@ -281,40 +234,87 @@ class BookingCalendarState extends State<BookingCalendar> {
                                 ),
                               );
                             }
-                            widget.backendOperations.reset();
-                          },
+                            else if(widget.backendOperations.getNumberOfOperations() > 0){
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) => AlertDialog(
+                                  title: Row(
+                                    children: const [
+                                      Icon(Icons.check_circle, color: Colors.green,),
+                                      Text(' Cambios guardados'),
+                                    ],
+                                  ),
+                                  content: const Text('¡Se han guardado tus cambios exitosamente!'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context, 'Ok');
+                                        updateAvailabilityWithBackend(widget.selectedDate);
 
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: Size(MediaQuery.of(context).size.width*0.45, 40),
-                            maximumSize: Size(MediaQuery.of(context).size.width*0.5, double.infinity),
-                            padding: const EdgeInsets.symmetric(vertical: 15),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(0.0),
-                                side: BorderSide(
-                                    width: 0,
-                                    color: Colors.green.shade800
-                                )
-                            ),
-                            backgroundColor:  Colors.green,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: const [
-                              Icon(Icons.event_available,size: 22,),
-                              Text(
-                                " Reservar ",
-                                style: TextStyle(
-                                    fontSize: 20
+                                      },
+                                      child: const Text('Ok'),
+                                    ),
+
+                                  ],
                                 ),
+                              );
+                            }
+                          }
+                          else{
+
+                            showDialog<String>(
+                              context: context,
+                              builder: (BuildContext context) => AlertDialog(
+                                title: Row(
+                                  children: [
+                                    const Icon(Icons.error, color: Colors.redAccent,),
+                                    const Text(' Reserva no válida'),
+                                  ],
+                                ),
+                                content: const Text('Las horas de una reserva deben ser contiguas'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context, 'Entendido'),
+                                    child: const Text('Entendido'),
+                                  ),
+                                ],
                               ),
-                            ],
+                            );
+                          }
+                          widget.backendOperations.reset();
+                        },
+
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: Size(MediaQuery.of(context).size.width*0.45, 40),
+                          maximumSize: Size(MediaQuery.of(context).size.width*0.5, double.infinity),
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0.0),
+                              side: BorderSide(
+                                  width: 0,
+                                  color: Colors.green.shade800
+                              )
                           ),
+                          backgroundColor:  Colors.green,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.event_available,size: 22,),
+                            Text(
+                              " Reservar ",
+                              style: TextStyle(
+                                  fontSize: 20
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  )
-                ],
-              ),
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
         ],
       ),
@@ -366,8 +366,8 @@ class BookingCalendarState extends State<BookingCalendar> {
   void updateWithHourListReservation(TimeOfDay reservation, OperationType operation)
   {
     Availability availability =
-      (operation == OperationType.add)?
-      Availability.reserved:Availability.available;
+    (operation == OperationType.add)?
+    Availability.reserved:Availability.available;
 
     DateTime date = DateTime(
         widget.selectedDate.year,
@@ -581,7 +581,7 @@ class DateStates{
 
     for( var date in reservations ) {
       if(!blocked.contains(date))
-      dateStates.add(DateState(date,Availability.reserved));
+        dateStates.add(DateState(date,Availability.reserved));
     }
     for( var date in blocked ) {
       dateStates.add(DateState(date,Availability.blocked));
@@ -654,13 +654,13 @@ class BackendOperations{
       log("current: $current");
       log("resizing: $resizeBackendOperation");
       if(
-          resizeBackendOperation.isContiguousWith(current) && (
+      resizeBackendOperation.isContiguousWith(current) && (
           resizeBackendOperation.operation == current.operation ||
-            (
-              resizeBackendOperation.operation == OperationType.add &&
-              current.operation == OperationType.nothing
-            )
-          )
+              (
+                  resizeBackendOperation.operation == OperationType.add &&
+                      current.operation == OperationType.nothing
+              )
+      )
       ){
         resizeBackendOperation.endDate = current.endDate;
         log("Se mezcla: $resizeBackendOperation");
@@ -733,9 +733,9 @@ class BackendOperations{
 //TODO: posible refactor
   bool resultOfApplyingIsAContiguousReservation() {
 
-     List mergedOperations =  mergeBackendOperations();
+    List mergedOperations =  mergeBackendOperations();
 
-     //log("Comprobando si las horas de la reserva son contiguas\n\n\n");
+    //log("Comprobando si las horas de la reserva son contiguas\n\n\n");
     var lastOperation;
     int i=0;
     for (var operation in mergedOperations) {
@@ -746,16 +746,16 @@ class BackendOperations{
       }
       ++i;
     }
-     //log("Primera reserva: ${lastOperation.toString()}");
+    //log("Primera reserva: ${lastOperation.toString()}");
     if(lastOperation==null) {
       //log("pal carrer");
       return true;
     }
     if(++i >= mergedOperations.length) return true;
-     //log("pasamos al algoritmo de comprobacion");
+    //log("pasamos al algoritmo de comprobacion");
     while ( i < mergedOperations.length ){
       if(mergedOperations[i].operation != OperationType.delete){
-      /*  log("___________________________________");
+        /*  log("___________________________________");
         log("COMPARE--> $lastOperation  / ${mergedOperations[i]}");
         log("\nis contiguos------- ${lastOperation.isContiguousWith(mergedOperations[i])}")*/;
         if(!lastOperation.isContiguousWith(mergedOperations[i])) {
@@ -877,15 +877,15 @@ class Occupation {
 
   factory Occupation.fromJson(DateTime date,Map<String, dynamic> json){
     String dateString = date.toString().substring(0,
-                        11);
+        11);
 
     String startT = dateString +
-                    json["start_time"].substring(0,
-                    json["start_time"].length-3);
+        json["start_time"].substring(0,
+            json["start_time"].length-3);
 
     String endT = dateString +
-                  json["end_time"].substring(0,
-                  json["end_time"].length-3);
+        json["end_time"].substring(0,
+            json["end_time"].length-3);
 
     return Occupation(
       startTime: startT,
@@ -897,43 +897,43 @@ class Occupation {
     );
   }
 
-    Map<String, dynamic> toJson() => {
-      "start_time": startTime,
-      "end_time": endTime,
-      "id": id,
-      "occupation_range_type": occupationRangeType,
-      "booking": booking == null ? null : booking.toJson(),
-    };
+  Map<String, dynamic> toJson() => {
+    "start_time": startTime,
+    "end_time": endTime,
+    "id": id,
+    "occupation_range_type": occupationRangeType,
+    "booking": booking == null ? null : booking.toJson(),
+  };
 
-    List<DateTime> split(Duration chunkTime){
-      DateTime startTimeDate = DateFormat("yyyy-MM-dd HH:mm").parse(startTime);
-      DateTime endTimeDate = DateFormat("yyyy-MM-dd HH:mm").parse(endTime);
-      //Duration aux = Duration(hours: startTimeDate.hour, minutes: startTimeDate.minute);
-      //Duration diff = DateTime.parse(endTime).difference(startTimeDate);
-      //diff.inSeconds % Duration(days: startTimeDate.day)
-      DateTime currentDateTime = startTimeDate;
-      List<DateTime> chunks = [];
-      log(currentDateTime.toString()+"  |  "+endTimeDate.toString());
-      while(currentDateTime < endTimeDate)
-      {
+  List<DateTime> split(Duration chunkTime){
+    DateTime startTimeDate = DateFormat("yyyy-MM-dd HH:mm").parse(startTime);
+    DateTime endTimeDate = DateFormat("yyyy-MM-dd HH:mm").parse(endTime);
+    //Duration aux = Duration(hours: startTimeDate.hour, minutes: startTimeDate.minute);
+    //Duration diff = DateTime.parse(endTime).difference(startTimeDate);
+    //diff.inSeconds % Duration(days: startTimeDate.day)
+    DateTime currentDateTime = startTimeDate;
+    List<DateTime> chunks = [];
+    log(currentDateTime.toString()+"  |  "+endTimeDate.toString());
+    while(currentDateTime < endTimeDate)
+    {
 
-        chunks.add(currentDateTime);
-        //log(currentDateTime.toString());
-        currentDateTime = currentDateTime.add(chunkTime);
-      }
-      //log("chunks"+chunks.toString());
-      return chunks;
+      chunks.add(currentDateTime);
+      //log(currentDateTime.toString());
+      currentDateTime = currentDateTime.add(chunkTime);
     }
+    //log("chunks"+chunks.toString());
+    return chunks;
+  }
 
-    @override
-    String toString() {
+  @override
+  String toString() {
 
-      return startTime.toString()+" -> "+endTime.toString();
-    }
+    return startTime.toString()+" -> "+endTime.toString();
+  }
 
   bool belongsToUserWithId(int id) {
-      //log("Tu atecion !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-      return (booking!=null && booking.id == id);
+    //log("Tu atecion !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+    return (booking!=null && booking.id == id);
   }
 }
 
@@ -1031,8 +1031,8 @@ extension DatetimeExtension on DateTime {
     DateTime now = DateTime.now();
 
     return now.year > this.year ||
-    now.month > this.month ||
-    now.day > this.day;
+        now.month > this.month ||
+        now.day > this.day;
   }
 
   bool isTomorrow(){
@@ -1076,7 +1076,7 @@ extension TimeOfDayExtension on TimeOfDay {
                      minute: (minutesSum)%60);
   }*/
 
- /* TimeOfDay operator - (TimeOfDay b)
+  /* TimeOfDay operator - (TimeOfDay b)
   {
     return TimeOfDay(hour: hour - b.hour, minute: minute - b.minute);
   }*/
@@ -1109,4 +1109,3 @@ extension TimeOfDayExtension on TimeOfDay {
     return compareTo(b) == -1;
   }
 }
-

@@ -1,6 +1,6 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import '../../widgets/booking_calendar.dart';
+import '../../widgets/Bookings/booking_calendar.dart';
 
 
 
@@ -14,7 +14,7 @@ class Reservate extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Booking calendar',
-      home: bookingCalendar(id: 1),
+      home: BookingCalendar(id: 1),
     );
   }
 }

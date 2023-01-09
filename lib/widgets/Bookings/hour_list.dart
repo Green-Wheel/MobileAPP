@@ -2,7 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'dart:developer';
 
-import 'package:greenwheel/widgets/booking_calendar2.dart';
+import 'package:greenwheel/widgets/Bookings/booking_calendar.dart';
+import 'package:greenwheel/widgets/Bookings/utils/classExtensions/TimeOfDayExtension.dart';
+import 'package:greenwheel/widgets/Bookings/utils/enums.dart';
 
 class hourList extends StatefulWidget {
   late bool showHoursStartingAtCurrentHour;

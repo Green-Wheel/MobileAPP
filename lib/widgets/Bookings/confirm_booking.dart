@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/serializers/bookings.dart';
-import 'package:greenwheel/widgets/booking_calendar2.dart';
+import 'package:greenwheel/widgets/Bookings/booking_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:greenwheel/services/backendServices/bookings.dart';
-import '../../serializers/bookings.dart' as bkn;
+import '../../../serializers/bookings.dart' as bkn;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'dart:developer';
 
