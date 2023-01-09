@@ -137,7 +137,8 @@ class _ChatView extends State<ChatView> {
     }
     return Column(
       children: [
-        Expanded(
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.84,
           child:ListView.builder(
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             controller: _scrollController,
@@ -201,14 +202,20 @@ class _ChatView extends State<ChatView> {
                 ],
               ),
             ),
-            body: Column(
-              children: [
-                SafeArea(child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.54,
-                  child: buildMessagesView(),
-                )),
-                inputTextMessage(),
-              ],
+            body: Container(
+              height: MediaQuery.of(context).size.height,
+              child: Stack(
+                children: [
+                  buildMessagesView(),
+                  Positioned(
+                    bottom: 0.0,
+                    right: 0.0,
+                    left: 0.0,
+                      child: inputTextMessage(),
+                  )
+                ]
+
+              ),
             )
         )
       ],
