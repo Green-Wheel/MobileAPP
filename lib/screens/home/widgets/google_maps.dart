@@ -563,8 +563,10 @@ void _getCharger(int id) async {
     if (owner_id == null) {
       owner_id = 3;
     }
-    print("ID: $id");
-    print("Owner ID: $owner_id");
+    String? owner_name = markedCharger!.private?.owner.username;
+    if (owner_name == null){
+      owner_name = "No owner";
+    }
 
     return CardInfoWidget(location: descrip,
         rating: rate,
@@ -579,7 +581,8 @@ void _getCharger(int id) async {
         longitude: longitude,
         private_list: false,
         id: id,
-        owner_id: owner_id,);
+        owner_id: owner_id,
+        owner_username: owner_name,);
   }
 
   void _showAvisNoEsPotCarregarBici() async {

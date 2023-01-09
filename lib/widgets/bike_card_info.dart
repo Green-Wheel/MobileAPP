@@ -41,7 +41,7 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   final _loggedInStateInfo = LoginService();
   var userData;
   bool mybike = false;
-
+  String username = "";
   @override
   void initState() {
     super.initState();
@@ -52,15 +52,15 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
     print(data);
     setState(() {
       userData = data;
-      //TODO: obtener user id que falta
       mybike = userData['id'] == widget.owner_id;
+      username = userData['username'];
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description,
-        widget.direction, widget.power, widget.bike_list, widget.latitude, widget.longitude, widget.id, context, mybike, widget.owner_id);
+        widget.direction, widget.power, widget.bike_list, widget.latitude, widget.longitude, widget.id, context, mybike, widget.owner_id, username);
   }
 }
 
@@ -76,7 +76,7 @@ main() {
         description: 'Bicicleta eléctrica de montaña',
         direction: 'Calle de la Paz, 1',
         power: 100.0,
-        bike_list: true,
+        bike_list: false,
         latitude: 43.371,
         longitude: -8.395,
         id: 1,
@@ -88,7 +88,7 @@ main() {
 
 
 Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction,
-    double power, bool bike_list, double latitude, double longitude, int? id, BuildContext context, bool mybike, int? owner_id) {
+    double power, bool bike_list, double latitude, double longitude, int? id, BuildContext context, bool mybike, int? owner_id, String? username) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -161,17 +161,6 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                     ],
                   )
               ),
-              SizedBox(height: 15),
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 20),
-                    child:ChatButtonWidget(to_user: owner_id),
-                  ),
-                  mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
-                  mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
-                ],
-              ),
               !bike_list ? SizedBox(height: 65): SizedBox(height: 0),
               !bike_list ? SizedBox(
                   width: MediaQuery.of(context).size.width * 0.925,
@@ -183,6 +172,14 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                             !bike_list? SizedBox(height: 10): SizedBox(height: 0),
                             !bike_list? Column(
                                 children: [
+                                  SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+                                  Padding(padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.5, bottom: 10),
+                                    child:CircleAvatar(
+                                        radius: 20,
+                                        backgroundColor: Colors.lightBlue[100],
+                                        child: Icon(Icons.location_on, color: Colors.blue, size: 30,)
+                                    ),
+                                  ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width * 0.925,
                                     child: Padding(
@@ -204,7 +201,47 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                                     ),
                                   ),
                                 ]): SizedBox(height: 0),
-                            SizedBox(height: 10)
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                            Padding (
+                              padding: EdgeInsets.only(left: 25),
+                              child: InkWell(
+                                  onTap: () {
+                                    //TODO: Ruta user perfil
+                                  },
+                                  child: Row(
+                                      children:[
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor: Colors.lightBlue[100],
+                                          child: Icon(
+                                              color: Colors.blue,
+                                              Icons.person,
+                                              size: 30
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text("$username",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ]
+                                  )
+                              ),
+                            ),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+                            Row(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child:ChatButtonWidget(to_user: owner_id),
+                                ),
+                                !mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
+                                mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
+                              ],
+                            ),
                           ]
                       )
                   )

@@ -46,7 +46,7 @@ class _ButtonDeleteChargerWidget extends State<ButtonDeleteChargerWidget>{
                     SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
                     TextButton(
                         onPressed: () {
-                          GoRouter.of(context).go('/');
+                          Navigator.of(context).pop();
                         },
                         child: Text("Cancel")
                     ),

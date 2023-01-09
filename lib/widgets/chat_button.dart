@@ -63,15 +63,14 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
     });
   }
 
-  int _getChatId(){
+  /*int _getChatId(){
     for (var chat in chats){
       if (chat.to_user == widget.to_user){
         return chat.id;
       }
     }
     return -1;
-  }
-
+*/
   @override
   void initState() {
     super.initState();
@@ -105,7 +104,6 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
           }
           else{ //Si no existeix el chat, crear-lo
             GoRouter.of(context).go('/chats/${userschats[0].id}');
-
           }
         },
         child: Row(

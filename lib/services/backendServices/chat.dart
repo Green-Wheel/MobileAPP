@@ -49,7 +49,7 @@ class ChatService {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         result = jsonResponse.map((e) => ChatRoomMessage.fromJson(e)).toList();
       } else {
-        print('Error getting chats!');
+        print('Error getting messages!');
       }
     });
     return result;
