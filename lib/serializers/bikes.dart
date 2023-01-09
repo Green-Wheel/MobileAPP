@@ -74,6 +74,7 @@ class DetailedBikeSerializer {
   factory DetailedBikeSerializer.fromJson(Map<String, dynamic> json) =>
       _$DetailedBikeSerializerFromJson(json);
 
+
   Map<String, dynamic> toJson() => _$DetailedBikeSerializerToJson(this);
 }
 
@@ -88,7 +89,7 @@ class BikeList {
     this.avg_rating,
     required this.bike_type,
     required this.price,
-    required this.contamination
+    required this.contamination,
   });
 
   int? id;

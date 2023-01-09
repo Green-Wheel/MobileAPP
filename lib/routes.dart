@@ -35,16 +35,19 @@ GoRouter routeGenerator(LoginService loginService) {
           builder: (context, state) =>  HomePage(key: const Key("HomePage")),
           routes: [
             GoRoute(
-                path: 'profile',
-                builder: (context, state) =>
-                const ProfilePage(key: Key("ProfilePage")),
+                path: 'profile/:id',
+                builder: (context, state) {
+                  final int id = int.parse(state.params['id']!);
+                  return ProfilePage(key: Key("ProfilePage"), id: id);
+                },
                 routes: [
                   GoRoute(
                     path: 'edit',
                     builder: (context, state) =>
                     const EditProfile(key: Key("EditProfile")),
                   ),
-                ]),
+                ]
+            ),
             GoRoute(
               path: 'language',
               builder: (context, state) => const LanguageSelectorWidget(key: Key("Language")),
