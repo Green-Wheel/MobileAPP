@@ -139,6 +139,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _getChargers() async {
     List chargersList = await ChargerService.getChargers();
+    //List chargersList = [];
     if (chargersList.isEmpty) {
       _showAvisNoEsPodenCarregarCarregadors();
     }

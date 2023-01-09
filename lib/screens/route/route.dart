@@ -19,8 +19,9 @@ import '../../utils/map_directions.dart';
 class RoutePage extends StatefulWidget {
   final String long;
   final String lat;
+  int pubication_id;
 
-  const RoutePage({Key? key, required this.lat, required this.long})
+  RoutePage({Key? key, required this.lat, required this.long, required this.pubication_id})
       : super(key: key);
 
   @override
@@ -101,7 +102,7 @@ class _RoutePageState extends State<RoutePage> {
         body: Stack(children: [
           Container(
             padding: const EdgeInsets.only(bottom: 135),
-            child: GoogleMapsWidget(index: 0, polylines: polylines),
+            child: GoogleMapsWidget(index: 0, polylines: polylines, publicationId: widget.pubication_id),
           ),
           SlidingUpPanel(
               // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke

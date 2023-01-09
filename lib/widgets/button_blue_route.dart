@@ -28,7 +28,7 @@ class _ButtonBlueRouteWidget extends State<ButtonBlueRouteWidget>{
                     side: const BorderSide(color: Colors.blue)))),
         onPressed: () {
           GoRouter.of(context)
-              .go('/route/${widget.latitude}/${widget.longitude}');
+              .go('/route/${widget.latitude}/${widget.longitude}/-1');
         },
         child: Row(
           children: const [

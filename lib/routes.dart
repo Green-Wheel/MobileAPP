@@ -109,14 +109,16 @@ GoRouter routeGenerator(LoginService loginService) {
               const MyVehicles(key: Key("Vehicle")),
             ),
             GoRoute(
-              path: 'route/:lat/:long',
+              path: 'route/:lat/:long/:id',
               builder: (context, state) {
                 final long = state.params['long']!;
                 final lat = state.params['lat']!;
+                final id = int.parse(state.params['id']!);
                 return RoutePage(
                   key: const Key("RoutePage"),
                   lat: lat,
                   long: long,
+                  pubication_id: id,
                 );
               },
             ),
