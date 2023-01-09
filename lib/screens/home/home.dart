@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
   int index;
   int publicationId;
   var point_search = null;
+  List<String> suggestions = [];
   HomePage({Key? key, this.index = 0, this.publicationId = -1}) : super(key: key);
 
   @override
@@ -29,9 +30,10 @@ class _HomePageState extends State<HomePage> {
 
   final nameController = TextEditingController();
 
-  void callBack (LatLang value) {
+  void callBack (LatLang value,String selectioned) {
     setState(() {
       widget.point_search = value;
+      if(!widget.suggestions.contains(selectioned)) widget.suggestions.add(selectioned);
     });
   }
 
@@ -39,7 +41,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar : false,
-      appBar: SearchBar(index: widget.index, callBack: callBack),
+      appBar: SearchBar(index: widget.index, callBack: callBack, suggestions : widget.suggestions),
       bottomNavigationBar: BottomBarWidget(
         index: widget.index,
         onChangedTab: _onChangeTab,

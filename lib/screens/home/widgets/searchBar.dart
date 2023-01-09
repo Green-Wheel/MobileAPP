@@ -11,7 +11,8 @@ import '../home.dart';
 class SearchBar extends StatefulWidget implements PreferredSizeWidget{
   final int index;
   final Function callBack;
-  SearchBar({Key? key, required this.index, required this.callBack }) :preferredSize = Size.fromHeight(kToolbarHeight),super(key: key);
+  List<String> suggestions;
+  SearchBar({Key? key, required this.index, required this.callBack,required this.suggestions}) :preferredSize = Size.fromHeight(kToolbarHeight),super(key: key);
 
   @override
   State<SearchBar> createState()=> _SearchBar();
@@ -39,13 +40,13 @@ class _SearchBar extends State<SearchBar>{
   @override
   Widget build(BuildContext context) {
     return AppBar(
-        title: const Text("Search"),//_searchTextField(),
+        title: const Text("Search"),
         backgroundColor: widget.index==1 ? Colors.blue : Colors.green,
         actions:<Widget>[
           IconButton(
               icon: const Icon(Icons.search),
               onPressed: () {
-                showSearch(context:context,delegate:DataSearch(callBack : widget.callBack));
+                showSearch(context:context,delegate:DataSearch(callBack : widget.callBack, suggestions : widget.suggestions));
               }
           ),
           IconButton(
@@ -61,8 +62,8 @@ class _SearchBar extends State<SearchBar>{
 
 class DataSearch extends SearchDelegate<String> {
   final Function callBack;
-
-  DataSearch({Key? key, required this.callBack});
+  List<String> suggestions;
+  DataSearch({Key? key, required this.callBack, required this.suggestions});
 
   String selectioned = "";
 
@@ -126,25 +127,52 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    _getAdresses(query);
+    if(query.isNotEmpty) _getAdresses(query);
+    else{
+      autocompletation = suggestions;
+      print("XXXXXXXXXXXXXXXXXXXX");
+      print(suggestions);
+      print("XXXXXXXXXXXXXXXXXXXX");
+    }
     return ListView.builder(
-      itemBuilder: (context,index) => ListTile(
-        onTap: () async {
-          selectioned = autocompletation[index];
-          print("-AAAAAAAAAAAAA  " + selectioned);
-          query = autocompletation[index];
-          _SearchBar()._selectioned = selectioned;
-          callBack(await Geocoding.getLatLangFromAddress(selectioned));
-          showResults(context);
-        },
-        leading: const Icon(Icons.location_city),
-        title: RichText(
-          text: TextSpan(text: autocompletation[index],
-              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
       itemCount: autocompletation.length,
+      itemBuilder: (context,index) {
+        if(query.isEmpty){
+          return ListTile(
+            onTap: () async {
+              selectioned = autocompletation[index];
+              query = autocompletation[index];
+              callBack(await Geocoding.getLatLangFromAddress(selectioned));
+              showResults(context);
+            },
+            leading: const Icon(Icons.location_city),
+            title: RichText(
+              text: TextSpan(text: suggestions[index],
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+            ),
+          );
+        }
+        else {
+          return ListTile(
+            onTap: () async {
+              selectioned = autocompletation[index];
+              query = autocompletation[index];
+              suggestions.add(selectioned);
+              callBack(await Geocoding.getLatLangFromAddress(selectioned), selectioned);
+              showResults(context);
+            },
+            leading: const Icon(Icons.location_city),
+            title: RichText(
+              text: TextSpan(text: autocompletation[index],
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
   void _getAdresses(String query) async {

@@ -333,6 +333,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    if(widget.point_search_bar != null) callBackAddress();
   }
 
   static const CameraPosition _kInitialPosition = CameraPosition(
@@ -566,6 +567,12 @@ List<Widget> scrollMiddle() {
     }
   }
 
+  @override
+  void dispose() {
+    mapController.dispose();
+    super.dispose();
+  }
+
   void _showAvisNoEsPotCarregarCarregador() async {
     return showDialog<void>(
       context: context,
@@ -692,8 +699,9 @@ void _getCharger(int id) async {
     double? rate = markedBike!.avg_rating;
     double latitude = markedBike!.localization.latitude;
     double longitude = markedBike!.localization.longitude;
+    String contamination = markedBike!.contamination;
 
-    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude);
+    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude,contamination: contamination);
   }
 
 
@@ -730,35 +738,9 @@ void _getCharger(int id) async {
       ));
 
   void setPointAddress(LatLang point) {
-
-
-      /*
-
-      _updateCurrentLocation();
-      */
     setState(() {
-
-      markerList_search.clear();
-      markerList_search.add(Marker(
-        markerId: MarkerId(point.toString()),
-        position: LatLng(point.lat, point.lng),
-      ));
-
-      _position = Position(
-          latitude: point.lat,
-          longitude: point.lng,
-          timestamp: null,
-          accuracy: 1,
-          altitude: 1,
-          heading: 1,
-          speed: 1,
-          speedAccuracy: 1);
-      //_updateCurrentLocation();
     });
-
-
-
-      //mapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(40.0, 40.0), 14.0));
+    mapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(point.lat, point.lng), 14.0));
   }
 
 }

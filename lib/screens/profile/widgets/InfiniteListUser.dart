@@ -210,6 +210,7 @@ class _InfiniteList extends State<InfiniteListUser> {
               double longitude = _markersListAll[index].bike!.localization
                   .longitude;
               String? description = _markersListAll[index].bike!.description;
+              String contamination = _markersListAll[index].bike!.contamination;
               String? direction1 = "";
 
               return Flexible(child: GestureDetector(
@@ -227,7 +228,9 @@ class _InfiniteList extends State<InfiniteListUser> {
                     bike_list: true,
                     power: power,
                     latitude: latitude,
-                    longitude: longitude),
+                    longitude: longitude,
+                    contamination: contamination,
+                  ),
                 )
               );
             }
