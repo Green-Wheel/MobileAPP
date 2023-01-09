@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/serializers/maps.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
@@ -24,24 +25,45 @@ class PanelWidget extends StatelessWidget {
           SizedBox(height: 12),
           buildDragHandle(),
           SizedBox(height: 12),
-          buildAboutText(),
+          buildAboutText(context),
           SizedBox(height: 24),
         ],
       );
 
-  Widget buildAboutText() => Container(
+  Widget buildAboutText(BuildContext context) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              routeInfo != null
-                  ? "${routeInfo!.duration} (${routeInfo!.distance})"
-                  : '',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+            Row(
+              children: [
+                Text(
+                  routeInfo != null
+                      ? "${routeInfo!.duration} (${routeInfo!.distance})"
+                      : '',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(width: 10),
+                TextButton.icon(
+                  onPressed: () {
+                    panelController.close();
+                    GoRouter.of(context).go('/');
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    backgroundColor: Colors.white,
+                    side: BorderSide(color: Colors.red),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    ),
+                  ),
+                  icon: Icon(Icons.close),
+                  label: Text('Cancelar'),
+                )
+              ],
             ),
             const SizedBox(height: 8),
             Text(
@@ -65,9 +87,7 @@ class PanelWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 10,
-              ),
+              SizedBox(width: 10),
               TextButton.icon(
                 onPressed: () {
                   routeInfo != null
@@ -104,7 +124,7 @@ class PanelWidget extends StatelessWidget {
       );
 
   Widget buildDragHandle() => GestureDetector(
-    onTap: togglePanel,
+        onTap: togglePanel,
         child: Center(
           child: Container(
             width: 30,
