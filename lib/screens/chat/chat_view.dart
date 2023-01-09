@@ -22,18 +22,12 @@ class ChatView extends StatefulWidget {
   State<ChatView> createState() => _ChatView();
 }
 
-main(){
-  runApp(MaterialApp(
-    home: Scaffold(
-      body: ChatView(username: "Michael Jordan", to_user: 1),
-      ),
-    ),
-  );
-}
-
 class _ChatView extends State<ChatView> {
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
+  final NotificationController notificationController =
+  NotificationController();
+
 
   Future<void> DeleteChat(int? id_chat) {
     return showDialog(
@@ -103,6 +97,7 @@ class _ChatView extends State<ChatView> {
     _pageNumber = 1;
     _isLastPage = false;
     fetchData();
+    notificationController.initWebSocketConnection();
   }
 
   Future<void> fetchData() async {
@@ -261,15 +256,13 @@ class _ChatView extends State<ChatView> {
       _messages.add(ChatRoomMessage(
         content: msg['content'],
         created_at: DateTime.now(),
-        id: msg['to_user'],
+        id: msg['id'],
         sender: BasicUser(first_name: msg['sender']['first_name'], last_name: msg['sender']['last_name'], username: msg['sender']['username']),
       ));
     });
   }
 
   Widget buttonSendMessage() {
-    final NotificationController notificationController =
-    NotificationController();
       return FloatingActionButton.small(
         onPressed: () {
           if (_controller.text.isNotEmpty) {

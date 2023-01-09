@@ -17,7 +17,7 @@ class NotificationController{
 
   initWebSocketConnection() async {
     print("Connectant..");
-    int userId = LoginService().user_info!['id'];
+    int userId = LoginService().user_info?['id'] ?? 2;
     try{
       channel = IOWebSocketChannel.connect(
         Uri.parse('ws://3.250.219.80/ws/$userId/chats/messages/'), //ws://localhost:3000/chat/$user_id
@@ -48,7 +48,7 @@ class NotificationController{
         //TODO: rebo el missatge, falta fer la crida corresponent i transformació serializer
         Map msg = json.decode(data);
         listenMessage(msg);
-        print(message);
+        print("this is the message websocket $msg");
       });
     } on Exception catch(e){
       print(e);
