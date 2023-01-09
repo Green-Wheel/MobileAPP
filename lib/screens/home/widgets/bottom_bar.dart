@@ -60,9 +60,8 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
 }
 
 class BottomBarActionButton extends StatefulWidget {
-   BottomBarActionButton({super.key});
-  //TODO: canviar valor crida corresponent
-  late int msgCount = 0; //Caldrà implementar-ho quan es faci el chat.
+  BottomBarActionButton({super.key});
+  late int msgCount = 0;
 
   @override
   State<BottomBarActionButton> createState() => _BottomBarActionButtonState();
