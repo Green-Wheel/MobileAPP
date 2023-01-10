@@ -40,16 +40,20 @@ class NotificationController{
 
   void SendMessage (String message, int id_user, Function listenMessage){
    try{
-     print("Sending message");
       channel?.sink.add(jsonEncode({
         "message": message,
         "to_user": id_user,
       }));
+      print("Sent message");
       channelStream?.listen((data) {
         //TODO: rebo el missatge, falta fer la crida corresponent i transformació serializer
         Map msg = json.decode(data);
+        //print(msg['sender']['id'] != id_user);
+        if (msg['sender']['id'] != id_user){
+          listenMessage(msg);
+        }
         listenMessage(msg);
-        print("this is the message websocket $msg");
+        print("listenning message: $msg");
       });
     } on Exception catch(e){
       print(e);

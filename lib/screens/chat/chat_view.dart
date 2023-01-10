@@ -257,14 +257,15 @@ class _ChatView extends State<ChatView> {
   }
 
   void listenMessage(Map msg){
-    print(msg);
     setState(() {
-      _messages.add(ChatRoomMessage(
-        content: msg['content'],
-        created_at: DateTime.now(),
-        id: msg['id'],
-        sender: BasicUser(first_name: msg['sender']['first_name'], last_name: msg['sender']['last_name'], username: msg['sender']['username']),
-      ));
+      if (msg['sender']['id'] != widget.to_user) {
+        _messages.add(ChatRoomMessage(
+          content: msg['content'],
+          created_at: DateTime.now(),
+          id: msg['id'],
+          sender: BasicUser(first_name: msg['sender']['first_name'], last_name: msg['sender']['last_name'], username: msg['sender']['username']),
+        ));
+      }
     });
   }
 
@@ -293,8 +294,7 @@ class _ChatView extends State<ChatView> {
               curve: Curves.easeOut,
             );
 
-            notificationController.SendMessage(
-                _controller.text, widget.to_user!, listenMessage);
+            notificationController.SendMessage(_controller.text, widget.to_user!, listenMessage);
             _controller.clear();
           }
         },
