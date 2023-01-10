@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/serializers/bookings.dart';
 import 'package:greenwheel/widgets/Bookings/booking_calendar.dart';
+import 'package:greenwheel/widgets/Bookings/utils/stringOverflow.dart';
 import 'package:intl/intl.dart';
 import 'package:greenwheel/services/backendServices/bookings.dart';
 import '../../../serializers/bookings.dart' as bkn;
@@ -94,14 +95,18 @@ class _confirm_bookingState extends State<confirm_booking> {
                 decoration: BoxDecoration(
                   color: Color(0xF0052e42)
                 ),
-                child: const Center(
-                  child: Text(
-                    "Historial de reservas al punto",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                child: Center(
+                  child: Row(
+                    children: [
+                      Text(
+                        "Historial de reservas al punto",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -125,10 +130,23 @@ class _confirm_bookingState extends State<confirm_booking> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: const [
+                              children: [
                                 Text(
                                   "INICIO",
                                   style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: Color(0xA0052e42)),
+                                ),
+                                Row(
+                                  children: [
+                                    Text(
+                                      (booking.publication.type== "Charger")?
+                                      cutDownString(booking.publication.charger?.title ?? 'Sin título') :
+                                      cutDownString(booking.publication.bike?.title  ?? 'Sin títutlo'),
+                                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: Colors.green),
+                                    ),
+                                    (booking.publication.type== "Charger")?
+                                    Icon(Icons.bolt,color: Colors.green,):
+                                    Icon(Icons.directions_bike,color: Colors.green,),
+                                  ],
                                 ),
                                 Text(
                                   "FIN",

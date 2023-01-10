@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:greenwheel/services/backendServices/publications.dart';
 import 'package:greenwheel/widgets/Bookings/utils/classExtensions/DateTimeExtension.dart';
 import 'package:greenwheel/widgets/Bookings/utils/classExtensions/ListExtension.dart';
 import 'package:greenwheel/widgets/Bookings/utils/classExtensions/TimeOfDayExtension.dart';
@@ -12,17 +13,19 @@ import 'enums.dart';
 class BackendOperations{
 
   List<BackendOperation> backendOperations = [];
+  int blocking_repeat_mode = 1;
+
+  void setBlockingRepeatMode(int mode){
+    blocking_repeat_mode = mode;
+  }
 
   Future<bool> applyBackendOperations() async {
+    log("Aplicando operaciones backend");
     List mergedBackendOperations = mergeBackendOperations();
     for(BackendOperation backendOperation in mergedBackendOperations){
-      if(backendOperation.operation==OperationType.add){
-        if(!await backendOperation.execute()) {
-          return false;
-        }
-      }
+        if(!await backendOperation.execute()) return false;
     }
-
+    reset();
     return true;
   }
 
@@ -189,7 +192,7 @@ class BackendOperation{
   late DateTime startDate;
   late DateTime endDate;
   late int publication;
-
+  int repeat_mode = 1;
   late OperationType operation;
 
   bool contains(DateTime date){
@@ -208,6 +211,10 @@ class BackendOperation{
     data['publication'] = publication.toString();
     data['start_date'] = startDate.toString();
     data['end_date'] = endDate.toString();
+    if(operation == OperationType.block) {
+      data['repeat_mode'] = repeat_mode;
+      return await PublicationService.blockRangeOfHours(data);
+    }
 
     return await BookingService.newBooking(data);
   }

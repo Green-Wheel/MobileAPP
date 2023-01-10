@@ -8,6 +8,8 @@ import '../../../serializers/bookings.dart' as bkn;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'dart:developer';
 
+import 'configs/confirm_bookings_config.dart';
+
 void main() => runApp(const MyApp());
 
 //TODO: exportar colores
@@ -29,6 +31,7 @@ class MyApp extends StatelessWidget {
 class confirm_booking extends StatefulWidget {
   List<bkn.Booking> bookings=[];
   bool waitingBackend = true;
+
 
   confirm_booking({Key? key}) : super(key: key);
 
@@ -75,6 +78,12 @@ class _confirm_bookingState extends State<confirm_booking> {
     setState(() {
 
     });
+  }
+  
+  String cutDownString(var s){
+    if(s==null) return "";
+    if(s.toString().length <= ConfirmAndHistoryConfig.maxTitleCaracters) return " "+s;
+    return " "+s.substring(0,ConfirmAndHistoryConfig.maxTitleCaracters)+"...";
   }
 
   @override
@@ -134,10 +143,23 @@ class _confirm_bookingState extends State<confirm_booking> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
+                        children:  [
                           Text(
                             "INICIO",
                             style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: Color(0xA0052e42)),
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                (booking.publication.type== "Charger")?
+                                  cutDownString(booking.publication.charger?.title ?? 'Sin título') :
+                                  cutDownString(booking.publication.bike?.title  ?? 'Sin títutlo'),
+                                style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: Colors.green),
+                              ),
+                              (booking.publication.type== "Charger")?
+                              Icon(Icons.bolt,color: Colors.green,):
+                              Icon(Icons.directions_bike,color: Colors.green,),
+                            ],
                           ),
                           Text(
                             "FIN",

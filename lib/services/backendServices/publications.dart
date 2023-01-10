@@ -55,17 +55,17 @@ class PublicationService {
     ];
   }
 
-  static Future<bool> editOcuppation(data) async {
+  static Future<bool> blockRangeOfHours(Map<String, dynamic> data) async {
     log("DENTRO DE LA LLAMADA A BACKEND editOcuppation");
-    log('publications/${data['id']}/occupation/${data['occupationId']}/');
+    log('publications/${data['id']}/occupation/');
     try{
-      Map<String, dynamic> jsonMap = {"startdate":data['startDate'],"enddate":data['endDate']};
-      await BackendService.put('publications/${data['id']}/occupation/${data['occupationId']}/',jsonMap).then((response) {
+      Map<String, dynamic> jsonMap = {"startdate":data['start_date'],"enddate":data['end_date'],"repeatmode":data['repeat_mode']};
+      await BackendService.post('publications/${data['id']}/occupation/',jsonMap).then((response) {
         if (response.statusCode == 200) {
-          log("Edited ocuppation period");
+          log("Bloqued period");
           return true;
         } else {
-          log('Error editing occupation period on call publications/${data['id']}/occupation/${data['occupationId']}/');
+          log('Error editing occupation period on call publications/${data['publication']}/occupation/');
         }
       });
     }

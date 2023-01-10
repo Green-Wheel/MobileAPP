@@ -216,8 +216,8 @@ class BookingCalendarState extends State<BookingCalendar> {
                       child: ElevatedButton(
 
                         onPressed: () async {
-                          log("################################################# RESERVAR ################################  ");
-
+                          log("################################################# Bloquear ################################  ");
+                            widget.backendOperations.setBlockingRepeatMode(1);
                             if(!await widget.backendOperations.applyBackendOperations()){
                               showDialog<String>(
                                 context: context,
@@ -264,7 +264,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                               );
                             }
                           }
-                          widget.backendOperations.reset();
+
                         },
 
                         style: ElevatedButton.styleFrom(
@@ -365,7 +365,7 @@ class BookingCalendarState extends State<BookingCalendar> {
   //callbacks hour_list
   void updateWithHourListReservation(TimeOfDay reservation, OperationType operation)
   {
-    operation = (operation == OperationType.add)?OperationType.block: OperationType.delete;
+    operation = (operation == OperationType.add)?OperationType.block: OperationType.nothing;
     Availability availability =
     (operation == OperationType.add)?
     Availability.reserved:Availability.available;
