@@ -37,7 +37,9 @@ class VehicleService {
     try {
       var response = await BackendService.get('vehicles/$id/');
       if (response.statusCode != 200) return {};
+      print(response.body);
       var json = jsonDecode(response.body);
+      print(json);
       var data = {
         'id': json['id'],
         'alias': json['alias'] ?? '',
@@ -52,9 +54,9 @@ class VehicleService {
             'id': json['model']['car_brand']['id'],
             'name': json['model']['car_brand']['name'] ?? '',
           },
-          'current_type': json['current_type'].map((item) => item['id']).toList() ?? [],
-          'connection_type': json['connection_type'].map((item) => item['id']).toList() ?? [],
-          'consumption': json['consumption'] ?? 0.0,
+          'current_type': json['model']['current_type'].map((item) => item['id']).toList() ?? [],
+          'connection_type': json['model']['connection_type'].map((item) => item['id']).toList() ?? [],
+          'consumption': json['model']['consumption'] ?? 0.0,
         },
       };
       return data;

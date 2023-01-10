@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
+import 'package:greenwheel/screens/route/widgets/baterySelector.dart';
 import 'package:greenwheel/screens/route/widgets/panel_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../serializers/maps.dart';
+import '../../serializers/vehicles.dart';
+import '../../services/backendServices/vehicles.dart';
+import '../../services/generalServices/LoginService.dart';
 import '../../utils/geocoding.dart';
 import '../../utils/lang_config.dart';
 import '../../utils/map_directions.dart';
@@ -21,7 +25,11 @@ class RoutePage extends StatefulWidget {
   final String lat;
   int pubication_id;
 
-  RoutePage({Key? key, required this.lat, required this.long, required this.pubication_id})
+  RoutePage(
+      {Key? key,
+      required this.lat,
+      required this.long,
+      required this.pubication_id})
       : super(key: key);
 
   @override
@@ -34,11 +42,36 @@ class _RoutePageState extends State<RoutePage> {
   Direction? routeInfo;
   final originController = TextEditingController();
   final destinationController = TextEditingController();
+  final _loggedInStateInfo = LoginService();
+
+  var cars_of_user = [];
+  var selected_car;
+  int batery = -2;
 
   @override
   void initState() {
     super.initState();
     getPolylines();
+    getUserCars();
+  }
+
+  void getUserCars() async {
+    var carsAux = await VehicleService.getVehicles();
+    var user = _loggedInStateInfo.user_info;
+    print('selected_Car');
+    print(user!['selected_car']);
+    cars_of_user = carsAux;
+    selected_car = carsAux
+        .where((element) => element.id == user['selected_car'])
+        .toList()[0]
+        .id;
+    print(
+        '--------------------------------------------------------------------------');
+    print(selected_car);
+    print(cars_of_user);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showModal(context);
+    });
   }
 
   void getPolylines() {
@@ -49,8 +82,7 @@ class _RoutePageState extends State<RoutePage> {
                       lat: double.parse(widget.lat),
                       lng: double.parse(widget.long)),
                   LangConfig.getStringFromLocale(context.locale))
-              .then((value) =>
-      {
+              .then((value) => {
                     setState(() {
                       routeInfo = value;
                       originController.text = value.startAddress;
@@ -65,6 +97,55 @@ class _RoutePageState extends State<RoutePage> {
                               .toList()));
                     })
                   })
+        });
+  }
+
+  void _showModal(BuildContext context) {
+    var tempselectedCar;
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        builder: (BuildContext context) {
+          return Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Container(
+                height: 250,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                    BatterySelector(
+                      user_cars: cars_of_user,
+                      selected_car: selected_car,
+                      callbackBattery: (value) {batery = int.parse(value);},
+                      callbackCar: (value) {tempselectedCar = value;},
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          primary: Colors.white,
+                        ),
+                        onPressed: () {
+                          print('-------------------------------------------------battery:  $batery');
+                          print('-------------------------------------------------car:  $tempselectedCar');
+                          setState(() {
+                            selected_car = tempselectedCar;
+                          });
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Confirmar'),
+                      ),
+                    )
+                  ],
+                ),
+              )));
         });
   }
 
@@ -102,12 +183,15 @@ class _RoutePageState extends State<RoutePage> {
         body: Stack(children: [
           Container(
             padding: const EdgeInsets.only(bottom: 135),
-            child: GoogleMapsWidget(index: 0, polylines: polylines, publicationId: widget.pubication_id),
+            child: GoogleMapsWidget(
+                index: 0,
+                polylines: polylines ?? {},
+                publicationId: widget.pubication_id),
           ),
           SlidingUpPanel(
               // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
               maxHeight: MediaQuery.of(context).size.height * 0.8,
-              minHeight: 135.0,
+              minHeight: 170.0,
               controller: panelController,
               parallaxEnabled: true,
               parallaxOffset: 0.5,
@@ -118,6 +202,12 @@ class _RoutePageState extends State<RoutePage> {
                     routeInfo: routeInfo,
                   ),
               borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
+          TextButton(
+            onPressed: () {
+              _showModal(context);
+            },
+            child: Text("Select car"),
+          ),
         ]));
   }
 }

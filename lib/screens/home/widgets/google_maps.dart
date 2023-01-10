@@ -18,11 +18,11 @@ import '../../../widgets/button_list_screen_bikes.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
-  Set<Polyline>? polylines = {};
+  Set<Polyline> polylines;
   int? publicationId;
 
   GoogleMapsWidget(
-      {Key? key, required this.index, this.polylines, this.publicationId})
+      {Key? key, required this.index, this.polylines = const {}, this.publicationId})
       : super(key: key);
 
   @override
@@ -439,12 +439,13 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
             compassEnabled: true,
             zoomGesturesEnabled: true,
             zoomControlsEnabled: false,
-            trafficEnabled: true,
+            trafficEnabled: false,
             mapToolbarEnabled: false,
             rotateGesturesEnabled: true,
             scrollGesturesEnabled: true,
             tiltGesturesEnabled: true,
             liteModeEnabled: false,
+            polylines: widget.polylines,
             onTap: (latLong) {
               (SnackBar(
                 content: Text(
