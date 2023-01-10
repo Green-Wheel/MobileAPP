@@ -55,6 +55,7 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
     else if (loading){
       print("Loading chats");
     }
+    print(chatsrequest?.id);
     print("Chats loaded");
     print(chats);
     setState(() {
@@ -63,14 +64,6 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
     });
   }
 
-  /*int _getChatId(){
-    for (var chat in chats){
-      if (chat.to_user == widget.to_user){
-        return chat.id;
-      }
-    }
-    return -1;
-*/
   @override
   void initState() {
     super.initState();
@@ -97,13 +90,15 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
             )
         ),
         onPressed: () {
+          print("usuario ${widget.to_user}");
           //TODO: Ruta a chat
-          if (userschats.isEmpty){
-            GoRouter.of(context).go('/chats');
-            //Crear chat
+          if (userschats.isNotEmpty){
+            print("existente");
+              GoRouter.of(context).go('/chats/${userschats.first.id}');
           }
-          else{ //Si no existeix el chat, crear-lo
-            GoRouter.of(context).go('/chats/${userschats[0].id}');
+          else{
+            print("nuevo chat");
+            GoRouter.of(context).go('/chats/${widget.to_user}');
           }
         },
         child: Row(

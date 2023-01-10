@@ -182,8 +182,15 @@ class _InfiniteList extends State<InfiniteList>{
         double longitude = _markersListAll[index]!.localization.longitude;
         double? rate = _markersListAll[index]!.avg_rating;
         int? id_charger = _markersListAll[index].id;
-        int? owner_id = _markersListAll[index]!.private!.owner.id;
-        String? owner_name = _markersListAll[index]!.private!.owner.username;
+        int? owner_id = _markersListAll[index]!.private?.owner.id;
+        if (owner_id == null) {
+          owner_id = 3;
+        }
+        String? owner_name = _markersListAll[index]!.private?.owner.username;
+        if (owner_name == null){
+          owner_name = "No owner";
+        }
+        String? contamination = _markersListAll[index]!.contamination;
         return GestureDetector(
           onTap: () {
             GoRouter.of(context)
@@ -191,7 +198,7 @@ class _InfiniteList extends State<InfiniteList>{
           },
           child: CardInfoWidget(location: description, rating: rate, types: types, available: avaliable, match: match,
               private: false, price: price, direction: direction, description: description2, private_list: private,
-              latitude: latitude, longitude: longitude, id: id_charger, owner_id: owner_id, owner_username: owner_name),
+              latitude: latitude, longitude: longitude, id: id_charger, owner_id: owner_id, owner_username: owner_name, contamination: contamination),
         );
       });
   }

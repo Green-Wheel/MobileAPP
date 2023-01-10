@@ -169,7 +169,7 @@ class ChargerList {
   String charger_type;
   PublicCharger? public;
   PrivateCharger? private;
-  String contamination;
+  String? contamination;
 
   factory ChargerList.fromJson(Map<String, dynamic> json) =>
       _$ChargerListFromJson(json);
@@ -268,7 +268,7 @@ class DetailedCharherSerializer {
   String charger_type;
   PublicCharger? public;
   PrivateCharger? private;
-  String contamination;
+  String? contamination;
 
 
   factory DetailedCharherSerializer.fromJson(Map<String, dynamic> json) =>

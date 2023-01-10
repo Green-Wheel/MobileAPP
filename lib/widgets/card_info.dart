@@ -29,11 +29,12 @@ class CardInfoWidget extends StatefulWidget {
   int? id;
   int? owner_id;
   String? owner_username;
+  String? contamination;
 
   CardInfoWidget({required this.location, required this.rating, required this.types, required this.available,
     required this.match, required this.private, required this.price, required this.description, required
   this.direction, required this.private_list, required this.latitude, required this.longitude, required this.id,
-    required this.owner_id, required this.owner_username, super.key});
+    required this.owner_id, required this.owner_username, required this.contamination, super.key});
 
   @override
   State<StatefulWidget> createState() => _CardInfoWidget();
@@ -62,13 +63,14 @@ class _CardInfoWidget extends State<CardInfoWidget>{
   Widget build(BuildContext context) {
     int? owner_id = widget.owner_id!;
     return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price,
-        widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, widget.id, isOwner, owner_id, widget.owner_username, context);
+        widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, widget.id, isOwner, owner_id,
+        widget.owner_username, widget.contamination, context);
   }
 }
 
 Widget _buildCard(String? location, double? rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price,
     String? description, String? direction, bool private_list, double latitude, double longitude, int? id,
-    bool isOwner, int? owner_id, String? username, BuildContext context){
+    bool isOwner, int? owner_id, String? username, String? contamination, BuildContext context){
   print(isOwner);
   return Card(
     elevation: 10,
@@ -130,6 +132,23 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                   padding: EdgeInsets.only(left: 25),
                   child: MatchWithCarWidget(match: match),
                 ),
+                Padding(
+                  padding: EdgeInsets.only(left: 24, top: 5),
+                  child: Row(
+                    children: [
+                      if(contamination == null ) Icon(Icons.cloud_circle_outlined, color: Colors.grey),
+                      if(contamination == "green") Icon(Icons.cloud_circle_outlined, color: Colors.green),
+                      if(contamination == "yellow") Icon(Icons.cloud_circle_outlined, color: Colors.yellow),
+                      if(contamination == "red") Icon(Icons.cloud_circle_outlined, color: Colors.red),
+                      if(contamination == "maroon") Icon(Icons.cloud_circle_outlined, color: Colors.brown),
+                      if(contamination == "orange") Icon(Icons.cloud_circle_outlined, color: Colors.orange),
+                      SizedBox(width: 2),
+                      Text("Contamination",
+                      style: TextStyle( color: Colors.black)),
+
+                    ],
+                  ),
+                ),
                 private && !private_list? SizedBox(
                   width: MediaQuery.of(context).size.width * 0.925,
                   child: Flexible(
@@ -138,7 +157,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                       private? SizedBox(height: 10): SizedBox(height: 0),
                       private? SizedBox(height: 60) : SizedBox(height: 0),
                       private? ButtonReservaListWidget() : SizedBox(height: 0),
-                      private? SizedBox(height: MediaQuery.of(context).size.height * 0.05):  SizedBox(height: 0),
+                      private? SizedBox(height: MediaQuery.of(context).size.height * 0.03):  SizedBox(height: 0),
 
                     private? Padding (
                       padding: EdgeInsets.only(left: 25, bottom: 10),
@@ -247,13 +266,14 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                           )
                         ),
                       ): SizedBox(height: 0),
-                      private && !isOwner? SizedBox(height: MediaQuery.of(context).size.height * 0.02):SizedBox(height: 0),
-                      private && !isOwner?  Row(
+                      private? SizedBox(height: MediaQuery.of(context).size.height * 0.02):SizedBox(height: 0),
+                      private?  Row(
                         children: [
-                          Padding(padding: EdgeInsets.only(left: 25, right: 20),
+                          isOwner ? Padding(padding: EdgeInsets.only(left: 25, right: 20),
                             child: ChatButtonWidget( to_user: owner_id!),
-                          ),
-                          ButtonDeleteChargerWidget(id_charger: id!),
+                          ): Container(),
+                          isOwner ? Padding(padding: EdgeInsets.only(left: 25),
+                              child: ButtonDeleteChargerWidget(id_charger: id!)): SizedBox(height: 0),
                         ],
                       ) : SizedBox(height: 0),
                     ],

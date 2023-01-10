@@ -451,7 +451,7 @@ List<Widget> scrollMiddle() {
           maxHeight: MediaQuery
               .of(context)
               .size
-              .height * 0.6,
+              .height * 0.75,
           minHeight: 210.0,
           controller: panelController,
           parallaxEnabled: true,
@@ -567,6 +567,7 @@ void _getCharger(int id) async {
     if (owner_name == null){
       owner_name = "No owner";
     }
+    String? contamination = markedCharger!.contamination;
 
     return CardInfoWidget(location: descrip,
         rating: rate,
@@ -582,7 +583,8 @@ void _getCharger(int id) async {
         private_list: false,
         id: id,
         owner_id: owner_id,
-        owner_username: owner_name,);
+        owner_username: owner_name,
+        contamination: contamination);
   }
 
   void _showAvisNoEsPotCarregarBici() async {
@@ -638,10 +640,11 @@ void _getCharger(int id) async {
     double longitude = markedBike!.localization.longitude;
     int? id = markedBike!.id;
     int? owner_id = markedBike!.owner.id;
+    String? contamination = markedBike!.contamination;
 
     return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType,
         description: description, direction: direction, price: price, power: power??0, bike_list: false,
-        latitude: latitude, longitude: longitude, id: id, owner_id: owner_id,);
+        latitude: latitude, longitude: longitude, id: id, owner_id: owner_id, contamination: contamination,);
   }
 
 

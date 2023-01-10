@@ -28,10 +28,11 @@ class BikeCardInfoWidget extends StatefulWidget {
   double longitude;
   int? id;
   int? owner_id;
+  String? contamination;
 
 
   BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,
-    required this.power,  required this.bike_list, required this.latitude, required this.longitude, required this.id, required this.owner_id, super.key});
+    required this.power,  required this.bike_list, required this.latitude, required this.longitude, required this.id, required this.owner_id, required this.contamination, super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
@@ -60,7 +61,7 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   @override
   Widget build(BuildContext context) {
     return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description,
-        widget.direction, widget.power, widget.bike_list, widget.latitude, widget.longitude, widget.id, context, mybike, widget.owner_id, username);
+        widget.direction, widget.power, widget.bike_list, widget.latitude, widget.longitude, widget.id, context, mybike, widget.owner_id, username, widget.contamination);
   }
 }
 
@@ -81,6 +82,7 @@ main() {
         longitude: -8.395,
         id: 1,
         owner_id: 1,
+        contamination: 'yellow',
       ),
     ),
   ));
@@ -88,7 +90,7 @@ main() {
 
 
 Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction,
-    double power, bool bike_list, double latitude, double longitude, int? id, BuildContext context, bool mybike, int? owner_id, String? username) {
+    double power, bool bike_list, double latitude, double longitude, int? id, BuildContext context, bool mybike, int? owner_id, String? username, String? contamination) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -160,6 +162,22 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                       ),
                     ],
                   )
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 24, top: 5),
+                child: Row(
+                  children: [
+                    if(contamination == null ) Icon(Icons.cloud_circle_outlined, color: Colors.grey),
+                    if(contamination == "green") Icon(Icons.cloud_circle_outlined, color: Colors.green),
+                    if(contamination == "yellow") Icon(Icons.cloud_circle_outlined, color: Colors.yellow),
+                    if(contamination == "red") Icon(Icons.cloud_circle_outlined, color: Colors.red),
+                    if(contamination == "maroon") Icon(Icons.cloud_circle_outlined, color: Colors.brown),
+                    if(contamination == "orange") Icon(Icons.cloud_circle_outlined, color: Colors.orange),
+                    SizedBox(width: 2),
+                    Text("Contamination",
+                        style: TextStyle( color: Colors.black)),
+                  ],
+                ),
               ),
               !bike_list ? SizedBox(height: 65): SizedBox(height: 0),
               !bike_list ? SizedBox(

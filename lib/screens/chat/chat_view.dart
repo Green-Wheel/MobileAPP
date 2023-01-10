@@ -73,20 +73,7 @@ class _ChatView extends State<ChatView> {
   late int _pageNumber;
   final int _numberOfPostsPerRequest = 30;
   final int _nextPageTrigger = 3;
-  List<ChatRoomMessage> _messages = [
-    ChatRoomMessage(
-      content: "Hola",
-      created_at: DateTime.now(),
-      id: 1,
-      sender: BasicUser(first_name: "Michael", last_name: "Jordan", username: "Michael Jordan"),
-    ),
-    ChatRoomMessage(
-      content: "Hoa",
-      created_at: DateTime.now(),
-      id: 1,
-      sender: BasicUser(first_name: "Kobe", last_name: "Bryant", username: "Kobe Bryant"),
-    ),
-  ];
+  List<ChatRoomMessage> _messages = [];
 
   @override
   void initState() {
