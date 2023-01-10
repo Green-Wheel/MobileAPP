@@ -56,23 +56,30 @@ class PublicationService {
   }
 
   static Future<bool> blockRangeOfHours(Map<String, dynamic> data) async {
-    log("DENTRO DE LA LLAMADA A BACKEND editOcuppation");
-    log('publications/${data['id']}/occupation/');
+    log("DENTRO DE LA LLAMADA A BACKEND blockRangeOfHours");
+    log('publications/${data['publication']}/occupation/');
     try{
-      Map<String, dynamic> jsonMap = {"startdate":data['start_date'],"enddate":data['end_date'],"repeatmode":data['repeat_mode']};
-      await BackendService.post('publications/${data['id']}/occupation/',jsonMap).then((response) {
-        if (response.statusCode == 200) {
-          log("Bloqued period");
-          return true;
-        } else {
-          log('Error editing occupation period on call publications/${data['publication']}/occupation/');
-        }
-      });
+      Map<String, dynamic> jsonMap = {"start_date":data['start_date'],"end_date":data['end_date'],"repeat_mode":data['repeat_mode']};
+      Map<String, dynamic> ranges = {"ranges":[jsonMap]};
+
+      var response = await BackendService.post('publications/${data['publication']}/occupation/',ranges);
+        log("=================="+response.statusCode.toString());
+      if (response.statusCode == 200) {
+        log("Bloqued period ${response.statusCode == 200}");
+        return true;
+      } else {
+        log(response.statusCode.toString());
+        log('Error editing occupation period on call publications/${data['publication']}/occupation/');
+        return false;
+      }
+
     }
     catch(e){
       log(e.toString());
+      return false;
     }
-    return false;
+    log("akkkkshualeyyyy");
+
   }
 
 }

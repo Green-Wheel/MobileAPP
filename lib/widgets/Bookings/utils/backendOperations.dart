@@ -20,12 +20,17 @@ class BackendOperations{
   }
 
   Future<bool> applyBackendOperations() async {
+    if(backendOperations.length <= 0) return true;
     log("Aplicando operaciones backend");
     List mergedBackendOperations = mergeBackendOperations();
     for(BackendOperation backendOperation in mergedBackendOperations){
-        if(!await backendOperation.execute()) return false;
+        if(!await backendOperation.execute())
+          {
+
+            return false;
+          }
     }
-    reset();
+    //reset();
     return true;
   }
 
@@ -166,6 +171,14 @@ class BackendOperations{
     return true;
   }
 
+  int getNumberOfOperationsOfType(OperationType op){
+    int reservations=0;
+    for(var operation in backendOperations){
+      if(operation.operation == op) ++reservations;
+    }
+    return reservations;
+  }
+
   int getNumberOfNewReservations() {
     int reservations=0;
     for(var operation in backendOperations){
@@ -175,6 +188,7 @@ class BackendOperations{
   }
 
   int getNumberOfOperations() {
+    return backendOperations.length;
     int reservations=0;
     for(var operation in backendOperations){
       if(operation.operation != OperationType.nothing)
@@ -192,7 +206,6 @@ class BackendOperation{
   late DateTime startDate;
   late DateTime endDate;
   late int publication;
-  int repeat_mode = 1;
   late OperationType operation;
 
   bool contains(DateTime date){
@@ -212,8 +225,10 @@ class BackendOperation{
     data['start_date'] = startDate.toString();
     data['end_date'] = endDate.toString();
     if(operation == OperationType.block) {
-      data['repeat_mode'] = repeat_mode;
-      return await PublicationService.blockRangeOfHours(data);
+      data['repeat_mode'] = 1;
+      bool res = await PublicationService.blockRangeOfHours(data);
+      log("a ver si es nula la publicaicon -----ñ"+res.toString());
+      return res;
     }
 
     return await BookingService.newBooking(data);

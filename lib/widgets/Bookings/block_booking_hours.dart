@@ -148,7 +148,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                       child: ElevatedButton(
 
                         onPressed: (){
-                          if(widget.backendOperations.getNumberOfNewReservations() > 0) {
+                          if(widget.backendOperations.getNumberOfOperationsOfType(OperationType.block) > 0) {
 
                             showDialog<String>(
                               context: context,
@@ -201,7 +201,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                           children: const [
                             Icon(Icons.refresh_rounded,size: 22,color: Color(0xA0052e42),),
                             Text(
-                              " Deshacer",
+                              " Desmarcar",
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Color(0xA0052e42),
@@ -218,53 +218,67 @@ class BookingCalendarState extends State<BookingCalendar> {
                         onPressed: () async {
                           log("################################################# Bloquear ################################  ");
                             widget.backendOperations.setBlockingRepeatMode(1);
-                            if(!await widget.backendOperations.applyBackendOperations()){
+                          if(widget.backendOperations.getNumberOfOperationsOfType(OperationType.block) > 0) {
+                            if (!await widget.backendOperations.applyBackendOperations()) {
                               showDialog<String>(
                                 context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: Row(
-                                    children: const [
-                                      Icon(Icons.error, color: Colors.redAccent,),
-                                      Text(' Error al guardar'),
-                                    ],
-                                  ),
-                                  content: const Text('Ha habido un error al guardar los cambios. Por favor, ponte en contacto con los GreenWheelers para que lo solucionen'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context, 'Entendido'),
-                                      child: const Text('Entendido'),
+                                builder: (BuildContext context) =>
+                                    AlertDialog(
+                                      title: Row(
+                                        children: const [
+                                          Icon(Icons.error,
+                                            color: Colors.redAccent,),
+                                          Text(' Error al guardar'),
+                                        ],
+                                      ),
+                                      content: const Text(
+                                          'Ha habido un error al guardar los cambios. Por favor, ponte en contacto con los GreenWheelers para que lo solucionen'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(
+                                                  context, 'Entendido'),
+                                          child: const Text('Entendido'),
+                                        ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              );
-
-                            if(widget.backendOperations.getNumberOfOperations() > 0){
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) => AlertDialog(
-                                  title: Row(
-                                    children: const [
-                                      Icon(Icons.check_circle, color: Colors.green,),
-                                      Text(' Cambios guardados'),
-                                    ],
-                                  ),
-                                  content: const Text('¡Se han guardado tus horas bloqueadas!'),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, 'Ok');
-                                        updateAvailabilityWithBackend(widget.selectedDate);
-
-                                      },
-                                      child: const Text('Ok'),
-                                    ),
-
-                                  ],
-                                ),
                               );
                             }
-                          }
 
+                            else {
+                              showDialog<String>(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    AlertDialog(
+                                      title: Row(
+                                        children: const [
+                                          Icon(Icons.check_circle,
+                                            color: Colors.green,),
+                                          Text(' Cambios guardados'),
+                                        ],
+                                      ),
+                                      content: const Text(
+                                          '¡Se han guardado tus horas bloqueadas!'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context, 'Ok');
+                                            updateAvailabilityWithBackend(
+                                                widget.selectedDate);
+                                          },
+                                          child: const Text('Ok'),
+                                        ),
+
+                                      ],
+                                    ),
+                              );
+
+                            }
+                            widget.backendOperations.reset();
+                            log("lookhiar" + widget.backendOperations
+                                .getNumberOfOperationsOfType(
+                                OperationType.block).toString());
+                          }
                         },
 
                         style: ElevatedButton.styleFrom(
@@ -278,7 +292,7 @@ class BookingCalendarState extends State<BookingCalendar> {
                                   color: Colors.green.shade800
                               )
                           ),
-                          backgroundColor:  Colors.blue,
+                          backgroundColor:  Colors.blueGrey,
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,

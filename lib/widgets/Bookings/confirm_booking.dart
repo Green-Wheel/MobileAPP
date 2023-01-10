@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/serializers/bookings.dart';
 import 'package:greenwheel/widgets/Bookings/booking_calendar.dart';
 import 'package:intl/intl.dart';
@@ -94,6 +95,22 @@ class _confirm_bookingState extends State<confirm_booking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Reservas pendientes'),
+        centerTitle: true,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 50, left: 5.0),
+            child: Icon(Icons.pending_actions),
+          ),
+        ],backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).go('/');
+          },
+        ),
+      ),
       body: (widget.waitingBackend && widget.bookings.length <= 0)?
       Container(
         decoration: const BoxDecoration(
