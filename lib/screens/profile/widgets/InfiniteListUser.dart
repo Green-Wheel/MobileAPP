@@ -102,8 +102,11 @@ class _InfiniteList extends State<InfiniteListUser> {
     }
     else {
       for(int i=0;i<publicationlist.length;++i){
-        if(publicationlist[i].type=="Charger") chargerPublications.add(publicationlist[i]);
-        else bikesPublications.add(publicationlist[i]);
+        if(publicationlist[i].type=="Charger") {
+          chargerPublications.add(publicationlist[i]);
+        } else {
+          bikesPublications.add(publicationlist[i]);
+        }
       }
     }
     setState(() {

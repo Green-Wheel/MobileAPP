@@ -29,12 +29,12 @@ class _UserRatings extends State<UserRatings> {
     _getData();
   }
 
-  void _getData() {
-    Future<List<dynamic>?> aux = RatingService.getRatingsUsers(widget.id);
+  void _getData() async {
+    List<Rating> aux = await RatingService.getRatingsUsers(widget.id);
     print("zzzzzzzzzzz");
     print(aux);
     setState(() {
-      _ratings = [];
+      _ratings = aux;
     });
   }
 
@@ -82,7 +82,7 @@ Text _getTitleWidget(String username) {
 }
 
 Widget _getCommentWidget(Rating rating) {
-  String rate = rating.rate.toString();
+  String rate = rating.rate.toStringAsFixed(3);
   return Column(
     children: [
       Align(
@@ -101,7 +101,7 @@ Widget _getCommentWidget(Rating rating) {
       Align(
         alignment: Alignment.topLeft,
         child :Text(rating.comment!,style: TextStyle(
-          color: Colors.black),
+          color: Colors.black12),
         ),
       )
     ],

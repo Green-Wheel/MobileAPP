@@ -7,8 +7,8 @@ import '../../widgets/interactive_stars_widget.dart';
 
 class RateUser extends StatefulWidget {
 
-  RateUser({Key? key, required int booking_id, required int user_id}) : user_id = user_id, booking_id = booking_id,super(key: key);
-  int booking_id;
+  RateUser({Key? key, int? this.booking_id, required int user_id}) : user_id = user_id,super(key: key);
+  int? booking_id;
   int user_id;
   @override
   State<RateUser> createState() => _RateUser();

@@ -20,8 +20,8 @@ class _BookingRatings extends State<BookingRatings> {
   final List<MaterialColor> _colors = [Colors.blue, Colors.indigo, Colors.red];
   Rating dummy = Rating(user: BasicUser(
       id: 2, username: "Miau", first_name: "Guau", last_name: "Crack"),
-      rate: 3, comment: "FIUM", created_at: DateTime.now());
-  List _ratings = [];
+      rate: 3, comment: "Holasdsadsdasdsadsadasdsadasdsadasdasddasdsdadasdasdsa", created_at: DateTime.now());
+  List  _ratings = [];
 
   @override
   void initState() {
@@ -29,26 +29,57 @@ class _BookingRatings extends State<BookingRatings> {
     _getData();
   }
 
-  void _getData() {
-    Future<List<dynamic>?> aux = RatingService.getRatingsPublication(widget.id);
+  void _getData() async {
+    List<Rating> aux = await RatingService.getRatingsPublication(widget.id);
     print("zzzzzzzzzzz");
+    for(int i=0;i< aux.length;++i){
+      print (aux[i]);
+    }
     print(aux);
     setState(() {
-      _ratings.add(dummy);
+      _ratings = aux;
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildBody();
+
+    return Scaffold(
+      body:_buildBody(),
+    );
   }
 
   Widget _buildBody() {
+    int size = _ratings.length;
+    double aux = 0;
+    for(int i=0; i<size;++i){
+      aux += _ratings[i].rate;
+    }
+    double avg = aux/size;
     return Container(
       margin: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
       padding: const EdgeInsets.only(top: 0, left: 0),
       child: Column(
         children: <Widget>[
+          Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(40.0, 0.0, 0.0, 0.0),
+              child:Text("Valorations",style: TextStyle(
+                fontSize: 20, fontWeight: FontWeight.bold
+                )
+              )
+            )
+          ),
+          SizedBox(height: 10),
+          Row(
+            children: [
+              SizedBox(width:42),
+              Text("$avg"),
+              RatingStars(rating: avg.toString()),
+              Text("($size)")
+            ],
+          ),
           _getListViewWidget()],
       ),
     );
@@ -66,26 +97,42 @@ class _BookingRatings extends State<BookingRatings> {
   }
 }
 
-Text _getTitleWidget(String username) {
-  return Text(
-    username,
-    style: const TextStyle(fontWeight: FontWeight.bold),
+CircleAvatar _getLeadingWidget(String userName, MaterialColor color) {
+  return CircleAvatar(
+    backgroundImage: const AssetImage('assets/images/default_user_img.jpg'),
+    backgroundColor: color,
+    child: Text(userName),
+  );
+}
+Widget _getTitleWidget(String username, double rate) {
+  return Align(
+      alignment: Alignment.topLeft,
+      child :Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children:[
+            Text(username, style: TextStyle(fontWeight: FontWeight.bold)),
+            Align(
+              alignment: Alignment.topLeft,
+              child : RatingStars(rating: rate.toString()),
+            ),
+          ]
+      )
   );
 }
 
 Widget _getCommentWidget(Rating rating) {
-  String rate = rating.rate.toString();
+  String rate = rating.rate.toStringAsFixed(3);
   return Column(
     children: [
       Align(
           alignment: Alignment.topLeft,
           child :Row(
               children:[
-                Text("1 " + "reseñas"),
+                Text(""),
                 SizedBox(width:10),
                 Align(
                   alignment: Alignment.topLeft,
-                  child :RatingStars(rating: rate),
+                  child : Text(""),
                 ),
               ]
           )
@@ -100,9 +147,11 @@ Widget _getCommentWidget(Rating rating) {
   );
 }
 
+
 ListTile _getListTile(Rating rating, MaterialColor color) {
   return ListTile(
-    title: _getTitleWidget(rating.user.username),
+    leading: _getLeadingWidget("",color),
+    title: _getTitleWidget(rating.user.username,rating.rate),
     subtitle: _getCommentWidget(rating),
     isThreeLine: true,
   );

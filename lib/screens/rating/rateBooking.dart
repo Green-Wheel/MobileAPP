@@ -6,8 +6,9 @@ import '../../widgets/interactive_stars_widget.dart';
 
 
 class RateBooking extends StatefulWidget {
-  RateBooking({Key? key, required int booking_id, required int user_id}) : user_id = user_id, booking_id = booking_id,super(key: key);
+  RateBooking({Key? key,required int this.publication_id, required int this.booking_id, required int this.user_id}) : super(key: key);
   int booking_id;
+  int publication_id;
   int user_id;
   @override
   State<RateBooking> createState() => _RateBooking();
@@ -117,7 +118,7 @@ class _RateBooking extends State<RateBooking> {
         const SizedBox(height:20),
         GreenButton("Rate it",
             onPressed: (){
-              RatingService.addBookingRating(widget.booking_id, myController.text, stars.rate, context);
+              RatingService.addBookingRating(widget.booking_id,widget.publication_id,myController.text, stars.rate, context);
             }
         ),
       ],

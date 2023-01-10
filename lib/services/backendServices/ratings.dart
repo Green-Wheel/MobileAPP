@@ -37,60 +37,49 @@ class RatingService {
     List<Rating> result = [];
     await BackendService.get('ratings/client/$id').then((response) {
       if (response.statusCode == 200) {
-        print(200);
         var jsonResponse = jsonDecode(response.body);
         List<dynamic> ratings = jsonResponse['results'] as List<dynamic>;
         result = ratings.map((e) => Rating.fromJson(e)).toList();
-        //result = jsonResponse;
       } else {
-        print(response.statusCode);
         print('Error getting ratings!');
       }
     });
     return result;
   }
 
-  static Future<List<Rating>> getRatingsPublication(int booking_id) async {
+  static Future<List<Rating>> getRatingsPublication(int publication_id) async {
     List<Rating> result = [];
-    await BackendService.get('ratings/publications/$booking_id').then((response) {
+    await BackendService.get('ratings/publication/$publication_id').then((response) {
       if (response.statusCode == 200) {
-        print(200);
         var jsonResponse = jsonDecode(response.body);
         List<dynamic> ratings = jsonResponse['results'] as List<dynamic>;
         result = ratings.map((e) => Rating.fromJson(e)).toList();
-        //result = jsonResponse;
       } else {
-        print(response.statusCode);
         print('Error getting ratings!');
       }
     });
     return result;
   }
 
-  static void addUserRating(int id, int booking_id, String message, double rating, BuildContext context){
-
+  static void addUserRating(int user_id, int? booking_id, String message, double rating, BuildContext context){
     Map<String,dynamic> ratingMap = {
       'booking': booking_id,
       'rate': rating,
       'comment': message
     };
 
-    BackendService.post('ratings/client/$id',ratingMap).then((response)  {
-      print(response.statusCode);
+    BackendService.post('ratings/client/$user_id/',ratingMap).then((response)  {
       if (response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
-        print("asasas  " +  jsonResponse);
         GoRouter.of(context).push('/');
       }
       else {
-        var jsonResponse = jsonDecode(response.body);
-        String value = jsonResponse["res"];
-        Future.delayed(Duration.zero, () => showAlert(context,"Error Message",value));
+        Future.delayed(Duration.zero, () => showAlert(context,"Error Message",response.body));
       }
     });
   }
 
-  static void addBookingRating(int booking_id, String message, double rating, BuildContext context){
+  static void addBookingRating(int booking_id, int publication_id, String message, double rating, BuildContext context){
 
     Map<String,dynamic> ratingMap = {
       'booking': booking_id,
@@ -98,17 +87,13 @@ class RatingService {
       'comment': message
     };
 
-    BackendService.post('ratings/publication/$booking_id',ratingMap).then((response)  {
-      print(response.statusCode);
+    BackendService.post('ratings/publication/$publication_id/',ratingMap).then((response)  {
       if (response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
-        print("asasas  " +  jsonResponse);
         GoRouter.of(context).push('/');
       }
       else {
-        var jsonResponse = jsonDecode(response.body);
-        String value = jsonResponse["res"];
-        Future.delayed(Duration.zero, () => showAlert(context,"Error Message",value));
+        Future.delayed(Duration.zero, () => showAlert(context,"Error Message",response.body));
       }
     });
   }

@@ -23,6 +23,7 @@ class Username_Rating extends StatelessWidget {
                           children: <Widget>[
                             Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                             (edit_button) ? edit(context) : chat(context),
+                            (edit_button) ? Container() : report(context),
                       ],
                     ),
             ),
@@ -45,6 +46,15 @@ class Username_Rating extends StatelessWidget {
   Widget chat(BuildContext context) {
     return IconButton(
       icon: Icon(Icons.chat),
+      onPressed: () {
+        //GoRouter.of(context).push('/chat/$id');
+      },
+    );
+  }
+
+  Widget report(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.report),
       onPressed: () {
         //GoRouter.of(context).push('/chat/$id');
       },
