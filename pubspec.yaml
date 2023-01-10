@@ -20,23 +20,27 @@ dependencies:
   cupertino_icons: ^1.0.5
   image_picker: ^0.8.6
   location: ^4.4.0
-  firebase_core: ^2.1.0
+  firebase_core: ^2.3.0
   geolocator: ^9.0.2
   permission_handler: ^10.2.0
-  go_router: ^5.1.1
-  awesome_snackbar_content: ^0.0.8
+  go_router: ^5.2.0
+  awesome_snackbar_content: ^0.1.0
   badges: ^2.0.3
   json_annotation: ^4.7.0
   flutter_polyline_points: ^1.0.0
   sliding_up_panel: ^2.0.0+1
-  url_launcher: ^6.1.6
+  url_launcher: ^6.1.7
   flutter_rating_bar: ^4.0.1
   material_floating_search_bar: ^0.3.7
   percent_indicator: ^4.2.2
   easy_search_bar: ^2.4.2
   searchfield: ^0.7.2
+  flutter_secure_storage: ^6.1.0
   email_validator: ^2.1.17
-  flutter_secure_storage: ^6.0.0
+  infinite_scroll_pagination: ^3.2.0
+  google_sign_in: ^5.4.2
+  flutter_appauth: ^4.2.1
+  flutter_web_auth_2: ^2.0.3
   material_design_icons_flutter: ^6.0.7096
 
 

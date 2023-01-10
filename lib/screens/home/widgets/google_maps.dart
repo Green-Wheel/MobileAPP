@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -12,30 +11,54 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../serializers/bikes.dart';
 import '../../../serializers/chargers.dart';
+import '../../../serializers/maps.dart';
 import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
+import '../../../utils/geocoding.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
-import 'charger_filters_map.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
   Set<Polyline>? polylines = {};
   int? publicationId;
-
-
+  LatLang? point_search_bar;
   GoogleMapsWidget(
-      {Key? key, required this.index, this.polylines, this.publicationId})
+      {Key? key, required this.index, this.polylines, this.publicationId,this.point_search_bar})
       : super(key: key);
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
+
+  void callGetChargers() {
+    _GoogleMapsWidgetState()._getChargers();
+  }
+
+  void callGetBikes() {
+    _GoogleMapsWidgetState()._getBikes();
+  }
+
+  void callGetPublicChargers() {
+    _GoogleMapsWidgetState()._getPublicChargers();
+  }
+
+  void callGetPrivateChargers() {
+    _GoogleMapsWidgetState()._getPrivateChargers();
+  }
+
+  void callGetNormalBikes() {
+    _GoogleMapsWidgetState()._getNormalBikes();
+  }
+
+  void callGetElectricBikes() {
+    _GoogleMapsWidgetState()._getElectricBikes();
+  }
 }
 
 class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   late GoogleMapController mapController;
   bool permissionGranted = false;
-  Position _position = const Position(
+  Position _position = Position(
       latitude: 41.7285833,
       longitude: 1.8130899,
       timestamp: null,
@@ -45,6 +68,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       speed: 1,
       speedAccuracy: 1);
   Set<Marker> markers = {};
+  Set<Marker> markerList_search = {};
   final Map<MarkerId, Marker> markerMap = {};
 
   //late Position _actualMarcador = _position;
@@ -123,7 +147,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
-      removeChargeMarkers();
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -142,7 +166,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
-      removeChargeMarkers();
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -164,7 +188,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = chargersList;
-      removeChargeMarkers();
+      removeMarkers();
       print(markersList.length);
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
@@ -184,6 +208,43 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     setState(() {
       markersList = bikeList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        _addBikeMarker(latitude, longitude, id);
+      }
+      loading_bike = true;
+    });
+  }
+
+  void _getNormalBikes() async {
+    List bikeList = await BikeService.getNormalBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
+    setState(() {
+      markersList = bikeList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        _addBikeMarker(latitude, longitude, id);
+      }
+      loading_bike = true;
+    });
+  }
+
+  void _getElectricBikes() async {
+    List bikeList = await BikeService.getElectricBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
+    setState(() {
+      markersList = bikeList;
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -239,7 +300,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     markerMap[MarkerId(id.toString())] = marcador;
   }
 
-  void removeChargeMarkers() {
+  void removeMarkers() {
     Set<Marker> markersToRemove = {};
     markers = markersToRemove;
   }
@@ -272,6 +333,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    if(widget.point_search_bar != null) callBackAddress();
   }
 
   static const CameraPosition _kInitialPosition = CameraPosition(
@@ -310,11 +372,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void _getCurrentLocation() async {
-    _position = await _determinePosition();
+    //_position = await _determinePosition();
     mapController.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: LatLng(_position.latitude, _position.longitude),
+          target: LatLng(40.0, 11.0),
           zoom: 15,
         ),
       ),
@@ -322,11 +384,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void _updateCurrentLocation() async {
-    _position = await _determinePosition();
+    //_position = await _determinePosition();
     mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: LatLng(_position.latitude, _position.longitude),
+          target: LatLng(40.0, 11.0),
           zoom: 15,
         ),
       ),
@@ -334,7 +396,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void onCameraMove(CameraPosition cameraPosition) {
-    //print('$cameraPosition');
+    print('$cameraPosition');
+    print('DDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
   }
 
   void _setCardView()  {
@@ -357,6 +420,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       scrolledup = true;
       loading_bike = true;
     });
+  }
+
+  void callBackAddress() async{
+    setPointAddress(widget.point_search_bar!);
+    widget.point_search_bar = null;
   }
 
   @override
@@ -403,6 +471,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           children: scrolledup ? scrollDown() : scrollMiddle()
       )
     );
+
   }
 
 List<Widget> scrollDown() {
@@ -419,7 +488,6 @@ List<Widget> scrollDown() {
     ),
     const SizedBox(height: 200)];
 }
-
 
 List<Widget> scrollMiddle() {
   double width = MediaQuery.of(context).size.width;
@@ -499,6 +567,12 @@ List<Widget> scrollMiddle() {
     }
   }
 
+  @override
+  void dispose() {
+    mapController.dispose();
+    super.dispose();
+  }
+
   void _showAvisNoEsPotCarregarCarregador() async {
     return showDialog<void>(
       context: context,
@@ -557,8 +631,8 @@ void _getCharger(int id) async {
     String? description = markedCharger!.description;
     double latitude = markedCharger!.localization.latitude;
     double longitude = markedCharger!.localization.longitude;
-    double? rate = markedCharger!.avg_rating;
-
+    double rate = 3;
+    if(markedCharger!.avg_rating != null) rate = markedCharger!.avg_rating!;
 
     return CardInfoWidget(location: descrip,
         rating: rate,
@@ -625,8 +699,9 @@ void _getCharger(int id) async {
     double? rate = markedBike!.avg_rating;
     double latitude = markedBike!.localization.latitude;
     double longitude = markedBike!.localization.longitude;
+    String contamination = markedBike!.contamination;
 
-    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude);
+    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude,contamination: contamination);
   }
 
 
@@ -660,4 +735,12 @@ void _getCharger(int id) async {
         onPressed: () {
           openAppSettings();
         },
-      ));}
+      ));
+
+  void setPointAddress(LatLang point) {
+    setState(() {
+    });
+    mapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(point.lat, point.lng), 14.0));
+  }
+
+}

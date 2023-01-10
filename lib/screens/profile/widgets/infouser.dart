@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../services/backendServices/user_service.dart';
 import '../../../services/generalServices/LoginService.dart';
 import '../../../widgets/accountIcon.dart';
 import '../../../widgets/username_rating_stars.dart';
@@ -6,8 +7,9 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:go_router/go_router.dart';
 
 class InfoUser extends StatefulWidget {
-  const InfoUser({Key? key}) : super(key: key);
-
+  InfoUser(id,  {Key? key}) : id = id ,super(key: key);
+  int id;
+  bool edit_button = false;
   @override
   _InfoUser createState() => _InfoUser ();
 }
@@ -23,10 +25,20 @@ class _InfoUser extends State<InfoUser>  {
   }
   void _getData() async {
     var data = _loggedInStateInfo.user_info;
-    print(data);
-    setState(() {
-      userData = data;
-    });
+
+    if(widget.id  == data?['id']){
+      setState(() {
+        widget.edit_button = true;
+        userData = data;
+      });
+    }
+    else {
+      setState(() {
+        var data = UserService.getUser(widget.id);
+        userData = data;
+        widget.edit_button = false;
+      });
+    }
   }
 
   @override
@@ -50,7 +62,8 @@ class _InfoUser extends State<InfoUser>  {
                               ? userData['first_name'] + " " + userData['last_name']
                                   : "User Name",
                               rating :userData['rating']!=null ? userData['rating'].toString() : "2.5",
-                              edit_button: true),
+                              edit_button: widget.edit_button, id: widget.id),
+                          ),
                           Text('Username: ${userData['username']}'),
                           Text("lvl ${userData['level']} |  lvl ${userData['xp']} xp" ?? "1 + | 0 xp"),
                           Row(

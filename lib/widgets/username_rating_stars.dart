@@ -9,7 +9,8 @@ class Username_Rating extends StatelessWidget {
   String username;
   String rating;
   bool edit_button;
-  Username_Rating({required this.username,required this.rating,required this.edit_button, super.key});
+  int id;
+  Username_Rating({required this.username,required this.rating,required this.edit_button, super.key, required  this.id});
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +19,13 @@ class Username_Rating extends StatelessWidget {
           Stack(
             children:<Widget> [
               Container(
-                padding: EdgeInsets.only(left: 20.0),
-                  child: Row(
-                      children: <Widget>[
-                        Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                        if(edit_button) edit(context),
-                  ],
-                ),
+                      child: Row(
+                          children: <Widget>[
+                            Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                            (edit_button) ? edit(context) : chat(context),
+                            (edit_button) ? Container() : report(context),
+                      ],
+                    ),
             ),
             ]
           ),
@@ -38,6 +39,24 @@ class Username_Rating extends StatelessWidget {
       icon: Icon(Icons.edit),
       onPressed: () {
         GoRouter.of(context).push('/profile/edit');
+      },
+    );
+  }
+
+  Widget chat(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.chat),
+      onPressed: () {
+        //GoRouter.of(context).push('/chat/$id');
+      },
+    );
+  }
+
+  Widget report(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.report),
+      onPressed: () {
+        //GoRouter.of(context).push('/chat/$id');
       },
     );
   }

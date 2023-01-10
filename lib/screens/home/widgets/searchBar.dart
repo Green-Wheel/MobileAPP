@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:greenwheel/screens/home/widgets/google_maps.dart';
 import 'package:greenwheel/utils/address_autocompletation.dart';
 
+import '../../../utils/geocoding.dart';
 import '../../../widgets/language_selector_widget.dart';
+import '../home.dart';
 
 class SearchBar extends StatefulWidget implements PreferredSizeWidget{
-  final bool index;
-  SearchBar({Key? key, required this.index}) : preferredSize = Size.fromHeight(kToolbarHeight),super(key: key);
+  final int index;
+  final Function callBack;
+  List<String> suggestions;
+  SearchBar({Key? key, required this.index, required this.callBack,required this.suggestions}) :preferredSize = Size.fromHeight(kToolbarHeight),super(key: key);
 
   @override
   State<SearchBar> createState()=> _SearchBar();
-
   @override
   Size preferredSize;
 
@@ -21,16 +26,9 @@ class _SearchBar extends State<SearchBar>{
   @override
   void initState() {
     super.initState();
-    _selectioned = DataSearch().getSelectioned();
+    //_selectioned = DataSearch().getSelectioned();
   }
-/*
-  @override
-  void SetState(){
-    super.setState(() {
-        _selectioned = DataSearch().selectioned;
-    });
-  }
-*/
+
   void _changeLanguage() {
     showDialog(
       context: context,
@@ -42,28 +40,34 @@ class _SearchBar extends State<SearchBar>{
   @override
   Widget build(BuildContext context) {
     return AppBar(
-            title: const Text("Search"),//_searchTextField(),
-            backgroundColor: widget.index ? Colors.blue : Colors.green,
-            actions:<Widget>[
-                IconButton(
-                   icon: const Icon(Icons.search),
-                   onPressed: () {
-                       //showSearch(context:context,delegate:DataSearch());
-                   }
-                 ),
-                IconButton(
-                    icon: const Icon(Icons.language),
-                    onPressed: () {
-                      _changeLanguage();
-                    }
-                )
-             ]
-        );
+        title: const Text("Search"),
+        backgroundColor: widget.index==1 ? Colors.blue : Colors.green,
+        actions:<Widget>[
+          IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                showSearch(context:context,delegate:DataSearch(callBack : widget.callBack, suggestions : widget.suggestions));
+              }
+          ),
+          IconButton(
+              icon: const Icon(Icons.language),
+              onPressed: () {
+                _changeLanguage();
+              }
+          )
+        ]
+    );
   }
 }
 
 class DataSearch extends SearchDelegate<String> {
+  final Function callBack;
+  List<String> suggestions;
+  DataSearch({Key? key, required this.callBack, required this.suggestions});
+
   String selectioned = "";
+
+  var autocompletation = [];
 
   String getSelectioned(){
     return selectioned;
@@ -114,38 +118,65 @@ class DataSearch extends SearchDelegate<String> {
 
   @override
   Widget buildResults(BuildContext context) {
-    //Aqui enviar al mapa les coordenades
-    close(context,"");
+    Future.delayed(Duration.zero,() {
+      close(context, "");
+    });
     return Text("");
   }
 
+
   @override
   Widget buildSuggestions(BuildContext context) {
-    //final suggestionList = query.isEmpty?recentCities: cities.where((p)=>p.startsWith(query)).toList();
-    List<String> autocompletation = AdressAutocompletation.getAdresses("") as List<String>;
-    print("------------------------------- : ${autocompletation.length}");
+    if(query.isNotEmpty) _getAdresses(query);
+    else{
+      autocompletation = suggestions;
+      print("XXXXXXXXXXXXXXXXXXXX");
+      print(suggestions);
+      print("XXXXXXXXXXXXXXXXXXXX");
+    }
     return ListView.builder(
-      itemBuilder: (context,index) => ListTile(
-        onTap: (){
-          selectioned = autocompletation[index];
-          query = autocompletation[index];
-          _SearchBar()._selectioned = selectioned;
-          print("------------------------------- : ${_SearchBar()._selectioned}");
-          print("------------------------------- : $selectioned");
-          showResults(context);
-        },
-        leading: const Icon(Icons.location_city),
-        title: RichText(
-          text: TextSpan(text: autocompletation[index].substring(0,query.length),
-              style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-              children:  [
-                TextSpan(text: autocompletation[index].substring(query.length),
-                    style: const TextStyle(color: Colors.grey))
-              ]
-          ),
-        ),
-      ),
       itemCount: autocompletation.length,
+      itemBuilder: (context,index) {
+        if(query.isEmpty){
+          return ListTile(
+            onTap: () async {
+              selectioned = autocompletation[index];
+              query = autocompletation[index];
+              callBack(await Geocoding.getLatLangFromAddress(selectioned));
+              showResults(context);
+            },
+            leading: const Icon(Icons.location_city),
+            title: RichText(
+              text: TextSpan(text: suggestions[index],
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+            ),
+          );
+        }
+        else {
+          return ListTile(
+            onTap: () async {
+              selectioned = autocompletation[index];
+              query = autocompletation[index];
+              suggestions.add(selectioned);
+              callBack(await Geocoding.getLatLangFromAddress(selectioned), selectioned);
+              showResults(context);
+            },
+            leading: const Icon(Icons.location_city),
+            title: RichText(
+              text: TextSpan(text: autocompletation[index],
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
+  void _getAdresses(String query) async {
+    autocompletation = await AdressAutocompletation.getAdresses(query);
+  }
 }
+
