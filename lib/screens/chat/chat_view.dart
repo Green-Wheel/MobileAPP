@@ -202,11 +202,13 @@ class _ChatView extends State<ChatView> {
                 ],
               ),
             ),
-            body: SingleChildScrollView(
+            body: !_loading ? SingleChildScrollView(
               //height: MediaQuery.of(context).size.height,
-              child: Column(
+              child: Stack(
                 children: [
-                  buildMessagesView(),
+                  Padding(padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height * 0.07),
+                    child: buildMessagesView(),
+                  ),
                   Positioned(
                     bottom: 0.0,
                     right: 0.0,
@@ -216,7 +218,11 @@ class _ChatView extends State<ChatView> {
                 ]
 
               ),
-            )
+            ): Center(
+                child:Padding(
+                  padding: EdgeInsets.all(25),
+                  child: CircularProgressIndicator(),
+                )),
         )
       ],
     );

@@ -40,6 +40,7 @@ class NotificationController{
 
   void SendMessage (String message, int id_user, Function listenMessage){
    try{
+     print("Sending message");
       channel?.sink.add(jsonEncode({
         "message": message,
         "to_user": id_user,
