@@ -41,7 +41,8 @@ dependencies:
   google_sign_in: ^5.4.2
   flutter_appauth: ^4.2.1
   flutter_web_auth_2: ^2.0.3
-
+  flutter_local_notifications: ^13.0.0
+  web_socket_channel: ^2.2.0
 
 dev_dependencies:
   flutter_test:

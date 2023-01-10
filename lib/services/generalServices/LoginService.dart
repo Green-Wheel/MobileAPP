@@ -34,7 +34,7 @@ class LoginService extends ChangeNotifier {
   static final _googleSignIn = GoogleSignIn();
 
   checkLoggedIn() async {
-    storage.delete(key: "apiKey");
+    //storage.delete(key: "apiKey");
     var key = await storage.read(key: "apiKey");
     if (key != null) loginUser(key);
   }
