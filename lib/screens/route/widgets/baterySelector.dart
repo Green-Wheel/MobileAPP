@@ -24,8 +24,6 @@ class _BatterySelectorState extends State<BatterySelector> {
 
   @override
   Widget build(BuildContext context) {
-    print('selected_car');
-    print('selected_Car ${widget.user_cars}');
     return Column(
             children: [
               Card(
@@ -55,8 +53,7 @@ class _BatterySelectorState extends State<BatterySelector> {
                           );
                         }).toList() as List<DropdownMenuItem<Object>>,
                         onChanged: (value) {
-                          widget.callbackCar(widget.user_cars
-                              .firstWhere((element) => element.id == value));
+                          widget.callbackCar(value);
                           setState(() {
                             widget.selected_car = value;
                           });

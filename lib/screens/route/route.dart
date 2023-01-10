@@ -46,7 +46,8 @@ class _RoutePageState extends State<RoutePage> {
 
   var cars_of_user = [];
   var selected_car;
-  int batery = -2;
+  int batery = -1;
+  bool batterySufficient= true ;
 
   @override
   void initState() {
@@ -58,17 +59,11 @@ class _RoutePageState extends State<RoutePage> {
   void getUserCars() async {
     var carsAux = await VehicleService.getVehicles();
     var user = _loggedInStateInfo.user_info;
-    print('selected_Car');
-    print(user!['selected_car']);
     cars_of_user = carsAux;
     selected_car = carsAux
-        .where((element) => element.id == user['selected_car'])
+        .where((element) => element.id == user!['selected_car'])
         .toList()[0]
         .id;
-    print(
-        '--------------------------------------------------------------------------');
-    print(selected_car);
-    print(cars_of_user);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _showModal(context);
     });
@@ -100,8 +95,14 @@ class _RoutePageState extends State<RoutePage> {
         });
   }
 
+  void sufficientBattery() async {
+    var vehicle = await VehicleService.getVehicle(selected_car);
+    setState(() {
+      batterySufficient = batery == -1 ? true : vehicle['model']['autonomy'] * double.parse('${batery}')/100 > double.parse(routeInfo!.distance.split(' ')[0].replaceAll(',', '.'));
+    });
+  }
+
   void _showModal(BuildContext context) {
-    var tempselectedCar;
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
@@ -123,7 +124,7 @@ class _RoutePageState extends State<RoutePage> {
                       user_cars: cars_of_user,
                       selected_car: selected_car,
                       callbackBattery: (value) {batery = int.parse(value);},
-                      callbackCar: (value) {tempselectedCar = value;},
+                      callbackCar: (value) {selected_car = value;},
                     ),
                     Container(
                       alignment: Alignment.centerRight,
@@ -133,11 +134,7 @@ class _RoutePageState extends State<RoutePage> {
                           primary: Colors.white,
                         ),
                         onPressed: () {
-                          print('-------------------------------------------------battery:  $batery');
-                          print('-------------------------------------------------car:  $tempselectedCar');
-                          setState(() {
-                            selected_car = tempselectedCar;
-                          });
+                          sufficientBattery();
                           Navigator.of(context).pop();
                         },
                         child: const Text('Confirmar'),
@@ -182,7 +179,7 @@ class _RoutePageState extends State<RoutePage> {
         ),
         body: Stack(children: [
           Container(
-            padding: const EdgeInsets.only(bottom: 135),
+            padding: const EdgeInsets.only(bottom: 200),
             child: GoogleMapsWidget(
                 index: 0,
                 polylines: polylines ?? {},
@@ -191,23 +188,18 @@ class _RoutePageState extends State<RoutePage> {
           SlidingUpPanel(
               // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
               maxHeight: MediaQuery.of(context).size.height * 0.8,
-              minHeight: 170.0,
+              minHeight: 200.0,
               controller: panelController,
               parallaxEnabled: true,
               parallaxOffset: 0.5,
               backdropEnabled: true,
               panelBuilder: (controller) => PanelWidget(
                     controller: controller,
+                    sufficientBattery: batterySufficient,
                     panelController: panelController,
                     routeInfo: routeInfo,
                   ),
               borderRadius: BorderRadius.vertical(top: Radius.circular(18))),
-          TextButton(
-            onPressed: () {
-              _showModal(context);
-            },
-            child: Text("Select car"),
-          ),
         ]));
   }
 }
