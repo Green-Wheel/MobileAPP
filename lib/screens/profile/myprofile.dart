@@ -4,7 +4,7 @@ import 'package:greenwheel/screens/profile/widgets/infouser.dart';
 import 'package:greenwheel/screens/profile/widgets/mypoints.dart';
 import '../../services/generalServices/LoginService.dart';
 import '../../widgets/list_user_ratings.dart';
-import '../../widgets/user_rating_valoration.dart';
+import '../rating/user_rating_valoration.dart';
 
 
 class ProfilePage extends StatefulWidget {

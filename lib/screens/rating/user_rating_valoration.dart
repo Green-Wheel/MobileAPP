@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:greenwheel/services/backendServices/ratings.dart';
-import '../screens/register/widgets/greenButton.dart';
-import '../services/generalServices/LoginService.dart';
-import 'interactive_stars_widget.dart';
+import '../register/widgets/greenButton.dart';
+import '../../services/generalServices/LoginService.dart';
+import '../../widgets/interactive_stars_widget.dart';
 
 
 class RateUser extends StatefulWidget {
@@ -118,7 +118,7 @@ class _RateUser extends State<RateUser> {
         const SizedBox(height:20),
         GreenButton("Rate it",
             onPressed: (){
-              RatingService.addRating(widget.user_id, widget.booking_id, myController.text, stars.rate, context);
+              RatingService.addUserRating(widget.user_id, widget.booking_id, myController.text, stars.rate, context);
             }
         ),
       ],

@@ -7,15 +7,15 @@ import '../serializers/users.dart';
 import 'interactive_stars_widget.dart';
 
 
-class UserRatings extends StatefulWidget {
+class BookingRatings extends StatefulWidget {
 
-  UserRatings(int id, {Key? key}) : id = id, super(key: key);
+  BookingRatings(int id, {Key? key}) : id = id,super(key: key);
   int id;
   @override
-  State<UserRatings> createState() => _UserRatings();
+  State<BookingRatings> createState() => _BookingRatings();
 }
 
-class _UserRatings extends State<UserRatings> {
+class _BookingRatings extends State<BookingRatings> {
 
   final List<MaterialColor> _colors = [Colors.blue, Colors.indigo, Colors.red];
   Rating dummy = Rating(user: BasicUser(
@@ -30,11 +30,11 @@ class _UserRatings extends State<UserRatings> {
   }
 
   void _getData() {
-    Future<List<dynamic>?> aux = RatingService.getRatingsUsers(widget.id);
+    Future<List<dynamic>?> aux = RatingService.getRatingsPublication(widget.id);
     print("zzzzzzzzzzz");
     print(aux);
     setState(() {
-      _ratings = [];
+      _ratings.add(dummy);
     });
   }
 
@@ -66,14 +66,6 @@ class _UserRatings extends State<UserRatings> {
   }
 }
 
-CircleAvatar _getLeadingWidget(String userName, MaterialColor color) {
-  return CircleAvatar(
-    backgroundImage: const AssetImage('assets/images/default_user_img.jpg'),
-    backgroundColor: color,
-    child: Text(userName),
-  );
-}
-
 Text _getTitleWidget(String username) {
   return Text(
     username,
@@ -101,7 +93,7 @@ Widget _getCommentWidget(Rating rating) {
       Align(
         alignment: Alignment.topLeft,
         child :Text(rating.comment!,style: TextStyle(
-          color: Colors.black),
+            color: Colors.black),
         ),
       )
     ],
@@ -110,7 +102,6 @@ Widget _getCommentWidget(Rating rating) {
 
 ListTile _getListTile(Rating rating, MaterialColor color) {
   return ListTile(
-    leading: _getLeadingWidget("", color),
     title: _getTitleWidget(rating.user.username),
     subtitle: _getCommentWidget(rating),
     isThreeLine: true,

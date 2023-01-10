@@ -46,7 +46,7 @@ class _ChatView extends State<ChatView> {
               ),
             ),
             const SizedBox(width: 15),
-            Username_Rating(username: "username", rating: "4.0", edit_button: false)
+            Username_Rating(id:4,username: "username", rating: "4.0", edit_button: false)
           ],
         ),
       ),
