@@ -77,7 +77,7 @@ class _ButtonsCard extends State<ButtonsCard> {
                       )
                   ),
                   onPressed: () {
-                    GoRouter.of(context).go('/route/${widget.longitude}/${widget.latitude}');
+                    GoRouter.of(context).go('/route/${widget.longitude}/${widget.latitude}/-1');
                   },
                   child: Row(
                     children: const [

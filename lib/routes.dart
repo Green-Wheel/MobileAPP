@@ -133,15 +133,42 @@ GoRouter routeGenerator(LoginService loginService) {
               builder: (context, state) =>
               const MyVehicles(key: Key("Vehicle")),
             ),
+            GoRoute(path: 'report/user/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportUser(key: const Key("ReportUser"), user_id: id);
+                }),
+            GoRoute(path: 'report/rating/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportComment(key: const Key("ReportUser"), comment_id: id);
+                }),
+            GoRoute(path: 'report/bike/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportBike(key: const Key("ReportUser"), bike_id: id);
+                }),
+            GoRoute(path: 'report/charger/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportCharger(key: const Key("ReportUser"), charger_id: id);
+                }),
+            GoRoute(path: 'report/user/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportUser(key: const Key("ReportUser"), user_id: id);
+                }),
             GoRoute(
-              path: 'route/:lat/:long',
+              path: 'route/:lat/:long/:id',
               builder: (context, state) {
                 final long = state.params['long']!;
                 final lat = state.params['lat']!;
+                final id = int.parse(state.params['id']!);
                 return RoutePage(
                   key: const Key("RoutePage"),
                   lat: lat,
                   long: long,
+                  pubication_id: id,
                 );
               },
             ),
