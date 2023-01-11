@@ -20,7 +20,7 @@ import '../../../widgets/button_list_screen_bikes.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
-  Set<Polyline> polylines;
+  Set<Polyline>? polylines;
   int? publicationId;
   LatLang? point_search_bar;
   GoogleMapsWidget(
