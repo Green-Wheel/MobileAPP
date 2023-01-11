@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'dart:developer';
 import 'package:flutter/foundation.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backendServices/publications.dart';
 import 'package:greenwheel/widgets/Bookings/utils/backendOperations.dart';
 import 'package:greenwheel/widgets/Bookings/utils/classExtensions/DateTimeExtension.dart';
@@ -54,10 +55,25 @@ class BookingCalendarState extends State<BookingCalendar> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Reservar horas'),
+        centerTitle: true,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 20.0, left: 5.0),
+            child: Icon(Icons.calendar_month),
+          ),
+        ],backgroundColor: Colors.green,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).go('/');
+          },
+        ),
+      ),
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(height: MediaQuery.of(context).size.height*0.04),
           customCalendar(get_selected_date: getDateFromCalendar),
           Container(
             width: double.infinity,

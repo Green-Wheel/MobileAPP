@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/serializers/bookings.dart';
 import 'package:greenwheel/widgets/Bookings/booking_calendar.dart';
 import 'package:greenwheel/widgets/Bookings/utils/stringOverflow.dart';
@@ -59,6 +60,22 @@ class _confirm_bookingState extends State<confirm_booking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Historial de reservas'),
+        centerTitle: true,
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 20.0, left: 5.0),
+            child: Icon(Icons.history),
+          ),
+        ],backgroundColor: Colors.green,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            GoRouter.of(context).go('/');
+          },
+        ),
+      ),
       body: (widget.waitingBackend && widget.bookings.length <= 0)?
       Container(
         decoration: const BoxDecoration(
@@ -90,7 +107,7 @@ class _confirm_bookingState extends State<confirm_booking> {
         ):
         Column(
           children: [
-              Container(
+              /*Container(
                 padding: EdgeInsets.all(15.0),
                 decoration: BoxDecoration(
                   color: Color(0xF0052e42)
@@ -109,7 +126,7 @@ class _confirm_bookingState extends State<confirm_booking> {
                     ],
                   ),
                 ),
-              ),
+              ),*/
             Expanded(
               child: ListView.builder(
                 itemCount: widget.bookings.length,

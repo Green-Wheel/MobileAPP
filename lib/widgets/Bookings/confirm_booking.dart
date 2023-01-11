@@ -100,10 +100,10 @@ class _confirm_bookingState extends State<confirm_booking> {
         centerTitle: true,
         actions: const [
           Padding(
-            padding: EdgeInsets.only(right: 50, left: 5.0),
+            padding: EdgeInsets.only(right: 20, left: 5.0),
             child: Icon(Icons.pending_actions),
           ),
-        ],backgroundColor: Colors.blue,
+        ],backgroundColor: Colors.green,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
