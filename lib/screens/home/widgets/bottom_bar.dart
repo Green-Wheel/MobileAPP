@@ -70,10 +70,18 @@ class BottomBarActionButton extends StatefulWidget {
 class _BottomBarActionButtonState extends State<BottomBarActionButton> {
 
   getUnreadMessages() async {
-    final unreadMessages = await ChatService.getUnreadMessages();
+    int unreadMessages = await ChatService.getUnreadMessages();
+    print("Mensajes por leer $unreadMessages");
     setState(() {
       widget.msgCount = unreadMessages;
     });
+    print(widget.msgCount);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUnreadMessages();
   }
 
   @override
@@ -87,6 +95,7 @@ class _BottomBarActionButtonState extends State<BottomBarActionButton> {
 
   void _onPressed() {
     GoRouter.of(context).go('/chats');
+    //getUnreadMessages();
   }
 
   Widget notificationBadge() {
