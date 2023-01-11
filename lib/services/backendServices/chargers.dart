@@ -77,6 +77,8 @@ class ChargerService {
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
       result = DetailedCharherSerializer.fromJson(jsonResponse);
+      print(result);
+      print(jsonResponse);
     } else {
       throw Exception('Error getting speeds');
     }

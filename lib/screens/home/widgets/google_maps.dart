@@ -549,7 +549,7 @@ void _getCharger(int id) async {
       types.add(markedCharger!.connection_type[i]);
     }
 
-    bool private = markedCharger!.private != null ? true : false;
+    bool private = markedCharger!.charger_type == 'private';
     double price = markedCharger!.private != null
         ? markedCharger!.private!.price
         : 0.0;

@@ -42,25 +42,23 @@ class CardInfoWidget extends StatefulWidget {
 
 class _CardInfoWidget extends State<CardInfoWidget>{
   var userData;
-  bool isOwner = false;
+  late bool isOwner;
 
   @override
   void initState() {
     super.initState();
-    _getData();
   }
-  void _getData() async {
+  void _getData() {
     var data = LoginService().user_info;
-    print(data);
     setState(() {
       userData = data;
       isOwner = userData['id'] == widget.owner_id;
     });
-    print(isOwner);
   }
 
   @override
   Widget build(BuildContext context) {
+    _getData();
     int? owner_id = widget.owner_id!;
     return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price,
         widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, widget.id, isOwner, owner_id,
@@ -118,11 +116,11 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                                 style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green)),
                         )
                   ),
-                Padding(
+                /*Padding(
                   padding: const EdgeInsets.only(right: 193),
                   child: private_list ? const Text('Private',
                       style: TextStyle(fontWeight: FontWeight.w600, color: Colors.amberAccent)
-                  ) : SizedBox()),
+                  ) : SizedBox()),*/
                 SizedBox(height: 5),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
@@ -272,8 +270,8 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                           !isOwner ? Padding(padding: EdgeInsets.only(left: 25, right: 20),
                             child: ChatButtonWidget( to_user: owner_id!),
                           ): Container(),
-                          isOwner ? Padding(padding: EdgeInsets.only(left: 25),
-                              child: ButtonDeleteChargerWidget(id_charger: id!)): SizedBox(height: 0),
+                          //!isOwner ? Padding(padding: EdgeInsets.only(left: 25),
+                              //child: ButtonDeleteChargerWidget(id_charger: id!)): SizedBox(height: 0),
                         ],
                       ) : SizedBox(height: 0),
                     ],
