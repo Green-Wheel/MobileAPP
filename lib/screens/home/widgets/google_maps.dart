@@ -372,11 +372,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void _getCurrentLocation() async {
-    //_position = await _determinePosition();
+    _position = await _determinePosition();
     mapController.moveCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: LatLng(40.0, 11.0),
+          target: LatLng(_position.latitude, _position.longitude),
           zoom: 15,
         ),
       ),
@@ -384,11 +384,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void _updateCurrentLocation() async {
-    //_position = await _determinePosition();
+    _position = await _determinePosition();
     mapController.animateCamera(
       CameraUpdate.newCameraPosition(
         CameraPosition(
-          target: LatLng(40.0, 11.0),
+          target: LatLng(_position.latitude, _position.longitude),
           zoom: 15,
         ),
       ),
