@@ -68,8 +68,8 @@ void initializeWebSocket() {
   FlutterLocalNotificationsPlugin notifications = FlutterLocalNotificationsPlugin();
   var androidInit = const AndroidInitializationSettings('@mipmap/greenwheelfonsblanc');
   var iOSInit = const DarwinInitializationSettings();
-  //int userId = LoginService().user_info?['id'];
-  channel = IOWebSocketChannel.connect('ws://3.250.219.80/ws/3/notifications/');
+  int userId = LoginService().user_info?['id'] ?? 3;
+  channel = IOWebSocketChannel.connect('ws://3.250.219.80/ws/$userId/notifications/');
   _message = TextEditingController();
   var init = InitializationSettings(android: androidInit, iOS: iOSInit);
   notifications.initialize(init).then((done) {
