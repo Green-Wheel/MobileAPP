@@ -698,7 +698,7 @@ void _getCharger(int id) async {
     double? rate = markedBike!.avg_rating;
     double latitude = markedBike!.localization.latitude;
     double longitude = markedBike!.localization.longitude;
-    String contamination = markedBike!.contamination;
+    String contamination = markedBike!.contamination ?? '';
 
     return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude, contamination: contamination);
   }
