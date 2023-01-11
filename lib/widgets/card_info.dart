@@ -18,7 +18,7 @@ class CardInfoWidget extends StatefulWidget {
   double? rating;
   List<ConnectionType> types;
   bool available;
-  bool match;
+  bool? match;
   bool private;
   double price;
   String? description;
@@ -68,10 +68,10 @@ class _CardInfoWidget extends State<CardInfoWidget>{
   }
 }
 
-Widget _buildCard(String? location, double? rating, List<ConnectionType> types, bool avaliable, bool match, bool private, double price,
+Widget _buildCard(String? location, double? rating, List<ConnectionType> types, bool avaliable, bool? match, bool private, double price,
     String? description, String? direction, bool private_list, double latitude, double longitude, int? id,
     bool isOwner, int? owner_id, String? username, String? contamination, BuildContext context){
-  print(isOwner);
+
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -130,7 +130,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
-                  child: MatchWithCarWidget(match: match),
+                  child: MatchWithCarWidget(match: match??false),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 24, top: 5),

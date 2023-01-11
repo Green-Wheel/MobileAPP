@@ -158,7 +158,7 @@ class ChargerList {
     this.public,
     this.private,
     required this.contamination,
-    required this.compatible,
+    this.compatible,
   });
 
   int? id;
@@ -171,7 +171,7 @@ class ChargerList {
   PublicCharger? public;
   PrivateCharger? private;
   String? contamination;
-  bool compatible;
+  bool? compatible;
 
   factory ChargerList.fromJson(Map<String, dynamic> json) =>
       _$ChargerListFromJson(json);
@@ -253,7 +253,7 @@ class DetailedCharherSerializer {
     this.public,
     this.private,
     required this.contamination,
-    required this.compatible,
+    this.compatible,
   });
 
   int? id;
@@ -272,7 +272,7 @@ class DetailedCharherSerializer {
   PublicCharger? public;
   PrivateCharger? private;
   String? contamination;
-  bool compatible;
+  bool? compatible;
 
 
   factory DetailedCharherSerializer.fromJson(Map<String, dynamic> json) =>

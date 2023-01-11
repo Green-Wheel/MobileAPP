@@ -568,12 +568,13 @@ void _getCharger(int id) async {
       owner_name = "No owner";
     }
     String? contamination = markedCharger!.contamination;
+    bool? compatible = markedCharger!.compatible;
 
     return CardInfoWidget(location: descrip,
         rating: rate,
         types: types,
         available: true,
-        match: true,
+        match: compatible,
         private: private,
         price: price,
         direction: direction,
@@ -584,7 +585,8 @@ void _getCharger(int id) async {
         id: id,
         owner_id: owner_id,
         owner_username: owner_name,
-        contamination: contamination);
+        contamination: contamination,
+        );
   }
 
   void _showAvisNoEsPotCarregarBici() async {
