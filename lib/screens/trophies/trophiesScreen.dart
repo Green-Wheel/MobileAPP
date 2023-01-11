@@ -57,7 +57,7 @@ class _TrophiesScreen extends State<TrophiesScreen>{
   bool x = false;
   @override
   Widget build(BuildContext context) {
-    if(!x) {
+    if(!x && userData?["trophies"] != null){
       int aux = 0;
       trophies_call = userData?["trophies"];
       for(int i=0;i<trophies_call.length;++i) {
@@ -131,7 +131,7 @@ class _TrophiesScreen extends State<TrophiesScreen>{
                       ), // the space between image and text
                       Text(image_descritpor[i-1]),
                       Checkbox(
-                        value: trophies_call[i-1]['achieved'],
+                        value: trophies_call.length > 0? trophies_call[i-1]['achieved'] : true,
                         onChanged: null
                       ),
                     ],
