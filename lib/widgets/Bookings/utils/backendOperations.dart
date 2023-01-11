@@ -16,6 +16,7 @@ class BackendOperations{
   int blocking_repeat_mode = 1;
 
   void setBlockingRepeatMode(int mode){
+    log("setting mode repetition $mode");
     blocking_repeat_mode = mode;
   }
 
@@ -24,11 +25,10 @@ class BackendOperations{
     log("Aplicando operaciones backend");
     List mergedBackendOperations = mergeBackendOperations();
     for(BackendOperation backendOperation in mergedBackendOperations){
-        if(!await backendOperation.execute())
-          {
-
-            return false;
-          }
+      if(backendOperation.operation == OperationType.block){
+        backendOperation.repetitionMode = blocking_repeat_mode;
+      }
+        if(!await backendOperation.execute()) return false;
     }
     //reset();
     return true;
@@ -207,6 +207,7 @@ class BackendOperation{
   late DateTime endDate;
   late int publication;
   late OperationType operation;
+  var repetitionMode;
 
   bool contains(DateTime date){
     return ( date >= startDate && date < endDate );
@@ -225,7 +226,7 @@ class BackendOperation{
     data['start_date'] = startDate.toString();
     data['end_date'] = endDate.toString();
     if(operation == OperationType.block) {
-      data['repeat_mode'] = 1;
+      data['repeat_mode'] = repetitionMode.toString();
       bool res = await PublicationService.blockRangeOfHours(data);
       log("a ver si es nula la publicaicon -----ñ"+res.toString());
       return res;

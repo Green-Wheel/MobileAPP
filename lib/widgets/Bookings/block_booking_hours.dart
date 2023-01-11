@@ -39,9 +39,11 @@ class BookingCalendar extends StatefulWidget {
   Map<String, dynamic> data = Map();
   bool waitingBakend = true;
   int id;
+
   DateTime selectedDate = DateTime.now();
   late DateStates datesState;
   late BackendOperations backendOperations;
+
   BookingCalendar({Key? key, required this.id}) : super(key: key);
 
   @override
@@ -49,48 +51,45 @@ class BookingCalendar extends StatefulWidget {
 }
 
 class BookingCalendarState extends State<BookingCalendar> {
-
+  String dropdownValue = 'Sin repetición';
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(height: MediaQuery.of(context).size.height*0.04),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.04),
           customCalendar(get_selected_date: getDateFromCalendar),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.blue.shade100,
-                    blurRadius:10 ,
-                    spreadRadius: 1,
-                    offset: Offset(0, 7),
-                  ),
-                ],
-                color: Colors.white
-            ),
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: Colors.blue.shade100,
+                blurRadius: 10,
+                spreadRadius: 1,
+                offset: Offset(0, 7),
+              ),
+            ], color: Colors.white),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Expanded(
                   child: Text(
                     "Horas:",
-                    style: TextStyle(
-                        color: Color(0xA0052e42),
-                        fontSize: 18
-                    ),
+                    style: TextStyle(color: Color(0xA0052e42), fontSize: 18),
                   ),
                 ),
                 Expanded(
                   child: Center(
                     child: Text(
-                      (widget.selectedDate.isToday())?
-                      "Hoy": widget.selectedDate.isTomorrow()?"Mañana":
-                      DateFormat('dd · MM · yyyy').format(widget.selectedDate).toString(),
+                      (widget.selectedDate.isToday())
+                          ? "Hoy"
+                          : widget.selectedDate.isTomorrow()
+                              ? "Mañana"
+                              : DateFormat('dd · MM · yyyy')
+                                  .format(widget.selectedDate)
+                                  .toString(),
                       style: const TextStyle(
                         color: Colors.green,
                         fontSize: 20,
@@ -102,217 +101,312 @@ class BookingCalendarState extends State<BookingCalendar> {
               ],
             ),
           ),
-          widget.waitingBakend?
-          Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Colors.white70
-                ),
-                child: Center(
-                  child:  LoadingAnimationWidget.discreteCircle(
-                      color: Colors.green.shade50,
-                      size: 70,
-                      secondRingColor: Colors.green.shade200,
-                      thirdRingColor: Color(0x10052e42)),
-                ),
-              )
-          ):
-
-          Expanded(
-            child:
-            Column(
-              children: [
-                (widget.selectedDate.hasPast())?
-                const Expanded(
+          widget.waitingBakend
+              ? Expanded(
+                  child: Container(
+                  decoration: const BoxDecoration(color: Colors.white70),
                   child: Center(
-                    child: Text(
-                      'No se puede reservar en una fecha pasada',
-                      style: TextStyle(
-                          color: Colors.black45,
-                          fontSize: 15
-                      ),
-                    ),
+                    child: LoadingAnimationWidget.discreteCircle(
+                        color: Colors.green.shade50,
+                        size: 70,
+                        secondRingColor: Colors.green.shade200,
+                        thirdRingColor: Color(0x10052e42)),
                   ),
-                ):
-                hourList(
-                  showHoursStartingAtCurrentHour: widget.selectedDate.isToday(),
-                  reservations: widget.datesState.getMyReservationsAt(widget.selectedDate),
-                  blockedHours: widget.datesState.getBlockedHours(widget.selectedDate),
-                  return_change_in_reservations: updateWithHourListReservation,
-
-                ),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 0.0),
-                      child: ElevatedButton(
-
-                        onPressed: (){
-                          if(widget.backendOperations.getNumberOfOperationsOfType(OperationType.block) > 0) {
-
-                            showDialog<String>(
-                              context: context,
-                              builder: (BuildContext context) => AlertDialog(
-                                title: Row(
-                                  children: const [
-                                    Icon(Icons.warning_rounded, color: Colors.amber,),
-                                    Text(' Deshacer cambios'),
-                                  ],
+                ))
+              : Expanded(
+                  child: Column(
+                    children: [
+                      (widget.selectedDate.hasPast())
+                          ? const Expanded(
+                              child: Center(
+                                child: Text(
+                                  'No se puede reservar en una fecha pasada',
+                                  style: TextStyle(
+                                      color: Colors.black45, fontSize: 15),
                                 ),
-                                content: const Text('Se deseleccionarán todas las horas que has marcado'),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context, 'Cancelar'),
-                                    child: const Text(
-                                      'Cancelar',
-                                      style: TextStyle(color: Colors.black45),
-                                    ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(context, 'Ok');
-                                      widget.datesState.reset();
-                                      widget.backendOperations.reset();
-                                      updateAvailabilityWithBackend(widget.selectedDate);
-                                    },
-                                    child: const Text('Ok'),
-                                  ),
-                                ],
                               ),
-                            );
-                          }
-                        },
-
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(MediaQuery.of(context).size.width*0.45, 40),
-                          maximumSize: Size(MediaQuery.of(context).size.width*0.5, double.infinity),
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0.0),
-                              side: const BorderSide(
-                                  width: 0,
-                                  color: Color(0xA0052e42)
-                              )
-                          ),
-                          backgroundColor:  Colors.white,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.refresh_rounded,size: 22,color: Color(0xA0052e42),),
-                            Text(
-                              " Desmarcar",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Color(0xA0052e42),
-                              ),
+                            )
+                          : hourList(
+                              showHoursStartingAtCurrentHour:
+                                  widget.selectedDate.isToday(),
+                              reservations: widget.datesState
+                                  .getMyReservationsAt(widget.selectedDate),
+                              blockedHours: widget.datesState
+                                  .getBlockedHours(widget.selectedDate),
+                              return_change_in_reservations:
+                                  updateWithHourListReservation,
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 0.0),
-                      child: ElevatedButton(
-
-                        onPressed: () async {
-                          log("################################################# Bloquear ################################  ");
-                            widget.backendOperations.setBlockingRepeatMode(1);
-                          if(widget.backendOperations.getNumberOfOperationsOfType(OperationType.block) > 0) {
-                            if (!await widget.backendOperations.applyBackendOperations()) {
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    AlertDialog(
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 0.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (widget.backendOperations
+                                        .getNumberOfOperationsOfType(
+                                            OperationType.block) >
+                                    0) {
+                                  showDialog<String>(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
                                       title: Row(
                                         children: const [
-                                          Icon(Icons.error,
-                                            color: Colors.redAccent,),
-                                          Text(' Error al guardar'),
+                                          Icon(
+                                            Icons.warning_rounded,
+                                            color: Colors.amber,
+                                          ),
+                                          Text(' Deshacer cambios'),
                                         ],
                                       ),
                                       content: const Text(
-                                          'Ha habido un error al guardar los cambios. Por favor, ponte en contacto con los GreenWheelers para que lo solucionen'),
+                                          'Se deseleccionarán todas las horas que has marcado'),
                                       actions: <Widget>[
                                         TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(
-                                                  context, 'Entendido'),
-                                          child: const Text('Entendido'),
+                                          onPressed: () => Navigator.pop(
+                                              context, 'Cancelar'),
+                                          child: const Text(
+                                            'Cancelar',
+                                            style: TextStyle(
+                                                color: Colors.black45),
+                                          ),
                                         ),
-                                      ],
-                                    ),
-                              );
-                            }
-
-                            else {
-                              showDialog<String>(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    AlertDialog(
-                                      title: Row(
-                                        children: const [
-                                          Icon(Icons.check_circle,
-                                            color: Colors.green,),
-                                          Text(' Cambios guardados'),
-                                        ],
-                                      ),
-                                      content: const Text(
-                                          '¡Se han guardado tus horas bloqueadas!'),
-                                      actions: <Widget>[
                                         TextButton(
                                           onPressed: () {
                                             Navigator.pop(context, 'Ok');
+                                            widget.datesState.reset();
+                                            widget.backendOperations.reset();
                                             updateAvailabilityWithBackend(
                                                 widget.selectedDate);
                                           },
                                           child: const Text('Ok'),
                                         ),
-
                                       ],
                                     ),
-                              );
-
-                            }
-                            widget.backendOperations.reset();
-                            log("lookhiar" + widget.backendOperations
-                                .getNumberOfOperationsOfType(
-                                OperationType.block).toString());
-                          }
-                        },
-
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: Size(MediaQuery.of(context).size.width*0.45, 40),
-                          maximumSize: Size(MediaQuery.of(context).size.width*0.5, double.infinity),
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0.0),
-                              side: BorderSide(
-                                  width: 0,
-                                  color: Colors.green.shade800
-                              )
-                          ),
-                          backgroundColor:  Colors.blueGrey,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(Icons.block,size: 22,),
-                            Text(
-                              " Bloquear ",
-                              style: TextStyle(
-                                  fontSize: 20
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.45,
+                                    40),
+                                maximumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.5,
+                                    double.infinity),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0.0),
+                                    side: const BorderSide(
+                                        width: 0, color: Color(0xA0052e42))),
+                                backgroundColor: Colors.white,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(
+                                    Icons.refresh_rounded,
+                                    size: 22,
+                                    color: Color(0xA0052e42),
+                                  ),
+                                  Text(
+                                    " Desmarcar",
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      color: Color(0xA0052e42),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            ),
-          ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 0.0),
+                            child: ElevatedButton(
+                              onPressed: () {
+
+                                log("################################################# Bloquear ################################  ");
+                                widget.backendOperations
+                                    .setBlockingRepeatMode(1);
+                                if (widget.backendOperations.getNumberOfOperationsOfType(OperationType.block) > 0) {
+
+                                  showDialog<String>(
+                                    context: context,
+
+                                    builder: (BuildContext context) =>
+                                        AlertDialog(
+                                      title: Row(
+                                        children:  [
+                                          Icon(
+                                            Icons.repeat,
+                                            color: Colors.blueGrey,
+                                          ),
+                                          Text(' ¿ Quieres que se repita ?'),
+                                        ],
+                                      ),
+                                      content: StatefulBuilder(
+                                      builder: (BuildContext context, StateSetter setState) =>Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+
+                                          const Text(
+                                              'Selecciona a continuación el modo de repetición'),
+                                          DropdownButton<String>(
+                                            value: dropdownValue,
+                                            icon: const Icon(Icons.arrow_drop_down),
+                                            iconSize: 24,
+                                            elevation: 16,
+                                            style: const TextStyle(
+                                                color: Colors.black87
+                                            ),
+                                            underline: Container(
+                                              height: 2,
+                                              color: Colors.blueGrey,
+                                            ),
+                                            onChanged: (String? newValue) {
+                                              setState(() {
+                                                log(dropdownValue);
+                                                dropdownValue = newValue!;
+
+                                                int mode = 1+['Sin repetición', 'Diariamente', 'Semanalmente', 'Mensualmente', 'Anualmente'].indexOf(dropdownValue);
+                                                widget.backendOperations.setBlockingRepeatMode(mode);
+                                                log(dropdownValue);
+                                              });
+                                            },
+                                            items: <String>['Sin repetición', 'Diariamente', 'Semanalmente', 'Mensualmente', 'Anualmente']
+                                                .map<DropdownMenuItem<String>>((String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(
+                                                    value,
+                                                    style: TextStyle(fontSize: 16),
+                                                ),
+                                              );
+                                            })
+                                                .toList(),
+                                          ),
+                                        ],
+                                      ),),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () async {
+                                            Navigator.pop(context, 'Ok');
+
+                                            if (!await widget.backendOperations
+                                                .applyBackendOperations()) {
+                                              showDialog<String>(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        AlertDialog(
+                                                  title: Row(
+                                                    children: const [
+                                                      Icon(
+                                                        Icons.error,
+                                                        color: Colors.redAccent,
+                                                      ),
+                                                      Text(' Error al guardar'),
+                                                    ],
+                                                  ),
+                                                  content: const Text(
+                                                      'Ha habido un error al guardar los cambios. Por favor, ponte en contacto con los GreenWheelers para que lo solucionen'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(context,
+                                                              'Entendido'),
+                                                      child: const Text(
+                                                          'Entendido'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            } else {
+                                              showDialog<String>(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) =>
+                                                        AlertDialog(
+                                                  title: StatefulBuilder(
+                                                    builder: (BuildContext context, StateSetter setState) =>Row(
+                                                    children: const [
+                                                      Icon(
+                                                        Icons.check_circle,
+                                                        color: Colors.green,
+                                                      ),
+                                                      Text(
+                                                          ' Cambios guardados'),
+                                                    ],
+                                                  ),),
+                                                  content: StatefulBuilder(
+                                                    builder: (BuildContext context, StateSetter setState) =>const Text(
+                                                      '¡Se han guardado tus horas bloqueadas!'),),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(
+                                                            context, 'Ok');
+                                                        updateAvailabilityWithBackend(
+                                                            widget
+                                                                .selectedDate);
+                                                      },
+                                                      child: const Text('Ok'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            }
+                                            widget.backendOperations.reset();
+                                          },
+                                          child: const Text('Ok'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  log("lookhiar" +
+                                      widget.backendOperations
+                                          .getNumberOfOperationsOfType(
+                                              OperationType.block)
+                                          .toString());
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.45,
+                                    40),
+                                maximumSize: Size(
+                                    MediaQuery.of(context).size.width * 0.5,
+                                    double.infinity),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 15),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(0.0),
+                                    side: BorderSide(
+                                        width: 0,
+                                        color: Colors.green.shade800)),
+                                backgroundColor: Colors.blueGrey,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(
+                                    Icons.block,
+                                    size: 22,
+                                  ),
+                                  Text(
+                                    " Bloquear ",
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
         ],
       ),
     );
@@ -322,31 +416,30 @@ class BookingCalendarState extends State<BookingCalendar> {
 
   //---------------------------------[ BACKEND ]------------------------------//
 
-
   Future<List> getAvailabilityFromBackend(DateTime date) async {
     //List<>BookingService.getBookingHours(widget.id);
     widget.data['id'] = widget.id;
     widget.data['year'] = date.year;
     widget.data['month'] = date.month;
     widget.data['day'] = date.day;
-    List? backendHours = await PublicationService.getBlockedHoursByDay(widget.data);
+    List? backendHours =
+        await PublicationService.getBlockedHoursByDay(widget.data);
 
-    List<DateTime> blockedHours=[];
-    List<DateTime> myReservedHours=[];
+    List<DateTime> blockedHours = [];
+    List<DateTime> myReservedHours = [];
     //parseBackendHours(bloquedHours);
-    for(var hour in backendHours!){
+    for (var hour in backendHours!) {
       var occupation = Occupation.fromJson(date, hour);
-      log("Occupation: "+occupation.toString());
+      log("Occupation: " + occupation.toString());
       log(occupation.split(Config.minTimeOfReservation).toString());
-      List<DateTime> dateTimeChunks = occupation.split(Config.minTimeOfReservation);
-
+      List<DateTime> dateTimeChunks =
+          occupation.split(Config.minTimeOfReservation);
 
       blockedHours.addAll(dateTimeChunks);
-
     }
 
     log(PublicationService.getBlockedHoursByDay(widget.data).toString());
-    return [myReservedHours,blockedHours];
+    return [myReservedHours, blockedHours];
   }
 
   Future<void> updateAvailabilityWithBackend(DateTime date) async {
@@ -362,13 +455,12 @@ class BookingCalendarState extends State<BookingCalendar> {
     log("ha pasado el checkpoint");
     //widget.backendOperations.update();
     widget.waitingBakend = false;
-    setState(() {
-
-    });
+    setState(() {});
   }
+
   //--------------------------------[ CALLBACKS ]-----------------------------//
   //callbacks custom_calendar
-  void getDateFromCalendar(DateTime date){
+  void getDateFromCalendar(DateTime date) {
     setState(() {
       widget.selectedDate = date;
       updateAvailabilityWithBackend(date);
@@ -377,12 +469,14 @@ class BookingCalendarState extends State<BookingCalendar> {
   }
 
   //callbacks hour_list
-  void updateWithHourListReservation(TimeOfDay reservation, OperationType operation)
-  {
-    operation = (operation == OperationType.add)?OperationType.block: OperationType.nothing;
-    Availability availability =
-    (operation == OperationType.add)?
-    Availability.reserved:Availability.available;
+  void updateWithHourListReservation(
+      TimeOfDay reservation, OperationType operation) {
+    operation = (operation == OperationType.add)
+        ? OperationType.block
+        : OperationType.nothing;
+    Availability availability = (operation == OperationType.add)
+        ? Availability.reserved
+        : Availability.available;
 
     DateTime date = DateTime(
         widget.selectedDate.year,
@@ -391,36 +485,33 @@ class BookingCalendarState extends State<BookingCalendar> {
         reservation.hour,
         reservation.minute);
     log("################################################## EL FALLOTRON ${date}");
-    widget.datesState.add(reservation.toDateTime(widget.selectedDate),availability);
-    widget.backendOperations.add(date,operation,widget.id);
+    widget.datesState
+        .add(reservation.toDateTime(widget.selectedDate), availability);
+    widget.backendOperations.add(date, operation, widget.id);
   }
 
   //----------------------------------[ UTILS ]-------------------------------//
 
-  List<DateTime> convertToDateTime(List<TimeOfDay> hours,DateTime date){
+  List<DateTime> convertToDateTime(List<TimeOfDay> hours, DateTime date) {
     List<DateTime> dates = [];
-    for(var hour in hours)
-    {
+    for (var hour in hours) {
       dates.add(hour.toDateTime(date));
     }
     return dates;
   }
 
-
-  void updateDateState(List<DateTime> blockedDates, List<DateTime> reservations){
-
+  void updateDateState(
+      List<DateTime> blockedDates, List<DateTime> reservations) {
     log("ejecutando init--------------");
 
-    widget.datesState.update(reservations,blockedDates);
+    widget.datesState.update(reservations, blockedDates);
   }
 
-
-
-  void updateBackendOperations(List<DateTime> blockedDates, List<DateTime> reservations){
-
+  void updateBackendOperations(
+      List<DateTime> blockedDates, List<DateTime> reservations) {
     log("ejecutando init--------------");
 
-    widget.datesState.update(reservations,blockedDates);
+    widget.datesState.update(reservations, blockedDates);
   }
 
   //--------------------------------[ OVERRIDES ]-----------------------------//
@@ -432,7 +523,5 @@ class BookingCalendarState extends State<BookingCalendar> {
     widget.backendOperations = BackendOperations([], widget.id);
     updateAvailabilityWithBackend(DateTime.now());
     super.initState();
-
   }
-
 }
