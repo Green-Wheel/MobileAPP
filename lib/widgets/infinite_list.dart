@@ -174,7 +174,7 @@ class _InfiniteList extends State<InfiniteList>{
           types.add(_markersListAll[index].connection_type[i]);
         }
         bool private =  _markersListAll[index].private != null ? true : false;
-        bool match = true;
+        bool match = _markersListAll[index].compatible == true ? true : false;
         double price = 0.0;
         String? direction = "Calle 1";
         String? description2 = "description";
@@ -183,13 +183,9 @@ class _InfiniteList extends State<InfiniteList>{
         double? rate = _markersListAll[index]!.avg_rating;
         int? id_charger = _markersListAll[index].id;
         int? owner_id = _markersListAll[index]!.private?.owner.id;
-        if (owner_id == null) {
-          owner_id = 3;
-        }
+        owner_id ??= 0;
         String? owner_name = _markersListAll[index]!.private?.owner.username;
-        if (owner_name == null){
-          owner_name = "No owner";
-        }
+        owner_name ??= "No owner";
         String? contamination = _markersListAll[index]!.contamination;
         return GestureDetector(
           onTap: () {
