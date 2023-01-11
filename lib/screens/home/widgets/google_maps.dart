@@ -11,8 +11,10 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../serializers/bikes.dart';
 import '../../../serializers/chargers.dart';
+import '../../../serializers/maps.dart';
 import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
+import '../../../utils/geocoding.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
 
@@ -20,9 +22,9 @@ class GoogleMapsWidget extends StatefulWidget {
   int index;
   Set<Polyline> polylines;
   int? publicationId;
-
+  LatLang? point_search_bar;
   GoogleMapsWidget(
-      {Key? key, required this.index, this.polylines = const {}, this.publicationId})
+      {Key? key, required this.index, this.polylines = const {}, this.publicationId, this.point_search_bar})
       : super(key: key);
 
   @override
@@ -66,6 +68,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       speed: 1,
       speedAccuracy: 1);
   Set<Marker> markers = {};
+  Set<Marker> markerList_search = {};
   final Map<MarkerId, Marker> markerMap = {};
 
   //late Position _actualMarcador = _position;
@@ -139,7 +142,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _getChargers() async {
     List chargersList = await ChargerService.getChargers();
-    //List chargersList = [];
     if (chargersList.isEmpty) {
       _showAvisNoEsPodenCarregarCarregadors();
     }
@@ -331,6 +333,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    if(widget.point_search_bar != null) callBackAddress();
   }
 
   static const CameraPosition _kInitialPosition = CameraPosition(
@@ -418,6 +421,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     });
   }
 
+  void callBackAddress() async{
+    setPointAddress(widget.point_search_bar!);
+    widget.point_search_bar = null;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!is_visible && widget.publicationId != -1 && widget.index == 0 ) {
@@ -439,13 +447,12 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
             compassEnabled: true,
             zoomGesturesEnabled: true,
             zoomControlsEnabled: false,
-            trafficEnabled: false,
+            trafficEnabled: true,
             mapToolbarEnabled: false,
             rotateGesturesEnabled: true,
             scrollGesturesEnabled: true,
             tiltGesturesEnabled: true,
             liteModeEnabled: false,
-            polylines: widget.polylines,
             onTap: (latLong) {
               (SnackBar(
                 content: Text(
@@ -556,6 +563,12 @@ List<Widget> scrollMiddle() {
           ) : Container(),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
     }
+  }
+
+  @override
+  void dispose() {
+    mapController.dispose();
+    super.dispose();
   }
 
   void _showAvisNoEsPotCarregarCarregador() async {
@@ -684,8 +697,9 @@ void _getCharger(int id) async {
     double? rate = markedBike!.avg_rating;
     double latitude = markedBike!.localization.latitude;
     double longitude = markedBike!.localization.longitude;
+    String contamination = markedBike!.contamination;
 
-    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude);
+    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude, contamination: contamination);
   }
 
 
@@ -719,4 +733,12 @@ void _getCharger(int id) async {
         onPressed: () {
           openAppSettings();
         },
-      ));}
+      ));
+
+  void setPointAddress(LatLang point) {
+    setState(() {
+    });
+    mapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(point.lat, point.lng), 14.0));
+  }
+
+}

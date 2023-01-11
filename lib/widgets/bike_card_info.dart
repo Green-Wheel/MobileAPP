@@ -23,10 +23,11 @@ class BikeCardInfoWidget extends StatefulWidget {
   bool bike_list;
   double latitude;
   double longitude;
+  String contamination;
 
 
   BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,
-    required this.power,  required this.bike_list, required this.latitude, required this.longitude, super.key});
+    required this.power,  required this.bike_list, required this.latitude, required this.longitude, required this.contamination ,super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
@@ -35,11 +36,11 @@ class BikeCardInfoWidget extends StatefulWidget {
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.latitude, widget.latitude, context);
+    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.latitude, widget.latitude, widget.contamination, context);
   }
 }
 
-Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, double latitude, double longitude, BuildContext context) {
+Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, double latitude, double longitude,String contamination ,BuildContext context) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
