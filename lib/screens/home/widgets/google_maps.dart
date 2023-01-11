@@ -20,11 +20,11 @@ import '../../../widgets/button_list_screen_bikes.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
-  Set<Polyline>? polylines = {};
+  Set<Polyline> polylines;
   int? publicationId;
   LatLang? point_search_bar;
   GoogleMapsWidget(
-      {Key? key, required this.index, this.polylines, this.publicationId,this.point_search_bar})
+      {Key? key, required this.index, this.polylines = const {}, this.publicationId, this.point_search_bar})
       : super(key: key);
 
   @override
@@ -58,7 +58,7 @@ class GoogleMapsWidget extends StatefulWidget {
 class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   late GoogleMapController mapController;
   bool permissionGranted = false;
-  Position _position = Position(
+  Position _position = const Position(
       latitude: 41.7285833,
       longitude: 1.8130899,
       timestamp: null,
@@ -396,8 +396,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   void onCameraMove(CameraPosition cameraPosition) {
-    print('$cameraPosition');
-    print('DDDDDDDDDDDDDDDDDDDDDDDDDDDDD');
+    //print('$cameraPosition');
   }
 
   void _setCardView()  {
@@ -471,7 +470,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           children: scrolledup ? scrollDown() : scrollMiddle()
       )
     );
-
   }
 
 List<Widget> scrollDown() {
@@ -701,7 +699,7 @@ void _getCharger(int id) async {
     double longitude = markedBike!.localization.longitude;
     String contamination = markedBike!.contamination;
 
-    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude,contamination: contamination);
+    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude, contamination: contamination);
   }
 
 
