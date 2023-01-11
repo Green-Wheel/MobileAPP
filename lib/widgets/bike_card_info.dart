@@ -65,29 +65,6 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   }
 }
 
-main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      body: BikeCardInfoWidget(
-        location: 'A Coruña',
-        rating: 4.5,
-        available: true,
-        type: BikeType(id: 1, name: 'ELECTRIC'),
-        price: 10.0,
-        description: 'Bicicleta eléctrica de montaña',
-        direction: 'Calle de la Paz, 1',
-        power: 100.0,
-        bike_list: false,
-        latitude: 43.371,
-        longitude: -8.395,
-        id: 1,
-        owner_id: 1,
-        contamination: 'yellow',
-      ),
-    ),
-  ));
-}
-
 
 Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction,
     double power, bool bike_list, double latitude, double longitude, int? id, BuildContext context, bool mybike, int? owner_id, String? username, String? contamination) {
@@ -252,10 +229,10 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                             SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
                             Row(
                               children: [
-                                Padding(
+                                !mybike ? Padding(
                                   padding: EdgeInsets.only(left: 20),
                                   child:ChatButtonWidget(to_user: owner_id),
-                                ),
+                                ): SizedBox(height: 0),
                                 !mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
                                 mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
                               ],

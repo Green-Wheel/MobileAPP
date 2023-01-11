@@ -7,21 +7,19 @@ part 'chat.g.dart';
 class ChatRoom {
   ChatRoom ({
     required this.id,
-    required this.to_users,
+    required this.to_user,
     required this.last_message,
     required this.last_sent_time,
     required this.last_sent_user,
-    required this.open,
-    required this.read,
+    required this.unread,
   });
 
   int id;
-  BasicUser to_users;
+  BasicUser to_user;
   String last_message;
   DateTime last_sent_time;
   String last_sent_user;
-  bool open;
-  bool read;
+  bool unread;
 
   factory ChatRoom.fromJson(Map<String, dynamic> json) =>
       _$ChatRoomFromJson(json);

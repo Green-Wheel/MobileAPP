@@ -21,7 +21,7 @@ class NotificationController{
     print("usuari mostra: $userId");
     try{
       channel = IOWebSocketChannel.connect(
-        Uri.parse('ws://192.168.21.163:8000/ws/$userId/chats/messages/'), //3.250.219.80
+        Uri.parse('ws://3.250.219.80/ws/$userId/chats/messages/'), //3.250.219.80
         pingInterval: Duration(seconds: 10),
       );
     } on Exception catch(e){

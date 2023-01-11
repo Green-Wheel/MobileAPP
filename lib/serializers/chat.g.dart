@@ -8,22 +8,20 @@ part of 'chat.dart';
 
 ChatRoom _$ChatRoomFromJson(Map<String, dynamic> json) => ChatRoom(
       id: json['id'] as int,
-      to_users: BasicUser.fromJson(json['to_users'] as Map<String, dynamic>),
+      to_user: BasicUser.fromJson(json['to_user'] as Map<String, dynamic>),
       last_message: json['last_message'] as String,
       last_sent_time: DateTime.parse(json['last_sent_time'] as String),
       last_sent_user: json['last_sent_user'] as String,
-      open: json['open'] as bool,
-      read: json['read'] as bool,
+      unread: json['unread'] as bool,
     );
 
 Map<String, dynamic> _$ChatRoomToJson(ChatRoom instance) => <String, dynamic>{
       'id': instance.id,
-      'to_users': instance.to_users,
+      'to_user': instance.to_user,
       'last_message': instance.last_message,
       'last_sent_time': instance.last_sent_time.toIso8601String(),
       'last_sent_user': instance.last_sent_user,
-      'open': instance.open,
-      'read': instance.read,
+      'unread': instance.unread,
     };
 
 ChatRoomMessage _$ChatRoomMessageFromJson(Map<String, dynamic> json) =>

@@ -8,8 +8,11 @@ class ChatService {
     List<ChatRoom> result = [];
     await BackendService.get('chats/').then((response) {
       if (response.statusCode == 200) {
+        print("#####################################");
+        print(response.body);
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
         result = jsonResponse.map((e) => ChatRoom.fromJson(e)).toList();
+        print (jsonResponse);
       } else {
         print('Error getting chats!');
       }

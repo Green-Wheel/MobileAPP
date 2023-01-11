@@ -107,12 +107,12 @@ class _ChatListUsers extends State<ChatListUsers> {
                   itemBuilder: (context, index) {
                     print(_number_new_messages);
                     return CardChatUsersWidget(
-                      username: list[index].to_users.username,
+                      username: list[index].to_user.username,
                       last_message_received: list[index].last_message,
-                      new_message: list[index].read,
+                      new_message: list[index].unread,
                       last_message_time:  DateFormat('hh:mm').format(list[index].last_sent_time),
                       context: context,
-                      room_id: list[index].to_users.id,
+                      room_id: list[index].to_user.id,
                       decrementar: _setListMessages,
                     );
                   }

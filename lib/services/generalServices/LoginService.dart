@@ -18,7 +18,7 @@ class LoginService extends ChangeNotifier {
   Map<String, dynamic>? get user_info => _user_info;
 
   checkLoggedIn() async {
-    storage.delete(key: "apiKey");
+    //storage.delete(key: "apiKey");
     var key = await storage.read(key: "apiKey");
     if (key != null) loginUser(key);
   }
