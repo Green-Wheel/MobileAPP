@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
-import '../select_image.dart';
 
-class BasicInfo extends StatefulWidget {
+class VehicleBasicInfo extends StatefulWidget {
   var data;
   final Function callback;
   final Function nextPage;
 
-  BasicInfo(
+  VehicleBasicInfo(
       {Key? key,
-      required this.data,
-      required this.callback,
-      required this.nextPage})
+        required this.data,
+        required this.callback,
+        required this.nextPage})
       : super(key: key);
 
   @override
-  State<BasicInfo> createState() => _BasicInfoState();
+  State<VehicleBasicInfo> createState() => _VehicleBasicInfoState();
 }
 
-class _BasicInfoState extends State<BasicInfo> {
+class _VehicleBasicInfoState extends State<VehicleBasicInfo> {
   final _formKey = GlobalKey<FormState>();
-
-  void _getImageData(images) {
-    setState(() {
-      widget.data['images'] = images;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,63 +30,61 @@ class _BasicInfoState extends State<BasicInfo> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
+                const Text("Name"),
                 TextFormField(
-                  initialValue: widget.data['title'],
+                  initialValue: widget.data['alias'],
                   onSaved: (value) {
-                    widget.data['title'] = value!;
+                    widget.data['alias'] = value!;
                   },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter Title';
+                      return 'please enter vehicle name';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 10),
+                const Text("Car License"),
                 TextFormField(
-                  initialValue: widget.data['description'],
+                  initialValue: widget.data['car_license'],
                   onSaved: (value) {
-                    widget.data['description'] = value!;
+                    widget.data['car_license'] = value!;
                   },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter description';
+                      return 'please enter your car license';
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 10),
+                const Text("Charge Capacity"),
                 TextFormField(
-                  initialValue: widget.data['price'].toString() != '0.0' ? widget.data['price'].toString() : '',
+                  initialValue: widget.data['charge_capacity'].toString() != '0.0' ? widget.data['charge_capacity'].toString() : '',
                   keyboardType: TextInputType.number,
                   onSaved: (value) {
-                    widget.data['price'] = double.parse(value!);
+                    widget.data['charge_capacity'] = double.parse(value!);
                   },
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'please enter Price';
+                      return 'please enter charge capacity';
                     }
                     return null;
                   },
-                ),
-                const SizedBox(height: 10),
-                SelectImage(
-                  multiple: true,
-                  getImageData: _getImageData,
-                  imageFile: widget.data['images'],
                 ),
                 const SizedBox(height: 10),
                 Center(
                   child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
                         _formKey.currentState!.save();
