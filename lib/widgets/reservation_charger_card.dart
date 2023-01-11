@@ -62,85 +62,82 @@ class _ReservationChargerCard extends State<ReservationChargerCard> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
-        child: SizedBox(
-          height: 175,
-          width: width * 0.9,
-          child: Column(children: [
+        child: Expanded(child: Column(children: [
           Padding(
-          padding: const EdgeInsets.only(
-              left: 15.0, bottom: 3.0, top: 15.0),
-          child: Row(
+            padding: const EdgeInsets.only(
+                left: 15.0, bottom: 3.0, top: 15.0),
+            child: Row(
               children: [
-              Flexible(child:
+                Flexible(child:
                 Text(chargerName,
-                style: const TextStyle(fontWeight: FontWeight.w600))
+                    style: const TextStyle(fontWeight: FontWeight.w600))
+                ),
+                Icon(
+                  Icons.bolt,
+                  size: 25,
+                  color: Colors.green[500],
+                ),
+              ],
+            ),
           ),
-          Icon(
-            Icons.bolt,
-            size: 25,
-            color: Colors.green[500],
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0, bottom: 3.0),
+            child: RatingStars(rating: rating),
           ),
-          ],
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0, bottom: 3.5),
+            child: Row(
+              children: [
+                Text('Charging point - ($distance km)',
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0, bottom: 4.0),
+            child: Row(
+              children: [
+                Text('$statusName: ',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, color: Colors.green),
+                ),
+                Text('$formattedTimeStart-$formattedTimeEnd',
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0),
+            child: Row(
+              children: const [
+                Icon(
+                  Icons.check_circle_outline_rounded,
+                  size: 20,
+                  color: Colors.green,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5.0),
+                  child: Text('Matching with your car charger',
+                    style: TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 10.0, top: 10.0, bottom: 10.0),
+            child: ButtonsCard(longitude: 41.389622159782746,
+                latitude: 2.113375926632859,
+                function: callSetState,
+                id: id),
+          ),
+        ],
+        ),
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.only(left: 10.0, bottom: 3.0),
-        child: RatingStars(rating: rating),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 15.0, bottom: 3.5),
-        child: Row(
-          children: [
-            Text('Charging point - ($distance km)',
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 15.0, bottom: 4.0),
-        child: Row(
-          children: [
-            Text('$statusName: ',
-              style: const TextStyle(
-                  fontWeight: FontWeight.w600, color: Colors.green),
-            ),
-            Text('$formattedTimeStart-$formattedTimeEnd',
-              style: const TextStyle(fontWeight: FontWeight.w500),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(left: 15.0),
-        child: Row(
-          children: const [
-            Icon(
-              Icons.check_circle_outline_rounded,
-              size: 20,
-              color: Colors.green,
-            ),
-            Padding(
-              padding: EdgeInsets.only(left: 5.0),
-              child: Text('Matching with your car charger',
-                style: TextStyle(fontWeight: FontWeight.w500),
-              ),
-            ),
-          ],
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(
-            left: 10.0, top: 10.0, bottom: 5.0),
-        child: ButtonsCard(longitude: 41.389622159782746,
-            latitude: 2.113375926632859,
-            function: callSetState,
-            id: id),
-      ),
-      ],
-    ),
-    ),
-    ),
     );
   }
 }

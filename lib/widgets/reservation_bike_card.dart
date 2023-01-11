@@ -62,65 +62,63 @@ class _ReservationBikeCard extends State<ReservationBikeCard> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
-        child: SizedBox(
-          height: 175,
-          width: width * 0.9,
-          child: Column(children: [
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 15.0, bottom: 3.0, top: 15.0),
-              child: Row(
-                children: [
-                  Flexible(child:
-                    Text(bikeName,
+        child: Expanded(child:
+        Column(children: [
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 15.0, bottom: 3.0, top: 15.0),
+            child: Row(
+              children: [
+                Flexible(child:
+                Text(bikeName,
                     style: const TextStyle(fontWeight: FontWeight.w600))
-                  ),
-                  Icon(
-                    Icons.pedal_bike,
-                    size: 25,
-                    color: Colors.green[500],
-                  ),
-                ],
-              ),
+                ),
+                Icon(
+                  Icons.pedal_bike,
+                  size: 25,
+                  color: Colors.green[500],
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 10.0, bottom: 3.0),
-              child: RatingStars(rating: rating),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0, bottom: 3.5),
-              child: Row(
-                children: [
-                  Text('Bike - ($distance km)',
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15.0, bottom: 4.0),
-              child: Row(
-                children: [
-                  Text('$statusName: ',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.w600, color: Colors.green),
-                  ),
-                  Text('$formattedTimeStart - $formattedTimeEnd',
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 10.0, top: 10.0, bottom: 5.0),
-              child: ButtonsCard(longitude: 41.389622159782746,
-                  latitude: 2.113375926632859,
-                  function: callSetState,
-                  id: id),
-            ),
-          ],
           ),
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0, bottom: 3.0),
+            child: RatingStars(rating: rating),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0, bottom: 3.5),
+            child: Row(
+              children: [
+                Text('Bike - ($distance km)',
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15.0, bottom: 4.0),
+            child: Row(
+              children: [
+                Text('$statusName: ',
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, color: Colors.green),
+                ),
+                Text('$formattedTimeStart - $formattedTimeEnd',
+                  style: const TextStyle(fontWeight: FontWeight.w500),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 10.0, top: 10.0, bottom: 10.0),
+            child: ButtonsCard(longitude: 41.389622159782746,
+                latitude: 2.113375926632859,
+                function: callSetState,
+                id: id),
+          ),
+        ],
+        ),
         ),
       ),
     );

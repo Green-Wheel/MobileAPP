@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:math';
 
 import 'package:easy_localization/easy_localization.dart';
@@ -12,23 +11,48 @@ import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../../serializers/bikes.dart';
 import '../../../serializers/chargers.dart';
+import '../../../serializers/maps.dart';
 import '../../../services/backendServices/bikes.dart';
 import '../../../services/backendServices/chargers.dart';
+import '../../../utils/geocoding.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
-  Set<Polyline>? polylines = {};
+  Set<Polyline>? polylines;
   int? publicationId;
-
-
+  LatLang? point_search_bar;
   GoogleMapsWidget(
-      {Key? key, required this.index, this.polylines, this.publicationId})
+      {Key? key, required this.index, this.polylines = const {}, this.publicationId, this.point_search_bar})
       : super(key: key);
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
+
+  void callGetChargers() {
+    _GoogleMapsWidgetState()._getChargers();
+  }
+
+  void callGetBikes() {
+    _GoogleMapsWidgetState()._getBikes();
+  }
+
+  void callGetPublicChargers() {
+    _GoogleMapsWidgetState()._getPublicChargers();
+  }
+
+  void callGetPrivateChargers() {
+    _GoogleMapsWidgetState()._getPrivateChargers();
+  }
+
+  void callGetNormalBikes() {
+    _GoogleMapsWidgetState()._getNormalBikes();
+  }
+
+  void callGetElectricBikes() {
+    _GoogleMapsWidgetState()._getElectricBikes();
+  }
 }
 
 class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
@@ -44,6 +68,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       speed: 1,
       speedAccuracy: 1);
   Set<Marker> markers = {};
+  Set<Marker> markerList_search = {};
   final Map<MarkerId, Marker> markerMap = {};
 
   //late Position _actualMarcador = _position;
@@ -61,11 +86,111 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   bool loading_bike = false;
   bool _publicationloaded = false;
 
+  void _showAvisNoEsPodenCarregarCarregadors() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Chargers Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load chargers'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _showAvisNoEsPodenCarregarBicis() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Bike Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load bikes'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   void _getChargers() async {
     List chargersList = await ChargerService.getChargers();
+    //List chargersList = [];
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
     setState(() {
       markersList = chargersList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        String chargerType = markersList[i].charger_type;
+        _addMarker(latitude, longitude, chargerType, id);
+      }
+      loading_charger = true;
+    });
+  }
+
+  void _getPublicChargers() async {
+    List chargersList = await ChargerService.getPublicChargers();
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
+    setState(() {
+      markersList = chargersList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        String chargerType = markersList[i].charger_type;
+        _addMarker(latitude, longitude, chargerType, id);
+      }
+      loading_charger = true;
+    });
+  }
+
+  void _getPrivateChargers() async {
+    List chargersList = await ChargerService.getPrivateChargers();
+    for (int i = 0; i < chargersList.length; i++) {
+      print(chargersList[i].charger_type);
+    }
+    if (chargersList.isEmpty) {
+      _showAvisNoEsPodenCarregarCarregadors();
+    }
+    setState(() {
+      markersList = chargersList;
+      removeMarkers();
+      print(markersList.length);
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -79,8 +204,48 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _getBikes() async {
     List bikeList = await BikeService.getBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
     setState(() {
       markersList = bikeList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        _addBikeMarker(latitude, longitude, id);
+      }
+      loading_bike = true;
+    });
+  }
+
+  void _getNormalBikes() async {
+    List bikeList = await BikeService.getNormalBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
+    setState(() {
+      markersList = bikeList;
+      removeMarkers();
+      for (int i = 0; i < markersList.length; i++) {
+        int id = markersList[i].id;
+        double latitude = markersList[i].localization.latitude;
+        double longitude = markersList[i].localization.longitude;
+        _addBikeMarker(latitude, longitude, id);
+      }
+      loading_bike = true;
+    });
+  }
+
+  void _getElectricBikes() async {
+    List bikeList = await BikeService.getElectricBikes();
+    if (bikeList.isEmpty) {
+      _showAvisNoEsPodenCarregarBicis();
+    }
+    setState(() {
+      markersList = bikeList;
+      removeMarkers();
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -136,6 +301,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     markerMap[MarkerId(id.toString())] = marcador;
   }
 
+  void removeMarkers() {
+    Set<Marker> markersToRemove = {};
+    markers = markersToRemove;
+  }
+  
   void _addMarker(double lat, double log, String chargerType, int id) async {
     final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 3.2,),
@@ -164,6 +334,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    if(widget.point_search_bar != null) callBackAddress();
   }
 
   static const CameraPosition _kInitialPosition = CameraPosition(
@@ -251,6 +422,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     });
   }
 
+  void callBackAddress() async{
+    setPointAddress(widget.point_search_bar!);
+    widget.point_search_bar = null;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (!is_visible && widget.publicationId != -1 && widget.index == 0 ) {
@@ -260,286 +436,310 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _setCardBikeView();
     }
     return Scaffold(
-        body: Stack(
-          children: [
-            GoogleMap(
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: _kInitialPosition,
-              markers: markers,
-              mapType: MapType.normal,
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              compassEnabled: true,
-              zoomGesturesEnabled: true,
-              zoomControlsEnabled: false,
-              trafficEnabled: true,
-              mapToolbarEnabled: false,
-              rotateGesturesEnabled: true,
-              scrollGesturesEnabled: true,
-              tiltGesturesEnabled: true,
-              liteModeEnabled: false,
-              onTap: (latLong) {
-                (SnackBar(
-                  content: Text(
-                      'Tapped location LatLong is (${latLong.latitude},${latLong
-                          .longitude})'),
-                ));
-              },
-              onCameraMove: onCameraMove,
-            ),
-            is_visible ? show_card() : Container(),
-          ],
-        ),
-        floatingActionButton: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: scrolledup ? scrollDown() : scrollMiddel()
-        ));
+      body: Stack(
+        children: [
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: _kInitialPosition,
+            markers: markers,
+            mapType: MapType.normal,
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            compassEnabled: true,
+            zoomGesturesEnabled: true,
+            zoomControlsEnabled: false,
+            trafficEnabled: true,
+            mapToolbarEnabled: false,
+            rotateGesturesEnabled: true,
+            scrollGesturesEnabled: true,
+            tiltGesturesEnabled: true,
+            liteModeEnabled: false,
+            onTap: (latLong) {
+              (SnackBar(
+                content: Text(
+                    'Tapped location LatLong is (${latLong.latitude},${latLong
+                        .longitude})'),
+              ));
+            },
+            onCameraMove: onCameraMove,
+          ),
+          is_visible ? show_card() : Container(),
+        ],
+      ),
+      floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: scrolledup ? scrollDown() : scrollMiddle()
+      )
+    );
   }
 
 List<Widget> scrollDown() {
+  double width = MediaQuery.of(context).size.width;
   return <Widget>[
-    listButton(),
-    SizedBox(height: 10),
-    currentLocationActionButton(),
-    SizedBox(height: 200)];
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: listButton(),
+    ),
+    const SizedBox(height: 10),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: currentLocationActionButton(),
+    ),
+    const SizedBox(height: 200)];
+}
+
+List<Widget> scrollMiddle() {
+  double width = MediaQuery.of(context).size.width;
+  return <Widget>[
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: listButton(),
+    ),
+    const SizedBox(height: 10),
+    Padding(
+      padding: EdgeInsets.only(left: width * 0.83),
+      child: currentLocationActionButton(),
+    ),
+  ];
 }
 
 
-List<Widget> scrollMiddel() {
-  return <Widget>[
-    listButton(),
-    SizedBox(height: 10),
-    currentLocationActionButton()];
-}
-
-
-Widget listButton() {
-  if (widget.index == 0) {
-    return const ButtonListScreenChargersWidget();
-  } else {
-    return const ButtonListScreenBikesWidget();
+  Widget listButton() {
+    if (widget.index == 0) {
+      return const ButtonListScreenChargersWidget();
+    } else {
+      return const ButtonListScreenBikesWidget();
+    }
   }
-}
 
-Widget show_card() {
-  if (widget.index == 0) {
-    return SlidingUpPanel(
-        maxHeight: MediaQuery
-            .of(context)
-            .size
-            .height * 0.6,
-        minHeight: 210.0,
-        controller: panelController,
-        parallaxEnabled: true,
-        parallaxOffset: 0.5,
-        backdropEnabled: true,
-        onPanelSlide: (double pos) =>
-            setState(() {
-              if (pos < 0.2) {
-                scrolledup = true;
-              } else {
-                scrolledup = false;
-              }
-            }),
-        panelBuilder: (controller) =>
+  Widget show_card() {
+    if (widget.index == 0) {
+      return SlidingUpPanel(
+          maxHeight: MediaQuery
+              .of(context)
+              .size
+              .height * 0.6,
+          minHeight: 210.0,
+          controller: panelController,
+          parallaxEnabled: true,
+          parallaxOffset: 0.5,
+          backdropEnabled: true,
+          onPanelSlide: (double pos) =>
+              setState(() {
+                if (pos < 0.2) {
+                  scrolledup = true;
+                } else {
+                  scrolledup = false;
+                }
+              }),
+          panelBuilder: (controller) =>
           _publicationloaded ? buildSlidingUpPanelCharger(
             controller: controller,
             panelController: panelController,
           ) : Container(),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
-  } else {
-    return SlidingUpPanel(
-        maxHeight: MediaQuery
-            .of(context)
-            .size
-            .height * 0.8,
-        minHeight: 185.0,
-        controller: panelController,
-        parallaxEnabled: true,
-        parallaxOffset: 0.5,
-        backdropEnabled: true,
-        onPanelSlide: (double pos) =>
-            setState(() {
-              if (pos < 0.2) {
-                scrolledup = true;
-              } else {
-                scrolledup = false;
-              }
-            }),
-        panelBuilder: (controller) =>
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
+    } else {
+      return SlidingUpPanel(
+          maxHeight: MediaQuery
+              .of(context)
+              .size
+              .height * 0.8,
+          minHeight: 185.0,
+          controller: panelController,
+          parallaxEnabled: true,
+          parallaxOffset: 0.5,
+          backdropEnabled: true,
+          onPanelSlide: (double pos) =>
+              setState(() {
+                if (pos < 0.2) {
+                  scrolledup = true;
+                } else {
+                  scrolledup = false;
+                }
+              }),
+          panelBuilder: (controller) =>
           _publicationloaded ? buildSlidingUpPanelBike(
             controller: controller,
             panelController: panelController,
           ) : Container(),
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
+    }
   }
-}
+
+  @override
+  void dispose() {
+    mapController.dispose();
+    super.dispose();
+  }
+
+  void _showAvisNoEsPotCarregarCarregador() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Charger Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load charger info'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 void _getCharger(int id) async {
   DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
-  print(charger);
   if (charger != null) {
     setState(() {
       //loading_charger = true;
       _publicationloaded = true;
       markedCharger = charger;
     });
-  }
-  /*else {
-    setState(() {
-      loading_charger = false;
-    });
-  }*/
-}
-
-Widget buildSlidingUpPanelCharger(
-    {required ScrollController controller, required PanelController panelController}) {
-  String? descrip = markedCharger!.title;
-  descrip = title_parser(descrip);
-
-  //Obtencion del numero de tipos de cargadores
-  List<ConnectionType> types = [];
-  for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
-    types.add(markedCharger!.connection_type[i]);
-  }
-
-  bool private = markedCharger!.private != null ? true : false;
-  double price = markedCharger!.private != null
-      ? markedCharger!.private!.price
-      : 0.0;
-  String? direction = markedCharger!.direction;
-  direction = title_parser(direction);
-  String? description = markedCharger!.description;
-  double latitude = markedCharger!.localization.latitude;
-  double longitude = markedCharger!.localization.longitude;
-  int? id = markedCharger!.id;
-  double? rate = markedCharger!.avg_rating;
-
-
-  return CardInfoWidget(location: descrip,
-      rating: rate,
-      types: types,
-      available: true,
-      match: true,
-      private: private,
-      price: price,
-      direction: direction,
-      description: description,
-      latitude: latitude,
-      longitude: longitude,
-      private_list: false, id: id!);
-}
-
-
-void _getBike(int id) async {
-  DetailedBikeSerializer? bike = await BikeService.getBike(id);
-  print(bike);
-  //TODO: carregaar simbol
-  if (bike != null) {
-    setState(() {
-      _publicationloaded = true;
-      widget.index = 1;
-      markedBike = bike;
-    });
-  }
-}
-
-Widget buildSlidingUpPanelBike(
-    {required ScrollController controller, required PanelController panelController}) {
-  String? descrip = markedBike!.title!;
-  descrip = title_parser(descrip);
-  BikeType bikeType = markedBike?.bike_type as BikeType;
-  String? direction = markedBike!.direction;
-  direction = title_parser(direction);
-  String? description = markedBike!.description;
-  double price = markedBike!.price;
-  double? power = markedBike!.power;
-  int? id = markedBike!.id;
-  double? rate = markedBike!.avg_rating;
-
-
-  print('power: $power');
-
-  return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, id: id!);
-}
-
-String? title_parser(String? description) {
-  description = description?.replaceAll("Ãa", "i");
-  description = description?.replaceAll("Ã", "à");
-  description = description?.replaceAll("àa", "ia");
-  description = description?.replaceAll("Ã³", "ó");
-  description = description?.replaceAll("à³", "ó");
-  description = description?.replaceAll("Ã²", "ò");
-  description = description?.replaceAll("à²", "ò");
-  description = description?.replaceAll("Ã§", "ç");
-  description = description?.replaceAll("à§", "ç");
-  description = description?.replaceAll("Ã©", "é");
-  description = description?.replaceAll("à¨", "è");
-  description = description?.replaceAll("à©", "è");
-  description = description?.replaceAll("2 -", "2\n");
-  description = description?.replaceAll("6 -  ", "6\n");
-  description = description?.replaceAll("³-", "\n");
-  description = description?.replaceAll("er-Al", "er\nAl");
-  description = description?.replaceAll("a-Ca", "a\nCa");
-  description = description?.replaceAll(", Ap", "\nAp");
-  description = description?.replaceAll("-Ca", "\nCa");
-  description = description?.replaceAll(", Ca", "\nCa");
-  description = description?.replaceAll(" QR", "\nQR");
-  description = description?.replaceAll("37 - S", "37\nS");
-  description = description?.replaceAll("res SO", "res\nSO");
-  description = description?.replaceAll("-Ca", "\nCa");
-  description = description?.replaceAll("ó-Pl", "ó\nPl");
-  description = description?.replaceAll("mans i ", "mans\ni ");
-  description = description?.replaceAll("T-I", "T\nI");
-  description = description?.replaceAll("A  Torr", "A\nTorr");
-  description = description?.replaceAll("Mont-Roig", "Mont\nRoig");
-  description = description?.replaceAll("a Sup", "a\nSup");
-  description = description?.replaceAll("Despà", "Despí");
-  if (description!.length >= 40) {
-    description = description.replaceAll(" - ", "\n");
-    //description = description.replaceAll("-", "\n");
-    description = description.replaceAll("- ", "\n");
-    description = description.replaceAll(")(", ")\n(");
-    description = description.replaceAll(" (", "\n(");
-    description = description.replaceAll("E L'", "E\nL'");
-  }
-  if (description.length < 40) {
-    description = description.replaceAll(") ", ")\n");
-    description = description.replaceAll(" (", "\n(");
-    description = description.replaceAll("m-", "m\n");
-  }
-  return description;
-}
-
-
-Widget currentLocationActionButton() {
-  if (widget.index == 0) {
-    return FloatingActionButton(
-      heroTag: "btn1",
-      onPressed: _updateCurrentLocation,
-      backgroundColor: Colors.white,
-      child: permissionGranted
-          ? const Icon(Icons.my_location, color: Colors.green, size: 30.0)
-          : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
-    );
   } else {
-    return FloatingActionButton(
-      heroTag: "btn2",
-      onPressed: _updateCurrentLocation,
-      backgroundColor: Colors.white,
-      child: permissionGranted
-          ? const Icon(Icons.my_location, color: Colors.blue, size: 30.0)
-          : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
-    );
+    _showAvisNoEsPotCarregarCarregador();
   }
 }
 
-var snackBarLocation = SnackBar(
-    content: const Text('snackbar_location_denied_label').tr(),
-    action: SnackBarAction(
-      textColor: Colors.green,
-      label: 'snackbar_location_denied_action'.tr(),
-      onPressed: () {
-        openAppSettings();
+  Widget buildSlidingUpPanelCharger(
+      {required ScrollController controller, required PanelController panelController}) {
+    String? descrip = markedCharger!.title;
+
+    //Obtencion del numero de tipos de cargadores
+    List<ConnectionType> types = [];
+    for (int i = 0; i < markedCharger!.connection_type.length; ++i) {
+      types.add(markedCharger!.connection_type[i]);
+    }
+
+    bool private = markedCharger!.private != null ? true : false;
+    double price = markedCharger!.private != null
+        ? markedCharger!.private!.price
+        : 0.0;
+    String? direction = markedCharger!.direction;
+    String? description = markedCharger!.description;
+    double latitude = markedCharger!.localization.latitude;
+    double longitude = markedCharger!.localization.longitude;
+    double rate = 3;
+    if(markedCharger!.avg_rating != null) rate = markedCharger!.avg_rating!;
+
+    return CardInfoWidget(location: descrip,
+        rating: rate,
+        types: types,
+        available: true,
+        match: true,
+        private: private,
+        price: price,
+        direction: direction,
+        description: description,
+        latitude: latitude,
+        longitude: longitude,
+        private_list: false);
+  }
+
+  void _showAvisNoEsPotCarregarBici() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Bike Error'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Could not load bike info'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Okay'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
       },
-    ));}
+    );
+  }
+
+  void _getBike(int id) async {
+    DetailedBikeSerializer? bike = await BikeService.getBike(id);
+    if (bike != null) {
+      setState(() {
+        _publicationloaded = true;
+        widget.index = 1;
+        markedBike = bike;
+      });
+    } else {
+      _showAvisNoEsPotCarregarBici();
+    }
+  }
+
+  Widget buildSlidingUpPanelBike(
+      {required ScrollController controller, required PanelController panelController}) {
+    String? descrip = markedBike!.title!;
+    BikeType bikeType = markedBike?.bike_type as BikeType;
+    String? direction = markedBike!.direction;
+    String? description = markedBike!.description;
+    double price = markedBike!.price;
+    double? power = markedBike!.power;
+    double? rate = markedBike!.avg_rating;
+    double latitude = markedBike!.localization.latitude;
+    double longitude = markedBike!.localization.longitude;
+    String contamination = markedBike!.contamination ?? '';
+
+    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude, contamination: contamination);
+  }
+
+
+  Widget currentLocationActionButton() {
+    if (widget.index == 0) {
+      return FloatingActionButton(
+        heroTag: "btn1",
+        onPressed: _updateCurrentLocation,
+        backgroundColor: Colors.white,
+        child: permissionGranted
+            ? const Icon(Icons.my_location, color: Colors.green, size: 30.0)
+            : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
+      );
+    } else {
+      return FloatingActionButton(
+        heroTag: "btn2",
+        onPressed: _updateCurrentLocation,
+        backgroundColor: Colors.white,
+        child: permissionGranted
+            ? const Icon(Icons.my_location, color: Colors.blue, size: 30.0)
+            : const Icon(Icons.question_mark, color: Colors.red, size: 25.0),
+      );
+    }
+  }
+
+  var snackBarLocation = SnackBar(
+      content: const Text('snackbar_location_denied_label').tr(),
+      action: SnackBarAction(
+        textColor: Colors.green,
+        label: 'snackbar_location_denied_action'.tr(),
+        onPressed: () {
+          openAppSettings();
+        },
+      ));
+
+  void setPointAddress(LatLang point) {
+    setState(() {
+    });
+    mapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(point.lat, point.lng), 14.0));
+  }
+
+}

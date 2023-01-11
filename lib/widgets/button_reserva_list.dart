@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 class ButtonReservaListWidget extends StatefulWidget {
   int? id;
   ButtonReservaListWidget(
-      {super.key, required this.id}); //required this.id
+      {super.key,});// required this.id}); //required this.id
 
   @override
   State<StatefulWidget> createState() => _ButtonReservaListWidget();

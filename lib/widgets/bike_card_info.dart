@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:greenwheel/widgets/button_blue_route.dart';
 import 'package:greenwheel/widgets/button_reserva_list.dart';
+import 'package:greenwheel/widgets/button_route.dart';
 import 'package:greenwheel/widgets/image_bike.dart';
 import 'package:greenwheel/widgets/location_bike.dart';
 import 'package:greenwheel/widgets/point_of_charge_dist.dart';
@@ -20,9 +21,13 @@ class BikeCardInfoWidget extends StatefulWidget {
   String? direction;
   double power;
   bool bike_list;
-  int? id;
+  double latitude;
+  double longitude;
+  String contamination;
 
-  BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,  required this.power,  required this.bike_list, required this.id, super.key});
+
+  BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,
+    required this.power,  required this.bike_list, required this.latitude, required this.longitude, required this.contamination ,super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
@@ -31,11 +36,11 @@ class BikeCardInfoWidget extends StatefulWidget {
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.id, context);
+    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.latitude, widget.latitude, widget.contamination, context);
   }
 }
 
-Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, int? id, BuildContext context) {
+Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, double latitude, double longitude,String contamination ,BuildContext context) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -56,22 +61,24 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                 child: LocationBikeWidget(location: location!, bikeType: type.id),
               ),
               Padding(
-                padding: EdgeInsets.only(left: 25),
-                child:  StarsStaticRateWidget(rate: rating!),
+                padding: EdgeInsets.only(left: 20),
+                child:  rating != null ?
+                StarsStaticRateWidget(rate: rating):
+                StarsStaticRateWidget(rate: 0.0),
               ),
               SizedBox(height: 5),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.725,
-                child: type.name == "Electric" ? Padding(
-                padding: EdgeInsets.only(left: 25),
-                child: !bike_list ? Text('Electric: $power W',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green)
-                ) : Text('Electric', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green))) :
-                Padding(
+                  width: MediaQuery.of(context).size.width * 0.725,
+                  child: type.name == "Electric" ? Padding(
+                      padding: EdgeInsets.only(left: 25),
+                      child: !bike_list ? Text('Electric: $power W',
+                          style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green)
+                      ) : Text('Electric', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.green))) :
+                  Padding(
                     padding: EdgeInsets.only(left: 25),
                     child: const Text('Manual',
                         style: TextStyle(fontWeight: FontWeight.w600, color: Colors.amberAccent)),
-                )
+                  )
               ),
               SizedBox(height: 5),
               Padding(
@@ -108,36 +115,40 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
               ),
               !bike_list ? SizedBox(height: 65): SizedBox(height: 0),
               !bike_list ? SizedBox(
-                width: MediaQuery.of(context).size.width * 0.925,
-                child: Flexible(
-                  child: Column(
-                    children:[
-                      !bike_list? ButtonReservaListBikeWidget(id: id): SizedBox(height: 0),
-                      !bike_list? SizedBox(height: 10): SizedBox(height: 0),
-                      !bike_list? SizedBox(height: 10): SizedBox(height: 0),
-                      !bike_list? Column(
-                          children: [
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.925,
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 25),
-                                  child: Text("Address:  $direction",style: const TextStyle(fontWeight: FontWeight.w600))
+                  width: MediaQuery.of(context).size.width * 0.925,
+                  child: Flexible(
+                      child: Column(
+                          children:[
+                            !bike_list? ButtonReservaListBikeWidget(): SizedBox(height: 0),
+                            !bike_list? SizedBox(height: 10): SizedBox(height: 0),
+                            !bike_list? SizedBox(height: 10): SizedBox(height: 0),
+                            !bike_list? Column(
+                                children: [
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.925,
+                                    child: Padding(
+                                        padding: EdgeInsets.only(left: 25),
+                                        child: direction != null ?
+                                        Text("Address:  $direction",style: const TextStyle(fontWeight: FontWeight.w600)):
+                                        Text("Address: No address available ",style: const TextStyle(fontWeight: FontWeight.w600))
                                     ),
-                            ),
-                            SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.925,
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 25),
-                                  child: Text("Description:  $description",
-                                      style: const TextStyle(fontWeight: FontWeight.w600)
                                   ),
-                                ),
-                            ),
-                          ]): SizedBox(height: 0),
-                      SizedBox(height: 10)
-                    ]
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.925,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 25),
+                                      child: description != null ?  Text("Description:  $description",
+                                          style: const TextStyle(fontWeight: FontWeight.w600)
+                                      ):  const Text("Description:  No description",
+                                          style: TextStyle(fontWeight: FontWeight.w600)
+                                      ),
+                                    ),
+                                  ),
+                                ]): SizedBox(height: 0),
+                            SizedBox(height: 10)
+                          ]
+                      )
                   )
-                )
               ) : SizedBox(height: 0),
             ],
           ),
@@ -146,10 +157,10 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
           width: MediaQuery.of(context).size.width * 0.215,
           child: Column(
             children: [
-              SizedBox(height: 20),
               ImageBikeWidget(),
               SizedBox(height: 10),
-              ButtonBlueRouteWidget(latitude: 41.3874, longitude: 2.1686),
+              ButtonBlueRouteWidget(latitude: latitude, longitude: longitude),
+              SizedBox(height: 20),
             ],
           ),
         )
@@ -157,4 +168,3 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
     ),
   );
 }
-
