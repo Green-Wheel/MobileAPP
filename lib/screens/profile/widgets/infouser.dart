@@ -10,13 +10,13 @@ import 'package:go_router/go_router.dart';
 class InfoUser extends StatefulWidget {
   InfoUser(id,  {Key? key}) : id = id ,super(key: key);
   int id;
-  bool edit_button = false;
+
   @override
   _InfoUser createState() => _InfoUser ();
 }
 
 class _InfoUser extends State<InfoUser>  {
-
+  bool edit_button = false;
   final _loggedInStateInfo = LoginService();
   var userData;
   @override
@@ -29,7 +29,7 @@ class _InfoUser extends State<InfoUser>  {
 
     if(widget.id  == data?['id']){
       setState(() {
-        widget.edit_button = true;
+        edit_button = true;
         userData = data;
       });
     }
@@ -37,7 +37,7 @@ class _InfoUser extends State<InfoUser>  {
       Map<String,dynamic> data = await UserService.getUserMap(widget.id) as Map<String, dynamic>;
       setState(() {
         userData = data;
-        widget.edit_button = false;
+        edit_button = false;
       });
     }
   }
@@ -63,7 +63,7 @@ class _InfoUser extends State<InfoUser>  {
                               ? userData['first_name'] + " " + userData['last_name']
                                   : "User Name",
                               rating :userData?['rating'] !=null ? userData['rating'].toString() : "2.5",
-                              edit_button: widget.edit_button, id: widget.id
+                              edit_button: edit_button, id: widget.id
                           ),
                           Text('Username: ${userData?['username']}'),
                           Text("lvl ${userData?['level']} |  lvl ${userData?['xp']} xp" ?? "1 + | 0 xp"),

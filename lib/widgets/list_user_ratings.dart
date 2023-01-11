@@ -55,73 +55,79 @@ class _UserRatings extends State<UserRatings> {
   }
 
   Widget _getListViewWidget() {
-    return Flexible(
-        child: ListView.builder(
-            itemCount: _ratings.length,
-            itemBuilder: (context, index) {
-              final rating = _ratings[index];
-              final MaterialColor color = _colors[index % _colors.length];
-              return _getListItemWidget(rating, color);
-            }));
+    if (_ratings.length == 0) {
+      return Text("This user hasnt been rated");
+    }
+    else {
+      return Flexible(
+          child: ListView.builder(
+              itemCount: _ratings.length,
+              itemBuilder: (context, index) {
+                final rating = _ratings[index];
+                final MaterialColor color = _colors[index % _colors.length];
+                return _getListItemWidget(rating, color);
+              }));
+    }
   }
-}
 
-CircleAvatar _getLeadingWidget(String userName, MaterialColor color) {
-  return CircleAvatar(
-    backgroundImage: const AssetImage('assets/images/default_user_img.jpg'),
-    backgroundColor: color,
-    child: Text(userName),
-  );
-}
 
-Text _getTitleWidget(String username) {
-  return Text(
-    username,
-    style: const TextStyle(fontWeight: FontWeight.bold),
-  );
-}
+  CircleAvatar _getLeadingWidget(String userName, MaterialColor color) {
+    return CircleAvatar(
+      backgroundImage: const AssetImage('assets/images/default_user_img.jpg'),
+      backgroundColor: color,
+      child: Text(userName),
+    );
+  }
 
-Widget _getCommentWidget(Rating rating) {
-  String rate = rating.rate.toStringAsFixed(3);
-  return Column(
-    children: [
-      Align(
-          alignment: Alignment.topLeft,
-          child :Row(
-              children:[
-                Text("1 " + "reseñas"),
-                SizedBox(width:10),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child :RatingStars(rating: rate),
-                ),
-              ]
-          )
-      ),
-      Align(
-        alignment: Alignment.topLeft,
-        child :Text(rating.comment!,style: TextStyle(
-          color: Colors.black12),
+  Text _getTitleWidget(String username) {
+    return Text(
+      username,
+      style: const TextStyle(fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _getCommentWidget(Rating rating) {
+    String rate = rating.rate.toStringAsFixed(3);
+    return Column(
+      children: [
+        Align(
+            alignment: Alignment.topLeft,
+            child: Row(
+                children: [
+                  Text("1 " + "reseñas"),
+                  SizedBox(width: 10),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: RatingStars(rating: rate),
+                  ),
+                ]
+            )
         ),
-      )
-    ],
-  );
-}
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text(rating.comment!, style: TextStyle(
+              color: Colors.black12),
+          ),
+        )
+      ],
+    );
+  }
 
-ListTile _getListTile(Rating rating, MaterialColor color) {
-  return ListTile(
-    leading: _getLeadingWidget("", color),
-    title: _getTitleWidget(rating.user.username),
-    subtitle: _getCommentWidget(rating),
-    isThreeLine: true,
-  );
-}
+  ListTile _getListTile(Rating rating, MaterialColor color) {
+    return ListTile(
+      leading: _getLeadingWidget("", color),
+      title: _getTitleWidget(rating.user.username),
+      subtitle: _getCommentWidget(rating),
+      isThreeLine: true,
+    );
+  }
 
-Container _getListItemWidget(Rating rating, MaterialColor color) {
-  return Container(
-    margin: const EdgeInsets.only(top: 5.0),
-    child: Card(
-      child: _getListTile(rating, color),
-    ),
-  );
+  Container _getListItemWidget(Rating rating, MaterialColor color) {
+    return Container(
+      margin: const EdgeInsets.only(top: 5.0),
+      child: Card(
+        child: _getListTile(rating, color),
+      ),
+    );
+  }
 }
