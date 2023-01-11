@@ -271,6 +271,7 @@ class DetailedCharherSerializer {
   String? contamination;
 
 
+
   factory DetailedCharherSerializer.fromJson(Map<String, dynamic> json) =>
       _$DetailedCharherSerializerFromJson(json);
 

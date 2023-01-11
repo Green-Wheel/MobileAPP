@@ -22,6 +22,7 @@ import 'package:greenwheel/screens/route/route.dart';
 import 'package:greenwheel/screens/vehicles/AddVehicleScreen.dart';
 import 'package:greenwheel/screens/vehicles/EditVehicleScreen.dart';
 import 'package:greenwheel/screens/vehicles/vehicles.dart';
+import 'package:greenwheel/screens/trophies/trophiesScreen.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/language_selector_widget.dart';
 
@@ -35,16 +36,26 @@ GoRouter routeGenerator(LoginService loginService) {
           builder: (context, state) =>  HomePage(key: const Key("HomePage")),
           routes: [
             GoRoute(
-                path: 'profile',
-                builder: (context, state) =>
-                const ProfilePage(key: Key("ProfilePage")),
+                path: 'profile/:id',
+                builder: (context, state) {
+                  final int id = int.parse(state.params['id']!);
+                  return ProfilePage(key: Key("ProfilePage"), id: id);
+                },
                 routes: [
                   GoRoute(
                     path: 'edit',
                     builder: (context, state) =>
-                    const EditProfile(key: Key("EditProfile")),
+                    EditProfile(key: Key("EditProfile")),
                   ),
-                ]),
+                  GoRoute(
+                    path: 'trophies',
+                    builder: (context, state) {
+                      final int id = int.parse(state.params['id']!);
+                      return TrophiesScreen(key: Key("Trophies"), id);
+                    }
+                  ),
+                ]
+            ),
             GoRoute(
               path: 'language',
               builder: (context, state) => const LanguageSelectorWidget(key: Key("Language")),
@@ -122,15 +133,42 @@ GoRouter routeGenerator(LoginService loginService) {
               builder: (context, state) =>
               const MyVehicles(key: Key("Vehicle")),
             ),
+            GoRoute(path: 'report/user/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportUser(key: const Key("ReportUser"), user_id: id);
+                }),
+            GoRoute(path: 'report/rating/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportComment(key: const Key("ReportUser"), comment_id: id);
+                }),
+            GoRoute(path: 'report/bike/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportBike(key: const Key("ReportUser"), bike_id: id);
+                }),
+            GoRoute(path: 'report/charger/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportCharger(key: const Key("ReportUser"), charger_id: id);
+                }),
+            GoRoute(path: 'report/user/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportUser(key: const Key("ReportUser"), user_id: id);
+                }),
             GoRoute(
-              path: 'route/:lat/:long',
+              path: 'route/:lat/:long/:id',
               builder: (context, state) {
                 final long = state.params['long']!;
                 final lat = state.params['lat']!;
+                final id = int.parse(state.params['id']!);
                 return RoutePage(
                   key: const Key("RoutePage"),
                   lat: lat,
                   long: long,
+                  pubication_id: id,
                 );
               },
             ),

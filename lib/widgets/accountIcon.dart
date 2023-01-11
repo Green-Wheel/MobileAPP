@@ -44,15 +44,18 @@ class _AccountIcon extends State<AccountIcon> {
         radius: 55 ,
         lineWidth: 7.0,
         percent: widget.percent,
-        center: CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 48,
-          backgroundImage: widget.image_profile,
-        ),
+        center: account_icon(widget.image_profile, 48),
         progressColor: Colors.green,
         backgroundColor: Colors.white70,
     );
   }
 }
 
+Widget account_icon(ImageProvider<Object>? image,double radius){
+  return  CircleAvatar(
+    backgroundColor: Colors.white,
+    radius: radius,
+    backgroundImage: image,
+  );
+}
 

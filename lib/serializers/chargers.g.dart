@@ -234,5 +234,5 @@ Map<String, dynamic> _$DetailedCharherSerializerToJson(
       'charger_type': instance.charger_type,
       'public': instance.public,
       'private': instance.private,
-      'contamination': instance.contamination,
+      //'contamination': instance.contamination,
     };

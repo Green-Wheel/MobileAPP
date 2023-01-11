@@ -19,6 +19,7 @@ User _$UserFromJson(Map<String, dynamic> json) => User(
       xp: json['xp'] as int,
       rating: (json['rating'] as num?)?.toDouble(),
       selected_car: json['selected_car'] as int,
+      trophies: json['trophies'] as List<dynamic>,
     );
 
 Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
@@ -34,6 +35,7 @@ Map<String, dynamic> _$UserToJson(User instance) => <String, dynamic>{
       'xp': instance.xp,
       'rating': instance.rating,
       'selected_car': instance.selected_car,
+      'trophies': instance.trophies,
     };
 
 BasicUser _$BasicUserFromJson(Map<String, dynamic> json) => BasicUser(
