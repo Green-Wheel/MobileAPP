@@ -80,14 +80,14 @@ class _ChatListUsers extends State<ChatListUsers> {
 
   }
 
-  _decrementaUnreadMessage(){
+  /*_decrementaUnreadMessage(){
     setState(() {
       _number_new_messages = _number_new_messages - 1;
       if (_number_new_messages < 0){
         _number_new_messages = 0;
       }
     });
-  }
+  }*/
 
   _setListMessages(){
     setState(() {
@@ -110,10 +110,10 @@ class _ChatListUsers extends State<ChatListUsers> {
                       username: list[index].to_user.username,
                       last_message_received: list[index].last_message,
                       new_message: list[index].unread,
-                      last_message_time:  DateFormat('hh:mm').format(list[index].last_sent_time),
+                      last_message_time:  DateFormat('HH:mm').format(list[index].last_sent_time),
                       context: context,
                       room_id: list[index].to_user.id,
-                      decrementar: _setListMessages,
+                      setejar: _setListMessages,
                     );
                   }
                   ),

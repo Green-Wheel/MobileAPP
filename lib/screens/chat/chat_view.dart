@@ -129,8 +129,8 @@ class _ChatView extends State<ChatView> {
                 int itemCount = _messages.length ?? 0;
                 int reversedIndex = itemCount - 1 - index;
                 if (index < 0) return Container();
-                bool isMe = _messages[reversedIndex].sender.id == LoginService().user_info?['id'];
-                return MessageWidget( message: _messages[reversedIndex].content, itsmine: isMe, created_at: DateFormat('dd-MM-yyyy hh:mm').format(_messages[reversedIndex].created_at),);
+                bool isMe = _messages[reversedIndex].sender.username == LoginService().user_info?['username'];
+                return MessageWidget( message: _messages[reversedIndex].content, itsmine: isMe, created_at: DateFormat('dd-MM-yyyy HH:mm').format(_messages[reversedIndex].created_at),);
               },
             ),
           ),
@@ -242,8 +242,8 @@ class _ChatView extends State<ChatView> {
   }
 
   void listenMessage(Map msg){
-    setState(() {
-      if (msg['sender']['id'] != widget.to_user) {
+    /*setState(() {
+      //if (msg['sender']['id'] != widget.to_user) {
         _messages.add(ChatRoomMessage(
           content: msg['content'],
           created_at: DateTime.now(),
@@ -252,8 +252,8 @@ class _ChatView extends State<ChatView> {
               last_name: msg['sender']['last_name'],
               username: msg['sender']['username']),
         ));
-      }
-    });
+      //}
+    });*/
   }
 
   Widget buttonSendMessage() {

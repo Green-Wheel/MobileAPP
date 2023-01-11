@@ -10,11 +10,11 @@ class CardChatUsersWidget extends StatefulWidget {
   String last_message_time;
   BuildContext context;
   int? room_id;
-  Function? decrementar;
+  Function? setejar;
 
   //opcion leido del usuario en el doublecheck
   CardChatUsersWidget({Key? key, required this.username, required this.last_message_received, required this.new_message,
-    required this.last_message_time, required this.room_id, required this.context, required this.decrementar}) : super(key: key);
+    required this.last_message_time, required this.room_id, required this.context, required this.setejar}) : super(key: key);
 
   @override
   State<CardChatUsersWidget> createState() => _CardChatUsersWidget();
@@ -29,7 +29,7 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
         //print(widget.room_id);
 
         //decrementar unread + cridar a la api
-        widget.decrementar!();
+        widget.setejar!();
         ChatService.putUnreadMessage(widget.room_id!);
 
         GoRouter.of(context).go('/chats/${widget.room_id!}');

@@ -451,7 +451,7 @@ List<Widget> scrollMiddle() {
           maxHeight: MediaQuery
               .of(context)
               .size
-              .height * 0.75,
+              .height * 0.79,
           minHeight: 210.0,
           controller: panelController,
           parallaxEnabled: true,

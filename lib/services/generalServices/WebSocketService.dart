@@ -47,7 +47,6 @@ class NotificationController{
       }));
       print("Sent message");
       channelStream?.listen((data) {
-        //TODO: rebo el missatge, falta fer la crida corresponent i transformació serializer
         Map msg = json.decode(data);
         //print(msg['sender']['id'] != id_user);
         if (msg['sender']['id'] != id_user){
