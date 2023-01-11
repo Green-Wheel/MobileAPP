@@ -14,9 +14,9 @@ import '../../services/generalServices/WebSocketService.dart';
 import '../../widgets/message_widget.dart';
 
 class ChatView extends StatefulWidget {
-  String username;
+  String? username;
   int? to_user;
-  ChatView({Key? key, required this.username, required this.to_user}) : super(key: key);
+  ChatView({Key? key, required this.to_user, this.username}) : super(key: key);
 
   @override
   State<ChatView> createState() => _ChatView();
@@ -67,12 +67,10 @@ class _ChatView extends State<ChatView> {
         }
     );
   }
-  late bool _isLastPage;
+
   late bool _error;
   late bool _loading;
   late int _pageNumber;
-  final int _numberOfPostsPerRequest = 30;
-  final int _nextPageTrigger = 3;
   List<ChatRoomMessage> _messages = [];
 
   @override
@@ -82,7 +80,6 @@ class _ChatView extends State<ChatView> {
     _error = false;
     _loading = true;
     _pageNumber = 1;
-    _isLastPage = false;
     fetchData();
     notificationController.initWebSocketConnection();
   }
@@ -91,8 +88,7 @@ class _ChatView extends State<ChatView> {
     try {
       final messages = await ChatService.getChatMessages(widget.to_user!);
       setState(() {
-        _messages = messages;
-        _isLastPage = _messages.length < _numberOfPostsPerRequest;
+        _messages = messages.reversed.toList();
         _loading = false;
         _pageNumber = _pageNumber + 1;
       });
@@ -177,7 +173,7 @@ class _ChatView extends State<ChatView> {
                     ),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.07),
-                  Text(widget.username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  Text(widget.username!, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                   IconButton(
                       icon: const Icon(Icons.delete),
@@ -245,7 +241,7 @@ class _ChatView extends State<ChatView> {
 
   void listenMessage(Map msg){
     setState(() {
-      if (msg['sender']['id'] != widget.to_user) {
+      //if (msg['sender']['id'] != widget.to_user) {
         _messages.add(ChatRoomMessage(
           content: msg['content'],
           created_at: DateTime.now(),
@@ -253,7 +249,7 @@ class _ChatView extends State<ChatView> {
           sender: BasicUser(first_name: msg['sender']['first_name'], last_name: msg['sender']['last_name'], username: msg['sender']['username']),
         ));
       }
-    });
+    );
   }
 
   Widget buttonSendMessage() {

@@ -119,8 +119,7 @@ GoRouter routeGenerator(LoginService loginService) {
               builder: (context, state) {
                 //TODO: mirar tema ruta parametres no donguin null value
                 final id = int.parse(state.params['id']!);
-                final username = state.params['username'];
-                return ChatView(key: Key("ChatListUsers"), username: "usernam", to_user: id);
+                return ChatView(key: Key("ChatListUsers"), to_user: id);
               },
             ),
             GoRoute(

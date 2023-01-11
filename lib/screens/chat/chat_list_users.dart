@@ -9,7 +9,6 @@ import '../../serializers/chat.dart';
 import '../../widgets/card_chat_users.dart';
 
 class ChatListUsers extends StatefulWidget {
-  //int unread = 0;
   ChatListUsers({Key? key,}) : super(key: key);
 
   @override
@@ -19,23 +18,13 @@ class ChatListUsers extends StatefulWidget {
 class _ChatListUsers extends State<ChatListUsers> {
 
   int _number_new_messages = 0;
-  List<ChatRoom> chats = [
-    ChatRoom(
-        id: 1,
-        to_users: BasicUser(username: "Michael Jordan", first_name: "Michael", last_name: "Jordan"),
-        last_message: "Hello world",
-        last_sent_time: DateTime.now(),
-        last_sent_user: "Michael Jordan",
-        open: false,
-        read: true
-    ),
-  ];
+  List<ChatRoom> chats = [];
   bool loading = true;
 
   @override
   void initState() {
     super.initState();
-    //_getChats();
+    _getChats();
   }
 
 
@@ -77,7 +66,8 @@ class _ChatListUsers extends State<ChatListUsers> {
       print("Loading chats");
     }
     print("Chats loaded");
-    print(chats);
+    print(chatsrequest);
+    print(chats.length);
     setState(() {
       loading = false;
       chats = chatsrequest;
@@ -92,6 +82,12 @@ class _ChatListUsers extends State<ChatListUsers> {
       if (_number_new_messages < 0){
         _number_new_messages = 0;
       }
+    });
+  }
+
+  _setListMessages(){
+    setState(() {
+      _getChats();
     });
   }
 
@@ -112,8 +108,8 @@ class _ChatListUsers extends State<ChatListUsers> {
                       new_message: list[index].read,
                       last_message_time:  DateFormat('hh:mm').format(list[index].last_sent_time),
                       context: context,
-                      room_id: list[index].id, //TODO: to_users id o id?
-                      decrementar: _decrementaUnreadMessage,
+                      room_id: list[index].id,
+                      decrementar: _setListMessages,
                     );
                   }
                   ),
