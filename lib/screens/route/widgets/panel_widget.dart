@@ -9,12 +9,14 @@ class PanelWidget extends StatelessWidget {
   final ScrollController controller;
   final PanelController panelController;
   final Direction? routeInfo;
+  final bool sufficientBattery;
 
   const PanelWidget(
       {Key? key,
       required this.controller,
       required this.panelController,
-      this.routeInfo})
+      this.routeInfo,
+      required this.sufficientBattery})
       : super(key: key);
 
   @override
@@ -63,6 +65,15 @@ class PanelWidget extends StatelessWidget {
                   icon: Icon(Icons.close),
                   label: Text('Cancelar'),
                 )
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                sufficientBattery ? const Text('') : const Icon(Icons.warning, color: Colors.red),
+                Text(sufficientBattery
+                    ? ''
+                    : 'No tienes duficiente bateria para llegar', style: const TextStyle(color: Colors.red))
               ],
             ),
             const SizedBox(height: 8),

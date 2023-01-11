@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:greenwheel/screens/home/widgets/google_maps.dart';
+import 'package:greenwheel/screens/route/widgets/baterySelector.dart';
 import 'package:greenwheel/screens/route/widgets/panel_widget.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../serializers/maps.dart';
+import '../../serializers/vehicles.dart';
+import '../../services/backendServices/vehicles.dart';
+import '../../services/generalServices/LoginService.dart';
 import '../../utils/geocoding.dart';
 import '../../utils/lang_config.dart';
 import '../../utils/map_directions.dart';
@@ -34,11 +38,31 @@ class _RoutePageState extends State<RoutePage> {
   Direction? routeInfo;
   final originController = TextEditingController();
   final destinationController = TextEditingController();
+  final _loggedInStateInfo = LoginService();
+
+  var cars_of_user = [];
+  var selected_car;
+  int batery = -1;
+  bool batterySufficient= true ;
 
   @override
   void initState() {
     super.initState();
     getPolylines();
+    getUserCars();
+  }
+
+  void getUserCars() async {
+    var carsAux = await VehicleService.getVehicles();
+    var user = _loggedInStateInfo.user_info;
+    cars_of_user = carsAux;
+    selected_car = carsAux
+        .where((element) => element.id == user!['selected_car'])
+        .toList()[0]
+        .id;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showModal(context);
+    });
   }
 
   void getPolylines() {
@@ -49,8 +73,7 @@ class _RoutePageState extends State<RoutePage> {
                       lat: double.parse(widget.lat),
                       lng: double.parse(widget.long)),
                   LangConfig.getStringFromLocale(context.locale))
-              .then((value) =>
-      {
+              .then((value) => {
                     setState(() {
                       routeInfo = value;
                       originController.text = value.startAddress;
@@ -65,6 +88,57 @@ class _RoutePageState extends State<RoutePage> {
                               .toList()));
                     })
                   })
+        });
+  }
+
+  void sufficientBattery() async {
+    var vehicle = await VehicleService.getVehicle(selected_car);
+    setState(() {
+      batterySufficient = batery == -1 ? true : vehicle['model']['autonomy'] * double.parse('${batery}')/100 > double.parse(routeInfo!.distance.split(' ')[0].replaceAll(',', '.'));
+    });
+  }
+
+  void _showModal(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
+        ),
+        builder: (BuildContext context) {
+          return Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom),
+              child: Container(
+                height: 250,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                    BatterySelector(
+                      user_cars: cars_of_user,
+                      selected_car: selected_car,
+                      callbackBattery: (value) {batery = int.parse(value);},
+                      callbackCar: (value) {selected_car = value;},
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          primary: Colors.white,
+                        ),
+                        onPressed: () {
+                          sufficientBattery();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Confirmar'),
+                      ),
+                    )
+                  ],
+                ),
+              )));
         });
   }
 
@@ -107,13 +181,14 @@ class _RoutePageState extends State<RoutePage> {
           SlidingUpPanel(
               // https://www.youtube.com/watch?v=s9XHOQeIeZg&ab_channel=JohannesMilke
               maxHeight: MediaQuery.of(context).size.height * 0.8,
-              minHeight: 135.0,
+              minHeight: 200.0,
               controller: panelController,
               parallaxEnabled: true,
               parallaxOffset: 0.5,
               backdropEnabled: true,
               panelBuilder: (controller) => PanelWidget(
                     controller: controller,
+                    sufficientBattery: batterySufficient,
                     panelController: panelController,
                     routeInfo: routeInfo,
                   ),

@@ -16,7 +16,7 @@ class UserBasicInfo extends StatefulWidget {
 }
 
 class _UserBasicInfoState extends State<UserBasicInfo> {
-  User _user = User(username: '', email: '', about: '', first_name: '', last_name: '', language_id: 0, level: 0, xp: 0, rating: 0, selected_car: 0);
+  User _user = User(username: '', email: '', about: '', first_name: '', last_name: '', language_id: 0, level: 0, xp: 0, rating: 0, selected_car: 0,trophies: []);
   final _loginService = LoginService();
 
   void _getUser() async {
