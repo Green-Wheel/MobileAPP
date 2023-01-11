@@ -10,8 +10,6 @@ import '../../../serializers/bookings.dart' as bkn;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'dart:developer';
 
-void main() => runApp(const MyApp());
-
 //TODO: exportar colores
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

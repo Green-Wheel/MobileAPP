@@ -125,7 +125,7 @@ GoRouter routeGenerator(LoginService loginService) {
               },
             ),
             GoRoute(
-              path: 'booking',
+              path: 'bookings',
               builder: (context, state) =>
               const MyBookings(key: Key("Booking")),
             ),

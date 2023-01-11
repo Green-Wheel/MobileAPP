@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import '../../widgets/Bookings/booking_calendar.dart';
 
 
-
-void main() => runApp(Reservate(id: 1));
-
 //TODO: exportar colores a clase
 class Reservate extends StatelessWidget {
   int id;
@@ -14,7 +11,7 @@ class Reservate extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Booking calendar',
-      home: BookingCalendar(id: 1),
+      home: BookingCalendar(id: id),
     );
   }
 }

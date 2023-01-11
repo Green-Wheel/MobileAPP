@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 class ButtonReservaListWidget extends StatefulWidget {
   int? id;
   ButtonReservaListWidget(
-      {super.key,});// required this.id}); //required this.id
+      {super.key, required this.id}); //required this.id
 
   @override
   State<StatefulWidget> createState() => _ButtonReservaListWidget();
@@ -27,8 +27,8 @@ class _ButtonReservaListWidget extends State<ButtonReservaListWidget>{
                         side: const BorderSide(color: Colors.green)))),
             onPressed: () {
               //Redireccion a la pantalla del calendario
-              GoRouter.of(context)
-                  .go('/bookings/${widget.id}');
+              int aux = widget.id!;
+              GoRouter.of(context).go('/bookings/$aux');
             },
             child: Row(
               children: const [

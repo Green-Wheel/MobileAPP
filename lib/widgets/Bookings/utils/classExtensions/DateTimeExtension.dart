@@ -15,7 +15,7 @@ extension DatetimeExtension on DateTime {
 
   bool hasPast(){
     DateTime now = DateTime.now();
-
+    if(now.day == day && now.month==month && now.year == year) return false;
     return this < now;
   }
 

@@ -21,8 +21,6 @@ import 'models/bookings.dart';
 //TODO: al cambiar de fecha antes de que carguen las horas no se lanza la nueva query
 //TODO: cuidado con recibir reservas invalidas desde backend
 
-void main() => runApp(const MyApp());
-
 //TODO: exportar colores
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
