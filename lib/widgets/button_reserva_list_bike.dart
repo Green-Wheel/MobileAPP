@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ButtonReservaListBikeWidget extends StatefulWidget {
-  //final int id;
-  const ButtonReservaListBikeWidget(
-      {super.key,}); //required this.id
+  int? id;
+  ButtonReservaListBikeWidget(
+      {super.key, });//required this.id}); //required this.id
 
   @override
   State<StatefulWidget> createState() => _ButtonReservaListBikeWidget();
@@ -26,9 +26,8 @@ class _ButtonReservaListBikeWidget extends State<ButtonReservaListBikeWidget>{
                       borderRadius: BorderRadius.circular(10.0),
                       side: const BorderSide(color: Colors.blue)))),
           onPressed: () {
-            //TODO: Redireccion a la pantalla del calendario
             GoRouter.of(context)
-                .go('/bookings/'); //${widget.id}
+                .go('/bookings/${widget.id}');
           },
           child: Row(
             children: const [

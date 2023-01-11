@@ -123,6 +123,7 @@ class _SimpleDrawer extends State<SimpleDrawer>{
                 child: const Text('My Bookings', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
+                GoRouter.of(context).push('/bookings');
               },
             ),
           ),

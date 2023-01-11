@@ -11,7 +11,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  table_calendar: ^3.0.2
+  loading_animation_widget: ^1.2.0+3
   easy_localization: ^3.0.1
+  time_picker_widget: ^1.0.0+10
+  cell_calendar: ^0.7.0
   http: ^0.13.5
   google_maps_flutter: ^2.2.1
   flutter_config: ^2.0.0

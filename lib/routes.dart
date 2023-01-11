@@ -5,6 +5,7 @@ import 'package:greenwheel/screens/bike/add_bike.dart';
 import 'package:greenwheel/screens/bike/edit_bike.dart';
 import 'package:greenwheel/screens/bike/report_bike.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
+import 'package:greenwheel/screens/bookings/reservations.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
 import 'package:greenwheel/screens/chargers/add_charger.dart';
 import 'package:greenwheel/screens/chargers/edit_charger.dart';
@@ -124,9 +125,16 @@ GoRouter routeGenerator(LoginService loginService) {
               },
             ),
             GoRoute(
-              path: 'booking',
+              path: 'bookings',
               builder: (context, state) =>
               const MyBookings(key: Key("Booking")),
+            ),
+            GoRoute(
+              path: 'bookings/:id',
+              builder: (context, state) {
+                final id = int.parse(state.params['id']!);
+                return Reservate(key: const Key("Reservate"), id: id);
+              },
             ),
             GoRoute(
               path: 'vehicle',
