@@ -126,6 +126,7 @@ ChargerList _$ChargerListFromJson(Map<String, dynamic> json) => ChargerList(
           ? null
           : PrivateCharger.fromJson(json['private'] as Map<String, dynamic>),
       contamination: json['contamination'] as String?,
+      compatible: json['compatible'] as bool,
     );
 
 Map<String, dynamic> _$ChargerListToJson(ChargerList instance) =>
@@ -140,6 +141,7 @@ Map<String, dynamic> _$ChargerListToJson(ChargerList instance) =>
       'public': instance.public,
       'private': instance.private,
       'contamination': instance.contamination,
+      'compatible': instance.compatible,
     };
 
 PublicCharger _$PublicChargerFromJson(Map<String, dynamic> json) =>
@@ -214,6 +216,7 @@ DetailedCharherSerializer _$DetailedCharherSerializerFromJson(
           ? null
           : PrivateCharger.fromJson(json['private'] as Map<String, dynamic>),
       contamination: json['contamination'] as String?,
+      compatible: json['compatible'] as bool,
     );
 
 Map<String, dynamic> _$DetailedCharherSerializerToJson(
@@ -235,4 +238,5 @@ Map<String, dynamic> _$DetailedCharherSerializerToJson(
       'public': instance.public,
       'private': instance.private,
       'contamination': instance.contamination,
+      'compatible': instance.compatible,
     };
