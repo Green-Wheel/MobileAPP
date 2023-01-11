@@ -16,9 +16,7 @@ extension DatetimeExtension on DateTime {
   bool hasPast(){
     DateTime now = DateTime.now();
 
-    return now.year > this.year ||
-        now.month > this.month ||
-        now.day > this.day;
+    return this < now;
   }
 
   bool isTomorrow(){

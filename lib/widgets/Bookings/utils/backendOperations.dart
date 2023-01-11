@@ -214,7 +214,9 @@ class BackendOperation{
   }
 
   bool isContiguousWith(BackendOperation b){
-    bool contiguous = endDate.difference(b.startDate).inMinutes.abs() <= Config.minTimeOfReservation.inMinutes;
+    bool contiguous =
+        endDate.day == b.startDate.day &&
+        endDate.difference(b.startDate).inMinutes.abs() <= Config.minTimeOfReservation.inMinutes;
     //log("iscontigousu ---->diference ${endDate.difference(b.startDate).inMinutes.abs()} <= ${Config.minTimeOfReservation.inMinutes} | ${(contiguous)?"Si":"No"}");
 
     return contiguous;
