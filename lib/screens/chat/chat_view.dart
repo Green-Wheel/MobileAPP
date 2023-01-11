@@ -29,7 +29,7 @@ class _ChatView extends State<ChatView> {
   NotificationController();
 
 
-  Future<void> DeleteChat(int? id_chat) {
+  /*Future<void> DeleteChat(int? id_chat) {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -66,7 +66,7 @@ class _ChatView extends State<ChatView> {
           );
         }
     );
-  }
+  }*/
 
   late bool _error;
   late bool _loading;
@@ -177,13 +177,13 @@ class _ChatView extends State<ChatView> {
                   //TODO: canviar cuando pueda obtener un user
                   Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                  IconButton(
+                  /*IconButton(
                       icon: const Icon(Icons.delete),
                       iconSize: 30,
                       onPressed: () {
                         DeleteChat(widget!.to_user);
                       }
-                  ),
+                  ),*/
                 ],
               ),
             ),
