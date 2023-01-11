@@ -27,11 +27,14 @@ class MyPointsState extends State<MyPoints> {
     if (publicationlist.isEmpty) {
       print("BBBBBBBBBBBB");
     }
-    else print("publication: $publicationlist");
-    setState(() {
-      publications = publicationlist;
-      //obtenir ratings
-    });
+    else {
+      print("publication: $publicationlist");
+      setState(() {
+        publications = publicationlist;
+        //obtenir ratings
+      });
+    }
+
   }
 
   @override

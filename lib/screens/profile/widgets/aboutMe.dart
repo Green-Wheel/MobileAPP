@@ -30,7 +30,7 @@ class _AboutMe extends State<AboutMe>  {
       });
     }
     else {
-      var data = UserService.getUser(widget.id);
+      Map<String,dynamic> data = await UserService.getUserMap(widget.id) as Map<String, dynamic>;
       setState(() {
         userData = data;
       });
@@ -53,7 +53,7 @@ class _AboutMe extends State<AboutMe>  {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                    (userData['about']!=null) ? userData['about'] : "You haven't typed down an about",
+                    (userData?['about']!=null) ? userData['about'] : "You haven't typed down an about",
                     style: TextStyle(fontSize: 16)
                 ),
               ),

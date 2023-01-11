@@ -45,12 +45,14 @@ GoRouter routeGenerator(LoginService loginService) {
                   GoRoute(
                     path: 'edit',
                     builder: (context, state) =>
-                    const EditProfile(key: Key("EditProfile")),
+                    EditProfile(key: Key("EditProfile")),
                   ),
                   GoRoute(
                     path: 'trophies',
-                    builder: (context, state) =>
-                    const TrophiesScreen(key: Key("Trophies")),
+                    builder: (context, state) {
+                      final int id = int.parse(state.params['id']!);
+                      return TrophiesScreen(key: Key("Trophies"), id);
+                    }
                   ),
                 ]
             ),

@@ -38,7 +38,7 @@ class Username_Rating extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.edit),
       onPressed: () {
-        GoRouter.of(context).push('/profile/edit');
+        GoRouter.of(context).push('/profile/$id/edit');
       },
     );
   }

@@ -19,7 +19,8 @@ class User {
     required this.level,
     required this.xp,
     this.rating,
-    required this.selected_car
+    required this.selected_car,
+    required this.trophies
   });
 
   int? id;
@@ -34,6 +35,7 @@ class User {
   int xp;
   double? rating;
   int selected_car;
+  List trophies;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 

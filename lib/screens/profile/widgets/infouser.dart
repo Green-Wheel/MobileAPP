@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../serializers/users.dart';
 import '../../../services/backendServices/user_service.dart';
 import '../../../services/generalServices/LoginService.dart';
 import '../../../widgets/accountIcon.dart';
@@ -33,8 +34,8 @@ class _InfoUser extends State<InfoUser>  {
       });
     }
     else {
+      Map<String,dynamic> data = await UserService.getUserMap(widget.id) as Map<String, dynamic>;
       setState(() {
-        var data = UserService.getUser(widget.id);
         userData = data;
         widget.edit_button = false;
       });
@@ -43,7 +44,7 @@ class _InfoUser extends State<InfoUser>  {
 
   @override
   Widget build(BuildContext context) {
-
+    int aux = widget.id;
     return Container(
         padding: const EdgeInsets.only(top:0,left:0,right:0),
         width: MediaQuery.of(context).size.width,
@@ -55,17 +56,17 @@ class _InfoUser extends State<InfoUser>  {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      AccountIcon(percent: 0.5, path_image: userData["profile_picture"]),
+                      AccountIcon(percent: 0.5, path_image: userData?["profile_picture"]),
                       Column(
                         children: <Widget>[
                           Username_Rating(username: userData != null
                               ? userData['first_name'] + " " + userData['last_name']
                                   : "User Name",
-                              rating :userData['rating']!=null ? userData['rating'].toString() : "2.5",
-                              edit_button: widget.edit_button, id: widget.id),
+                              rating :userData?['rating'] !=null ? userData['rating'].toString() : "2.5",
+                              edit_button: widget.edit_button, id: widget.id
                           ),
-                          Text('Username: ${userData['username']}'),
-                          Text("lvl ${userData['level']} |  lvl ${userData['xp']} xp" ?? "1 + | 0 xp"),
+                          Text('Username: ${userData?['username']}'),
+                          Text("lvl ${userData?['level']} |  lvl ${userData?['xp']} xp" ?? "1 + | 0 xp"),
                           Row(
                             children:[
                               Text("Trophies"),
@@ -73,7 +74,7 @@ class _InfoUser extends State<InfoUser>  {
                                 iconSize: 20,
                                 icon: const Icon(MdiIcons.trophy),
                                 onPressed: () {
-                                  GoRouter.of(context).go('/profile/trophies');
+                                  GoRouter.of(context).go('/profile/$aux/trophies');
                                 },
                               ),
                             ]

@@ -1,38 +1,73 @@
 import "package:flutter/material.dart";
 
-class TrophiesScreen extends StatefulWidget{
-  const TrophiesScreen({Key? key}) : super(key: key);
+import '../../services/backendServices/user_service.dart';
 
+class TrophiesScreen extends StatefulWidget{
+  TrophiesScreen(id,  {Key? key}) : id = id ,super(key: key);
+  int id;
   @override
   State<TrophiesScreen> createState() => _TrophiesScreen();
 }
 
 class _TrophiesScreen extends State<TrophiesScreen>{
+
   final List<int> _listData = List<int>.generate(4, (i) => i);
   final List<Image> _list_images_trophys = [
-    Image.network(
-      "https://www.clipartmax.com/png/middle/252-2524925_trophy-gold-medal-award-prize-achievements-clipart-png.png",
-      height: 100,
-      width: 100,
-    ),
-    Image.network(
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKnemmKgJOG_3OSk89VHtpTVAUGN1Nagcvgw&usqp=CAU",
-      height: 100,
-      width: 100,
-    ),
-    Image.network(
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1Ee4DhiFLB8CrzquwmJjcZepednxWN6E8oQ&usqp=CAU",
-      height: 100,
-      width: 100,
-    ),
-    Image.network(
-      "https://www.pinclipart.com/picdir/middle/570-5705065_xbox-controller-clip-art.png",
-      height: 100,
-      width: 100,
-    ),
+    Image(width: 100,height:100,image: AssetImage('assets/images/added_one_electric_vehicle.png')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/added_multiple_electric_vehicle.jpg')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/added_one_bike.png')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/added_multiple_bikes.jpg')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/added_one_electric_charger.jpg')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/added_multiple_electric_chargers.jpg')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/booked_one.png')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/multiple_bookings.png')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/booked_ten.jpg')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/you_have_chatted.png')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/edited_user.png')),
+    Image(width: 100,height:100,image: AssetImage('assets/images/registered.png'))
   ];
+  final List<String> image_descritpor=[
+    "First vehicle publicated",
+    "Multiple vehicles publicated",
+    "First bike publicated",
+    "Multiple bikes publicated",
+    "First charger publication",
+    "Multiple chargers publications",
+    "First booking",
+    "Five bookings",
+    "Ten bookings",
+    "First chat message",
+    "Edit profile",
+    "First registration"
+  ];
+  List trophies_call = [];
+  void initState() {
+    super.initState();
+    _getData();
+
+  }
+  var userData;
+  int count = 0;
+  void _getData() async {
+    Map<String, dynamic> data = await UserService.getUserMap(widget.id) as Map<String,dynamic>;
+    setState(() {
+      userData = data;
+    });
+  }
+  bool x = false;
   @override
   Widget build(BuildContext context) {
+    if(!x) {
+      int aux = 0;
+      trophies_call = userData?["trophies"];
+      for(int i=0;i<trophies_call.length;++i) {
+        if(trophies_call[i]['achieved']==true) ++aux;
+      }
+      count = aux;
+      print(trophies_call);
+      print("FIUMMMMMMMMMMM");
+      x = true;
+    }
     return Scaffold(
       appBar: AppBar(
         title: const Text('Trophies'),
@@ -57,7 +92,7 @@ class _TrophiesScreen extends State<TrophiesScreen>{
                 ),
               ),
               Center(
-                child: Text("11/50",
+                child: Text("$count/12",
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,
@@ -83,23 +118,27 @@ class _TrophiesScreen extends State<TrophiesScreen>{
               ),
             ],
           )
-              : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    _list_images_trophys[i],
-                    SizedBox(
-                      width: 5,
-                    ), // the space between image and text
-                    Text("Achievementx $i"),
-                  ],
+            : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      _list_images_trophys[i-1],
+                      SizedBox(
+                        width: 5,
+                      ), // the space between image and text
+                      Text(image_descritpor[i-1]),
+                      Checkbox(
+                        value: trophies_call[i-1]['achieved'],
+                        onChanged: null
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          )),
-    );
-  }
+              ],
+            )),
+      );
+    }
 }
