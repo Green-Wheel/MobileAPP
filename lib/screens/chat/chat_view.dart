@@ -142,6 +142,7 @@ class _ChatView extends State<ChatView> {
   @override
   Widget build(BuildContext context) {
     print(_messages);
+    String username = widget.username ?? "User";
     return Stack(
       children: [
         Image.asset(
@@ -173,7 +174,8 @@ class _ChatView extends State<ChatView> {
                     ),
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.07),
-                  Text(widget.username!, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                  //TODO: canviar cuando pueda obtener un user
+                  Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                   IconButton(
                       icon: const Icon(Icons.delete),
