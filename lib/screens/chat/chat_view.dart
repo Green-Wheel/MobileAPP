@@ -243,15 +243,17 @@ class _ChatView extends State<ChatView> {
 
   void listenMessage(Map msg){
     setState(() {
-      //if (msg['sender']['id'] != widget.to_user) {
+      if (msg['sender']['id'] != widget.to_user) {
         _messages.add(ChatRoomMessage(
           content: msg['content'],
           created_at: DateTime.now(),
           id: msg['id'],
-          sender: BasicUser(first_name: msg['sender']['first_name'], last_name: msg['sender']['last_name'], username: msg['sender']['username']),
+          sender: BasicUser(first_name: msg['sender']['first_name'],
+              last_name: msg['sender']['last_name'],
+              username: msg['sender']['username']),
         ));
       }
-    );
+    });
   }
 
   Widget buttonSendMessage() {

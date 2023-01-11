@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/serializers/users.dart';
 import 'package:greenwheel/services/backendServices/chat.dart';
+import 'package:greenwheel/services/generalServices/LoginService.dart';
 
 
 import '../../serializers/chat.dart';
@@ -56,6 +57,7 @@ class _ChatListUsers extends State<ChatListUsers> {
   }
 
   void _getChats() async {
+    //ChatRoom? chat = await ChatService.getChatsId(LoginService().user_info!['id']!);
     List<ChatRoom> chatsrequest = await ChatService.getChats();
     int unreadrequest = await ChatService.getUnreadMessages();
     if (chatsrequest.isEmpty && !loading){
@@ -65,9 +67,11 @@ class _ChatListUsers extends State<ChatListUsers> {
     else if (loading){
       print("Loading chats");
     }
+    print(LoginService().user_info!['id']);
     print("Chats loaded");
     print(chatsrequest);
     print(chats.length);
+    //print(chat);
     setState(() {
       loading = false;
       chats = chatsrequest;
@@ -108,7 +112,7 @@ class _ChatListUsers extends State<ChatListUsers> {
                       new_message: list[index].read,
                       last_message_time:  DateFormat('hh:mm').format(list[index].last_sent_time),
                       context: context,
-                      room_id: list[index].id,
+                      room_id: list[index].to_users.id,
                       decrementar: _setListMessages,
                     );
                   }

@@ -269,7 +269,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                       private? SizedBox(height: MediaQuery.of(context).size.height * 0.02):SizedBox(height: 0),
                       private?  Row(
                         children: [
-                          isOwner ? Padding(padding: EdgeInsets.only(left: 25, right: 20),
+                          !isOwner ? Padding(padding: EdgeInsets.only(left: 25, right: 20),
                             child: ChatButtonWidget( to_user: owner_id!),
                           ): Container(),
                           isOwner ? Padding(padding: EdgeInsets.only(left: 25),
