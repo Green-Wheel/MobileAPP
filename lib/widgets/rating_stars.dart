@@ -20,6 +20,7 @@ class _RatingStarsWidget extends State<RatingStars> {
     return Row(
       children: [
         RatingBar.builder(
+          ignoreGestures: true,
           initialRating: double.parse(rating),
           minRating: 1,
           direction: Axis.horizontal,
@@ -36,12 +37,14 @@ class _RatingStarsWidget extends State<RatingStars> {
             print(rating);
           },
         ),
+        /*
         Padding(
           padding: const EdgeInsets.only(left: 10.0),
           child: Text(rating.toString(),
             style: const TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
+        */
       ],
     );
   }

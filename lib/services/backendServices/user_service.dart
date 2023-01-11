@@ -30,6 +30,34 @@ class UserService extends ChangeNotifier {
     return result;
   }
 
+  static Future<Map<String, dynamic>> getUserMap(int id) async {
+    Map<String, dynamic> result = {};
+    await BackendService.get('users/$id/').then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        print(jsonResponse);
+        print("hhhhhhhhhhhhhh");
+        result = {
+          "id": jsonResponse["id"],
+          "username": jsonResponse["username"],
+          "first_name": jsonResponse["first_name"],
+          "last_name": jsonResponse["last_name"],
+          "about": jsonResponse["about"],
+          "email": jsonResponse["email"],
+          "profile_picture": jsonResponse["profile_picture"],
+          "level": jsonResponse["level"],
+          "xp": jsonResponse["xp"],
+          "rating": jsonResponse["rating"],
+          "selected_car": jsonResponse["selected_car"],
+          "trophies": jsonResponse["trophies"]
+        };
+      } else {
+        throw Exception('Error getting user!');
+      }
+    });
+    return result;
+  }
+
   static Future<List<Publication>> getPostsUser(int id) async {
     List<Publication> result = [];
     await BackendService.get('users/$id/posts').then((response) {

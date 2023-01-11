@@ -22,6 +22,7 @@ import 'package:greenwheel/screens/route/route.dart';
 import 'package:greenwheel/screens/vehicles/AddVehicleScreen.dart';
 import 'package:greenwheel/screens/vehicles/EditVehicleScreen.dart';
 import 'package:greenwheel/screens/vehicles/vehicles.dart';
+import 'package:greenwheel/screens/trophies/trophiesScreen.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/language_selector_widget.dart';
 
@@ -35,16 +36,26 @@ GoRouter routeGenerator(LoginService loginService) {
           builder: (context, state) =>  HomePage(key: const Key("HomePage")),
           routes: [
             GoRoute(
-                path: 'profile',
-                builder: (context, state) =>
-                const ProfilePage(key: Key("ProfilePage")),
+                path: 'profile/:id',
+                builder: (context, state) {
+                  final int id = int.parse(state.params['id']!);
+                  return ProfilePage(key: Key("ProfilePage"), id: id);
+                },
                 routes: [
                   GoRoute(
                     path: 'edit',
                     builder: (context, state) =>
-                    const EditProfile(key: Key("EditProfile")),
+                    EditProfile(key: Key("EditProfile")),
                   ),
-                ]),
+                  GoRoute(
+                    path: 'trophies',
+                    builder: (context, state) {
+                      final int id = int.parse(state.params['id']!);
+                      return TrophiesScreen(key: Key("Trophies"), id);
+                    }
+                  ),
+                ]
+            ),
             GoRoute(
               path: 'language',
               builder: (context, state) => const LanguageSelectorWidget(key: Key("Language")),
