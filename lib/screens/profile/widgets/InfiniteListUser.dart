@@ -203,7 +203,7 @@ class _InfiniteList extends State<InfiniteListUser> {
               String? direction = _markersListAll[index].bike!.direction;
               double price = _markersListAll[index].bike!.price;
               bool available = true;
-              double power = _markersListAll[index].bike!.power!;
+              double power = _markersListAll[index].bike!.power ?? 0;
               int? id = _markersListAll[index].bike!.id;
               double? rate = _markersListAll[index].bike!.avg_rating;
               double latitude = _markersListAll[index].bike!.localization
