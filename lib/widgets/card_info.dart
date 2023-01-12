@@ -130,7 +130,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 25),
-                  child: MatchWithCarWidget(match: match!),
+                  child: MatchWithCarWidget(match: match),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 24, top: 5),
