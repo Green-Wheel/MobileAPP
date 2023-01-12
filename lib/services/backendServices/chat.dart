@@ -58,6 +58,19 @@ class ChatService {
     return result;
   }
 
+  static Future<List<ChatRoomMessage>> getChatMessagesPage(int to_user, int page) async {
+    List<ChatRoomMessage> result = [];
+    await BackendService.get('chats/$to_user/messages/?page=$page').then((response) {
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body) as List<dynamic>;
+        result = jsonResponse.map((e) => ChatRoomMessage.fromJson(e)).toList();
+      } else {
+        print('Error getting messages!');
+      }
+    });
+    return result;
+  }
+
   static Future<bool> postMessages(Map<String, dynamic> data) async{
     try {
       var response = await BackendService.post('chats/${data['id']}/messages', data);

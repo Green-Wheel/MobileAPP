@@ -65,7 +65,6 @@ class _ChatListUsers extends State<ChatListUsers> {
   }
 
   void _getChats() async {
-    //ChatRoom? chat = await ChatService.getChatsId(LoginService().user_info!['id']!);
     ChatService.getChats().then((value) {
       if (value.isEmpty && !loading) {
         _showAvisNoEsPotCarregarChat();
@@ -78,19 +77,7 @@ class _ChatListUsers extends State<ChatListUsers> {
     ChatService.getUnreadMessages().then((value) => setState(() {
           _number_new_messages = value;
         }));
-
-    //print(unreadrequest);
-    //print(chat);
   }
-
-  /*_decrementaUnreadMessage(){
-    setState(() {
-      _number_new_messages = _number_new_messages - 1;
-      if (_number_new_messages < 0){
-        _number_new_messages = 0;
-      }
-    });
-  }*/
 
 
   Widget ListPoints(BuildContext context, List<ChatRoom> list) {
@@ -102,7 +89,6 @@ class _ChatListUsers extends State<ChatListUsers> {
               child: ListView.builder(
                   itemCount: list.length,
                   itemBuilder: (context, index) {
-                    print(_number_new_messages);
                     return CardChatUsersWidget(
                   username: list[index].to_user.username,
                   last_message_received: list[index].last_message,

@@ -50,7 +50,6 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
   }
   void _getData() async {
     var data = _loggedInStateInfo.user_info;
-    print(data);
     setState(() {
       userData = data;
       mybike = userData['id'] == widget.owner_id;

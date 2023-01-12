@@ -30,8 +30,6 @@ class _ChatView extends State<ChatView> {
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
 
-  //final NotificationController notificationController = NotificationController();
-
   IOWebSocketChannel? channel;
   int userId = LoginService().user_info?['id'];
 
@@ -40,6 +38,7 @@ class _ChatView extends State<ChatView> {
   late int _pageNumber;
   BasicUser? _receiver_user = null;
   List<ChatRoomMessage> _messages = [];
+  List<ChatRoomMessage> _allmessages = [];
 
   @override
   void initState() {
@@ -50,21 +49,15 @@ class _ChatView extends State<ChatView> {
     _pageNumber = 1;
     _getReceiverUser();
     fetchData();
-    /*print("establint connexio");
-    print("usuari mostra: $userId");
-    print(LoginService().user_info?['username']);*/
     channelconnect();
-    //notificationController.initWebSocketConnection();
   }
 
   channelconnect() {
-    print("Connectant..");
     try{
       channel = IOWebSocketChannel.connect(Uri.parse('ws://3.250.219.80/ws/$userId/chats/messages/')); //channel IP : Port
       late var channelStream = channel?.stream.asBroadcastStream();
       channelStream?.listen((message) {
         Map msg = json.decode(message);
-          print("Message received: $msg");
           if (msg["type"] == "send.message" && msg["sender"]["id"] != userId) {
             if (msg["sender"]["id"] == widget.to_user) {
               listenMessage(msg);
@@ -75,7 +68,6 @@ class _ChatView extends State<ChatView> {
           }
         },
         onDone: () {
-          print("Socket disconnected");
           channelconnect();
         },
         onError: (error) {
@@ -110,7 +102,6 @@ class _ChatView extends State<ChatView> {
             setState(() {
               _receiver_user = null;
             });
-            print("ERROR GETTING USER");
           }
         }
       });
@@ -121,9 +112,11 @@ class _ChatView extends State<ChatView> {
 
   Future<void> fetchData() async {
     try {
-      final messages = await ChatService.getChatMessages(widget.to_user!);
+      final messages = await ChatService.getChatMessagesPage(widget.to_user!, _pageNumber);
       setState(() {
-        _messages = messages.reversed.toList();
+        List<ChatRoomMessage> msg = messages.reversed.toList();
+        msg.addAll(_messages);
+        _messages = msg;
         _loading = false;
         _pageNumber = _pageNumber + 1;
       });
@@ -161,8 +154,13 @@ class _ChatView extends State<ChatView> {
               shrinkWrap: true,
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
-                int itemCount = _messages.length ?? 0;
+                int itemCount = _messages.length;
                 int reversedIndex = itemCount - 1 - index;
+
+                if (reversedIndex == 3){
+                  fetchData();
+                }
+
                 if (index < 0) return Container();
                 bool isMe = _messages[reversedIndex].sender.username == LoginService().user_info?['username'];
                 return MessageWidget( message: _messages[reversedIndex].content, itsmine: isMe, created_at: DateFormat('dd-MM-yyyy HH:mm').format(_messages[reversedIndex].created_at),);
@@ -290,7 +288,6 @@ class _ChatView extends State<ChatView> {
 
   void SendMessage (String message, int to_user){
     try{
-      print("Sending message !!!!!!!!!!!!!!");
       channel?.sink.add(jsonEncode({
         "message": message,
         "to_user": to_user,
@@ -336,12 +333,6 @@ class _ChatView extends State<ChatView> {
           size: 25,
         ),
         backgroundColor: Colors.white,
-        /*shape: const CircleBorder(
-          side: BorderSide(
-            color: Colors.green,
-            width: 1,
-          ),
-        ),*/
       );
   }
 

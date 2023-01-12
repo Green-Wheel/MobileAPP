@@ -165,7 +165,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     setState(() {
       markersList = chargersList;
       removeChargeMarkers();
-      print(markersList.length);
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -202,7 +201,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       is_visible = false;
       scrolledup = false;
     });
-    print(widget.index);
 
     if (widget.index == 0) {
       _getChargers();
@@ -217,7 +215,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 3.2,),
         "assets/images/punt_bicicleta.png");
-    //print('afegir bici');
     final Marker marcador = Marker(
         markerId: MarkerId(id.toString()),
         position: LatLng(lat, log),
