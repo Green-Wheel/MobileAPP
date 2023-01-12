@@ -632,6 +632,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
     String? contamination = markedCharger!.contamination;
     bool? compatible = markedCharger!.compatible;
+    List? images = markedCharger!.images;
 
     return CardInfoWidget(location: descrip,
         rating: rate,
@@ -649,6 +650,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         owner_id: owner_id,
         owner_username: owner_name,
         contamination: contamination,
+        images: images,
         );
   }
 

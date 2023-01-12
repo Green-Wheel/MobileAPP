@@ -202,10 +202,12 @@ class _InfiniteList extends State<InfiniteListUser> {
               }
               String? contamination = _markersListAll[index].charger!.contamination;
               bool? compatible = _markersListAll[index].charger!.compatible;
+              List? images = _markersListAll[index].charger!.images;
+
               return Flexible(child: _cardChargerList(rating,
                   description!, avaliable, match, types,
                   private, price, direction!, description2, id!, latitude,
-                  longitude, owner_id, owner_name, contamination, compatible ));
+                  longitude, owner_id, owner_name, contamination, compatible, images));
             }
             else return Text("");
           }
@@ -261,7 +263,7 @@ class _InfiniteList extends State<InfiniteListUser> {
   Widget _cardChargerList(double? rating,String description, bool avaliable, bool match,
       List<ConnectionType> types, bool private, double price, String direction,
       String description2, int id, double latitude, double longitude, int? owner_id,
-      String? owner_name, String? contamination, bool? compatible
+      String? owner_name, String? contamination, bool? compatible, List? images
       ) {
     double rate = 2.5;
     if(rating != null) rate = rating;
@@ -287,6 +289,7 @@ class _InfiniteList extends State<InfiniteListUser> {
           id: id,
           owner_id: owner_id,
           owner_username: owner_name,
+          images: images,
       ),
     );
   }

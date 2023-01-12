@@ -12,6 +12,7 @@ import 'package:greenwheel/widgets/stars_static_rate.dart';
 
 import '../serializers/chargers.dart';
 import '../services/generalServices/LoginService.dart';
+import 'image_display.dart';
 
 class CardInfoWidget extends StatefulWidget {
   String? location;
@@ -30,11 +31,12 @@ class CardInfoWidget extends StatefulWidget {
   int? owner_id;
   String? owner_username;
   String? contamination;
+  List? images;
 
   CardInfoWidget({required this.location, required this.rating, required this.types, required this.available,
     required this.match, required this.private, required this.price, required this.description, required
   this.direction, required this.private_list, required this.latitude, required this.longitude, required this.id,
-    required this.owner_id, required this.owner_username, required this.contamination, super.key});
+    required this.owner_id, required this.owner_username, required this.contamination, required this.images, super.key});
 
   @override
   State<StatefulWidget> createState() => _CardInfoWidget();
@@ -62,13 +64,13 @@ class _CardInfoWidget extends State<CardInfoWidget>{
     int? owner_id = widget.owner_id!;
     return _buildCard(widget.location, widget.rating, widget.types, widget.available, widget.match, widget.private, widget.price,
         widget.description, widget.direction, widget.private_list, widget.latitude, widget.longitude, widget.id, isOwner, owner_id,
-        widget.owner_username, widget.contamination, context);
+        widget.owner_username, widget.contamination, widget.images, context);
   }
 }
 
 Widget _buildCard(String? location, double? rating, List<ConnectionType> types, bool avaliable, bool? match, bool private, double price,
     String? description, String? direction, bool private_list, double latitude, double longitude, int? id,
-    bool isOwner, int? owner_id, String? username, String? contamination, BuildContext context){
+    bool isOwner, int? owner_id, String? username, String? contamination, List? images, BuildContext context) {
 
   return Card(
     elevation: 10,
@@ -286,7 +288,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
             child: Column(
               children:  [
                   SizedBox(height: 30),
-                  ImageChargerWidget(),
+                  ImageDisplay(images: images ?? []),
                   SizedBox(height: 10),
                   ButtonRouteWidget(latitude: latitude, longitude: longitude),
                   private? SizedBox(height: MediaQuery.of(context).size.height * 0.315): SizedBox(height: 35),

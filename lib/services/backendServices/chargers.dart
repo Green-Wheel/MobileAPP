@@ -75,6 +75,7 @@ class ChargerService {
     DetailedCharherSerializer? result;
     var response = await BackendService.get('chargers/$id/');
     if (response.statusCode == 200) {
+      print('response.body: ${response.body}');
       var jsonResponse = jsonDecode(response.body);
       result = DetailedCharherSerializer.fromJson(jsonResponse);
       print(result);
