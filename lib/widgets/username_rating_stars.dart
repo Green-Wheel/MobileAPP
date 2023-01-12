@@ -47,7 +47,7 @@ class Username_Rating extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.chat),
       onPressed: () {
-        //GoRouter.of(context).push('/chat/$id');
+        GoRouter.of(context).push('/chats/$id');
       },
     );
   }
