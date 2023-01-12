@@ -92,14 +92,8 @@ class _ChatButtonWidget extends State<ChatButtonWidget>{
         onPressed: () {
           print("usuario ${widget.to_user}");
           //TODO: Ruta a chat
-          if (userschats.isNotEmpty){
-            print("existente");
-              GoRouter.of(context).go('/chats/${userschats.first.id}');
-          }
-          else{
-            print("nuevo chat");
-            GoRouter.of(context).go('/chats/${widget.to_user}');
-          }
+          GoRouter.of(context).push('/chats/${widget.to_user}');
+
         },
         child: Row(
           children: const [

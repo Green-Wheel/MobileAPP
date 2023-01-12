@@ -268,7 +268,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                       private?  Row(
                         children: [
                           !isOwner ? Padding(padding: EdgeInsets.only(left: 25, right: 20),
-                            child: ChatButtonWidget( to_user: owner_id!),
+                            child: ChatButtonWidget(to_user: owner_id!),
                           ): Container(),
                           //!isOwner ? Padding(padding: EdgeInsets.only(left: 25),
                               //child: ButtonDeleteChargerWidget(id_charger: id!)): SizedBox(height: 0),

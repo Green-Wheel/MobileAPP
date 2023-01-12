@@ -197,7 +197,7 @@ class _ChatView extends State<ChatView> {
                   IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        Navigator.pop(context);
+                        GoRouter.of(context).go("/chats/");
                     }
                   ),
                 SizedBox(width: MediaQuery.of(context).size.width * 0.09),
