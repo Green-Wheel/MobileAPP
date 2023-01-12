@@ -18,6 +18,7 @@ import 'package:greenwheel/screens/profile/editprofile.dart';
 import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:greenwheel/screens/profile/report_comment.dart';
 import 'package:greenwheel/screens/profile/report_user.dart';
+import 'package:greenwheel/screens/rating/user_rating_valoration.dart';
 import 'package:greenwheel/screens/register/change_password.dart';
 import 'package:greenwheel/screens/register/recover_password.dart';
 import 'package:greenwheel/screens/register/signup.dart';
@@ -145,6 +146,11 @@ GoRouter routeGenerator(LoginService loginService) {
               builder: (context, state) =>
               const MyVehicles(key: Key("Vehicle")),
             ),
+            GoRoute(path: 'rate/user/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return RateUser(key: const Key("ReportUser"), user_id: id);
+                }),
             GoRoute(path: 'report/user/:id',
                 builder: (context, state) {
                   final id = int.parse(state.params['id']!);

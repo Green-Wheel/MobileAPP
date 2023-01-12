@@ -4,6 +4,7 @@ import 'package:greenwheel/widgets/rating_stars.dart';
 
 import '../screens/profile/editprofile.dart';
 import '../screens/register/recover_password.dart';
+import 'Bookings/utils/stringOverflow.dart';
 
 class Username_Rating extends StatelessWidget {
   String username;
@@ -21,10 +22,12 @@ class Username_Rating extends StatelessWidget {
               Container(
                       child: Row(
                           children: <Widget>[
-                            Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                            Text(cutDownStringName(username), style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
                             (edit_button) ? edit(context) : chat(context),
                             (edit_button) ? Container() : report(context),
+                            (edit_button) ? Container() : rate(context),
                       ],
+
                     ),
             ),
             ]
@@ -60,6 +63,16 @@ class Username_Rating extends StatelessWidget {
       },
     );
   }
+  Widget rate(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.star_rate_sharp),
+      onPressed: () {
+        GoRouter.of(context).go('/rate/user/$id');
+      },
+    );
+  }
+
+
 }
 
 
