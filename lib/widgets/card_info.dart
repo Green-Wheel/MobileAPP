@@ -155,7 +155,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                     child:Column(
                     children: [
                       private? SizedBox(height: 10): SizedBox(height: 0),
-                      private? SizedBox(height: 60) : SizedBox(height: 0),
+                      private? SizedBox(height: MediaQuery.of(context).size.height * 0.03) : SizedBox(height: 0),
                       private? ButtonReservaListWidget(id: id) : SizedBox(height: 0),
                       private? SizedBox(height: MediaQuery.of(context).size.height * 0.03):  SizedBox(height: 0),
 
@@ -287,9 +287,9 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
             width: MediaQuery.of(context).size.width * 0.215,
             child: Column(
               children:  [
-                  SizedBox(height: 30),
-                  ImageDisplay(images: images ?? []),
                   SizedBox(height: 10),
+                  ImageDisplay(images: images ?? []),
+                  SizedBox(height: 5),
                   ButtonRouteWidget(latitude: latitude, longitude: longitude),
                   private? SizedBox(height: MediaQuery.of(context).size.height * 0.315): SizedBox(height: 35),
               ],

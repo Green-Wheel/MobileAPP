@@ -135,7 +135,7 @@ class BikeService {
       var jsonResponse = jsonDecode(response.body);
       result = DetailedBikeSerializer.fromJson(jsonResponse);
     } else {
-      throw Exception('Error getting speeds');
+      throw Exception('Error getting bikes');
     }
     return result;
   }
