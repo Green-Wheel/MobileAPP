@@ -213,7 +213,7 @@ DetailedCharherSerializer _$DetailedCharherSerializerFromJson(
       private: json['private'] == null
           ? null
           : PrivateCharger.fromJson(json['private'] as Map<String, dynamic>),
-      contamination: json['contamination'] as String?,
+      //contamination: json['contamination'] as String?,
     );
 
 Map<String, dynamic> _$DetailedCharherSerializerToJson(

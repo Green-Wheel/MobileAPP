@@ -149,17 +149,17 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(path: 'report/rating/:id',
                 builder: (context, state) {
                   final id = int.parse(state.params['id']!);
-                  return ReportComment(key: const Key("ReportUser"), comment_id: id);
+                  return ReportComment(key: const Key("ReportComment"), comment_id: id);
                 }),
             GoRoute(path: 'report/bike/:id',
                 builder: (context, state) {
                   final id = int.parse(state.params['id']!);
-                  return ReportBike(key: const Key("ReportUser"), bike_id: id);
+                  return ReportBike(key: const Key("ReportBike"), bike_id: id);
                 }),
             GoRoute(path: 'report/charger/:id',
                 builder: (context, state) {
                   final id = int.parse(state.params['id']!);
-                  return ReportCharger(key: const Key("ReportUser"), charger_id: id);
+                  return ReportCharger(key: const Key("ReportChargers"), charger_id: id);
                 }),
             GoRoute(path: 'report/user/:id',
                 builder: (context, state) {

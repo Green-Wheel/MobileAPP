@@ -43,6 +43,7 @@ class _ConnectionInfoState extends State<ConnectionInfo> {
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(children: [
+        const Text('Select connection types'),
         Column(
           children: _connection_types
               .map((item) => CheckboxListTile(
@@ -64,7 +65,7 @@ class _ConnectionInfoState extends State<ConnectionInfo> {
                   ))
               .toList(),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Center(
           child: Row(
             children: [

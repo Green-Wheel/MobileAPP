@@ -33,7 +33,7 @@ class RoutePage extends StatefulWidget {
 }
 
 class _RoutePageState extends State<RoutePage> {
-  Set<Polyline>? polylines = {};
+  Set<Polyline> polylines = {};
   final panelController = PanelController();
   Direction? routeInfo;
   final originController = TextEditingController();
@@ -56,13 +56,20 @@ class _RoutePageState extends State<RoutePage> {
     var carsAux = await VehicleService.getVehicles();
     var user = _loggedInStateInfo.user_info;
     cars_of_user = carsAux;
-    selected_car = carsAux
-        .where((element) => element.id == user!['selected_car'])
-        .toList()[0]
-        .id;
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _showModal(context);
-    });
+    if(cars_of_user.length != 0){
+      print(user!['selected_car']);
+      if(user!['selected_car'] == null){
+        selected_car = cars_of_user[0].id;
+      }else {
+        selected_car = carsAux
+            .where((element) => element.id == user!['selected_car'])
+            .toList()[0]
+            .id;
+      }
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showModal(context);
+      });
+    }
   }
 
   void getPolylines() {
@@ -175,7 +182,7 @@ class _RoutePageState extends State<RoutePage> {
         ),
         body: Stack(children: [
           Container(
-            padding: const EdgeInsets.only(bottom: 135),
+            padding: const EdgeInsets.only(bottom: 200),
             child: GoogleMapsWidget(index: 0, polylines: polylines, publicationId: widget.pubication_id),
           ),
           SlidingUpPanel(

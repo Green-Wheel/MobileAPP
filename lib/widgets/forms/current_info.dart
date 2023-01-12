@@ -49,7 +49,7 @@ class _CurrentInfoState extends State<CurrentInfo> {
                 key: _formKey,
                 child: Column(children: [
                   const SizedBox(height: 10),
-                  const Text("Power"),
+                  Container(child: const Text("Power"), alignment: Alignment.centerLeft),
                   TextFormField(
                     initialValue: widget.data['power'],
                     keyboardType: TextInputType.number,
