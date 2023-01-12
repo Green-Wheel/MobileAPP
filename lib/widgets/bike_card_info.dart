@@ -232,7 +232,7 @@ Widget _buildCard(
                   child: Flexible(
                       child: Column(
                           children:[
-                            !bike_list? ButtonReservaListBikeWidget(): SizedBox(height: 0),
+                            !bike_list? ButtonReservaListBikeWidget(id: id): SizedBox(height: 0),
                             !bike_list? SizedBox(height: 10): SizedBox(height: 0),
                             !bike_list? SizedBox(height: 10): SizedBox(height: 0),
                             !bike_list? Column(
