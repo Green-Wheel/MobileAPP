@@ -20,7 +20,7 @@ import '../../../widgets/button_list_screen_bikes.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
-  Set<Polyline>? polylines;
+  Set<Polyline> polylines;
   int? publicationId;
   LatLang? point_search_bar;
   GoogleMapsWidget(
@@ -441,6 +441,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           GoogleMap(
             onMapCreated: _onMapCreated,
             initialCameraPosition: _kInitialPosition,
+            polylines: widget.polylines,
             markers: markers,
             mapType: MapType.normal,
             myLocationEnabled: true,
@@ -448,7 +449,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
             compassEnabled: true,
             zoomGesturesEnabled: true,
             zoomControlsEnabled: false,
-            trafficEnabled: true,
+            trafficEnabled: false,
             mapToolbarEnabled: false,
             rotateGesturesEnabled: true,
             scrollGesturesEnabled: true,
