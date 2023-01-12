@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
@@ -25,48 +26,10 @@ class ChatView extends StatefulWidget {
 class _ChatView extends State<ChatView> {
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
-  final NotificationController notificationController =
-  NotificationController();
+  //final NotificationController notificationController = NotificationController();
 
-
-  /*Future<void> DeleteChat(int? id_chat) {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Row(
-              children: const [
-                Text("Delete chat"),
-                SizedBox(width: 10),
-                Icon(Icons.delete_forever_outlined),
-              ],
-            ),
-            content: Text("Are you sure you want to delete this chat?"),
-            actions: [
-              Row(
-                children:[
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: Text("Cancel")
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.4),
-                  TextButton(
-                    onPressed: () {
-                      ChatService.deleteChat(widget.to_user!);
-                      GoRouter.of(context).go('/chats');
-                    },
-                    child: Text("Delete", style: TextStyle(color: Colors.red),),
-                  ),
-                ]
-              )
-            ],
-          );
-        }
-    );
-  }*/
+  IOWebSocketChannel? channel;
+  int userId = LoginService().user_info?['id'];
 
   late bool _error;
   late bool _loading;
@@ -81,7 +44,37 @@ class _ChatView extends State<ChatView> {
     _loading = true;
     _pageNumber = 1;
     fetchData();
-    notificationController.initWebSocketConnection();
+    /*print("establint connexio");
+    print("usuari mostra: $userId");
+    print(LoginService().user_info?['username']);*/
+    channelconnect();
+    //notificationController.initWebSocketConnection();
+  }
+
+  channelconnect() {
+    print("Connectant..");
+    try{
+      channel = IOWebSocketChannel.connect(Uri.parse('ws://3.250.219.80/ws/$userId/chats/messages/')); //channel IP : Port
+      late var channelStream = channel?.stream.asBroadcastStream();
+      channelStream?.listen((message) {
+        Map msg = json.decode(message);
+        if (msg["type"] == "send.message") {
+          listenMessage(msg);
+          setState(() {
+
+          });
+        }
+      },
+        onDone: () {
+          print("Socket disconnected");
+          channelconnect();
+        },
+        onError: (error) {
+          print(error.toString());
+        },);
+    } catch (e){
+      print("Error connecting $e");
+    }
   }
 
   Future<void> fetchData() async {
@@ -143,6 +136,7 @@ class _ChatView extends State<ChatView> {
   Widget build(BuildContext context) {
     print(_messages);
     String username = widget.username ?? "User";
+    //fetchData();
     return Stack(
       children: [
         Image.asset(
@@ -242,8 +236,8 @@ class _ChatView extends State<ChatView> {
   }
 
   void listenMessage(Map msg){
-    /*setState(() {
-      //if (msg['sender']['id'] != widget.to_user) {
+    setState(() {
+      if (msg['sender']['id'] != userId) {
         _messages.add(ChatRoomMessage(
           content: msg['content'],
           created_at: DateTime.now(),
@@ -252,8 +246,20 @@ class _ChatView extends State<ChatView> {
               last_name: msg['sender']['last_name'],
               username: msg['sender']['username']),
         ));
-      //}
-    });*/
+      }
+    });
+  }
+
+  void SendMessage (String message, int id_user){
+    try{
+      print("Sending message !!!!!!!!!!!!!!");
+      channel?.sink.add(jsonEncode({
+        "message": message,
+        "to_user": 2,
+      }));
+    } on Exception catch(e){
+      print(e);
+    }
   }
 
   Widget buttonSendMessage() {
@@ -281,7 +287,7 @@ class _ChatView extends State<ChatView> {
               curve: Curves.easeOut,
             );
 
-            notificationController.SendMessage(_controller.text, widget.to_user!, listenMessage);
+            SendMessage(_controller.text, widget.to_user!);
             _controller.clear();
           }
         },
@@ -302,5 +308,44 @@ class _ChatView extends State<ChatView> {
   }
 
 }
+
+/*Future<void> DeleteChat(int? id_chat) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Row(
+              children: const [
+                Text("Delete chat"),
+                SizedBox(width: 10),
+                Icon(Icons.delete_forever_outlined),
+              ],
+            ),
+            content: Text("Are you sure you want to delete this chat?"),
+            actions: [
+              Row(
+                children:[
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text("Cancel")
+                  ),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.4),
+                  TextButton(
+                    onPressed: () {
+                      ChatService.deleteChat(widget.to_user!);
+                      GoRouter.of(context).go('/chats');
+                    },
+                    child: Text("Delete", style: TextStyle(color: Colors.red),),
+                  ),
+                ]
+              )
+            ],
+          );
+        }
+    );
+  }*/
 
 

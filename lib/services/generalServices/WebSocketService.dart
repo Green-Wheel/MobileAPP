@@ -11,6 +11,7 @@ class NotificationController{
   IOWebSocketChannel? channel;
   late var channelStream = channel?.stream.asBroadcastStream();
 
+
   NotificationController._internal(){
     initWebSocketConnection();
   }
@@ -24,6 +25,12 @@ class NotificationController{
         Uri.parse('ws://3.250.219.80/ws/$userId/chats/messages/'), //3.250.219.80
         pingInterval: Duration(seconds: 10),
       );
+      channelStream?.listen((data) {
+        Map msg = json.decode(data);
+        //listenMessage(msg);
+        //append i enviar unread
+      });
+
     } on Exception catch(e){
       print(e);
       return await initWebSocketConnection();
@@ -39,7 +46,7 @@ class NotificationController{
     initWebSocketConnection();
   }
 
-  void SendMessage (String message, int id_user, Function listenMessage){
+  void SendMessage (String message, int id_user){
    try{
       channel?.sink.add(jsonEncode({
         "message": message,
@@ -48,11 +55,6 @@ class NotificationController{
       print("Sent message");
       channelStream?.listen((data) {
         Map msg = json.decode(data);
-        //print(msg['sender']['id'] != id_user);
-        if (msg['sender']['id'] != id_user){
-          listenMessage(msg);
-        }
-        listenMessage(msg);
         print("listenning message: $msg");
       });
     } on Exception catch(e){
