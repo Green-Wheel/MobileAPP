@@ -12,10 +12,6 @@ import '../../services/backendServices/bookings.dart';
 import '../../widgets/reservation_bike_card.dart';
 import '../../widgets/reservation_charger_card.dart';
 
-void main() {
-  runApp(const MyBookings());
-}
-
 class MyBookings extends StatelessWidget {
   const MyBookings({super.key});
 

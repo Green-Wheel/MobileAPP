@@ -8,9 +8,6 @@ import '../../services/backendServices/vehicles.dart';
 import '../../services/generalServices/LoginService.dart';
 import '../../widgets/CarCard.dart';
 
-void main() {
-  runApp(const MyVehicles());
-}
 
 class MyVehicles extends StatelessWidget {
   const MyVehicles({super.key});
