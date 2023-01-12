@@ -43,14 +43,10 @@ class _InfiniteList extends State<InfiniteListUser> {
 
   List<Publication> chargerPublications = [];
   List<Publication> bikesPublications = [];
-  late bool _isLastPage;
   late int _pageNumber;
-  late bool _error;
-  late bool _loading;
   final int _numberOfPostsPerRequest = 10;
   List<Publication> _markersList = [];
   List<Publication> _markersListAll = [];
-  final int _nextPageTrigger = 3;
   bool pressFilterByChargers = false;
   bool pressFilterByBikes = false;
   bool disableCharger = true;
@@ -61,9 +57,6 @@ class _InfiniteList extends State<InfiniteListUser> {
     super.initState();
     _pageNumber = 1;
     _markersList = [];
-    _isLastPage = false;
-    _loading = true;
-    _error = false;
     fetchData();
   }
 
@@ -119,17 +112,12 @@ class _InfiniteList extends State<InfiniteListUser> {
     try {
       setState(() {
         _getPublicationList(_pageNumber);
-        _isLastPage = _markersListAll.length < _numberOfPostsPerRequest;
-        _loading = false;
         _pageNumber = _pageNumber + 1;
         _markersListAll.addAll(_markersList);
       });
     } catch (e) {
       print("error --> $e");
-      setState(() {
-        _loading = false;
-        _error = true;
-      });
+
     }
   }
 
@@ -151,8 +139,6 @@ class _InfiniteList extends State<InfiniteListUser> {
           TextButton(
               onPressed: () {
                 setState(() {
-                  _loading = true;
-                  _error = false;
                   fetchData();
                 });
               },
@@ -371,23 +357,17 @@ class _InfiniteList extends State<InfiniteListUser> {
   }
 
   void _getPublicationOfChargers() {
-    int x = 0;
     setState(() {
-      x=4;
       chargerPublications = chargerPublications;
     });
   }
   void _getPublicationOfBikes() {
-    int x = 0;
     setState(() {
-      x=4;
       bikesPublications = bikesPublications;
     });
   }
   void _getAllPublications() {
-    int x = 0;
     setState(() {
-      x=4;
       _markersListAll = _markersListAll;
     });
   }
