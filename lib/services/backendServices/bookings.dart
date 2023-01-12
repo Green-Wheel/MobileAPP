@@ -63,9 +63,11 @@ class BookingService {
     return result;
   }
 
-  static Future<List<Booking>> getBookingsByType(String type) async {
+  static Future<List<Booking>> getBookingsByType(String type, isOwner) async {
     List<Booking> result = [];
-    await BackendService.get('bookings/owner/?type=$type&order=date').then((response) {
+    var auxurl = "bookings/?type=$type&order=date";
+    if(isOwner) auxurl = "bookings/owner/?type=$type&order=date";
+    await BackendService.get(auxurl).then((response) {
 
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
@@ -78,9 +80,11 @@ class BookingService {
     });
     return result;
   }
-  static Future<List<Booking>> getBookingsHistory() async {
+  static Future<List<Booking>> getBookingsHistory(bool isOwner) async {
     List<Booking> result = [];
-    await BackendService.get('bookings/owner/history/').then((response) {
+    var auxurl = "bookings/history";
+    if(isOwner) auxurl = "bookings/owner/history";
+    await BackendService.get(auxurl).then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         List<dynamic> bookings = jsonResponse['results'] as List<dynamic>;

@@ -113,6 +113,20 @@ class _SimpleDrawer extends State<SimpleDrawer>{
               },
             ),
           ),
+/*          Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 0.0),
+            child: ListTile(
+              visualDensity: VisualDensity(vertical: -2),
+              leading: const Icon(Icons.pending_actions, size: 30.0),
+              title: Hero(
+                tag: "3",
+                child: const Text('Block hours bookings', style: TextStyle(fontSize: 18)),
+              ),
+              onTap: () {
+                GoRouter.of(context).push('/bookings/admin/block_hours/:id');
+              },
+            ),
+          ),*/
           Padding(
             padding: EdgeInsets.only(left: 10.0, right: 0.0),
             child: ListTile(

@@ -73,7 +73,7 @@ class _confirm_bookingState extends State<confirm_booking> {
 
   Future<void> getPendingBookingsFromBackend() async {
     widget.waitingBackend = true;
-    widget.bookings = (await BookingService.getBookingsByType("pending")).cast<bkn.Booking>();
+    widget.bookings = (await BookingService.getBookingsByType("pending",true)).cast<bkn.Booking>();
     log("###################  #######################");
     log(widget.bookings.toString());
     widget.waitingBackend = false;
