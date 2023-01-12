@@ -708,10 +708,11 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     int? id = markedBike!.id;
     int? owner_id = markedBike!.owner.id;
     String? contamination = markedBike!.contamination;
+    List? images = markedBike!.images;
 
     return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType,
         description: description, direction: direction, price: price, power: power??0, bike_list: false,
-        latitude: latitude, longitude: longitude, id: id, owner_id: owner_id, contamination: contamination,);
+        latitude: latitude, longitude: longitude, id: id, owner_id: owner_id, contamination: contamination, images: images);
   }
 
 

@@ -221,11 +221,11 @@ class PrivateCharger {
 class ImageSerializer {
   ImageSerializer({
     this.id,
-    required this.url,
+    required this.image_path,
   });
 
   int? id;
-  String url;
+  String image_path;
 
   factory ImageSerializer.fromJson(Map<String, dynamic> json) =>
       _$ImageSerializerFromJson(json);

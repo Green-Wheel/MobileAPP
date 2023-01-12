@@ -175,13 +175,13 @@ Map<String, dynamic> _$PrivateChargerToJson(PrivateCharger instance) =>
 ImageSerializer _$ImageSerializerFromJson(Map<String, dynamic> json) =>
     ImageSerializer(
       id: json['id'] as int?,
-      url: json['url'] as String,
+      image_path: json['image_path'] as String,
     );
 
 Map<String, dynamic> _$ImageSerializerToJson(ImageSerializer instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'url': instance.url,
+      'image_path': instance.image_path,
     };
 
 DetailedCharherSerializer _$DetailedCharherSerializerFromJson(

@@ -228,6 +228,7 @@ class _InfiniteList extends State<InfiniteListUser> {
               String contamination = _markersListAll[index].bike!.contamination ?? '';
               String? direction1 = "";
               int? owner_id =  _markersListAll[index].bike!.owner.id;
+              List? images = _markersListAll[index].bike!.images;
 
               return Flexible(child: GestureDetector(
                 onTap: () {
@@ -248,6 +249,7 @@ class _InfiniteList extends State<InfiniteListUser> {
                     contamination: contamination,
                     id: id,
                     owner_id: owner_id,
+                    images: images,
                   ),
                 )
               );
