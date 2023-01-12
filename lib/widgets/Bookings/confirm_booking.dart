@@ -44,9 +44,10 @@ class _confirm_bookingState extends State<confirm_booking> {
 
   Future<bool> acceptBooking(int i) async {
     log("Aceptando el boking...");
-    log(widget.bookings[i].user.toString());
+    log(widget.bookings[i].user.username.toString());
     var booking = widget.bookings[i];
     if (booking.id != null) {
+
       await BookingService.answerBookingPetition(booking.id!, 1);
     }
     getPendingBookingsFromBackend();
@@ -73,7 +74,7 @@ class _confirm_bookingState extends State<confirm_booking> {
   Future<void> getPendingBookingsFromBackend() async {
     widget.waitingBackend = true;
     widget.bookings = (await BookingService.getBookingsByType("pending")).cast<bkn.Booking>();
-    log("##########################################");
+    log("###################  #######################");
     log(widget.bookings.toString());
     widget.waitingBackend = false;
     setState(() {
@@ -89,14 +90,16 @@ class _confirm_bookingState extends State<confirm_booking> {
 
   @override
   void initState() {
+    widget.bookings = [];
     getPendingBookingsFromBackend();
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Reservas pendientes'),
+        title: const Text('Reservas pendientes '),
         centerTitle: true,
         actions: const [
           Padding(
@@ -206,7 +209,7 @@ class _confirm_bookingState extends State<confirm_booking> {
                               Row(
                                 children: [
                                   const Icon(Icons.access_time, color: Color(0xF0052e42)),
-                                  Text(' ${DateFormat('hh:mm').format(booking.start_date)} h'),
+                                  Text(' ${DateFormat('kk:mm').format(booking.start_date)} h'),
                                 ],
                               ),
                             ],
@@ -230,7 +233,7 @@ class _confirm_bookingState extends State<confirm_booking> {
                               Row(
                                 children: [
                                   const Icon(Icons.access_time,color: Color(0xF0052e42),                                                                ),
-                                  Text(' ${DateFormat('hh:mm').format(booking.end_date)} h',),
+                                  Text(' ${DateFormat('kk:mm').format(booking.end_date)} h',),
                                 ],
                               ),
                             ],
