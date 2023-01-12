@@ -25,6 +25,8 @@ import 'package:greenwheel/screens/vehicles/EditVehicleScreen.dart';
 import 'package:greenwheel/screens/vehicles/vehicles.dart';
 import 'package:greenwheel/screens/trophies/trophiesScreen.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
+import 'package:greenwheel/widgets/Bookings/confirm_booking.dart';
+import 'package:greenwheel/widgets/Bookings/past_confirmed_bookings.dart';
 import 'package:greenwheel/widgets/language_selector_widget.dart';
 
 GoRouter routeGenerator(LoginService loginService) {
@@ -165,6 +167,16 @@ GoRouter routeGenerator(LoginService loginService) {
                 builder: (context, state) {
                   final id = int.parse(state.params['id']!);
                   return ReportUser(key: const Key("ReportUser"), user_id: id);
+                }),
+            GoRoute(
+                path: 'booking/accept',
+                    builder: (context, state) {
+                  return confirm_booking(key: const Key("AcceptBookings"));
+                }),
+            GoRoute(
+                path: 'booking/admin/history',
+                builder: (context, state) {
+                  return past_confirm_booking(key: const Key("adminHistory"));
                 }),
             GoRoute(
               path: 'route/:lat/:long/:id',

@@ -103,13 +103,13 @@ class _SimpleDrawer extends State<SimpleDrawer>{
             padding: EdgeInsets.only(left: 10.0, right: 0.0),
             child: ListTile(
               visualDensity: VisualDensity(vertical: -2),
-              leading: const Icon(Icons.history, size: 30.0),
+              leading: const Icon(Icons.pending_actions, size: 30.0),
               title: Hero(
                 tag: "3",
-                child: const Text('History', style: TextStyle(fontSize: 18)),
+                child: const Text('Pending booking', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
-                GoRouter.of(context).push('/trophies');
+                GoRouter.of(context).push('/booking/accept');
               },
             ),
           ),
@@ -131,13 +131,13 @@ class _SimpleDrawer extends State<SimpleDrawer>{
             padding: EdgeInsets.only(left: 10.0, right: 0.0),
             child: ListTile(
               visualDensity: VisualDensity(vertical: -2),
-              leading: const Icon(Icons.chat, size: 30.0),
+              leading: const Icon(Icons.manage_history, size: 30.0),
               title: Hero(
                 tag: "5",
-                child: const Text('Chat', style: TextStyle(fontSize: 18)),
+                child: const Text('Booking Petitions', style: TextStyle(fontSize: 18)),
               ),
               onTap: () {
-                Navigator.pop(context);
+                GoRouter.of(context).push('/booking/admin/history');
               },
             ),
           ),
