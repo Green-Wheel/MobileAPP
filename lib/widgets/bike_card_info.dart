@@ -318,7 +318,7 @@ Widget _buildCard(
           width: MediaQuery.of(context).size.width * 0.215,
           child: Column(
             children: [
-              images?.length != 0
+              images?.length != 0 && !bike_list
                   ? ImageDisplay(
                       images:
                           images?.map((value) => value.image_path).toList() ??
