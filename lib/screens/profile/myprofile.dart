@@ -93,7 +93,7 @@ class _ProfilePage extends State<ProfilePage> {
                             ),
                             child: TabBarView(children: <Widget>[
                               Container(
-                                  padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
+                                  padding: const EdgeInsets.only(top: 0, left: 10, right: 0),
                                   child:
                                   Column(
                                       children: <Widget>[
