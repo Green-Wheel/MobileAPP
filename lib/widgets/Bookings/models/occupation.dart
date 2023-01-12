@@ -60,6 +60,7 @@ class Occupation {
   List<DateTime> split(Duration chunkTime){
     DateTime startTimeDate = DateFormat("yyyy-MM-dd HH:mm").parse(startTime);
     DateTime endTimeDate = DateFormat("yyyy-MM-dd HH:mm").parse(endTime);
+
     //Duration aux = Duration(hours: startTimeDate.hour, minutes: startTimeDate.minute);
     //Duration diff = DateTime.parse(endTime).difference(startTimeDate);
     //diff.inSeconds % Duration(days: startTimeDate.day)
@@ -68,9 +69,8 @@ class Occupation {
     log(currentDateTime.toString()+"  |  "+endTimeDate.toString());
     while(currentDateTime < endTimeDate)
     {
-
       chunks.add(currentDateTime);
-      //log(currentDateTime.toString());
+      log("Aqui"+currentDateTime.toString());
       currentDateTime = currentDateTime.add(chunkTime);
     }
     //log("chunks"+chunks.toString());

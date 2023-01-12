@@ -19,16 +19,17 @@ class BackendOperations{
     blocking_repeat_mode = mode;
   }
 
+
+
   Future<bool> applyBackendOperations() async {
     if(backendOperations.length <= 0) return true;
     log("Aplicando operaciones backend");
     List mergedBackendOperations = mergeBackendOperations();
     for(BackendOperation backendOperation in mergedBackendOperations){
-        if(!await backendOperation.execute())
-          {
+        if(!await backendOperation.execute()) return false;
+        log("Una operacion aplicada");
 
-            return false;
-          }
+
     }
     //reset();
     return true;
@@ -47,19 +48,18 @@ class BackendOperations{
 
     List<BackendOperation> toRemove=[];
 
-    var resizeBackendOperation = mergedBackendOperations[0];
+    BackendOperation resizeBackendOperation = mergedBackendOperations[0];
     for(int i=1; i < mergedBackendOperations.length; ++i){
       var current = mergedBackendOperations[i];
       log("current: $current");
       log("resizing: $resizeBackendOperation");
       if(
-      resizeBackendOperation.isContiguousWith(current) && (
-          resizeBackendOperation.operation == current.operation ||
-              (
-                  resizeBackendOperation.operation == OperationType.add &&
-                      current.operation == OperationType.nothing
-              )
-      )
+        resizeBackendOperation.isContiguousWith(current) &&
+        resizeBackendOperation.operation == current.operation ||
+          (
+              resizeBackendOperation.operation == OperationType.add &&
+              current.operation == OperationType.nothing
+          )
       ){
         resizeBackendOperation.endDate = current.endDate;
         log("Se mezcla: $resizeBackendOperation");
@@ -212,9 +212,12 @@ class BackendOperation{
     return ( date >= startDate && date < endDate );
   }
 
+  bool inSameDay(BackendOperation bo){
+    return this.startDate.day == bo.endDate.day;
+  }
+
   bool isContiguousWith(BackendOperation b){
     bool contiguous =
-        endDate.day == b.startDate.day &&
         endDate.difference(b.startDate).inMinutes.abs() <= Config.minTimeOfReservation.inMinutes;
     //log("iscontigousu ---->diference ${endDate.difference(b.startDate).inMinutes.abs()} <= ${Config.minTimeOfReservation.inMinutes} | ${(contiguous)?"Si":"No"}");
 

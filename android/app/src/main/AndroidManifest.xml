@@ -13,7 +13,7 @@
             android:icon="@mipmap/ic_launcher">
         <!-- Add your Google Maps API key here -->
         <meta-data android:name="com.google.android.geo.API_KEY"
-                   android:value="@string/GOOGLE_MAPS_API_KEY"/>
+                   android:value="AIzaSyD8Pi5Gqno8qBiVQSVTBiokyB0vQQHHTGs"/>
         <activity
                 android:name=".MainActivity"
                 android:icon="@mipmap/greenwheelfonsblanc"
