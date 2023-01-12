@@ -25,8 +25,13 @@ class GoogleMapsWidget extends StatefulWidget {
   Set<Polyline>? polylines;
   int? publicationId;
   LatLang? point_search_bar;
+
   GoogleMapsWidget(
-      {Key? key, required this.index, this.polylines = const {}, this.publicationId, this.point_search_bar})
+      {Key? key,
+      required this.index,
+      this.polylines = const {},
+      this.publicationId,
+      this.point_search_bar})
       : super(key: key);
 
   @override
@@ -251,7 +256,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   void _addBikeMarker(double lat, double log, int id) async {
     // Falta BikeType com a argument
     final iconMarker = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(devicePixelRatio: 3.2,),
+        const ImageConfiguration(
+          devicePixelRatio: 3.2,
+        ),
         "assets/images/punt_bicicleta.png");
     final Marker marcador = Marker(
         markerId: MarkerId(id.toString()),
@@ -269,7 +276,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
             _getBike(id);
           });
         } //_onMarkerTapped(MarkerId(id)),
-    );
+        );
     markers.add(marcador);
     markerMap[MarkerId(id.toString())] = marcador;
   }
@@ -281,7 +288,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _addMarker(double lat, double log, String chargerType, int id) async {
     final iconMarker = await BitmapDescriptor.fromAssetImage(
-        const ImageConfiguration(devicePixelRatio: 3.2,),
+        const ImageConfiguration(
+          devicePixelRatio: 3.2,
+        ),
         "assets/images/punt_carregador.png");
     final Marker marcador = Marker(
         markerId: MarkerId(id.toString()),
@@ -299,15 +308,14 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
             _getCharger(id);
           });
         } //_onMarkerTapped(MarkerId(id)),
-    );
+        );
     markers.add(marcador);
     markerMap[MarkerId(id.toString())] = marcador;
   }
 
-
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-    if(widget.point_search_bar != null) callBackAddress();
+    if (widget.point_search_bar != null) callBackAddress();
   }
 
   static const CameraPosition _kInitialPosition = CameraPosition(
@@ -373,7 +381,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     //print('$cameraPosition');
   }
 
-  void _setCardView()  {
+  void _setCardView() {
     _getCharger(widget.publicationId!);
     setState(() {
       widget.index = 0;
@@ -381,10 +389,10 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       is_visible = true;
       scrolledup = true;
       loading_charger = true;
-
     });
   }
-  void _setCardBikeView()  {
+
+  void _setCardBikeView() {
     _getBike(widget.publicationId!);
     setState(() {
       widget.index = 1;
@@ -395,14 +403,14 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     });
   }
 
-  void callBackAddress() async{
+  void callBackAddress() async {
     setPointAddress(widget.point_search_bar!);
     widget.point_search_bar = null;
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!is_visible && widget.publicationId != -1 && widget.index == 0 ) {
+    if (!is_visible && widget.publicationId != -1 && widget.index == 0) {
       _setCardView();
     }
     if (!is_visible && widget.publicationId != -1 && widget.index != 0) {
@@ -430,37 +438,36 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               onTap: (latLong) {
                 (SnackBar(
                   content: Text(
-                      'Tapped location LatLong is (${latLong.latitude},${latLong
-                          .longitude})'),
+                      'Tapped location LatLong is (${latLong.latitude},${latLong.longitude})'),
                 ));
               },
               onCameraMove: onCameraMove,
             ),
             is_visible ? show_card() : Container(),
-            widget.index == 0 ? Positioned(
-              top: 0,
-              width: MediaQuery.of(context).size.width,
-              child: ChargerFilterMap(
-                functionPublic: _getPublicChargers,
-                functionPrivate: _getPrivateChargers,
-                functionAll: _getChargers,
-              ),
-            ) :  Positioned(
-              top: 0,
-              width: MediaQuery.of(context).size.width,
-              child: BikeFilterMap(
-                functionNormal: _getNormalBikes,
-                functionElectric: _getElectricBikes,
-                functionAll: _getBikes,
-              ),
-            ),
+            widget.index == 0
+                ? Positioned(
+                    top: 0,
+                    width: MediaQuery.of(context).size.width,
+                    child: ChargerFilterMap(
+                      functionPublic: _getPublicChargers,
+                      functionPrivate: _getPrivateChargers,
+                      functionAll: _getChargers,
+                    ),
+                  )
+                : Positioned(
+                    top: 0,
+                    width: MediaQuery.of(context).size.width,
+                    child: BikeFilterMap(
+                      functionNormal: _getNormalBikes,
+                      functionElectric: _getElectricBikes,
+                      functionAll: _getBikes,
+                    ),
+                  ),
           ],
         ),
         floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
-            children: scrolledup ? scrollDown() : scrollMiddle()
-        )
-    );
+            children: scrolledup ? scrollDown() : scrollMiddle()));
   }
 
   List<Widget> scrollDown() {
@@ -475,7 +482,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
         padding: EdgeInsets.only(left: width * 0.83),
         child: currentLocationActionButton(),
       ),
-      const SizedBox(height: 200)];
+      const SizedBox(height: 200)
+    ];
   }
 
   List<Widget> scrollMiddle() {
@@ -493,7 +501,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     ];
   }
 
-
   Widget listButton() {
     if (widget.index == 0) {
       return const ButtonListScreenChargersWidget();
@@ -505,53 +512,47 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   Widget show_card() {
     if (widget.index == 0) {
       return SlidingUpPanel(
-          maxHeight: MediaQuery
-              .of(context)
-              .size
-              .height * 0.79,
+          maxHeight: MediaQuery.of(context).size.height * 0.79,
           minHeight: 210.0,
           controller: panelController,
           parallaxEnabled: true,
           parallaxOffset: 0.5,
           backdropEnabled: true,
-          onPanelSlide: (double pos) =>
-              setState(() {
+          onPanelSlide: (double pos) => setState(() {
                 if (pos < 0.2) {
                   scrolledup = true;
                 } else {
                   scrolledup = false;
                 }
               }),
-          panelBuilder: (controller) =>
-          _publicationloaded ? buildSlidingUpPanelCharger(
-            controller: controller,
-            panelController: panelController,
-          ) : Container(),
+          panelBuilder: (controller) => _publicationloaded
+              ? buildSlidingUpPanelCharger(
+                  controller: controller,
+                  panelController: panelController,
+                )
+              : Container(),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
     } else {
       return SlidingUpPanel(
-          maxHeight: MediaQuery
-              .of(context)
-              .size
-              .height * 0.8,
+          maxHeight: MediaQuery.of(context).size.height * 0.8,
           minHeight: 185.0,
           controller: panelController,
           parallaxEnabled: true,
           parallaxOffset: 0.5,
           backdropEnabled: true,
-          onPanelSlide: (double pos) =>
-              setState(() {
+          onPanelSlide: (double pos) => setState(() {
                 if (pos < 0.2) {
                   scrolledup = true;
                 } else {
                   scrolledup = false;
                 }
               }),
-          panelBuilder: (controller) =>
-          _publicationloaded ? buildSlidingUpPanelBike(
-            controller: controller,
-            panelController: panelController,
-          ) : Container(),
+          panelBuilder: (controller) => _publicationloaded
+              ? buildSlidingUpPanelBike(
+                  controller: controller,
+                  panelController: panelController,
+                )
+              : Container(),
           borderRadius: const BorderRadius.vertical(top: Radius.circular(18)));
     }
   }
@@ -602,7 +603,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   Widget buildSlidingUpPanelCharger(
-      {required ScrollController controller, required PanelController panelController}) {
+      {required ScrollController controller,
+      required PanelController panelController}) {
     int? id = markedCharger!.id;
     String? descrip = markedCharger!.title;
 
@@ -613,9 +615,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     }
 
     bool private = markedCharger!.charger_type == 'private';
-    double price = markedCharger!.private != null
-        ? markedCharger!.private!.price
-        : 0.0;
+    double price =
+        markedCharger!.private != null ? markedCharger!.private!.price : 0.0;
     String? direction = markedCharger!.direction;
     String? description = markedCharger!.description;
     double latitude = markedCharger!.localization.latitude;
@@ -627,31 +628,32 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       owner_id = 3;
     }
     String? owner_name = markedCharger!.private?.owner.username;
-    if (owner_name == null){
+    if (owner_name == null) {
       owner_name = "No owner";
     }
     String? contamination = markedCharger!.contamination;
     bool? compatible = markedCharger!.compatible;
     List? images = markedCharger!.images;
 
-    return CardInfoWidget(location: descrip,
-        rating: rate,
-        types: types,
-        available: true,
-        match: compatible,
-        private: private,
-        price: price,
-        direction: direction,
-        description: description,
-        latitude: latitude,
-        longitude: longitude,
-        private_list: false,
-        id: id,
-        owner_id: owner_id,
-        owner_username: owner_name,
-        contamination: contamination,
-        images: images,
-        );
+    return CardInfoWidget(
+      location: descrip,
+      rating: rate,
+      types: types,
+      available: true,
+      match: compatible,
+      private: private,
+      price: price,
+      direction: direction,
+      description: description,
+      latitude: latitude,
+      longitude: longitude,
+      private_list: false,
+      id: id,
+      owner_id: owner_id,
+      owner_username: owner_name,
+      contamination: contamination,
+      images: images,
+    );
   }
 
   void _showAvisNoEsPotCarregarBici() async {
@@ -695,7 +697,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
   }
 
   Widget buildSlidingUpPanelBike(
-      {required ScrollController controller, required PanelController panelController}) {
+      {required ScrollController controller,
+      required PanelController panelController}) {
     String? descrip = markedBike!.title!;
     BikeType bikeType = markedBike?.bike_type as BikeType;
     String? direction = markedBike!.direction;
@@ -710,11 +713,23 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     String? contamination = markedBike!.contamination;
     List? images = markedBike!.images;
 
-    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType,
-        description: description, direction: direction, price: price, power: power??0, bike_list: false,
-        latitude: latitude, longitude: longitude, id: id, owner_id: owner_id, contamination: contamination, images: images);
+    return BikeCardInfoWidget(
+        location: descrip,
+        rating: rate,
+        available: true,
+        type: bikeType,
+        description: description,
+        direction: direction,
+        price: price,
+        power: power ?? 0,
+        bike_list: false,
+        latitude: latitude,
+        longitude: longitude,
+        id: id,
+        owner_id: owner_id,
+        contamination: contamination,
+        images: images);
   }
-
 
   Widget currentLocationActionButton() {
     if (widget.index == 0) {
@@ -749,9 +764,8 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       ));
 
   void setPointAddress(LatLang point) {
-    setState(() {
-    });
-    mapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(point.lat, point.lng), 14.0));
+    setState(() {});
+    mapController.animateCamera(
+        CameraUpdate.newLatLngZoom(LatLng(point.lat, point.lng), 14.0));
   }
-
 }
