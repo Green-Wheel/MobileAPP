@@ -14,18 +14,18 @@ const String uploadImageUrl = 'users/upload/';
 
 
 
-class UserService extends ChangeNotifier {
+class UserService {
+  static void registerUser(BuildContext context, String username, String email,
+      String password, String firstName, String lastName) {
+    Map<String, dynamic> registerMap = {
+      'email': email,
+      'username': username,
+      'password': password,
+      'first_name': firstName,
+      'last_name': lastName
+    };
 
-  static void registerUser(BuildContext context,String username, String email, String password,String firstName,String lastName){
-      Map<String,dynamic> registerMap = {
-          'email': email,
-          'username': username,
-          'password': password,
-          'first_name': firstName,
-          'last_name': lastName
-        };
-
-      BackendService.post(registerUrl,registerMap).then((response)  {
+    BackendService.post(registerUrl,registerMap).then((response)  {
         if (response.statusCode == 201) {
           var jsonResponse = jsonDecode(response.body);
           LoginService ls =  LoginService();
@@ -67,14 +67,29 @@ class UserService extends ChangeNotifier {
     List<File> image =[];
     image.add(file);
     BackendService.postFiles(uploadImageUrl, image).then((response) {
-      if (response.statusCode == 200 ) {
+      if (response.statusCode == 200) {
         var _loginService = LoginService();
         _loginService.update_user_info();
-        Future.delayed(Duration.zero, () => showAlert(context,"Done","You have changed your image"));
-      }
-      else {
-        Future.delayed(Duration.zero, () => showAlert(context,"Error","We cannot retrieve the image"));
+        Future.delayed(Duration.zero,
+            () => showAlert(context, "Done", "You have changed your image"));
+      } else {
+        Future.delayed(Duration.zero,
+            () => showAlert(context, "Error", "We cannot retrieve the image"));
       }
     });
+  }
+
+  static Future<User?> getUser(int id) async {
+    User? result;
+    var response = await BackendService.get('users/$id/');
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      result = User.fromJson(jsonResponse);
+      print(result);
+      print(jsonResponse);
+    } else {
+      throw Exception('Error getting speeds');
+    }
+    return result;
   }
 }

@@ -28,7 +28,7 @@ class _ChatListUsers extends State<ChatListUsers> {
   void initState() {
     super.initState();
     _getChats();
-    timer = Timer.periodic(Duration(seconds: 3), (Timer t) => _getChats());
+    timer = Timer.periodic(Duration(seconds: 60), (Timer t) => _getChats());
   }
 
   @override

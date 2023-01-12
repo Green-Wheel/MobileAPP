@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:greenwheel/serializers/chat.dart';
 import 'package:greenwheel/serializers/users.dart';
+import 'package:greenwheel/services/backendServices/user_service.dart';
+import 'package:greenwheel/services/backend_service.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:intl/intl.dart';
 import 'package:web_socket_channel/io.dart';
@@ -16,7 +18,8 @@ import '../../widgets/message_widget.dart';
 
 class ChatView extends StatefulWidget {
   String? username;
-  int? to_user;
+  int to_user;
+
   ChatView({Key? key, required this.to_user, this.username}) : super(key: key);
 
   @override
@@ -26,6 +29,7 @@ class ChatView extends StatefulWidget {
 class _ChatView extends State<ChatView> {
   TextEditingController _controller = TextEditingController();
   ScrollController _scrollController = ScrollController();
+
   //final NotificationController notificationController = NotificationController();
 
   IOWebSocketChannel? channel;
@@ -34,6 +38,7 @@ class _ChatView extends State<ChatView> {
   late bool _error;
   late bool _loading;
   late int _pageNumber;
+  BasicUser? _receiver_user = null;
   List<ChatRoomMessage> _messages = [];
 
   @override
@@ -43,6 +48,7 @@ class _ChatView extends State<ChatView> {
     _error = false;
     _loading = true;
     _pageNumber = 1;
+    _getReceiverUser();
     fetchData();
     /*print("establint connexio");
     print("usuari mostra: $userId");
@@ -75,9 +81,42 @@ class _ChatView extends State<ChatView> {
         },
         onError: (error) {
           print(error.toString());
-        },);
-    } catch (e){
+        },
+      );
+    } catch (e) {
       print("Error connecting $e");
+    }
+  }
+
+  Future<void> _getReceiverUser() async {
+    try {
+      ChatService.getChatsId(widget.to_user).then((value) {
+        if (value != null) {
+          setState(() {
+            _receiver_user = value.to_user;
+          });
+        } else {
+          if (widget != null && widget.to_user != null) {
+            UserService.getUser(widget.to_user).then((value) {
+              if (value != null) {
+                setState(() {
+                  _receiver_user = BasicUser(
+                      username: value.username,
+                      first_name: value.first_name,
+                      last_name: value.last_name,
+                      profile_picture: value.profile_picture);
+                });
+              }
+            });
+            setState(() {
+              _receiver_user = null;
+            });
+            print("ERROR GETTING USER");
+          }
+        }
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -138,16 +177,15 @@ class _ChatView extends State<ChatView> {
 
   @override
   Widget build(BuildContext context) {
-    print(_messages);
-    String username = widget.username ?? "User";
     //fetchData();
     return Stack(
       children: [
         Image.asset(
           "assets/images/background_chat.jpg",
-           height: MediaQuery.of(context).size.height,
-           width: MediaQuery.of(context).size.width,
-           fit: BoxFit.cover,
+          //_receiver_user?.profile_picture != null ? _receiver_user!.profile_picture! : "assets/images/background_chat.jpg",
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.cover,
         ),
         Scaffold(
           backgroundColor: Colors.transparent,
@@ -162,27 +200,25 @@ class _ChatView extends State<ChatView> {
                         Navigator.pop(context);
                     }
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.09),
-                  const CircleAvatar(
-                    radius: 20,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                        color: Colors.green,
-                        Icons.person
-                    ),
-                  ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.07),
-                  //TODO: canviar cuando pueda obtener un user
-                  Text(username, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.1),
-                  /*IconButton(
+                SizedBox(width: MediaQuery.of(context).size.width * 0.09),
+                const CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.white,
+                  child: Icon(color: Colors.green, Icons.person),
+                ),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.07),
+                Text(_receiver_user != null ? _receiver_user!.username : "",
+                    style:
+                        TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                /*IconButton(
                       icon: const Icon(Icons.delete),
                       iconSize: 30,
                       onPressed: () {
                         DeleteChat(widget!.to_user);
                       }
                   ),*/
-                ],
+              ],
               ),
             ),
             body: !_loading ? SingleChildScrollView(
