@@ -182,7 +182,7 @@ class _RoutePageState extends State<RoutePage> {
         ),
         body: Stack(children: [
           Container(
-            padding: const EdgeInsets.only(bottom: 135),
+            padding: const EdgeInsets.only(bottom: 200),
             child: GoogleMapsWidget(index: 0, polylines: polylines, publicationId: widget.pubication_id),
           ),
           SlidingUpPanel(
