@@ -3,6 +3,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <application
             android:label="greenwheel"
@@ -13,9 +16,10 @@
 
         <!-- Add your Google Maps API key here -->
         <meta-data android:name="com.google.android.geo.API_KEY"
-                   android:value="@string/GOOGLE_MAPS_API_KEY"/>
+                   android:value="AIzaSyD8Pi5Gqno8qBiVQSVTBiokyB0vQQHHTGs"/>
         <activity
                 android:name=".MainActivity"
+                android:icon="@mipmap/greenwheelfonsblanc"
                 android:exported="true"
                 android:launchMode="singleTop"
                 android:theme="@style/LaunchTheme"
@@ -30,9 +34,22 @@
                     android:name="io.flutter.embedding.android.NormalTheme"
                     android:resource="@style/NormalTheme"
             />
+            <meta-data
+                    android:name="com.google.firebase.messaging.default_notification_channel_id"
+                    android:value="channel_id"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name="com.linusu.flutter_web_auth_2.CallbackActivity"
+                android:exported="true">
+            <intent-filter android:label="flutter_web_auth_2">
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="apifib" android:host="greenwheel"/>
             </intent-filter>
         </activity>
         <!-- Don't delete the meta-data below.

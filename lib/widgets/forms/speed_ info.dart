@@ -43,6 +43,7 @@ class _SpeedInfoState extends State<SpeedInfo> {
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(children: [
+        const Text('Select speeds'),
         Column(
           children: _speeds
               .map((item) => CheckboxListTile(
@@ -63,7 +64,7 @@ class _SpeedInfoState extends State<SpeedInfo> {
                   ))
               .toList(),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         Center(
           child: Row(
             children: [
@@ -73,7 +74,7 @@ class _SpeedInfoState extends State<SpeedInfo> {
                 },
                 child: const Text('Previous'),
               ),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               ElevatedButton(
                 onPressed: () {
                   widget.callback(widget.data);

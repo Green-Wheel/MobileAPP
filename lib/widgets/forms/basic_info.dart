@@ -37,7 +37,7 @@ class _BasicInfoState extends State<BasicInfo> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text("Title"),
+                const Text('Titulo'),
                 TextFormField(
                   initialValue: widget.data['title'],
                   onSaved: (value) {
@@ -53,8 +53,8 @@ class _BasicInfoState extends State<BasicInfo> {
                     return null;
                   },
                 ),
-                SizedBox(height: 10),
-                Text("Description"),
+                const SizedBox(height: 10),
+                const Text('Descripció'),
                 TextFormField(
                   initialValue: widget.data['description'],
                   onSaved: (value) {
@@ -70,8 +70,8 @@ class _BasicInfoState extends State<BasicInfo> {
                     return null;
                   },
                 ),
-                SizedBox(height: 10),
-                Text("Price"),
+                const SizedBox(height: 10),
+                const Text('Preu'),
                 TextFormField(
                   initialValue: widget.data['price'].toString() != '0.0' ? widget.data['price'].toString() : '',
                   keyboardType: TextInputType.number,
@@ -88,13 +88,14 @@ class _BasicInfoState extends State<BasicInfo> {
                     return null;
                   },
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
+                const Text('Afegeix imatges'),
                 SelectImage(
                   multiple: true,
                   getImageData: _getImageData,
                   imageFile: widget.data['images'],
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {

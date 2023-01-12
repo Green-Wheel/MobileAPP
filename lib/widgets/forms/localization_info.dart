@@ -112,7 +112,7 @@ class _LocalizationInfoState extends State<LocalizationInfo> {
                           },
                           child: const Text('Previous'),
                         ),
-                        SizedBox(width: 20),
+                        const SizedBox(width: 20),
                         ElevatedButton(
                           onPressed: () {
                             widget.callback(widget.localization, _selectedAddress);

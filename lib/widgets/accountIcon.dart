@@ -35,19 +35,27 @@ class _AccountIcon extends State<AccountIcon> {
 
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      if(widget.path_image != null)  widget.image_profile = NetworkImage(widget.path_image);
+      else widget.image_profile = AssetImage('assets/images/default_user_img.jpg');
+    });
+    print("_------------------------");
       return CircularPercentIndicator(
         radius: 55 ,
         lineWidth: 7.0,
         percent: widget.percent,
-        center: CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 48,
-          backgroundImage: widget.image_profile,
-        ),
+        center: account_icon(widget.image_profile, 48),
         progressColor: Colors.green,
         backgroundColor: Colors.white70,
     );
   }
 }
 
+Widget account_icon(ImageProvider<Object>? image,double radius){
+  return  CircleAvatar(
+    backgroundColor: Colors.white,
+    radius: radius,
+    backgroundImage: image,
+  );
+}
 

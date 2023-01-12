@@ -8,9 +8,10 @@ class ButtonsCard extends StatefulWidget {
   Function function;
   double longitude;
   double latitude;
+  bool charger;
 
   ButtonsCard({required this.function, required this.id, required this.longitude,
-    required this.latitude, super.key});
+    required this.latitude, required this.charger, super.key});
 
   @override
   State<StatefulWidget> createState() => _ButtonsCard();
@@ -61,7 +62,7 @@ class _ButtonsCard extends State<ButtonsCard> {
             Padding(
               padding: const EdgeInsets.only(right: 10.0),
               child: SizedBox(
-                height: 30,
+                height: 40,
                 child: TextButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<
@@ -77,7 +78,7 @@ class _ButtonsCard extends State<ButtonsCard> {
                       )
                   ),
                   onPressed: () {
-                    GoRouter.of(context).go('/route/${widget.longitude}/${widget.latitude}');
+                    GoRouter.of(context).go('/route/${widget.longitude}/${widget.latitude}/-1');
                   },
                   child: Row(
                     children: const [
@@ -103,7 +104,7 @@ class _ButtonsCard extends State<ButtonsCard> {
             Padding(
               padding: const EdgeInsets.only(right: 10.0),
               child: SizedBox(
-                height: 30,
+                height: 40,
                 child: TextButton(
                   style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all<
@@ -141,7 +142,7 @@ class _ButtonsCard extends State<ButtonsCard> {
         Column(
           children: [
             SizedBox(
-              height: 30,
+              height: 40,
               child: TextButton(
                 style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<
@@ -171,6 +172,48 @@ class _ButtonsCard extends State<ButtonsCard> {
                       color: Colors.red,
                     ),
                   ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: SizedBox(
+                height: 40,
+                child: TextButton(
+                  style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all<
+                          Color>(Colors.transparent),
+                      shape: MaterialStateProperty.all<
+                          RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  18.0),
+                              side: const BorderSide(
+                                  color: Colors.transparent)
+                          )
+                      )
+                  ),
+                  onPressed: () {
+                    GoRouter.of(context).go('/report/${widget.charger?'charger':'bike'}/${widget.id}');
+                  },
+                  child: Row(
+                    children: const [
+                      Text('',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.blueAccent),
+                      ),
+                      Icon(
+                        Icons.report_gmailerrorred,
+                        size: 25,
+                        color: Colors.red,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -3,20 +3,29 @@ import 'package:go_router/go_router.dart';
 import 'package:greenwheel/screens/bike-info-list/bikeInfoList.dart';
 import 'package:greenwheel/screens/bike/add_bike.dart';
 import 'package:greenwheel/screens/bike/edit_bike.dart';
+import 'package:greenwheel/screens/bike/report_bike.dart';
 import 'package:greenwheel/screens/bookings/bookings.dart';
+import 'package:greenwheel/screens/bookings/reservations.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
 import 'package:greenwheel/screens/chargers/add_charger.dart';
 import 'package:greenwheel/screens/chargers/edit_charger.dart';
 import 'package:greenwheel/screens/chat/chat_list_users.dart';
 import 'package:greenwheel/screens/chat/chat_view.dart';
+import 'package:greenwheel/screens/chargers/report_charger.dart';
 import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/login/login_screen.dart';
 import 'package:greenwheel/screens/profile/editprofile.dart';
 import 'package:greenwheel/screens/profile/myprofile.dart';
+import 'package:greenwheel/screens/profile/report_comment.dart';
+import 'package:greenwheel/screens/profile/report_user.dart';
 import 'package:greenwheel/screens/register/change_password.dart';
 import 'package:greenwheel/screens/register/recover_password.dart';
 import 'package:greenwheel/screens/register/signup.dart';
 import 'package:greenwheel/screens/route/route.dart';
+import 'package:greenwheel/screens/vehicles/AddVehicleScreen.dart';
+import 'package:greenwheel/screens/vehicles/EditVehicleScreen.dart';
+import 'package:greenwheel/screens/vehicles/vehicles.dart';
+import 'package:greenwheel/screens/trophies/trophiesScreen.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/language_selector_widget.dart';
 
@@ -30,19 +39,45 @@ GoRouter routeGenerator(LoginService loginService) {
           builder: (context, state) =>  HomePage(key: const Key("HomePage")),
           routes: [
             GoRoute(
-                path: 'profile',
-                builder: (context, state) =>
-                const ProfilePage(key: Key("ProfilePage")),
+                path: 'profile/:id',
+                builder: (context, state) {
+                  final int id = int.parse(state.params['id']!);
+                  return ProfilePage(key: Key("ProfilePage"), id: id);
+                },
                 routes: [
                   GoRoute(
                     path: 'edit',
                     builder: (context, state) =>
-                    const EditProfile(key: Key("EditProfile")),
+                    EditProfile(key: Key("EditProfile")),
                   ),
-                ]),
+                  GoRoute(
+                    path: 'trophies',
+                    builder: (context, state) {
+                      final int id = int.parse(state.params['id']!);
+                      return TrophiesScreen(key: Key("Trophies"), id);
+                    }
+                  ),
+                ]
+            ),
             GoRoute(
               path: 'language',
               builder: (context, state) => const LanguageSelectorWidget(key: Key("Language")),
+            ),
+            GoRoute(
+              path: 'home',
+              builder: (context, state) => HomePage(key: const Key("HomePage")),
+            ),
+            GoRoute(
+              path: 'vehicles/add',
+              builder: (context, state) =>
+              const AddVehicle(key: Key("AddVehicle")),
+            ),
+            GoRoute(
+              path: 'vehicle/edit/:id',
+              builder: (context, state) {
+                final int id = int.parse(state.params['id']!);
+                return EditVehicle(id: id, key: const Key("EditVehicle"));
+              },
             ),
             GoRoute(
               path: 'chargers/add',
@@ -92,19 +127,58 @@ GoRouter routeGenerator(LoginService loginService) {
               },
             ),
             GoRoute(
-              path: 'booking',
+              path: 'bookings',
               builder: (context, state) =>
               const MyBookings(key: Key("Booking")),
             ),
             GoRoute(
-              path: 'route/:lat/:long',
+              path: 'bookings/:id',
+              builder: (context, state) {
+                final id = int.parse(state.params['id']!);
+                return Reservate(key: const Key("Reservate"), id: id);
+              },
+            ),
+            GoRoute(
+              path: 'vehicle',
+              builder: (context, state) =>
+              const MyVehicles(key: Key("Vehicle")),
+            ),
+            GoRoute(path: 'report/user/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportUser(key: const Key("ReportUser"), user_id: id);
+                }),
+            GoRoute(path: 'report/rating/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportComment(key: const Key("ReportComment"), comment_id: id);
+                }),
+            GoRoute(path: 'report/bike/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportBike(key: const Key("ReportBike"), bike_id: id);
+                }),
+            GoRoute(path: 'report/charger/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportCharger(key: const Key("ReportChargers"), charger_id: id);
+                }),
+            GoRoute(path: 'report/user/:id',
+                builder: (context, state) {
+                  final id = int.parse(state.params['id']!);
+                  return ReportUser(key: const Key("ReportUser"), user_id: id);
+                }),
+            GoRoute(
+              path: 'route/:lat/:long/:id',
               builder: (context, state) {
                 final long = state.params['long']!;
                 final lat = state.params['lat']!;
+                final id = int.parse(state.params['id']!);
                 return RoutePage(
                   key: const Key("RoutePage"),
                   lat: lat,
                   long: long,
+                  pubication_id: id,
                 );
               },
             ),

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/screens/profile/widgets/aboutMe.dart';
 import 'package:greenwheel/screens/profile/widgets/infouser.dart';
 import 'package:greenwheel/screens/profile/widgets/mypoints.dart';
-import '../../serializers/users.dart';
 import '../../services/generalServices/LoginService.dart';
+import '../../widgets/list_user_ratings.dart';
+import '../rating/user_rating_valoration.dart';
 
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
-
+  ProfilePage({Key? key, required id}) : id=id,super(key: key);
+  int id;
   @override
   State<ProfilePage> createState() => _ProfilePage();
 
@@ -16,6 +18,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePage extends State<ProfilePage> {
   final _loggedInStateInfo = LoginService();
   var userData;
+
   @override
   void initState() {
     super.initState();
@@ -23,7 +26,6 @@ class _ProfilePage extends State<ProfilePage> {
   }
   void _getData() async {
     var data = _loggedInStateInfo.user_info;
-    print(data);
     setState(() {
       userData = data;
     });
@@ -31,68 +33,97 @@ class _ProfilePage extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('My Profile'),
         centerTitle: true,
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height/5,
-            padding: const EdgeInsets.only(top:20),
-            child: InfoUser(),
-          ),
-          Container(
-            padding : const EdgeInsets.only(top:0),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Colors.black),
-              ),
+      body: LayoutBuilder(
+        builder:
+            (BuildContext context, BoxConstraints viewportConstraints) {
+            return SingleChildScrollView(
+              child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: viewportConstraints.maxHeight),
+              child: Column(
+                children: <Widget> [
+                  Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height/4,
+                      padding: const EdgeInsets.only(top:20),
+                    child: InfoUser(widget.id),
+                  ),
+                  Container(
+                      padding : const EdgeInsets.only(top:0),
+                      decoration: const BoxDecoration(
+                          border: Border(
+                                    bottom: BorderSide(color: Colors.black),
+                          ),
+                      ),
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height/8,
+                    padding: const EdgeInsets.only(top:5),
+                    child:  (userData['id'] == widget.id) ? AboutMe(userData['id']) : AboutMe(widget.id),//ficar user
+                  ),
+                  Container(
+                    padding : const EdgeInsets.only(top:5),
+                    decoration: const BoxDecoration(
+                      border: Border(
+                        bottom: BorderSide(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  DefaultTabController(
+                      length: 2, // length of tabs
+                      initialIndex: 0,
+                      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: <Widget>[
+                        const TabBar(
+                          labelColor: Colors.green,
+                          unselectedLabelColor: Colors.black,
+                          tabs: [
+                            Tab(text: 'Posts'),
+                            Tab(text: 'Ratings'),
+                          ],
+                        ),
+                        Container(
+                            height: MediaQuery.of(context).size.height/2, //height of TabBarView
+                            decoration: const BoxDecoration(
+                                border: Border(top: BorderSide(color: Colors.grey, width: 0.5))
+                            ),
+                            child: TabBarView(children: <Widget>[
+                              Container(
+                                  padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
+                                  child:
+                                  Column(
+                                      children: <Widget>[
+                                        const Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text("My Posts",
+                                              style: TextStyle(
+                                                  fontSize: 20, fontWeight: FontWeight.bold)),
+                                        ),
+                                        (userData['id'] == widget.id) ? MyPoints(userData['id']) : MyPoints(widget.id),
+                                      ]
+                                  )
+                              ),
+                              Container(
+                                padding: const EdgeInsets.only(top:5),
+                                child: UserRatings(widget.id)//RateUser(user_id: 2,booking_id: 2),
+                              ),
+                            ])
+                        )
+                      ])
+                   ),
+                  ],
+                 ),
+
+                // remaining stuffs
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top:5),
-            child: aboutMe( userData['about'] != null ? userData['about'] : "No content aboutMe"),//ficar user
-          ),
-          Container(
-            padding : const EdgeInsets.only(top:5),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(color: Colors.black),
-              ),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top:10),
-            child: MyPoints(),
-          ),
-        ],
-      ),
+          );
+        },
+      )
     );
   }
 
-  Widget aboutMe(String aboutMe) {
-    return Container(
-        padding: const EdgeInsets.only(top: 0, left: 20, right: 20),
-        child: Column(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("About Me",
-                    style: TextStyle(
-                        fontSize: 24, fontWeight: FontWeight.bold)),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                    aboutMe,
-                    style: TextStyle(fontSize: 16)
-                ),
-              ),
-
-            ]
-        )
-    );
-  }
 }

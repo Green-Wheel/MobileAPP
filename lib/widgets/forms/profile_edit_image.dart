@@ -48,7 +48,7 @@ class _SelectImageEdit extends State<SelectImageEdit> {
         final pickedFile = await ImagePicker().pickImage(source: source);
         setState(() => image = File(pickedFile!.path));
         if(image!= null) {
-          UserService.putImage(context, image!);
+          UserService.postImage(context, image!);
           setState(() {
             widget.image_profile = Image.file(image!) as ImageProvider<Object>?;
           });
