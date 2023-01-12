@@ -20,8 +20,8 @@ class _VehicleFormState extends State<VehicleForm> {
   //variables
   int _page = 0;
   late final Map<String, dynamic> _data;
-  int _brandId = 0;
-  int _modelId = 0;
+  int _brandId = 1;
+  int _modelId = 1;
 
   //functions
   void nextPage() {
@@ -45,7 +45,7 @@ class _VehicleFormState extends State<VehicleForm> {
           'alias': '',
           'car_license': '',
           'charge_capacity': '',
-          'model': 0,
+          'model': 1,
         };
   }
 
