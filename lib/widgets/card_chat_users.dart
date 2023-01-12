@@ -9,12 +9,20 @@ class CardChatUsersWidget extends StatefulWidget {
   bool new_message;
   String last_message_time;
   BuildContext context;
-  int? room_id;
-  Function? setejar;
+  int? to_user_id;
+
+  //Function? setejar;
 
   //opcion leido del usuario en el doublecheck
-  CardChatUsersWidget({Key? key, required this.username, required this.last_message_received, required this.new_message,
-    required this.last_message_time, required this.room_id, required this.context, required this.setejar}) : super(key: key);
+  CardChatUsersWidget(
+      {Key? key,
+      required this.username,
+      required this.last_message_received,
+      required this.new_message,
+      required this.last_message_time,
+      required this.to_user_id,
+      required this.context})
+      : super(key: key);
 
   @override
   State<CardChatUsersWidget> createState() => _CardChatUsersWidget();
@@ -22,6 +30,10 @@ class CardChatUsersWidget extends StatefulWidget {
 
 
 class _CardChatUsersWidget extends State<CardChatUsersWidget> {
+  refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -29,10 +41,10 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
         //print(widget.room_id);
 
         //decrementar unread + cridar a la api
-        widget.setejar!();
-        ChatService.putUnreadMessage(widget.room_id!);
+        //widget.setejar!();
+        ChatService.putUnreadMessage(widget.to_user_id!);
 
-        GoRouter.of(context).go('/chats/${widget.room_id!}');
+        GoRouter.of(context).push('/chats/${widget.to_user_id!}');
         widget.new_message = false;
       },
       child: SizedBox(
@@ -41,18 +53,16 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
           child: Column (
             children: [
               ListTile(
-                leading: !widget.new_message ?  CircleAvatar(
-                    radius: 27,
-                    backgroundColor: Colors.green[100],
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 12),
-                          child: Icon(
-                              size: 30,
-                              color: Colors.green,
-                              Icons.person
-                          ),
+                leading: widget.new_message
+                    ? CircleAvatar(
+                        radius: 27,
+                        backgroundColor: Colors.green[100],
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 12),
+                              child: Icon(
+                                  size: 30, color: Colors.green, Icons.person),
                         ),
                         Padding(
                           padding: EdgeInsets.only(bottom:35),
@@ -82,23 +92,29 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          !widget.new_message ? Text(
-                            widget.username,
-                            style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
-                          ): Text(
-                            widget.username,
-                            style: const TextStyle(fontSize: 18, color: Colors.black),
-                          ),
+                          widget.new_message
+                              ? Text(
+                                  widget.username,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              : Text(
+                                  widget.username,
+                                  style: const TextStyle(
+                                      fontSize: 18, color: Colors.black),
+                                ),
                           SizedBox(height: 4),
                           Row(
-                            children:[
-                              Icon(
+                              children:[
+                                Icon(
                                   Icons.done_all,
-                                size: 15,
-                              ),
-                              SizedBox(width: 5),
-                              Text(widget.last_message_received, style: TextStyle(fontSize: 14, color: Colors.grey)),
-                            ]
+                                  size: 15,
+                                ),
+                                SizedBox(width: 5),
+                                Text(widget.last_message_received, style: TextStyle(fontSize: 14, color: Colors.grey)),
+                              ]
                           )
                         ],
                       ),

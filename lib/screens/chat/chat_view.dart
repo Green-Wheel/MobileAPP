@@ -58,13 +58,17 @@ class _ChatView extends State<ChatView> {
       late var channelStream = channel?.stream.asBroadcastStream();
       channelStream?.listen((message) {
         Map msg = json.decode(message);
-        if (msg["type"] == "send.message") {
-          listenMessage(msg);
-          setState(() {
-
-          });
-        }
-      },
+          print("Message received: $msg");
+          if (msg["type"] == "send.message" && msg["sender"]["id"] != userId) {
+            if (msg["sender"]["id"] == widget.to_user) {
+              print("holii");
+              listenMessage(msg);
+              ChatService.putUnreadMessage(msg["room_id"]);
+            } else {
+              // @TODO ENVIAR NOTIFICACIO
+            }
+          }
+        },
         onDone: () {
           print("Socket disconnected");
           channelconnect();
@@ -155,8 +159,8 @@ class _ChatView extends State<ChatView> {
                   IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        GoRouter.of(context).go('/chats');
-                      }
+                        Navigator.pop(context);
+                    }
                   ),
                   SizedBox(width: MediaQuery.of(context).size.width * 0.09),
                   const CircleAvatar(
@@ -237,16 +241,15 @@ class _ChatView extends State<ChatView> {
 
   void listenMessage(Map msg){
     setState(() {
-      if (msg['sender']['id'] != userId) {
-        _messages.add(ChatRoomMessage(
-          content: msg['content'],
-          created_at: DateTime.now(),
-          id: msg['id'],
-          sender: BasicUser(first_name: msg['sender']['first_name'],
-              last_name: msg['sender']['last_name'],
-              username: msg['sender']['username']),
-        ));
-      }
+      _messages.add(ChatRoomMessage(
+        content: msg['content'],
+        created_at: DateTime.now(),
+        id: msg['id'],
+        sender: BasicUser(
+            first_name: msg['sender']['first_name'],
+            last_name: msg['sender']['last_name'],
+            username: msg['sender']['username']),
+      ));
     });
   }
 
