@@ -154,7 +154,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                     children: [
                       private? SizedBox(height: 10): SizedBox(height: 0),
                       private? SizedBox(height: 60) : SizedBox(height: 0),
-                      private? ButtonReservaListWidget() : SizedBox(height: 0),
+                      private? ButtonReservaListWidget(id: id) : SizedBox(height: 0),
                       private? SizedBox(height: MediaQuery.of(context).size.height * 0.03):  SizedBox(height: 0),
 
                     private? Padding (
