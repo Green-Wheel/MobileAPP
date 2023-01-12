@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/widgets/avaliable_public_charger.dart';
 import 'package:greenwheel/widgets/button_delete_charger.dart';
 import 'package:greenwheel/widgets/button_reserva_list.dart';
@@ -241,7 +242,7 @@ Widget _buildCard(String? location, double? rating, List<ConnectionType> types, 
                         padding: EdgeInsets.only(left: 25),
                         child: InkWell(
                           onTap: () {
-                            //TODO: Ruta user perfil
+                            GoRouter.of(context).go("/profile/$owner_id");
                           },
                           child: Row(
                               children:[

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backendServices/user_service.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/button_blue_route.dart';
@@ -202,7 +203,7 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                               padding: EdgeInsets.only(left: 25),
                               child: InkWell(
                                   onTap: () {
-                                    //TODO: Ruta user perfil
+                                    GoRouter.of(context).go("/profile/$owner_id");
                                   },
                                   child: Row(
                                       children:[
