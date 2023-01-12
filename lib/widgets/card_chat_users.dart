@@ -87,7 +87,7 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
                 title: Row(
                   children: [
                     SizedBox(
-                      width: MediaQuery.of(widget.context).size.width * 0.6,
+                      width: MediaQuery.of(widget.context).size.width * 0.5,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -124,7 +124,7 @@ class _ChatListUsers extends State<ChatListUsers> {
                       GoRouter.of(context).go('/');
                     }
                 ),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.2),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.18),
                 const CircleAvatar(
                   radius: 20,
                   backgroundColor: Colors.white,
@@ -133,9 +133,9 @@ class _ChatListUsers extends State<ChatListUsers> {
                       Icons.chat
                   ),
                 ),
-                const SizedBox(width: 15),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
                 const Text("Chat", style: TextStyle(fontSize: 20, color: Colors.white),),
-                SizedBox(width: MediaQuery.of(context).size.width * 0.15),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.1),
                 Column(
                     children:[
                       Stack(
