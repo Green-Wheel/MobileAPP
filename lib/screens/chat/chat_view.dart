@@ -67,7 +67,6 @@ class _ChatView extends State<ChatView> {
           print("Message received: $msg");
           if (msg["type"] == "send.message" && msg["sender"]["id"] != userId) {
             if (msg["sender"]["id"] == widget.to_user) {
-              print("holii");
               listenMessage(msg);
               ChatService.putUnreadMessage(msg["room_id"]);
             } else {
@@ -289,12 +288,12 @@ class _ChatView extends State<ChatView> {
     });
   }
 
-  void SendMessage (String message, int id_user){
+  void SendMessage (String message, int to_user){
     try{
       print("Sending message !!!!!!!!!!!!!!");
       channel?.sink.add(jsonEncode({
         "message": message,
-        "to_user": 2,
+        "to_user": to_user,
       }));
     } on Exception catch(e){
       print(e);
