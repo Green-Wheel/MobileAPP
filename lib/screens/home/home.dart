@@ -30,9 +30,12 @@ class _HomePageState extends State<HomePage> {
 
   final nameController = TextEditingController();
 
-  void callBack (LatLang value,String selectioned) {
+  void callBack (LatLang value, String selectioned) {
     setState(() {
       widget.point_search = value;
+      print("--------------------");
+      print(value);
+      print("--------------------");
       if(!widget.suggestions.contains(selectioned)) widget.suggestions.add(selectioned);
     });
   }
@@ -50,7 +53,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        child: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId),
+        child: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId, point_search_bar: widget.point_search),
       ),
     );
   }

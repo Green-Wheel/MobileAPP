@@ -62,8 +62,7 @@ class GoogleService {
   // https://developers.google.com/maps/documentation/places/web-service/autocomplete
   static Future<dynamic> getAutocomplete(String input) async {
     final url =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&types=address&key=${FlutterConfig
-        .get('GOOGLE_MAPS_API_KEY')}&components=country:es';
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&types=address&key=$apiKey&components=country:es';
     var response = await http.get(Uri.parse(url));
     return jsonDecode(response.body);
   }

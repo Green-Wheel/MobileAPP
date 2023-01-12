@@ -130,9 +130,6 @@ class DataSearch extends SearchDelegate<String> {
     if(query.isNotEmpty) _getAdresses(query);
     else{
       autocompletation = suggestions;
-      print("XXXXXXXXXXXXXXXXXXXX");
-      print(suggestions);
-      print("XXXXXXXXXXXXXXXXXXXX");
     }
     return ListView.builder(
       itemCount: autocompletation.length,
