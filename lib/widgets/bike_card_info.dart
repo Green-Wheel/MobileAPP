@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/services/backendServices/user_service.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/button_blue_route.dart';
 import 'package:greenwheel/widgets/button_delete_bike.dart';
@@ -9,6 +10,7 @@ import 'package:greenwheel/widgets/image_bike.dart';
 import 'package:greenwheel/widgets/location_bike.dart';
 import 'package:greenwheel/widgets/point_of_charge_dist.dart';
 import 'package:greenwheel/widgets/stars_static_rate.dart';
+
 
 import '../serializers/bikes.dart';
 import 'available_bike.dart';
@@ -39,9 +41,8 @@ class BikeCardInfoWidget extends StatefulWidget {
 }
 
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
-  final _loggedInStateInfo = LoginService();
   var userData;
-  bool mybike = false;
+  bool mybike = true;
   String username = "";
   @override
   void initState() {
@@ -49,11 +50,12 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
     _getData();
   }
   void _getData() async {
-    var data = _loggedInStateInfo.user_info;
+    var data = LoginService().user_info;
+    var user = await UserService.getUser(widget.owner_id!);
     setState(() {
       userData = data;
       mybike = userData['id'] == widget.owner_id;
-      username = userData['username'];
+      username = user?.username ?? "";
     });
   }
 
@@ -232,8 +234,8 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                                   padding: EdgeInsets.only(left: 20),
                                   child:ChatButtonWidget(to_user: owner_id),
                                 ): SizedBox(height: 0),
-                                !mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
-                                mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
+                                //!mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
+                                //mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
                               ],
                             ),
                           ]
