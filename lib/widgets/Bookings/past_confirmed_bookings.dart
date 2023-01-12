@@ -21,22 +21,22 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Confirm booking',
-      home: confirm_booking(),
+      home: past_confirm_booking(),
     );
   }
 }
 
-class confirm_booking extends StatefulWidget {
+class past_confirm_booking extends StatefulWidget {
   List<bkn.Booking> bookings=[];
   bool waitingBackend = true;
 
-  confirm_booking({Key? key}) : super(key: key);
+  past_confirm_booking({Key? key}) : super(key: key);
 
   @override
-  State<confirm_booking> createState() => _confirm_bookingState();
+  State<past_confirm_booking> createState() => _past_confirm_bookingState();
 }
 
-class _confirm_bookingState extends State<confirm_booking> {
+class _past_confirm_bookingState extends State<past_confirm_booking> {
 
 
   Future<void> getPendingBookingsFromBackend() async {
