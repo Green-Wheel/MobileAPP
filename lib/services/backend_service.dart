@@ -15,6 +15,7 @@ class BackendService {
   /// @return: Devuelve un Future con el resultado del get, al cual se le debe hacer un then para obtener el resultado
   static Future<http.Response> get(String endpoint) async {
     var apiKey = _loggedInStateInfo.apiKey;
+    print(apiKey);
     apiKey ??= "";
     print(_baseUrl + endpoint);
     http.Response response = await http.get(
