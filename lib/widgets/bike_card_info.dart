@@ -271,7 +271,7 @@ Widget _buildCard(
                               padding: EdgeInsets.only(left: 25),
                               child: InkWell(
                                   onTap: () {
-                                    GoRouter.of(context).go("/profile/$owner_id");
+                                    GoRouter.of(context).go('/profile/$owner_id');
                                   },
                                   child: Row(
                                       children:[
