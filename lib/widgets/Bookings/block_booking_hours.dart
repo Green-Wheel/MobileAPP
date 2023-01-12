@@ -31,25 +31,25 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Booking calendar',
-      home: BookingCalendar(id: 432),
+      home: BlockingBookingCalendar(id: 432),
     );
   }
 }
 
-class BookingCalendar extends StatefulWidget {
+class BlockingBookingCalendar extends StatefulWidget {
   Map<String, dynamic> data = Map();
   bool waitingBakend = true;
   int id;
   DateTime selectedDate = DateTime.now();
   late DateStates datesState;
   late BackendOperations backendOperations;
-  BookingCalendar({Key? key, required this.id}) : super(key: key);
+  BlockingBookingCalendar({Key? key, required this.id}) : super(key: key);
 
   @override
-  State<BookingCalendar> createState() => BookingCalendarState();
+  State<BlockingBookingCalendar> createState() => BlockingBookingCalendarState();
 }
 
-class BookingCalendarState extends State<BookingCalendar> {
+class BlockingBookingCalendarState extends State<BlockingBookingCalendar> {
 
   @override
   Widget build(BuildContext context) {

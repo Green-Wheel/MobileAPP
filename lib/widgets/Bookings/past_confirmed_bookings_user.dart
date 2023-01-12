@@ -7,18 +7,18 @@ import 'package:greenwheel/widgets/Bookings/booking_list.dart';
 
 void main() => runApp(
     MaterialApp(
-        home: bookingTabs()
+        home: bookingTabsUser()
     )
 );
 
-class bookingTabs extends StatefulWidget {
-  bookingTabs({Key? key}) : super(key: key);
+class bookingTabsUser extends StatefulWidget {
+  bookingTabsUser({Key? key}) : super(key: key);
 
   @override
-  State<bookingTabs> createState() => _bookingTabsState();
+  State<bookingTabsUser> createState() => _bookingTabsUserState();
 }
 
-class _bookingTabsState extends State<bookingTabs> {
+class _bookingTabsUserState extends State<bookingTabsUser> {
 
   @override
   Widget build(BuildContext context) {
@@ -43,8 +43,8 @@ class _bookingTabsState extends State<bookingTabs> {
           ),
           body: TabBarView(
             children: [
-              booking_list(getFinisheds: false,isOwner: true,),
-              booking_list(getFinisheds: true,isOwner: true,),
+              booking_list(getFinisheds: false,isOwner: false,),
+              booking_list(getFinisheds: true,isOwner: false,),
             ],
           )
       ),

@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       title: 'Confirm booking',
-      home: booking_list(getFinisheds:true),
+      home: booking_list(getFinisheds:true,isOwner: true,),
     );
   }
 }
@@ -31,7 +31,9 @@ class booking_list extends StatefulWidget {
   List<bkn.Booking> bookings=[];
   bool waitingBackend = true;
   bool getFinisheds=true;
-  booking_list({Key? key,required this.getFinisheds}) : super(key: key);
+
+  var isOwner;
+  booking_list({Key? key,required this.getFinisheds, required this.isOwner}) : super(key: key);
 
   @override
   State<booking_list> createState() => _booking_listState();
@@ -43,7 +45,8 @@ class _booking_listState extends State<booking_list> {
   Future<void> getPastBookingsFromBackend() async {
 
     widget.waitingBackend = true;
-    widget.bookings = (await BookingService.getBookingsHistory()).cast<bkn.Booking>();
+    widget.bookings = (await BookingService.getBookingsHistory(widget.isOwner)).cast<bkn.Booking>();
+
     log("#################### PASADAS #####################");
     log(widget.bookings.toString());
     widget.waitingBackend = false;
@@ -55,7 +58,7 @@ class _booking_listState extends State<booking_list> {
   Future<void> getNotFinishedBookingsFromBackend() async {
 
     widget.waitingBackend = true;
-    widget.bookings = (await BookingService.getBookingsByType("not_finished")).cast<bkn.Booking>();
+    widget.bookings = (await BookingService.getBookingsByType("not_finished", widget.isOwner)).cast<bkn.Booking>();
     log("#################### PENDIENTES #####################");    log(widget.bookings.toString());
     widget.waitingBackend = false;
     setState(() {
@@ -65,6 +68,7 @@ class _booking_listState extends State<booking_list> {
 
   @override
   void initState() {
+
     (widget.getFinisheds)?
     getPastBookingsFromBackend():
     getNotFinishedBookingsFromBackend();

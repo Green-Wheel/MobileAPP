@@ -27,9 +27,11 @@ import 'package:greenwheel/screens/vehicles/EditVehicleScreen.dart';
 import 'package:greenwheel/screens/vehicles/vehicles.dart';
 import 'package:greenwheel/screens/trophies/trophiesScreen.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
+import 'package:greenwheel/widgets/Bookings/block_booking_hours.dart';
 import 'package:greenwheel/widgets/Bookings/past_confirmed_bookings.dart';
 import 'package:greenwheel/widgets/Bookings/confirm_booking.dart';
 import 'package:greenwheel/widgets/Bookings/past_confirmed_bookings.dart';
+import 'package:greenwheel/widgets/Bookings/past_confirmed_bookings_user.dart';
 import 'package:greenwheel/widgets/language_selector_widget.dart';
 
 GoRouter routeGenerator(LoginService loginService) {
@@ -132,13 +134,20 @@ GoRouter routeGenerator(LoginService loginService) {
             GoRoute(
               path: 'bookings',
               builder: (context, state) =>
-              const MyBookings(key: Key("Booking")),
+              bookingTabsUser(key: Key("Bookings_User")),
             ),
             GoRoute(
               path: 'bookings/:id',
               builder: (context, state) {
                 final id = int.parse(state.params['id']!);
                 return Reservate(key: const Key("Reservate"), id: id);
+              },
+            ),
+            GoRoute(
+              path: 'bookings/admin/block_hours/:id',
+              builder: (context, state) {
+                final id = int.parse(state.params['id']!);
+                return BlockingBookingCalendar(key: const Key("BlockingBookingCalendar"), id: id);
               },
             ),
             GoRoute(
@@ -181,6 +190,7 @@ GoRouter routeGenerator(LoginService loginService) {
                 builder: (context, state) {
                   return bookingTabs(key: const Key("adminHistory"));
                 }),
+
             GoRoute(
               path: 'route/:lat/:long/:id',
               builder: (context, state) {
