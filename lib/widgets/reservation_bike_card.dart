@@ -115,7 +115,7 @@ class _ReservationBikeCard extends State<ReservationBikeCard> {
             child: ButtonsCard(longitude: 41.389622159782746,
                 latitude: 2.113375926632859,
                 function: callSetState,
-                id: id),
+                id: id, charger: false,),
           ),
         ],
         ),

@@ -608,6 +608,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   Widget buildSlidingUpPanelCharger(
       {required ScrollController controller, required PanelController panelController}) {
+    int? id = markedCharger!.id;
     String? descrip = markedCharger!.title;
 
     //Obtencion del numero de tipos de cargadores
@@ -627,7 +628,9 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     double rate = 3;
     if(markedCharger!.avg_rating != null) rate = markedCharger!.avg_rating!;
 
-    return CardInfoWidget(location: descrip,
+    return CardInfoWidget(
+        id: id,
+        location: descrip,
         rating: rate,
         types: types,
         available: true,
