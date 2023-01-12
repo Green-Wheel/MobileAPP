@@ -9,6 +9,8 @@ import 'package:greenwheel/screens/bookings/reservations.dart';
 import 'package:greenwheel/screens/charger-info-list/chargeInfoList.dart';
 import 'package:greenwheel/screens/chargers/add_charger.dart';
 import 'package:greenwheel/screens/chargers/edit_charger.dart';
+import 'package:greenwheel/screens/chat/chat_list_users.dart';
+import 'package:greenwheel/screens/chat/chat_view.dart';
 import 'package:greenwheel/screens/chargers/report_charger.dart';
 import 'package:greenwheel/screens/home/home.dart';
 import 'package:greenwheel/screens/login/login_screen.dart';
@@ -190,6 +192,43 @@ GoRouter routeGenerator(LoginService loginService) {
                   long: long,
                   pubication_id: id,
                 );
+              },
+            ),
+            GoRoute(
+              path: 'chats',
+              builder: (context, state) {
+                return ChatListUsers(key: Key("ChatListUsers"));
+              },
+            ),
+            GoRoute(
+              path: 'chats/:id',
+              builder: (context, state) {
+                //TODO: mirar tema ruta parametres no donguin null value
+                final id = int.parse(state.params['id']!);
+                return ChatView(key: Key("ChatListUsers"), to_user: id);
+              },
+            ),
+            GoRoute(
+              path: 'chats/:id/messages',
+              builder: (context, state) {
+                final id = int.parse(state.params['id']!);
+                final username = state.params['username']!;
+                return ChatView(key: Key("ChatListUsers"), username: username, to_user: id);
+              },
+            ),
+            GoRoute(
+              path: 'chats/unread',
+              builder: (context, state) {
+                final unread = int.parse(state.params['unread']!);
+                return ChatListUsers(key: Key("ChatListUsers"));
+              },
+            ),
+            GoRoute(
+              //TODO: revisar paths unread
+              path: 'chats/unread/:id',
+              builder: (context, state) {
+                final unread = int.parse(state.params['unread']!);
+                return ChatListUsers(key: Key("ChatListUsers"));
               },
             ),
           ]),

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/button_blue_route.dart';
+import 'package:greenwheel/widgets/button_delete_bike.dart';
 import 'package:greenwheel/widgets/button_reserva_list.dart';
 import 'package:greenwheel/widgets/button_route.dart';
+import 'package:greenwheel/widgets/chat_button.dart';
 import 'package:greenwheel/widgets/image_bike.dart';
 import 'package:greenwheel/widgets/location_bike.dart';
 import 'package:greenwheel/widgets/point_of_charge_dist.dart';
@@ -23,24 +26,47 @@ class BikeCardInfoWidget extends StatefulWidget {
   bool bike_list;
   double latitude;
   double longitude;
-  String contamination;
+  int? id;
+  int? owner_id;
+  String? contamination;
 
 
   BikeCardInfoWidget({required this.location, required this.rating, required this.available,  required this.type,  required this.price,  required this.description,  required this.direction,
-    required this.power,  required this.bike_list, required this.latitude, required this.longitude, required this.contamination ,super.key});
+    required this.power,  required this.bike_list, required this.latitude, required this.longitude, required this.id, required this.owner_id, required this.contamination, super.key});
 
   @override
   State<StatefulWidget> createState() => _BikeCardInfoWidget();
 }
 
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget>{
+  final _loggedInStateInfo = LoginService();
+  var userData;
+  bool mybike = false;
+  String username = "";
+  @override
+  void initState() {
+    super.initState();
+    _getData();
+  }
+  void _getData() async {
+    var data = _loggedInStateInfo.user_info;
+    setState(() {
+      userData = data;
+      mybike = userData['id'] == widget.owner_id;
+      username = userData['username'];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description, widget.direction, widget.power, widget.bike_list, widget.latitude, widget.latitude, widget.contamination, context);
+    return _buildCard(widget.location, widget.rating, widget.available, widget.type, widget.price, widget.description,
+        widget.direction, widget.power, widget.bike_list, widget.latitude, widget.longitude, widget.id, context, mybike, widget.owner_id, username, widget.contamination);
   }
 }
 
-Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction, double power, bool bike_list, double latitude, double longitude,String contamination ,BuildContext context) {
+
+Widget _buildCard(String? location, double? rating, bool available, BikeType type, double price, String? description, String? direction,
+    double power, bool bike_list, double latitude, double longitude, int? id, BuildContext context, bool mybike, int? owner_id, String? username, String? contamination) {
   return Card(
     elevation: 10,
     shape:  const RoundedRectangleBorder(
@@ -113,6 +139,22 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                     ],
                   )
               ),
+              Padding(
+                padding: EdgeInsets.only(left: 24, top: 5),
+                child: Row(
+                  children: [
+                    if(contamination == null ) Icon(Icons.cloud_circle_outlined, color: Colors.grey),
+                    if(contamination == "green") Icon(Icons.cloud_circle_outlined, color: Colors.green),
+                    if(contamination == "yellow") Icon(Icons.cloud_circle_outlined, color: Colors.yellow),
+                    if(contamination == "red") Icon(Icons.cloud_circle_outlined, color: Colors.red),
+                    if(contamination == "maroon") Icon(Icons.cloud_circle_outlined, color: Colors.brown),
+                    if(contamination == "orange") Icon(Icons.cloud_circle_outlined, color: Colors.orange),
+                    SizedBox(width: 2),
+                    Text("Contamination",
+                        style: TextStyle( color: Colors.black)),
+                  ],
+                ),
+              ),
               !bike_list ? SizedBox(height: 65): SizedBox(height: 0),
               !bike_list ? SizedBox(
                   width: MediaQuery.of(context).size.width * 0.925,
@@ -124,6 +166,14 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                             !bike_list? SizedBox(height: 10): SizedBox(height: 0),
                             !bike_list? Column(
                                 children: [
+                                  SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+                                  Padding(padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.5, bottom: 10),
+                                    child:CircleAvatar(
+                                        radius: 20,
+                                        backgroundColor: Colors.lightBlue[100],
+                                        child: Icon(Icons.location_on, color: Colors.blue, size: 30,)
+                                    ),
+                                  ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width * 0.925,
                                     child: Padding(
@@ -145,7 +195,47 @@ Widget _buildCard(String? location, double? rating, bool available, BikeType typ
                                     ),
                                   ),
                                 ]): SizedBox(height: 0),
-                            SizedBox(height: 10)
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                            Padding (
+                              padding: EdgeInsets.only(left: 25),
+                              child: InkWell(
+                                  onTap: () {
+                                    //TODO: Ruta user perfil
+                                  },
+                                  child: Row(
+                                      children:[
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor: Colors.lightBlue[100],
+                                          child: Icon(
+                                              color: Colors.blue,
+                                              Icons.person,
+                                              size: 30
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text("$username",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ]
+                                  )
+                              ),
+                            ),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+                            Row(
+                              children: [
+                                !mybike ? Padding(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child:ChatButtonWidget(to_user: owner_id),
+                                ): SizedBox(height: 0),
+                                !mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
+                                mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
+                              ],
+                            ),
                           ]
                       )
                   )

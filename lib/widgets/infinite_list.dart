@@ -174,14 +174,20 @@ class _InfiniteList extends State<InfiniteList>{
           types.add(_markersListAll[index].connection_type[i]);
         }
         bool private =  _markersListAll[index].private != null ? true : false;
-        bool match = true;
+        bool match = _markersListAll[index].compatible == true ? true : false;
         double price = 0.0;
         String? direction = "Calle 1";
         String? description2 = "description";
         double latitude = _markersListAll[index]!.localization.latitude;
         double longitude = _markersListAll[index]!.localization.longitude;
-        double rate = 2;
-        if(_markersListAll[index]!.avg_rating != null) rate =_markersListAll[index]!.avg_rating!;
+        double? rate = _markersListAll[index]!.avg_rating;
+        int? id_charger = _markersListAll[index].id;
+        int? owner_id = _markersListAll[index]!.private?.owner.id;
+        owner_id ??= 0;
+        String? owner_name = _markersListAll[index]!.private?.owner.username;
+        owner_name ??= "No owner";
+        String? contamination = _markersListAll[index]!.contamination;
+        List? images = _markersListAll[index]!.images;
         return GestureDetector(
           onTap: () {
             GoRouter.of(context)
@@ -189,7 +195,7 @@ class _InfiniteList extends State<InfiniteList>{
           },
           child: CardInfoWidget(location: description, rating: rate, types: types, available: avaliable, match: match,
               private: false, price: price, direction: direction, description: description2, private_list: private,
-              latitude: latitude, longitude: longitude),
+              latitude: latitude, longitude: longitude, id: id_charger, owner_id: owner_id, owner_username: owner_name, contamination: contamination, images: images,),
         );
       });
   }

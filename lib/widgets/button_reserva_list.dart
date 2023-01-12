@@ -17,7 +17,7 @@ class _ButtonReservaListWidget extends State<ButtonReservaListWidget>{
       padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
        child: SizedBox(
           width: MediaQuery.of(context).size.width * 0.75,
-          height: 63,
+          height: 40,
           child: TextButton(
             style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all<Color>(Colors.green),

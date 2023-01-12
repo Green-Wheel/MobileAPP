@@ -192,10 +192,22 @@ class _InfiniteList extends State<InfiniteListUser> {
                   .latitude;
               double longitude = _markersListAll[index].charger!.localization
                   .longitude;
+              int? owner_id = _markersListAll[index].charger!.private?.owner.id;
+              if (owner_id == null) {
+                owner_id = 3;
+              }
+              String? owner_name = _markersListAll[index].charger!.private?.owner.username;
+              if (owner_name == null){
+                owner_name = "No owner";
+              }
+              String? contamination = _markersListAll[index].charger!.contamination;
+              bool? compatible = _markersListAll[index].charger!.compatible;
+              List? images = _markersListAll[index].charger!.images;
+
               return Flexible(child: _cardChargerList(rating,
                   description!, avaliable, match, types,
                   private, price, direction!, description2, id!, latitude,
-                  longitude));
+                  longitude, owner_id, owner_name, contamination, compatible, images));
             }
             else return Text("");
           }
@@ -215,6 +227,7 @@ class _InfiniteList extends State<InfiniteListUser> {
               String? description = _markersListAll[index].bike!.description;
               String contamination = _markersListAll[index].bike!.contamination ?? '';
               String? direction1 = "";
+              int? owner_id =  _markersListAll[index].bike!.owner.id;
 
               return Flexible(child: GestureDetector(
                 onTap: () {
@@ -233,6 +246,8 @@ class _InfiniteList extends State<InfiniteListUser> {
                     latitude: latitude,
                     longitude: longitude,
                     contamination: contamination,
+                    id: id,
+                    owner_id: owner_id,
                   ),
                 )
               );
@@ -247,7 +262,8 @@ class _InfiniteList extends State<InfiniteListUser> {
   //funcion respectiva a la card de los cargadores
   Widget _cardChargerList(double? rating,String description, bool avaliable, bool match,
       List<ConnectionType> types, bool private, double price, String direction,
-      String description2, int id, double latitude, double longitude,
+      String description2, int id, double latitude, double longitude, int? owner_id,
+      String? owner_name, String? contamination, bool? compatible, List? images
       ) {
     double rate = 2.5;
     if(rating != null) rate = rating;
@@ -268,7 +284,13 @@ class _InfiniteList extends State<InfiniteListUser> {
           description: description2,
           private_list: private,
           latitude: latitude,
-          longitude: longitude),
+          longitude: longitude,
+          contamination: contamination,
+          id: id,
+          owner_id: owner_id,
+          owner_username: owner_name,
+          images: images,
+      ),
     );
   }
 

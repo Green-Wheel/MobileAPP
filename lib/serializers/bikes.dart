@@ -1,3 +1,4 @@
+import 'package:greenwheel/serializers/users.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'chargers.dart';
@@ -55,7 +56,8 @@ class DetailedBikeSerializer {
     required this.bike_type,
     this.power,
     required this.price,
-    this.contamination
+    required this.owner,
+    required this.contamination,
   });
 
   int? id;
@@ -69,11 +71,11 @@ class DetailedBikeSerializer {
   BikeType bike_type;
   double? power;
   double price;
-  String? contamination;
+  BasicUser owner;
+  String contamination;
 
   factory DetailedBikeSerializer.fromJson(Map<String, dynamic> json) =>
       _$DetailedBikeSerializerFromJson(json);
-
 
   Map<String, dynamic> toJson() => _$DetailedBikeSerializerToJson(this);
 }
@@ -89,6 +91,7 @@ class BikeList {
     this.avg_rating,
     required this.bike_type,
     required this.price,
+    required this.owner,
     required this.contamination,
   });
 
@@ -99,6 +102,7 @@ class BikeList {
   double? avg_rating;
   BikeType bike_type;
   double price;
+  BasicUser owner;
   String contamination;
 
   factory BikeList.fromJson(Map<String, dynamic> json) =>

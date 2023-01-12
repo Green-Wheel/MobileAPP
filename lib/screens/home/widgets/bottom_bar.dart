@@ -1,5 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:greenwheel/services/backendServices/chat.dart';
 
 class BottomBarWidget extends StatefulWidget {
   final int index;
@@ -58,15 +60,30 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
 }
 
 class BottomBarActionButton extends StatefulWidget {
-  const BottomBarActionButton({super.key});
-
-  final int msgCount = 1; //Caldrà implementar-ho quan es faci el chat.
+  BottomBarActionButton({super.key});
+  late int msgCount = 0;
 
   @override
   State<BottomBarActionButton> createState() => _BottomBarActionButtonState();
 }
 
 class _BottomBarActionButtonState extends State<BottomBarActionButton> {
+
+  getUnreadMessages() async {
+    int unreadMessages = await ChatService.getUnreadMessages();
+    print("Mensajes por leer $unreadMessages");
+    setState(() {
+      widget.msgCount = unreadMessages;
+    });
+    print(widget.msgCount);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUnreadMessages();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
@@ -77,7 +94,8 @@ class _BottomBarActionButtonState extends State<BottomBarActionButton> {
   }
 
   void _onPressed() {
-    debugPrint("Show chat");
+    GoRouter.of(context).go('/chats');
+    //getUnreadMessages();
   }
 
   Widget notificationBadge() {

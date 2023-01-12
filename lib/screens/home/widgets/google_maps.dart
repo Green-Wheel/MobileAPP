@@ -120,7 +120,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
 
   void _getChargers() async {
     List chargersList = await ChargerService.getChargers();
-    //List chargersList = [];
     if (chargersList.isEmpty) {
       _showAvisNoEsPodenCarregarCarregadors();
     }
@@ -168,7 +167,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     setState(() {
       markersList = chargersList;
       removeMarkers();
-      print(markersList.length);
       for (int i = 0; i < markersList.length; i++) {
         int id = markersList[i].id;
         double latitude = markersList[i].localization.latitude;
@@ -242,7 +240,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       is_visible = false;
       scrolledup = false;
     });
-    print(widget.index);
 
     if (widget.index == 0) {
       _getChargers();
@@ -256,7 +253,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 3.2,),
         "assets/images/punt_bicicleta.png");
-    //print('afegir bici');
     final Marker marcador = Marker(
         markerId: MarkerId(id.toString()),
         position: LatLng(lat, log),
@@ -512,7 +508,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
           maxHeight: MediaQuery
               .of(context)
               .size
-              .height * 0.6,
+              .height * 0.79,
           minHeight: 210.0,
           controller: panelController,
           parallaxEnabled: true,
@@ -597,7 +593,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
     if (charger != null) {
       setState(() {
-        //loading_charger = true;
         _publicationloaded = true;
         markedCharger = charger;
       });
@@ -617,7 +612,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       types.add(markedCharger!.connection_type[i]);
     }
 
-    bool private = markedCharger!.private != null ? true : false;
+    bool private = markedCharger!.charger_type == 'private';
     double price = markedCharger!.private != null
         ? markedCharger!.private!.price
         : 0.0;
@@ -625,23 +620,38 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     String? description = markedCharger!.description;
     double latitude = markedCharger!.localization.latitude;
     double longitude = markedCharger!.localization.longitude;
-    double rate = 3;
-    if(markedCharger!.avg_rating != null) rate = markedCharger!.avg_rating!;
+    double? rate = markedCharger!.avg_rating;
 
-    return CardInfoWidget(
-        id: id,
-        location: descrip,
+    int? owner_id = markedCharger!.private?.owner.id;
+    if (owner_id == null) {
+      owner_id = 3;
+    }
+    String? owner_name = markedCharger!.private?.owner.username;
+    if (owner_name == null){
+      owner_name = "No owner";
+    }
+    String? contamination = markedCharger!.contamination;
+    bool? compatible = markedCharger!.compatible;
+    List? images = markedCharger!.images;
+
+    return CardInfoWidget(location: descrip,
         rating: rate,
         types: types,
         available: true,
-        match: true,
+        match: compatible,
         private: private,
         price: price,
         direction: direction,
         description: description,
         latitude: latitude,
         longitude: longitude,
-        private_list: false);
+        private_list: false,
+        id: id,
+        owner_id: owner_id,
+        owner_username: owner_name,
+        contamination: contamination,
+        images: images,
+        );
   }
 
   void _showAvisNoEsPotCarregarBici() async {
@@ -695,9 +705,13 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     double? rate = markedBike!.avg_rating;
     double latitude = markedBike!.localization.latitude;
     double longitude = markedBike!.localization.longitude;
-    String contamination = markedBike!.contamination ?? '';
+    int? id = markedBike!.id;
+    int? owner_id = markedBike!.owner.id;
+    String? contamination = markedBike!.contamination;
 
-    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType, description: description, direction: direction, price: price, power: power??0, bike_list: false, latitude: latitude, longitude: longitude, contamination: contamination);
+    return BikeCardInfoWidget(location: descrip, rating: rate, available: true, type: bikeType,
+        description: description, direction: direction, price: price, power: power??0, bike_list: false,
+        latitude: latitude, longitude: longitude, id: id, owner_id: owner_id, contamination: contamination,);
   }
 
 

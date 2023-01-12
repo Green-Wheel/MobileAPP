@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import '../screens/home/widgets/bottom_bar.dart';
 import '../screens/home/widgets/drawer.dart';
+import 'package:intl/intl.dart';
 
 class MessageWidget extends StatefulWidget {
-  bool read;
+  //bool read;
   bool itsmine;
   String message;
-  DateTime datesend;
-  DateTime dateread;
-  MessageWidget({required this.message, required this.itsmine, required this.read, required this.datesend, required this.dateread, super.key});
+  String created_at;
+  MessageWidget({required this.message, required this.itsmine, required this.created_at, super.key});
 
   @override
   State<StatefulWidget> createState() => _MessageWidget();
@@ -17,56 +17,20 @@ class MessageWidget extends StatefulWidget {
 class _MessageWidget extends State<MessageWidget>{
   @override
   Widget build(BuildContext context) {
-    return _messageWidget(widget.message, widget.itsmine, widget.read, widget.datesend, widget.dateread);
+    return _messageWidget(widget.message, widget.itsmine, widget.created_at);
   }
 }
 
-//TODO: en la screen implementar scroll con mensajes agrupados por dias + acabar de poner formato hora del mensaje bien
-main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(title: Text("Chat"), actions: [
-        IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-            })
-      ]),
-      body: Column(
-        /*child: Column(
-          children: <Widget>[
-            Expanded(
-              child: ListView.builder(
-                reverse: true,
-                padding: EdgeInsets.all(20),
-                itemCount: messages.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return _chatBubble(message, isMe, isSameUser);
-                },
-              ),
-            ),
-          ],
-        ),*/
-        children:[
-          _messageWidget("Hola shbcdhsadhslabchsdlbchsdlchbdslcvhdslchdslchdslvchdslcbhdslcbhdslcbhslcbhsl", true, false, DateTime.now(), DateTime.now()),
-          _messageWidget("shdkshldhsalssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss", false, true, DateTime.now(), DateTime.now()),
-        ]
-      ),
-   //   drawer: SimpleDrawer(),
-      floatingActionButton: const BottomBarActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-    ),
-  ));
-}
 
 //direction = true (other user), false = (its me)
-Widget greenCheck(bool direction){
+/*Widget blueCheck(bool direction){
   if (direction) {
     return const Padding(
       padding: EdgeInsets.only(left: 10),
       child:  Icon(
-        Icons.check_circle_outline_rounded,
+        Icons.done_all,
         size: 20,
-        color: Colors.green,
+        color: Colors.blue,
       ),
     );
   }
@@ -74,35 +38,35 @@ Widget greenCheck(bool direction){
     return const Padding(
       padding: EdgeInsets.only(right: 10),
       child: Icon(
-        Icons.check_circle_outline_rounded,
+        Icons.done_all,
         size: 20,
-        color: Colors.green,
+        color: Colors.blue,
       ),
     );
   }
-}
+}*/
 
 
 
 //direction = true (other user), false = (its me)
 Widget greyCheck(bool direction){
   if (direction) {
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.only(left: 10),
       child: Icon(
-        Icons.check_circle_outline_rounded,
+        Icons.done_all,
         size: 20,
-        color: Colors.grey,
+        color: Colors.grey[200],
       ),
     );
   }
   else{
-    return const Padding(
+    return Padding(
       padding: EdgeInsets.only(right: 10),
       child:  Icon(
-        Icons.check_circle_outline_rounded,
+        Icons.done_all,
         size: 20,
-        color: Colors.grey,
+        color: Colors.grey[200],
       ),
     );
   }
@@ -110,7 +74,7 @@ Widget greyCheck(bool direction){
 
 
 //funcion para mostrar las estrellas
-Widget _messageWidget(String message, bool itsmine, bool read, DateTime datesend, DateTime dateread){
+Widget _messageWidget(String message, bool itsmine, String created_at){
   if (!itsmine){
     return Column(
       children:<Widget>[
@@ -148,13 +112,13 @@ Widget _messageWidget(String message, bool itsmine, bool read, DateTime datesend
         ),
         Row(
           children: <Widget>[
-            read ? greenCheck(true) : greyCheck(true),
+            greyCheck(true),
             Container(
               margin: const EdgeInsets.only(left: 5),
               child: Text(
-                datesend.toString(),
+                created_at.toString(),
                 style: const TextStyle(
-                  color: Colors.grey,
+                  color: Colors.white,
                   fontSize: 12,
                 ),
               ),
@@ -205,14 +169,14 @@ Widget _messageWidget(String message, bool itsmine, bool read, DateTime datesend
             Container(
               margin: const EdgeInsets.only(right: 2),
               child: Text(
-                datesend.toString(),
+                created_at.toString(),
                 style: const TextStyle(
-                  color: Colors.grey,
+                  color: Colors.white,
                   fontSize: 12,
                 ),
               ),
             ),
-            read ? greenCheck(false) : greyCheck(false),
+            greyCheck(false),
           ],
         )
       ],

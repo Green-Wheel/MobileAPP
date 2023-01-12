@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
         onChangedTab: _onChangeTab,
       ),
       drawer: SimpleDrawer(),
-      floatingActionButton: const BottomBarActionButton(),
+      floatingActionButton: BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId),
