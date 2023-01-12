@@ -81,10 +81,10 @@ class _confirm_bookingState extends State<confirm_booking> {
     });
   }
   
-  String cutDownString(var s){
+  String cutDownString(var s, int max){
     if(s==null) return "";
-    if(s.toString().length <= ConfirmAndHistoryConfig.maxTitleCaracters) return " "+s;
-    return " "+s.substring(0,ConfirmAndHistoryConfig.maxTitleCaracters)+"...";
+    if(s.toString().length <=max) return " "+s;
+    return " "+s.substring(0,max)+"...";
   }
 
   @override
@@ -169,8 +169,8 @@ class _confirm_bookingState extends State<confirm_booking> {
                             children: [
                               Text(
                                 (booking.publication.type== "Charger")?
-                                  cutDownString(booking.publication.charger?.title ?? 'Sin título') :
-                                  cutDownString(booking.publication.bike?.title  ?? 'Sin títutlo'),
+                                  cutDownString(booking.publication.charger?.title ?? 'Sin título',ConfirmAndHistoryConfig.maxTitleCaracters) :
+                                  cutDownString(booking.publication.bike?.title  ?? 'Sin títutlo',ConfirmAndHistoryConfig.maxTitleCaracters),
                                 style: TextStyle(fontWeight: FontWeight.bold,fontSize: 16, color: Colors.green),
                               ),
                               (booking.publication.type== "Charger")?
@@ -326,8 +326,8 @@ class _confirm_bookingState extends State<confirm_booking> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
 
                                 children: [
-                                  Icon(Icons.person, color: Color(0xf0052e42),),
-                                  Text(' ${booking.user.username}'),
+                                  Icon(Icons.person, color: Color(0xf0052e42),size: 16,),
+                                  Text(' ${cutDownString(booking.user.username,12)}',style: TextStyle(fontSize: 12),),
                                 ],
                               ),
 
