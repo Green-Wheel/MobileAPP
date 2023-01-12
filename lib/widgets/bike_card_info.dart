@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:greenwheel/services/backendServices/user_service.dart';
 import 'package:greenwheel/services/generalServices/LoginService.dart';
 import 'package:greenwheel/widgets/button_blue_route.dart';
 import 'package:greenwheel/widgets/button_delete_bike.dart';
@@ -57,7 +58,7 @@ class BikeCardInfoWidget extends StatefulWidget {
 class _BikeCardInfoWidget extends State<BikeCardInfoWidget> {
   final _loggedInStateInfo = LoginService();
   var userData;
-  bool mybike = false;
+  bool mybike = true;
   String username = "";
 
   @override
@@ -67,11 +68,12 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget> {
   }
 
   void _getData() async {
-    var data = _loggedInStateInfo.user_info;
+    var data = LoginService().user_info;
+    var user = await UserService.getUser(widget.owner_id!);
     setState(() {
       userData = data;
       mybike = userData['id'] == widget.owner_id;
-      username = userData['username'];
+      username = user?.username ?? "";
     });
   }
 
@@ -223,120 +225,91 @@ Widget _buildCard(
                   ],
                 ),
               ),
-              !bike_list ? SizedBox(height: 65) : SizedBox(height: 0),
-              !bike_list
-                  ? SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.925,
-                      child: Flexible(
-                          child: Column(children: [
-                        !bike_list
-                            ? ButtonReservaListBikeWidget()
-                            : SizedBox(height: 0),
-                        !bike_list ? SizedBox(height: 10) : SizedBox(height: 0),
-                        !bike_list ? SizedBox(height: 10) : SizedBox(height: 0),
-                        !bike_list
-                            ? Column(children: [
-                                SizedBox(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.02,
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      right: MediaQuery.of(context).size.width *
-                                          0.5,
-                                      bottom: 10),
-                                  child: CircleAvatar(
-                                      radius: 20,
-                                      backgroundColor: Colors.lightBlue[100],
-                                      child: Icon(
-                                        Icons.location_on,
-                                        color: Colors.blue,
-                                        size: 30,
-                                      )),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.925,
-                                  child: Padding(
+              !bike_list ? SizedBox(height: 65): SizedBox(height: 0),
+              !bike_list ? SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.925,
+                  child: Flexible(
+                      child: Column(
+                          children:[
+                            !bike_list? ButtonReservaListBikeWidget(): SizedBox(height: 0),
+                            !bike_list? SizedBox(height: 10): SizedBox(height: 0),
+                            !bike_list? SizedBox(height: 10): SizedBox(height: 0),
+                            !bike_list? Column(
+                                children: [
+                                  SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+                                  Padding(padding: EdgeInsets.only(right: MediaQuery.of(context).size.width * 0.5, bottom: 10),
+                                    child:CircleAvatar(
+                                        radius: 20,
+                                        backgroundColor: Colors.lightBlue[100],
+                                        child: Icon(Icons.location_on, color: Colors.blue, size: 30,)
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.925,
+                                    child: Padding(
+                                        padding: EdgeInsets.only(left: 25),
+                                        child: direction != null ?
+                                        Text("Address:  $direction",style: const TextStyle(fontWeight: FontWeight.w600)):
+                                        Text("Address: No address available ",style: const TextStyle(fontWeight: FontWeight.w600))
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width * 0.925,
+                                    child: Padding(
                                       padding: EdgeInsets.only(left: 25),
-                                      child: direction != null
-                                          ? Text("Address:  $direction",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.w600))
-                                          : Text(
-                                              "Address: No address available ",
-                                              style: const TextStyle(
-                                                  fontWeight:
-                                                      FontWeight.w600))),
-                                ),
-                                SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.925,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 25),
-                                    child: description != null
-                                        ? Text("Description:  $description",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.w600))
-                                        : const Text(
-                                            "Description:  No description",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w600)),
+                                      child: description != null ?  Text("Description:  $description",
+                                          style: const TextStyle(fontWeight: FontWeight.w600)
+                                      ):  const Text("Description:  No description",
+                                          style: TextStyle(fontWeight: FontWeight.w600)
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ])
-                            : SizedBox(height: 0),
-                        SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.04),
-                        Padding(
-                          padding: EdgeInsets.only(left: 25),
-                          child: InkWell(
-                              onTap: () {
-                                //TODO: Ruta user perfil
-                              },
-                              child: Row(children: [
-                                CircleAvatar(
-                                  radius: 20,
-                                  backgroundColor: Colors.lightBlue[100],
-                                  child: Icon(
-                                      color: Colors.blue,
-                                      Icons.person,
-                                      size: 30),
-                                ),
-                                SizedBox(width: 10),
-                                Text(
-                                  "$username",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ])),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.02,
-                        ),
-                        Row(
-                          children: [
-                            !mybike
-                                ? Padding(
-                                    padding: EdgeInsets.only(left: 20),
-                                    child: ChatButtonWidget(to_user: owner_id),
+                                ]): SizedBox(height: 0),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.04),
+                            Padding (
+                              padding: EdgeInsets.only(left: 25),
+                              child: InkWell(
+                                  onTap: () {
+                                    //TODO: Ruta user perfil
+                                  },
+                                  child: Row(
+                                      children:[
+                                        CircleAvatar(
+                                          radius: 20,
+                                          backgroundColor: Colors.lightBlue[100],
+                                          child: Icon(
+                                              color: Colors.blue,
+                                              Icons.person,
+                                              size: 30
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Text("$username",
+                                          style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ]
                                   )
-                                : SizedBox(height: 0),
-                            !mybike
-                                ? SizedBox(
-                                    width: MediaQuery.of(context).size.width *
-                                        0.05)
-                                : SizedBox(width: 0),
-                            mybike
-                                ? ButtonDeleteBikeWidget(id_bike: id)
-                                : SizedBox(height: 0)
-                          ],
-                        ),
-                      ])))
-                  : SizedBox(height: 0),
+                              ),
+                            ),
+                            SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+                            Row(
+                              children: [
+                                !mybike ? Padding(
+                                  padding: EdgeInsets.only(left: 20),
+                                  child:ChatButtonWidget(to_user: owner_id),
+                                ): SizedBox(height: 0),
+                                //!mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
+                                //mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
+                              ],
+                            ),
+                          ]
+                      )
+                  )
+              ) : SizedBox(height: 0),
             ],
           ),
         ),
