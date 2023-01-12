@@ -423,6 +423,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
               onMapCreated: _onMapCreated,
               initialCameraPosition: _kInitialPosition,
               markers: markers,
+              polylines: widget.polylines ?? {},
               mapType: MapType.normal,
               myLocationEnabled: true,
               myLocationButtonEnabled: false,

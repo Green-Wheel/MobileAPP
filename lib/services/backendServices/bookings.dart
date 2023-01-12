@@ -65,7 +65,22 @@ class BookingService {
 
   static Future<List<Booking>> getBookingsByType(String type) async {
     List<Booking> result = [];
-    await BackendService.get('bookings/owner/?type=$type').then((response) {
+    await BackendService.get('bookings/owner/?type=$type&order=date').then((response) {
+
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        List<dynamic> bookings = jsonResponse['results'] as List<dynamic>;
+        result = bookings.map((e) => Booking.fromJson(e)).toList();
+
+      } else {
+        log('Error getting bookings!');
+      }
+    });
+    return result;
+  }
+  static Future<List<Booking>> getBookingsHistory() async {
+    List<Booking> result = [];
+    await BackendService.get('bookings/owner/history/').then((response) {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         List<dynamic> bookings = jsonResponse['results'] as List<dynamic>;
@@ -74,20 +89,6 @@ class BookingService {
         log('Error getting bookings!');
       }
     });
-/*    Map<String, dynamic> json = {
-      "id": 1,
-      "user": {
-        "id": 1,
-        "username": "admin",
-        "first_name": "",
-        "last_name": "",
-        "profile_picture": null
-      },
-      "publication": 1
-    };*/
-    //log("chekcpoint");
-    //log("Aqui esta el resultado del parseo ${result}");
-
     return result;
   }
 
@@ -105,6 +106,8 @@ class BookingService {
 
   static Future<bool> answerBookingPetition(int id, int decision) async {
     try {
+
+      log("bookings/$id/"+" confirmacion-> $decision");
       var response = await BackendService.put('bookings/$id/', {"confirmed":decision});
       return response.statusCode == 201;
     } catch (e) {

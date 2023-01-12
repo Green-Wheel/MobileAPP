@@ -405,7 +405,7 @@ Widget _buildCard(
           child: Column(
             children: [
               SizedBox(height: 10),
-              images?.length != 0
+              images?.length != 0 && !private_list
                   ? ImageDisplay(
                       images:
                           images?.map((value) => value.image_path).toList() ??
