@@ -50,48 +50,31 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: const BottomBarActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
-        child:Stack(
-            children: [
-            GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId, point_search_bar: widget.point_search),
-            widget.index == 0 ?
-            ChargerFilterMap(functionPublic: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetPublicChargers,
-                functionPrivate: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetPrivateChargers,
-                functionAll: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetChargers) :
-            BikeFilterMap(functionNormal: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetNormalBikes,
-                functionElectric: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetElectricBikes,
-                functionAll: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId).callGetBikes),
-        ]
+        child: GoogleMapsWidget(index: widget.index, key: UniqueKey(), publicationId: widget.publicationId),
       ),
-    ));
-  }
-
-  void _changeLanguage() {
-    showDialog(
-      context: context,
-      builder: (context) => const LanguageSelectorWidget(),
     );
   }
+}
 
-  Widget _searchTextField() {
-    return const TextField(
-      autofocus: false,
-      cursorColor: Colors.white,
-      style: TextStyle(
-        color: Colors.white,
+Widget _searchTextField() {
+  return const TextField(
+    autofocus: false,
+    cursorColor: Colors.white,
+    style: TextStyle(
+      color: Colors.white,
+      fontSize: 20,
+    ),
+    textInputAction: TextInputAction.search,
+    //Specify the action button on the keyboard
+    decoration: InputDecoration(
+      //Style of TextField
+      hintText: "Search...", //Text that is displayed when nothing is entered.
+      hintStyle: TextStyle(
+        //Style of hintText
+        color: Colors.white60,
         fontSize: 20,
       ),
-      textInputAction: TextInputAction.search,
-      //Specify the action button on the keyboard
-      decoration: InputDecoration(
-        //Style of TextField
-        hintText: "Search...", //Text that is displayed when nothing is entered.
-        hintStyle: TextStyle(
-          //Style of hintText
-          color: Colors.white60,
-          fontSize: 20,
-        ),
-        enabled: false,
-      ),
-    );
-  }
+      enabled: false,
+    ),
+  );
 }

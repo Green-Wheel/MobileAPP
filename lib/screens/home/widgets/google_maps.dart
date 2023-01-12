@@ -17,10 +17,12 @@ import '../../../services/backendServices/chargers.dart';
 import '../../../utils/geocoding.dart';
 import '../../../widgets/bike_card_info.dart';
 import '../../../widgets/button_list_screen_bikes.dart';
+import 'bike_filters_map.dart';
+import 'charger_filters_map.dart';
 
 class GoogleMapsWidget extends StatefulWidget {
   int index;
-  Set<Polyline> polylines;
+  Set<Polyline>? polylines;
   int? publicationId;
   LatLang? point_search_bar;
   GoogleMapsWidget(
@@ -29,30 +31,6 @@ class GoogleMapsWidget extends StatefulWidget {
 
   @override
   State<GoogleMapsWidget> createState() => _GoogleMapsWidgetState();
-
-  void callGetChargers() {
-    _GoogleMapsWidgetState()._getChargers();
-  }
-
-  void callGetBikes() {
-    _GoogleMapsWidgetState()._getBikes();
-  }
-
-  void callGetPublicChargers() {
-    _GoogleMapsWidgetState()._getPublicChargers();
-  }
-
-  void callGetPrivateChargers() {
-    _GoogleMapsWidgetState()._getPrivateChargers();
-  }
-
-  void callGetNormalBikes() {
-    _GoogleMapsWidgetState()._getNormalBikes();
-  }
-
-  void callGetElectricBikes() {
-    _GoogleMapsWidgetState()._getElectricBikes();
-  }
 }
 
 class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
@@ -271,7 +249,6 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     } else if (widget.index == 1) {
       _getBikes();
     }
-    //super.initState();
   }
 
   void _addBikeMarker(double lat, double log, int id) async {
@@ -305,7 +282,7 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
     Set<Marker> markersToRemove = {};
     markers = markersToRemove;
   }
-  
+
   void _addMarker(double lat, double log, String chargerType, int id) async {
     final iconMarker = await BitmapDescriptor.fromAssetImage(
         const ImageConfiguration(devicePixelRatio: 3.2,),
@@ -436,73 +413,89 @@ class _GoogleMapsWidgetState extends State<GoogleMapsWidget> {
       _setCardBikeView();
     }
     return Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: _kInitialPosition,
-            polylines: widget.polylines,
-            markers: markers,
-            mapType: MapType.normal,
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            compassEnabled: true,
-            zoomGesturesEnabled: true,
-            zoomControlsEnabled: false,
-            trafficEnabled: false,
-            mapToolbarEnabled: false,
-            rotateGesturesEnabled: true,
-            scrollGesturesEnabled: true,
-            tiltGesturesEnabled: true,
-            liteModeEnabled: false,
-            onTap: (latLong) {
-              (SnackBar(
-                content: Text(
-                    'Tapped location LatLong is (${latLong.latitude},${latLong
-                        .longitude})'),
-              ));
-            },
-            onCameraMove: onCameraMove,
-          ),
-          is_visible ? show_card() : Container(),
-        ],
-      ),
-      floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: scrolledup ? scrollDown() : scrollMiddle()
-      )
+        body: Stack(
+          children: [
+            GoogleMap(
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: _kInitialPosition,
+              markers: markers,
+              mapType: MapType.normal,
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              compassEnabled: true,
+              zoomGesturesEnabled: true,
+              zoomControlsEnabled: false,
+              trafficEnabled: true,
+              mapToolbarEnabled: false,
+              rotateGesturesEnabled: true,
+              scrollGesturesEnabled: true,
+              tiltGesturesEnabled: true,
+              liteModeEnabled: false,
+              onTap: (latLong) {
+                (SnackBar(
+                  content: Text(
+                      'Tapped location LatLong is (${latLong.latitude},${latLong
+                          .longitude})'),
+                ));
+              },
+              onCameraMove: onCameraMove,
+            ),
+            is_visible ? show_card() : Container(),
+            widget.index == 0 ? Positioned(
+              top: 0,
+              width: MediaQuery.of(context).size.width,
+              child: ChargerFilterMap(
+                functionPublic: _getPublicChargers,
+                functionPrivate: _getPrivateChargers,
+                functionAll: _getChargers,
+              ),
+            ) :  Positioned(
+              top: 0,
+              width: MediaQuery.of(context).size.width,
+              child: BikeFilterMap(
+                functionNormal: _getNormalBikes,
+                functionElectric: _getElectricBikes,
+                functionAll: _getBikes,
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: scrolledup ? scrollDown() : scrollMiddle()
+        )
     );
   }
 
-List<Widget> scrollDown() {
-  double width = MediaQuery.of(context).size.width;
-  return <Widget>[
-    Padding(
-      padding: EdgeInsets.only(left: width * 0.83),
-      child: listButton(),
-    ),
-    const SizedBox(height: 10),
-    Padding(
-      padding: EdgeInsets.only(left: width * 0.83),
-      child: currentLocationActionButton(),
-    ),
-    const SizedBox(height: 200)];
-}
+  List<Widget> scrollDown() {
+    double width = MediaQuery.of(context).size.width;
+    return <Widget>[
+      Padding(
+        padding: EdgeInsets.only(left: width * 0.83),
+        child: listButton(),
+      ),
+      const SizedBox(height: 10),
+      Padding(
+        padding: EdgeInsets.only(left: width * 0.83),
+        child: currentLocationActionButton(),
+      ),
+      const SizedBox(height: 200)];
+  }
 
-List<Widget> scrollMiddle() {
-  double width = MediaQuery.of(context).size.width;
-  return <Widget>[
-    Padding(
-      padding: EdgeInsets.only(left: width * 0.83),
-      child: listButton(),
-    ),
-    const SizedBox(height: 10),
-    Padding(
-      padding: EdgeInsets.only(left: width * 0.83),
-      child: currentLocationActionButton(),
-    ),
-  ];
-}
+  List<Widget> scrollMiddle() {
+    double width = MediaQuery.of(context).size.width;
+    return <Widget>[
+      Padding(
+        padding: EdgeInsets.only(left: width * 0.83),
+        child: listButton(),
+      ),
+      const SizedBox(height: 10),
+      Padding(
+        padding: EdgeInsets.only(left: width * 0.83),
+        child: currentLocationActionButton(),
+      ),
+    ];
+  }
 
 
   Widget listButton() {
@@ -600,18 +593,18 @@ List<Widget> scrollMiddle() {
     );
   }
 
-void _getCharger(int id) async {
-  DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
-  if (charger != null) {
-    setState(() {
-      //loading_charger = true;
-      _publicationloaded = true;
-      markedCharger = charger;
-    });
-  } else {
-    _showAvisNoEsPotCarregarCarregador();
+  void _getCharger(int id) async {
+    DetailedCharherSerializer? charger = await ChargerService.getCharger(id);
+    if (charger != null) {
+      setState(() {
+        //loading_charger = true;
+        _publicationloaded = true;
+        markedCharger = charger;
+      });
+    } else {
+      _showAvisNoEsPotCarregarCarregador();
+    }
   }
-}
 
   Widget buildSlidingUpPanelCharger(
       {required ScrollController controller, required PanelController panelController}) {

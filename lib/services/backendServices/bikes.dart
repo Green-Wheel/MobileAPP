@@ -23,7 +23,7 @@ class BikeService {
 
   static Future<List<Bike>> getNormalBikes() async {
     List<Bike> result = [];
-    await BackendService.get('bikes/?type=normal').then((response) { // bikes/?type=normal
+    await BackendService.get('bikes/?bike_type=1').then((response) { // bikes/?type=normal
       // bikes/
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
@@ -39,7 +39,7 @@ class BikeService {
 
   static Future<List<Bike>> getElectricBikes() async {
     List<Bike> result = [];
-    await BackendService.get('bikes/?type=electric').then((response) { // bikes/?type=electric
+    await BackendService.get('bikes/?bike_type=2').then((response) { // bikes/?type=electric
       // bikes/
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body) as List<dynamic>;
