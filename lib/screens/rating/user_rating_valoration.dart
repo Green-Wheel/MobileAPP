@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:greenwheel/services/backendServices/ratings.dart';
+import '../../services/backendServices/user_service.dart';
 import '../register/widgets/greenButton.dart';
 import '../../services/generalServices/LoginService.dart';
 import '../../widgets/interactive_stars_widget.dart';
@@ -27,11 +28,20 @@ class _RateUser extends State<RateUser> {
     _getData();
   }
 
-  void _getData() {
+  void _getData() async {
     var data = _loggedInStateInfo.user_info;
-    setState(() {
-      userData = data;
-    });
+
+    if(widget.user_id  == data?['id']){
+      setState(() {
+        userData = data;
+      });
+    }
+    else {
+      Map<String,dynamic> data = await UserService.getUserMap(widget.user_id) as Map<String, dynamic>;
+      setState(() {
+        userData = data;
+      });
+    }
   }
 
 
