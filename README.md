@@ -37,7 +37,11 @@ Jordi Piguillem Poch ( [jpiguillem@essi.upc.edu](mailto:jpiguillem@essi.upc.edu)
 - [Enllaç al projecte Taiga](https://tree.taiga.io/project/arnau147-pes-green-whee/)
 - [Repositori GitHub](https://github.com/orgs/Green-Wheel/repositories)
 
+
+
 ## Requeriments per a poder començar a treballar
+<details>
+<summary>Explicació detallada</summary>
 
 ### Introducció
 
@@ -89,14 +93,14 @@ Doctor summary (to see all details, run flutter doctor -v):
    Quan us aparegui una que es diu SDK components setup, seleccionar l'ultima versió de la api que hi hagi (33 ara
    mateix), així com android virtual device si no està instalat. també android sdk. (vigileu el path)
 4. Quan acabi, pulseu els tres puntets que hi ha a la dreta d'open i seleccionar "SDK Manager".
-   ![img.png](readme_images/img.png)
+   ![img.png](https://i.imgur.com/VPwRc5Q.png)
 5. A la pestanya "SDK Tools" seleccionar "Android SDK Build-Tools,Android SDK Platform-Tools, Android SDK command line tools i Android SDK Tools" i
    seleccionar la última versió.
 6. A la pestanya "SDK Platforms" seleccionar descarregar el següent.
-   ![img.png](readme_images/img2.png)
+   ![img.png](https://i.imgur.com/qaVDKYD.png)
 7. Quan acabi, pulseu els tres puntets que hi ha a la dreta d'open i seleccionar "AVD Manager".
 8. Crear un nou dispositiu virtual amb el següent:
-   ![img.png](readme_images/img3.png)
+   ![img.png](https://i.imgur.com/30DaGJ3.png)
 9. Li doneu a next i seleccioneu android api level 33.
 10. Finalitzeu i ja tindreu un mòbil virtual per a poder executar l'aplicació.
 
@@ -169,7 +173,8 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 3. Us hauria d'apareixer el movil virtual amb l'aplicació instal·lada.
 4. Si no us surt, busqueu la pestanya a la barra lateral dreta anomenada Android Emulator.
 5. Si tot ha anat bé, hauríeu de veure això:
-   ![img.png](readme_images/img4.png)
+
+![img.png](https://i.imgur.com/MzIYxjK.png)
 
 ### Executar tests
 
@@ -177,7 +182,46 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 2. Si no ho tenieu configurat, aneu a "Run" -> "Edit Configurations" i afegiu una configuració de tipus "Flutter Test".
    Allà seleccioneu que siguin de tipus directori i seleccioneu la carpeta test.
 
+### En cas de que no us funcioni l'execució, feu això:
+
+A alguns de vosaltres no us està funcionant l'execució de l¡aplicació o la virtualització del dispositiu android.
+Crec que es bugueja una mica amb git, però no ho sé molt bé. Per això, si no us funciona, podeu fer això:
+
+1. Crear un nou projecte de flutter, anant a File-> New -> project.
+2. Seleccionar flutter amb el sdk (la carpeta de flutter principal) i next.
+3. Posar el nom que vulgueu al projecte, on volgueu i amb la descripcio que vulgueu. Android Language = Kotlin i marqueu
+   nomes android. Li doneu a create.
+   ![Image](https://i.imgur.com/BKAsT2E.png)
+
+4. Copieu els seguents fitxers/directoris a la carpeta del projecte que heu creat (del projecte github que teniu):
+    - .git
+    - android
+    - assets
+    - lib
+    - test
+    - .env
+    - .gitignore
+    - .metadata
+    - analysis_options.yaml
+    - apunts.md
+    - LICENSE
+    - pubspec.lock
+    - pubspec.yaml
+    - README.md
+
+### Activar localització a l'emulador
+
+Per tal que les funcionalitats i tots els botons del mapa funcionin, cal activar la localització a l'emulador. Per fer-ho, cal
+anar a "Settings" -> "Location" i anar a "App access to location", seleccionar l'aplicació de "greenwheel" (amb el logo de Flutter)
+i activar l'opció "Allow all the time". Depsprés reinicieu l'emulador i ja hauria de funcionar.
+La localització de l'emulador no serà el lloc de l'ordinador que esteu fent servir si no predeterminadament és la seu central de Google. No us preocupeu, és normal. Quan es provi amb un mòbil de veritat la localització serà la real
+
+![Image](https://i.imgur.com/9HK1Amx.png)
+
+
 ### Ja està! Ara us recomano que aneu al fitxer apunts.md i llegiu els apunts que hi ha per a començar a fer el projecte.
+
+</details>
 
 ## Enllaços d'interès
 
@@ -193,6 +237,7 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 - [Llibreria de serveis de google maps](https://pub.dev/packages/google_maps_webservice)
 - [Explicacions i exemples de widgets a flutter by javaTpoint](https://www.javatpoint.com/flutter)
 - [Documentació components de material design](https://material.io/components?platform=flutter)
+- [Detectar canvis de posició en temps real](https://medium.com/flutter-community/implement-real-time-location-updates-on-google-maps-in-flutter-235c8a09173e)
 
 #### Videos
 
@@ -208,7 +253,7 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 - [Tutorial oficial d'afegeir un mapa a l'aplicació](https://codelabs.developers.google.com/codelabs/google-maps-in-flutter#0)
 - [Using Google Maps to add maps in flutter applications](https://blog.logrocket.com/google-maps-flutter/)
 - [Com obrir aplicació google maps amb coordenades](https://stackoverflow.com/questions/47046637/open-google-maps-app-if-available-with-flutter)
-- [Com fer un mapa amb rutes](https://medium.com/flutter-community/flutter-google-maps-with-directions-api-2d1a60b1a5a0)
+- [Com fer un mapa amb rutes](https://medium.com/@shiraz990/flutter-fetching-google-directions-using-changenotifierprovider-f642adbe6cf4)
 - [Dibuixar ruta en mapa](https://medium.com/@rohanarafat86/drawing-route-direction-in-flutter-using-openrouteservice-api-and-google-maps-in-flutter-4431a2989dd5)
 - [Geolocation](https://blog.logrocket.com/geolocation-geocoding-flutter/)
 
@@ -217,11 +262,34 @@ GOOGLE_MAPS_API_KEY=LA_CLAU_QUE_HEU_CREAT
 - [Llibreria per a fer un chat facilment (visualment)](https://pub.dev/packages/flutter_chat_ui)
 - [Exemple real time chat amb django i flutter](https://github.com/udaykhalsa/flutter-django-chat-app)
 - [Chat utilitzant flutter](https://medium.com/nerd-for-tech/flutter-a-chat-app-in-flutter-using-a-socket-io-service-88be02a388d6)
+- [Llibreria de badges](https://pub.dev/packages/badges)
 
 #### Notificacions push
 
 - [Llibreria Notificacions push locals](https://pub.dev/packages/flutter_local_notifications)
+- [Mostrar si hi ha notificacions a la icona de l'aplicació](https://pub.dev/packages/flutter_app_badger)
+
+#### Internacionalització
+
+- [Easy internacionalization](https://pub.dev/packages/easy_localization)
+
+#### Rutes i navegacio
+
+- [Llibreria de navegacio per les screens](https://pub.dev/packages/go_router)
+
+#### Calendaris
+
+- [Top llibreria de calendaris](https://pub.dev/packages/table_calendar)
+- [Llibreria de booking de calendaris](https://pub.dev/packages/booking_calendar)
 
 #### Altres
 
+- [App bar flotat al estil google maps](https://pub.dev/packages/floating_search_bar)
+- [Llibreria de ratings molones](https://pub.dev/packages/flutter_rating_bar)
+- [Llibreria de carrossel de fotos](https://pub.dev/packages/carousel_slider)
+- [Bottom bar amb animacions](https://pub.dev/packages/animated_bottom_navigation_bar)
+- [Web amb snipets i petites templates](https://www.fluttertemplates.dev/widgets)
+- [Filtres a l'estil google maps](https://material.io/components/chips/flutter)
+
 Si trobeu algun enllaç més, no dubteu en posar-lo.
+

@@ -1,0 +1,8 @@
+{
+  "test": "aixo es una prova",
+  "language_selector_title": "Selecciona el teu idioma",
+  "snackbar_location_denied_label": "Se rechazó el permiso a la app para acceder a la ubicación",
+  "snackbar_location_denied_action": "CONFIGURACIÓN",
+  "units_translator_seconds": "menys d'un minut",
+  "and": "i"
+}

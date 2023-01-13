@@ -121,52 +121,71 @@ Map<String, dynamic> json = jsonDecode(body);
 
 ## Internacionalització
 
-- Per a canviar l'idioma de l'aplicació, cal canviar la propietat `locale` de `MaterialApp`:
+S'ha canviat la [llibreria d'internacionalització](https://pub.dev/packages/easy_localization) degut a que la nativa de
+flutter es una merda.
+\nA continuació es detallen els canvis a realitzar per a que funcioni correctament.
 
-```dart
-locale: Locale
-('es
-'
-,
-'
-ES
-'
-)
-,
-```
+### Afegir nova traducció (frase)
 
-Per afegir una nova paraula, cal afegir-la als fitxers de la carpeta `lib/l10n`. Per exemple, per afegir la paraula "
-Hola", cal afegir la següent línia als fitxers `lib/l10n/intl_en.arb` i `lib/l10n/intl_es.arb`:
+Per afegir una nova paraula o frase, cal afegir-la als fitxers de la carpeta `langs`. Per exemple, per afegir la
+paraula "Hola", cal afegir la següent linia al fitxer `langs/es_ES.json`:
 
 ```json
-"hello": "Hola"
+  "hello": "Hola"
 ```
 
-- Per a traduir un text, cal utilitzar la funció `AppLocalizations.of(context).translate('key')`:
+i caldria fer el mateix en els altres dos fitxers.
+> Recordeu que cal fer les keys en anglès.
 
-```dart
-Text
-(
-AppLocalizations.of(context).
-translate
-('key
-'
-)
-)
-,
+### Afegir nova traducció amb paràmetres
+
+Per afegir una nova paraula o frase amb paràmetres, cal afegir-la als fitxers de la carpeta `langs`. Per exemple, per
+afegir la
+paraula "Hola, {name}", cal afegir la següent linia al fitxer `langs/es_ES.json`:
+
+```json
+  "hello": "Hola, {name}"
 ```
 
-- Per a traduir un text amb paràmetres, cal utilitzar la
-  funció `AppLocalizations.of(context).translateWithParams('key', params)`:
+i caldria fer el mateix en els altres dos fitxers.
+
+També podem fer que la paraula o frase tingui un valor o altre depenent d'un paràmetre. Per exemple:
+
+```json
+  "gender":{
+"male": "Hi man ;) {}",
+"female": "Hello girl :) {}",
+"other": "Hello {}"
+}
+```
+
+> També es poden fer coses més complexes (com pluralització, utilitzar unitats numèriques, reaprofitar altres
+> traduccions...), però per això millor llegir
+> la [documentació de la llibreria](https://pub.dev/packages/easy_localization).
+
+### Traduir un widget
+
+- Finalement, per a utilitzar la paraula, cal importar la
+  llibreria `import 'package:easy_localization/easy_localization.dart';` i posteriorment traduir allò que volem:
 
 ```dart
+import 'package:easy_localization/easy_localization.dart';
+
 Text
-(
-AppLocalizations.of(context).
-translateWithParams
-('key
-'
-,
-params))
-,
+('title').tr() //Text widget
+print('title'.tr()); //String
+var title = tr('title') //Static function
+```
+
+i si passem paràmetres, el podem especificar de la següent manera:
+
+```dart
+// args
+Text('msg').tr(args: ['Easy localization', 'Dart']),
+// namedArgs
+Text('msg_named').tr(namedArgs: {'lang': 'Dart'}),
+// args and namedArgs
+Text('msg_mixed').tr(args: ['Easy localization'],namedArgs: {'lang': 'Dart'}),
+// gender
+Text('gender').tr(gender: _gender? "female":"male"),
 ```
