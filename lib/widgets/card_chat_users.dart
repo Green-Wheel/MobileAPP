@@ -113,7 +113,9 @@ class _CardChatUsersWidget extends State<CardChatUsersWidget> {
                                   size: 15,
                                 ),
                                 SizedBox(width: 5),
-                                Text(widget.last_message_received, style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                SizedBox(width: MediaQuery.of(context).size.width *0.4,
+                                  child: Text(widget.last_message_received, style: TextStyle(fontSize: 14, color: Colors.grey)),
+                                ),
                               ]
                           )
                         ],
