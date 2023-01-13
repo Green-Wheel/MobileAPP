@@ -94,7 +94,7 @@ class _ChatListUsers extends State<ChatListUsers> {
                   last_message_received: list[index].last_message,
                   new_message: list[index].unread,
                   last_message_time:
-                      DateFormat('HH:mm').format(list[index].last_sent_time),
+                      DateFormat('HH:mm').format(list[index].last_sent_time.add(Duration(hours: 1))),
                   context: context,
                   to_user_id: list[index].to_user.id,
                   //setejar: _setListMessages,

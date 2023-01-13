@@ -99,9 +99,6 @@ class _ChatView extends State<ChatView> {
                 });
               }
             });
-            setState(() {
-              _receiver_user = null;
-            });
           }
         }
       });
