@@ -341,12 +341,12 @@ Widget _buildCard(
                             Row(
                               children: [
                                 !mybike ? Padding(
-                                  padding: EdgeInsets.only(left: 20, right: 20),
+                                  padding: EdgeInsets.only(left: 20),
                                   child:ChatButtonWidget(to_user: owner_id),
                                 ): SizedBox(height: 0),
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: 5),
+                                      left: 20, top: 5),
                                   child: ratingButton(context,id!),
                                 ),
                                 //!mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
