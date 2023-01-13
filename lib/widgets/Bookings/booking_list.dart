@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -228,50 +230,105 @@ class _booking_listState extends State<booking_list> {
                           ),
                           Column(
                             children: [
+                              if(widget.getFinisheds && !widget.isOwner)...[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.blueGrey.shade50,  // red as border color
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                                        children: [
+                                          OutlinedButton(
+                                              onPressed: (){},
+                                              style: ElevatedButton.styleFrom(
+                                                  foregroundColor: Colors.redAccent,
+                                                  backgroundColor: Colors.white,
+                                                  side: BorderSide(width: 1.0, color: Colors.redAccent),
+
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.report_outlined,color: Colors.redAccent,size: 18,),
+                                                  Text(" Reportar"),
+                                                ],
+                                              )),
+                                          OutlinedButton(
+                                              onPressed: (){},
+                                              style: ElevatedButton.styleFrom(
+                                                side: BorderSide(width: 1.0, color: Colors.blue),
+
+                                              ),
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.rate_review,color: Colors.blue, size: 18,),
+                                                  Text(" Valorar"),
+                                                ],
+                                              )),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )],
                               Container(
                                 padding: const EdgeInsets.symmetric(vertical: 0.0, horizontal: 12.0),
                                 decoration: BoxDecoration(
                                     color: Colors.blue.shade50
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                child: Column(
                                   children: [
+
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        if(booking.status.name == "Confirmed")...[
-                                          const Icon(Icons.check, color: Color(0xf0052e42),),
-                                          const Text(' Confirmada')
-                                        ]
-                                       else if(booking.status.name == "Cancelled")...[
-                                          const Icon(Icons.check, color: Color(0xf0052e42),),
-                                          const Text(' Cancelada')
-                                        ]
-                                        else if(booking.status.name == "Pending")...[
-                                          const Icon(Icons.pending, color: Color(0xf0052e42),),
-                                          const Text(' Pendiente')
-                                        ]
-                                        else if(booking.status.name == "Denied")...[
-                                          const Icon(Icons.block, color: Color(0xf0052e42),),
-                                          const Text(' Denegada')
-                                        ]
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
 
+                                          children: [
+                                            if(booking.status.name == "Confirmed")...[
+                                              const Icon(Icons.check, color: Color(0xf0052e42),),
+                                              const Text(' Confirmada')
+                                            ]
+                                           else if(booking.status.name == "Cancelled")...[
+                                              const Icon(Icons.check, color: Color(0xf0052e42),),
+                                              const Text(' Cancelada')
+                                            ]
+                                            else if(booking.status.name == "Pending")...[
+                                              const Icon(Icons.pending, color: Color(0xf0052e42),),
+                                              const Text(' Pendiente')
+                                            ]
+                                            else if(booking.status.name == "Denied")...[
+                                              const Icon(Icons.block, color: Color(0xf0052e42),),
+                                              const Text(' Denegada')
+                                            ]
+
+
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.center,
+
+                                          children: [
+                                            Icon(Icons.person, color: Color(0xf0052e42),),
+                                            Text(' ${booking.user.username}'),
+                                          ],
+                                        ),
 
                                       ],
                                     ),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
 
-                                      children: [
-                                        Icon(Icons.person, color: Color(0xf0052e42),),
-                                        Text(' ${booking.user.username}'),
-                                      ],
-                                    ),
                                   ],
                                 ),
+
                               ),
                             ],
                           ),
