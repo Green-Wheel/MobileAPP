@@ -21,11 +21,10 @@ class Username_Rating extends StatelessWidget {
             children:<Widget> [
               Container(
                       child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                             Text(cutDownStringName(username), style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                            (edit_button) ? edit(context) : chat(context),
-                            (edit_button) ? Container() : report(context),
-                            (edit_button) ? Container() : rate(context),
+
                       ],
 
                     ),

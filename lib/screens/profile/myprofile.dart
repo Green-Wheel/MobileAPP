@@ -5,6 +5,7 @@ import 'package:greenwheel/screens/profile/widgets/mypoints.dart';
 import '../../services/generalServices/LoginService.dart';
 import '../../widgets/list_user_ratings.dart';
 import '../rating/user_rating_valoration.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 
 class ProfilePage extends StatefulWidget {
@@ -35,7 +36,7 @@ class _ProfilePage extends State<ProfilePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: Text("My Profile"),//Text(("perfil").tr()),
         centerTitle: true,
       ),
       body: LayoutBuilder(

@@ -41,6 +41,40 @@ class _InfoUser extends State<InfoUser>  {
       });
     }
   }
+  Widget edit(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.edit),
+      onPressed: () {
+        GoRouter.of(context).push('/profile/${widget.id}/edit');
+      },
+    );
+  }
+
+  Widget chat(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.chat),
+      onPressed: () {
+        GoRouter.of(context).push('/chats/${widget.id}');
+      },
+    );
+  }
+
+  Widget report(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.report),
+      onPressed: () {
+        GoRouter.of(context).go('/report/user/${widget.id}');
+      },
+    );
+  }
+  Widget rate(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.star_rate_sharp),
+      onPressed: () {
+        GoRouter.of(context).go('/profile/${widget.id}/rate/user');
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +98,13 @@ class _InfoUser extends State<InfoUser>  {
                                   : "User Name",
                               rating :userData?['rating'] !=null ? userData['rating'].toString() : "2.5",
                               edit_button: edit_button, id: widget.id
+                          ),
+                          Row(
+                            children: [
+                              (edit_button) ? edit(context) : chat(context),
+                              (edit_button) ? Container() : report(context),
+                              (edit_button) ? Container() : rate(context),
+                            ],
                           ),
                           Text('Username: ${userData?['username']}'),
                           Text("lvl ${userData?['level']} |  lvl ${userData?['xp']} xp" ?? "1 + | 0 xp"),

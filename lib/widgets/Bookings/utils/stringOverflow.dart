@@ -8,6 +8,6 @@ String cutDownString(var s){
 
 String cutDownStringName(var s){
   if(s==null) return "";
-  if(s.toString().length <= 10) return " "+s;
-  return " "+s.substring(0,10)+"...";
+  if(s.toString().length <= 15) return " "+s;
+  return " "+s.substring(0,15)+"..";
 }
