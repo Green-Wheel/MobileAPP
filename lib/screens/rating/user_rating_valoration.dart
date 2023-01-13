@@ -21,7 +21,7 @@ class _RateUser extends State<RateUser> {
 
   InteractiveStarsWidget stars = InteractiveStarsWidget(rate: 2.5);
   final myController = TextEditingController();
-
+  String username = "";
   @override
   void initState() {
     super.initState();
@@ -40,6 +40,7 @@ class _RateUser extends State<RateUser> {
       Map<String,dynamic> data = await UserService.getUserMap(widget.user_id) as Map<String, dynamic>;
       setState(() {
         userData = data;
+        username = userData?["username"];
       });
     }
   }
@@ -58,7 +59,7 @@ class _RateUser extends State<RateUser> {
               children: <Widget>[
                 ListTile(
                   leading: _getLeadingWidget("", Colors.blue),
-                  title: _getTitleWidget(userData["username"]),
+                  title: _getTitleWidget(username),
                   subtitle: _getCommentWidget(),
                   isThreeLine: true,
                 )

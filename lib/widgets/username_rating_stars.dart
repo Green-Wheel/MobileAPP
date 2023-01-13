@@ -67,7 +67,7 @@ class Username_Rating extends StatelessWidget {
     return IconButton(
       icon: Icon(Icons.star_rate_sharp),
       onPressed: () {
-        GoRouter.of(context).go('/rate/user/$id');
+        GoRouter.of(context).go('/profile/$id/rate/user');
       },
     );
   }

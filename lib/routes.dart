@@ -51,6 +51,11 @@ GoRouter routeGenerator(LoginService loginService) {
                   return ProfilePage(key: Key("ProfilePage"), id: id);
                 },
                 routes: [
+                  GoRoute(path: 'rate/user',
+                      builder: (context, state) {
+                        final id = int.parse(state.params['id']!);
+                        return RateUser(key: const Key("RateUser"), user_id: id);
+                      }),
                   GoRoute(
                     path: 'edit',
                     builder: (context, state) =>
@@ -156,11 +161,6 @@ GoRouter routeGenerator(LoginService loginService) {
               builder: (context, state) =>
               const MyVehicles(key: Key("Vehicle")),
             ),
-            GoRoute(path: 'rate/user/:id',
-                builder: (context, state) {
-                  final id = int.parse(state.params['id']!);
-                  return RateUser(key: const Key("ReportUser"), user_id: id);
-                }),
             GoRoute(path: 'report/user/:id',
                 builder: (context, state) {
                   final id = int.parse(state.params['id']!);

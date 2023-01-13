@@ -65,7 +65,6 @@ class _TrophiesScreen extends State<TrophiesScreen>{
       }
       count = aux;
       print(trophies_call);
-      print("FIUMMMMMMMMMMM");
       x = true;
     }
     return Scaffold(
