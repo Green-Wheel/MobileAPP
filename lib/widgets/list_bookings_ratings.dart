@@ -85,6 +85,7 @@ class _BookingRatings extends State<BookingRatings> {
           _getListViewWidget()],
       ),
     );
+
   }
 
   Widget _getListViewWidget() {
