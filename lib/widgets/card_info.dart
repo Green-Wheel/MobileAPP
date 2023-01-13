@@ -424,14 +424,14 @@ Widget _buildCard(
                                       !isOwner
                                           ? Padding(
                                               padding: EdgeInsets.only(
-                                                  left: 25, right: 10),
+                                                  left: 25),
                                               child: ChatButtonWidget(
                                                   to_user: owner_id!),
                                             )
                                           : Container(),
                                       Padding(
                                         padding: EdgeInsets.only(
-                                            top: 5),
+                                            left: 20, top: 5),
                                         child: ratingButton(context,id!),
                                       ),
 
