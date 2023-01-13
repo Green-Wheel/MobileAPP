@@ -230,7 +230,7 @@ class _booking_listState extends State<booking_list> {
                           ),
                           Column(
                             children: [
-                              if(widget.getFinisheds && !widget.isOwner)...[
+                              if(widget.getFinisheds)...[
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -246,7 +246,22 @@ class _booking_listState extends State<booking_list> {
 
                                         children: [
                                           OutlinedButton(
-                                              onPressed: (){},
+                                              onPressed: (){
+                                                var id;
+                                                if(widget.isOwner){
+                                                  int? id = booking.user.id;
+                                                  GoRouter.of(context).go('/report/user/$id');
+                                                }
+                                                else{
+                                                  var pid = booking.publication.id;
+                                                  var bid = booking.id;
+                                                  (booking.publication.type == "Bike")?
+                                                    GoRouter.of(context).go('/report/bike/$pid'):
+                                                    GoRouter.of(context).go('/report/charger/$bid');
+
+                                              }
+
+                                              },
                                               style: ElevatedButton.styleFrom(
                                                   foregroundColor: Colors.redAccent,
                                                   backgroundColor: Colors.white,
@@ -260,7 +275,20 @@ class _booking_listState extends State<booking_list> {
                                                 ],
                                               )),
                                           OutlinedButton(
-                                              onPressed: (){},
+                                              onPressed: (){
+
+                                                if(widget.isOwner){
+                                                  int? id = booking.user.id;
+                                                  GoRouter.of(context).go('/profile/$id/rate/user');
+
+                                                }
+                                                else{
+                                                  var pid = booking.publication.id;
+                                                  var bid = booking.id;
+                                                  GoRouter.of(context).go('/rate/publication/$pid/booking/$bid');
+                                                }
+
+                                              },
                                               style: ElevatedButton.styleFrom(
                                                 side: BorderSide(width: 1.0, color: Colors.blue),
 

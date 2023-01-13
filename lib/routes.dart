@@ -18,6 +18,7 @@ import 'package:greenwheel/screens/profile/editprofile.dart';
 import 'package:greenwheel/screens/profile/myprofile.dart';
 import 'package:greenwheel/screens/profile/report_comment.dart';
 import 'package:greenwheel/screens/profile/report_user.dart';
+import 'package:greenwheel/screens/rating/rateBooking.dart';
 import 'package:greenwheel/screens/rating/user_rating_valoration.dart';
 import 'package:greenwheel/screens/register/change_password.dart';
 import 'package:greenwheel/screens/register/recover_password.dart';
@@ -44,6 +45,12 @@ GoRouter routeGenerator(LoginService loginService) {
           path: '/',
           builder: (context, state) =>  HomePage(key: const Key("HomePage")),
           routes: [
+            GoRoute(path: 'rate/publication/:pid/booking/:bid',
+                builder: (context, state) {
+                  final bid = int.parse(state.params['bid']!);
+                  final pid = int.parse(state.params['pid']!);
+                  return RateBooking(key: const Key("RateBooking"), publication_id: pid, booking_id: bid);
+                }),
             GoRoute(
                 path: 'profile/:id',
                 builder: (context, state) {

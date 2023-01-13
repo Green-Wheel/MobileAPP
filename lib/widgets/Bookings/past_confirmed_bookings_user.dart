@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:greenwheel/widgets/Bookings/booking_list.dart';
@@ -26,7 +24,7 @@ class _bookingTabsUserState extends State<bookingTabsUser> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
-            title: Text("Reservas a tus puntos"),
+            title: Text("Tus reservas"),
             bottom: TabBar(
               indicatorColor: Colors.white,
               labelColor: Colors.white,

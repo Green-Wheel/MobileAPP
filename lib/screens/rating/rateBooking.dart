@@ -6,10 +6,10 @@ import '../../widgets/interactive_stars_widget.dart';
 
 
 class RateBooking extends StatefulWidget {
-  RateBooking({Key? key,required int this.publication_id, required int this.booking_id, required int this.user_id}) : super(key: key);
+  RateBooking({Key? key,required int this.publication_id, required int this.booking_id,}) : super(key: key);
   int booking_id;
   int publication_id;
-  int user_id;
+
   @override
   State<RateBooking> createState() => _RateBooking();
 }
