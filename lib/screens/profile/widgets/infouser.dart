@@ -96,7 +96,7 @@ class _InfoUser extends State<InfoUser>  {
                           Username_Rating(username: userData != null
                               ? userData['first_name'] + " " + userData['last_name']
                                   : "User Name",
-                              rating :userData?['rating'] !=null ? userData['rating'].toString() : "2.5",
+                              rating :userData?['rating'] !=null ? userData['rating'].toString() : "0",
                               edit_button: edit_button, id: widget.id
                           ),
                           Row(

@@ -77,7 +77,7 @@ class _BookingRatings extends State<BookingRatings> {
           Row(
             children: [
               SizedBox(width:42),
-              Text((avg.isNaN) ?"0" : "${avg.toStringAsFixed(3)}"),
+              Text((avg.isNaN) ?"0" : "${avg.toStringAsFixed(1)}"),
               RatingStars(rating: (!avg.isNaN) ? avg.toString() : "0"),
               Text("($size)")
             ],

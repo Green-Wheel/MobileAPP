@@ -49,7 +49,7 @@ Widget _starsStaticCard(double? rate){
         rate != 0.0 ? Padding(
           padding: EdgeInsets.only(left: 5.0),
           child:Text(
-            rate!.toStringAsFixed(3),
+            rate!.toStringAsFixed(1),
             style: const TextStyle(fontWeight: FontWeight.w500, color: Color.fromRGBO(69, 69, 69, 1)),
           ),
         ): Container(),

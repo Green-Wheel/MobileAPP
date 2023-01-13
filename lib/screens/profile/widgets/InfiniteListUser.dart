@@ -159,6 +159,7 @@ class _InfiniteList extends State<InfiniteListUser> {
               double? rating = _markersListAll[index].charger?.avg_rating;
               String? description = _markersListAll[index].charger
                   ?.description;
+              String? title = _markersListAll[index].charger?.title;
               int? id = _markersListAll[index].charger?.id;
               bool? avaliable = true;
               List<ConnectionType> types = [];
@@ -193,7 +194,7 @@ class _InfiniteList extends State<InfiniteListUser> {
               return Flexible(child: _cardChargerList(rating,
                   description!, avaliable, match, types,
                   private, price, direction!, description2, id!, latitude,
-                  longitude, owner_id, owner_name, contamination, compatible, images));
+                  longitude, owner_id, owner_name, contamination, compatible, images, title!));
             }
             else return Text("");
           }
@@ -201,6 +202,7 @@ class _InfiniteList extends State<InfiniteListUser> {
             if (_markersListAll[index].bike != null) {
               BikeType bikeType = _markersListAll[index].bike!.bike_type;
               String? direction = _markersListAll[index].bike!.direction;
+              String? title = _markersListAll[index].bike!.title;
               double price = _markersListAll[index].bike!.price;
               bool available = true;
               double power = _markersListAll[index].bike!.power ?? 0;
@@ -221,7 +223,7 @@ class _InfiniteList extends State<InfiniteListUser> {
                   GoRouter.of(context)
                       .go('/bikes/$id');
                 },
-                child: BikeCardInfoWidget(location: direction,
+                child: BikeCardInfoWidget(location: title,
                     rating: rate,
                     available: available,
                     type: bikeType,
@@ -251,7 +253,7 @@ class _InfiniteList extends State<InfiniteListUser> {
   Widget _cardChargerList(double? rating,String description, bool avaliable, bool match,
       List<ConnectionType> types, bool private, double price, String direction,
       String description2, int id, double latitude, double longitude, int? owner_id,
-      String? owner_name, String? contamination, bool? compatible, List? images
+      String? owner_name, String? contamination, bool? compatible, List? images,String title
       ) {
     double rate = 2.5;
     if(rating != null) rate = rating;
@@ -261,7 +263,7 @@ class _InfiniteList extends State<InfiniteListUser> {
             .go(
             '/chargers/$id'); //Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
       },
-      child: CardInfoWidget(location: description,
+      child: CardInfoWidget(location: title,
           rating: rate,
           types: types,
           available: avaliable,

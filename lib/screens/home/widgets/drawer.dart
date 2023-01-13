@@ -204,6 +204,7 @@ class _SimpleDrawer extends State<SimpleDrawer>{
             ),
           ),
            */
+          SizedBox(height:100),
           Padding(
               padding: EdgeInsets.only(left: 10.0, right: 10.0),
               child: logged ?
