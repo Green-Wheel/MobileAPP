@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backendServices/ratings.dart';
 import 'package:greenwheel/widgets/rating_stars.dart';
 
@@ -100,6 +101,12 @@ class _UserRatings extends State<UserRatings> {
                     alignment: Alignment.topLeft,
                     child: RatingStars(rating: rate),
                   ),
+        IconButton(
+          icon: Icon(Icons.report),
+          onPressed: () {
+            GoRouter.of(context).go('/report/rating/${rating.id}');
+          },
+        )
                 ]
             )
         ),
@@ -108,7 +115,8 @@ class _UserRatings extends State<UserRatings> {
           child: Text(rating.comment!, style: TextStyle(
               color: Colors.black12),
           ),
-        )
+        ),
+
       ],
     );
   }

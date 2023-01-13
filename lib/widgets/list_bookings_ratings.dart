@@ -106,7 +106,7 @@ class _BookingRatings extends State<BookingRatings> {
       child: Text(userName),
     );
   }
-  Widget _getTitleWidget(String username, double rate) {
+  Widget _getTitleWidget(String username, Rating rating) {
     return Align(
         alignment: Alignment.topLeft,
         child :Row(
@@ -115,8 +115,14 @@ class _BookingRatings extends State<BookingRatings> {
               Text(username, style: TextStyle(fontWeight: FontWeight.bold)),
               Align(
                 alignment: Alignment.topLeft,
-                child : RatingStars(rating: rate.toString()),
+                child : RatingStars(rating: rating.rate.toString()),
               ),
+              IconButton(
+                icon: Icon(Icons.report),
+                onPressed: () {
+                  GoRouter.of(context).go('/report/rating/${rating.id}');
+                },
+              )
             ]
         )
     );
@@ -136,13 +142,6 @@ class _BookingRatings extends State<BookingRatings> {
                     alignment: Alignment.topLeft,
                     child : Text(""),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.report),
-                    onPressed: () {
-                     // int? aux = rating.user.id;
-                    //  GoRouter.of(context).go('report/user/$aux');
-                    },
-                  )
                 ]
             )
         ),
@@ -160,7 +159,7 @@ class _BookingRatings extends State<BookingRatings> {
   ListTile _getListTile(Rating rating, MaterialColor color) {
     return ListTile(
       leading: _getLeadingWidget("",color),
-      title: _getTitleWidget(rating.user.username,rating.rate),
+      title: _getTitleWidget(rating.user.username,rating),
       subtitle: _getCommentWidget(rating),
       isThreeLine: true,
     );

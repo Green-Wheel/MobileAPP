@@ -217,14 +217,14 @@ class _InfiniteList extends State<InfiniteListUser> {
               String? direction1 = "";
               int? owner_id =  _markersListAll[index].bike!.owner.id;
               List? images = _markersListAll[index].bike!.images;
-
+              double rating = 2.5;
+              if(rate!=null) rating = rate;
               return Flexible(child: GestureDetector(
                 onTap: () {
                   GoRouter.of(context)
                       .go('/bikes/$id');
                 },
                 child: BikeCardInfoWidget(location: title,
-                    rating: rate,
                     available: available,
                     type: bikeType,
                     price: price,
@@ -238,6 +238,7 @@ class _InfiniteList extends State<InfiniteListUser> {
                     id: id,
                     owner_id: owner_id,
                     images: images,
+                    rating: double.parse((rating).toStringAsFixed(2))
                   ),
                 )
               );
@@ -263,8 +264,9 @@ class _InfiniteList extends State<InfiniteListUser> {
             .go(
             '/chargers/$id'); //Navigator.push(context, MaterialPageRoute(builder: (context) => ChargerInfo()));
       },
-      child: CardInfoWidget(location: title,
-          rating: rate,
+      child:
+          CardInfoWidget(location: title,
+          rating: double.parse((rate).toStringAsFixed(2)),
           types: types,
           available: avaliable,
           match: match,
