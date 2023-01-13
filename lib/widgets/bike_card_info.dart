@@ -102,6 +102,48 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget> {
   }
 }
 
+Widget ratingButton(BuildContext context){
+  return  SizedBox(
+    height: 33,
+    width: 160,
+    child: TextButton(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<
+              Color>(Colors.lightBlue[50]!),
+          shape: MaterialStateProperty.all<
+              RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      18.0),
+                  side: const BorderSide(
+                      color: Colors.lightBlueAccent)
+              )
+          )
+      ),
+      onPressed: () {
+        //TODO: Ruta a chat
+        GoRouter.of(context).push('/chats/');
+
+      },
+      child: Row(
+        children: const [
+          Icon(
+            Icons.stars,
+            size: 18,
+            color: Colors.lightBlueAccent,
+          ),
+          SizedBox(width: 5),
+          Text('Publication rating ',
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.lightBlueAccent),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
 Widget _buildCard(
     String? location,
     double? rating,
@@ -300,9 +342,14 @@ Widget _buildCard(
                             Row(
                               children: [
                                 !mybike ? Padding(
-                                  padding: EdgeInsets.only(left: 20),
+                                  padding: EdgeInsets.only(left: 20, right: 20),
                                   child:ChatButtonWidget(to_user: owner_id),
                                 ): SizedBox(height: 0),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 5),
+                                  child: ratingButton(context),
+                                ),
                                 //!mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
                                 //mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)
                               ],

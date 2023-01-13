@@ -75,6 +75,7 @@ class _CardInfoWidget extends State<CardInfoWidget> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     _getData();
@@ -100,6 +101,48 @@ class _CardInfoWidget extends State<CardInfoWidget> {
         widget.images,
         context);
   }
+}
+
+Widget ratingButton(BuildContext context){
+  return  SizedBox(
+    height: 33,
+    width: 160,
+    child: TextButton(
+      style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all<
+              Color>(Colors.lightGreen[50]!),
+          shape: MaterialStateProperty.all<
+              RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                      18.0),
+                  side: const BorderSide(
+                      color: Colors.greenAccent)
+              )
+          )
+      ),
+      onPressed: () {
+        //TODO: Ruta a chat
+        GoRouter.of(context).push('/chats/');
+
+      },
+      child: Row(
+        children: const [
+          Icon(
+            Icons.stars,
+            size: 18,
+            color: Colors.greenAccent,
+          ),
+          SizedBox(width: 5),
+          Text('Publication rating ',
+            style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.greenAccent),
+          ),
+        ],
+      ),
+    ),
+  );
 }
 
 Widget _buildCard(
@@ -218,7 +261,7 @@ Widget _buildCard(
                             private
                                 ? SizedBox(
                                     height: MediaQuery.of(context).size.height *
-                                        0.03)
+                                        0.05)
                                 : SizedBox(height: 0),
                             private
                                 ? ButtonReservaListWidget(id: id)
@@ -383,16 +426,23 @@ Widget _buildCard(
                                       !isOwner
                                           ? Padding(
                                               padding: EdgeInsets.only(
-                                                  left: 25, right: 20),
+                                                  left: 25, right: 10),
                                               child: ChatButtonWidget(
                                                   to_user: owner_id!),
                                             )
                                           : Container(),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 5),
+                                        child: ratingButton(context),
+                                      ),
+
                                       //!isOwner ? Padding(padding: EdgeInsets.only(left: 25),
                                       //child: ButtonDeleteChargerWidget(id_charger: id!)): SizedBox(height: 0),
                                     ],
                                   )
                                 : SizedBox(height: 0),
+
                           ],
                         ),
                       ))
@@ -423,3 +473,4 @@ Widget _buildCard(
     ),
   );
 }
+
