@@ -103,7 +103,7 @@ class _CardInfoWidget extends State<CardInfoWidget> {
   }
 }
 
-Widget ratingButton(BuildContext context){
+Widget ratingButton(BuildContext context,int publication_id){
   return  SizedBox(
     height: 33,
     width: 160,
@@ -122,9 +122,7 @@ Widget ratingButton(BuildContext context){
           )
       ),
       onPressed: () {
-        //TODO: Ruta a chat
-        GoRouter.of(context).push('/chats/');
-
+        GoRouter.of(context).push('/ratings/publications/$publication_id');
       },
       child: Row(
         children: const [
@@ -434,7 +432,7 @@ Widget _buildCard(
                                       Padding(
                                         padding: EdgeInsets.only(
                                             top: 5),
-                                        child: ratingButton(context),
+                                        child: ratingButton(context,id!),
                                       ),
 
                                       //!isOwner ? Padding(padding: EdgeInsets.only(left: 25),

@@ -102,7 +102,7 @@ class _BikeCardInfoWidget extends State<BikeCardInfoWidget> {
   }
 }
 
-Widget ratingButton(BuildContext context){
+Widget ratingButton(BuildContext context,int publication_id){
   return  SizedBox(
     height: 33,
     width: 160,
@@ -121,8 +121,7 @@ Widget ratingButton(BuildContext context){
           )
       ),
       onPressed: () {
-        //TODO: Ruta a chat
-        GoRouter.of(context).push('/chats/');
+        GoRouter.of(context).push('/ratings/publications/$publication_id');
 
       },
       child: Row(
@@ -348,7 +347,7 @@ Widget _buildCard(
                                 Padding(
                                   padding: EdgeInsets.only(
                                       top: 5),
-                                  child: ratingButton(context),
+                                  child: ratingButton(context,id!),
                                 ),
                                 //!mybike? SizedBox(width:MediaQuery.of(context).size.width * 0.05) : SizedBox(width: 0),
                                 //mybike ? ButtonDeleteBikeWidget(id_bike: id) : SizedBox(height: 0)

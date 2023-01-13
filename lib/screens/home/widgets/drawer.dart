@@ -183,25 +183,6 @@ class _SimpleDrawer extends State<SimpleDrawer>{
               },
             ),
           ),
-          Padding(
-              padding: EdgeInsets.only(left: 10.0, right: 10.0),
-              child: Align(
-                        alignment: Alignment.center,
-                        child :Container(
-                            decoration: new BoxDecoration(color: Colors.lightBlueAccent),
-                            child: ListTile(
-                              visualDensity: VisualDensity(vertical: -2),
-                              leading: const Icon(Icons.help, size: 30),
-                              title: Hero(
-                                tag: "7",
-                                child: const Text('Help & Comments', style: TextStyle(fontSize: 18)),
-                              ),
-                              onTap: () {
-                              },
-                            ),
-                          )
-                    ),
-          ),
           /*
           Padding(
             padding: EdgeInsets.only(left: 10.0, right: 10.0),

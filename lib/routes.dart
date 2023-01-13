@@ -35,6 +35,7 @@ import 'package:greenwheel/widgets/Bookings/confirm_booking.dart';
 import 'package:greenwheel/widgets/Bookings/past_confirmed_bookings.dart';
 import 'package:greenwheel/widgets/Bookings/past_confirmed_bookings_user.dart';
 import 'package:greenwheel/widgets/language_selector_widget.dart';
+import 'package:greenwheel/widgets/list_bookings_ratings.dart';
 
 GoRouter routeGenerator(LoginService loginService) {
   return GoRouter(
@@ -108,6 +109,17 @@ GoRouter routeGenerator(LoginService loginService) {
                 final int id = int.parse(state.params['id']!);
                 return EditCharger(key: const Key("AddBike"), id: id);
               },
+            ),
+            GoRoute(
+              path: 'bikes/add',
+              builder: (context, state) => const AddBike(key: Key("AddBike")),
+            ),
+            GoRoute(
+              path: 'ratings/publications/:id',
+              builder: (context, state) {
+                final int id = int.parse(state.params['id']!);
+                return BookingRatings(key: Key("RatingsPublications"),id : id);
+              }
             ),
             GoRoute(
               path: 'bikes/add',

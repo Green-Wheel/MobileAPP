@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:greenwheel/services/backendServices/ratings.dart';
 import 'package:greenwheel/widgets/rating_stars.dart';
 
@@ -9,7 +10,7 @@ import 'interactive_stars_widget.dart';
 
 class BookingRatings extends StatefulWidget {
 
-  BookingRatings(int id, {Key? key}) : id = id,super(key: key);
+  BookingRatings({Key? key, required this.id}) : super(key: key);
   int id;
   @override
   State<BookingRatings> createState() => _BookingRatings();
@@ -45,6 +46,7 @@ class _BookingRatings extends State<BookingRatings> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      appBar: AppBar(title: Text("List of ratings of the publication") ,centerTitle: true),
       body:_buildBody(),
     );
   }
@@ -75,8 +77,8 @@ class _BookingRatings extends State<BookingRatings> {
           Row(
             children: [
               SizedBox(width:42),
-              Text("$avg"),
-              RatingStars(rating: avg.toString()),
+              Text("${avg.toStringAsFixed(3)}"),
+              RatingStars(rating: (avg.toString()!=null) ?avg.toString() : "0"),
               Text("($size)")
             ],
           ),
@@ -95,73 +97,81 @@ class _BookingRatings extends State<BookingRatings> {
               return _getListItemWidget(rating, color);
             }));
   }
-}
 
-CircleAvatar _getLeadingWidget(String userName, MaterialColor color) {
-  return CircleAvatar(
-    backgroundImage: const AssetImage('assets/images/default_user_img.jpg'),
-    backgroundColor: color,
-    child: Text(userName),
-  );
-}
-Widget _getTitleWidget(String username, double rate) {
-  return Align(
-      alignment: Alignment.topLeft,
-      child :Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children:[
-            Text(username, style: TextStyle(fontWeight: FontWeight.bold)),
-            Align(
-              alignment: Alignment.topLeft,
-              child : RatingStars(rating: rate.toString()),
-            ),
-          ]
-      )
-  );
-}
-
-Widget _getCommentWidget(Rating rating) {
-  String rate = rating.rate.toStringAsFixed(3);
-  return Column(
-    children: [
-      Align(
-          alignment: Alignment.topLeft,
-          child :Row(
-              children:[
-                Text(""),
-                SizedBox(width:10),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child : Text(""),
-                ),
-              ]
-          )
-      ),
-      Align(
+  CircleAvatar _getLeadingWidget(String userName, MaterialColor color) {
+    return CircleAvatar(
+      backgroundImage: const AssetImage('assets/images/default_user_img.jpg'),
+      backgroundColor: color,
+      child: Text(userName),
+    );
+  }
+  Widget _getTitleWidget(String username, double rate) {
+    return Align(
         alignment: Alignment.topLeft,
-        child :Text(rating.comment!,style: TextStyle(
-            color: Colors.black),
+        child :Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children:[
+              Text(username, style: TextStyle(fontWeight: FontWeight.bold)),
+              Align(
+                alignment: Alignment.topLeft,
+                child : RatingStars(rating: rate.toString()),
+              ),
+            ]
+        )
+    );
+  }
+
+  Widget _getCommentWidget(Rating rating) {
+    String rate = rating.rate.toStringAsFixed(3);
+    return Column(
+      children: [
+        Align(
+            alignment: Alignment.topLeft,
+            child :Row(
+                children:[
+                  Text(""),
+                  SizedBox(width:10),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child : Text(""),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.report),
+                    onPressed: () {
+                     // int? aux = rating.user.id;
+                    //  GoRouter.of(context).go('report/user/$aux');
+                    },
+                  )
+                ]
+            )
         ),
-      )
-    ],
-  );
-}
+        Align(
+          alignment: Alignment.topLeft,
+          child :Text(rating.comment!,style: TextStyle(
+              color: Colors.black),
+          ),
+        )
+      ],
+    );
+  }
 
 
-ListTile _getListTile(Rating rating, MaterialColor color) {
-  return ListTile(
-    leading: _getLeadingWidget("",color),
-    title: _getTitleWidget(rating.user.username,rating.rate),
-    subtitle: _getCommentWidget(rating),
-    isThreeLine: true,
-  );
+  ListTile _getListTile(Rating rating, MaterialColor color) {
+    return ListTile(
+      leading: _getLeadingWidget("",color),
+      title: _getTitleWidget(rating.user.username,rating.rate),
+      subtitle: _getCommentWidget(rating),
+      isThreeLine: true,
+    );
+  }
+
+  Container _getListItemWidget(Rating rating, MaterialColor color) {
+    return Container(
+      margin: const EdgeInsets.only(top: 5.0),
+      child: Card(
+        child: _getListTile(rating, color),
+      ),
+    );
+  }
 }
 
-Container _getListItemWidget(Rating rating, MaterialColor color) {
-  return Container(
-    margin: const EdgeInsets.only(top: 5.0),
-    child: Card(
-      child: _getListTile(rating, color),
-    ),
-  );
-}
