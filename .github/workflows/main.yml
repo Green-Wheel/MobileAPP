@@ -2,7 +2,7 @@ name: Flutter Workflow
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ dev,main ]
 jobs:
   build:
     runs-on: ubuntu-latest
